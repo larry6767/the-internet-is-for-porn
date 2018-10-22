@@ -57,4 +57,4 @@ export default (videos = defaultVideos, action) => {
     return videos
 }
 
-// it's not so clear code and i understand it, but later i'll be rewrite do this with immutable.js
+// it's not so clear code and i understand it, but later i'll rewrite this with immutable.js
