@@ -1,4 +1,4 @@
-export const video = {
+export const videoPlayer= {
     "id": "123",
     "player": true,
     "title": "Absolute top content from xxxvogue.net",

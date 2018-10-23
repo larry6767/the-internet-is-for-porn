@@ -1,10 +1,17 @@
-import {videos as defaultVideos, video} from '../fixtures'
+import {videos as defaultVideos, videoPlayer} from '../fixtures'
 import {SELECT_VIDEO, CLOSE_VIDEO} from '../constants'
+import produce from 'immer'
 
-export default (videos = defaultVideos, action) => {
+export default produce((videos, action) => {
+    if (!videos) {
+        return defaultVideos
+    }
     const {type, payload} = action
     switch (type) {
     case SELECT_VIDEO:
+        removePlayer()
+        
+        // find the last item in a row
         let currentItem = payload.ref.current
         while (currentItem.getBoundingClientRect().right < document.documentElement.clientWidth - 50) {
             if (currentItem.nextSibling) {
@@ -14,47 +21,38 @@ export default (videos = defaultVideos, action) => {
             }
         }
 
+        // insert player after last item in a row
         let targetItemId = currentItem.getAttribute('data-id')
-        videos = videos.slice(0)
-        if (~videos.findIndex((item) => item.player)) {
-            videos.splice(videos.findIndex((item) => item.player), 1)
-        }
-        videos.splice(videos.findIndex((item) => item.id === targetItemId) + 1, 0, video)
+        videos.splice(videos.findIndex((item) => item.id === targetItemId) + 1, 0, videoPlayer)
 
-        videos = videos.map((item) => {
-            if (item.id === payload.id) {
-                let clone = Object.assign({}, item)
-                clone.selected = true
-                return clone
-            } else if (item.selected) {
-                let clone = Object.assign({}, item)
-                clone.selected = false
-                return clone
-            }
-            return item
-        })
-        return videos
+        toggleStatus()
+        break
     
     case CLOSE_VIDEO:
-        videos = videos.slice(0)
-        if (~videos.findIndex((item) => item.player)) {
-            videos.splice(videos.findIndex((item) => item.player), 1)
-        }
+        removePlayer()
+        toggleStatus()
 
-        videos = videos.map((item) => {
-            if (item.selected) {
-                let clone = Object.assign({}, item)
-                clone.selected = false
-                return clone
-            }
-            return item
-        })
-        return videos
+        break
 
     default: break
     }
 
-    return videos
-}
+    // remove player if it's in the array
+    function removePlayer() {
+        if (~videos.findIndex((item) => item.player)) {
+            videos.splice(videos.findIndex((item) => item.player), 1)
+        }
+    }
 
-// it's not so clear code and i understand it, but later i'll rewrite this with immutable.js
+    // delete status of the selected video and add status to the newly selected video
+    function toggleStatus() {
+        videos = videos.map((item) => {
+            if (payload && payload.id && item.id === payload.id) {
+                item.selected = true
+            } else if (item.selected) {
+                item.selected = false
+            }
+            return item
+        })
+    }
+})
