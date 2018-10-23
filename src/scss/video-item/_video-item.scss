@@ -30,12 +30,44 @@
     }
 
     &__thumbnail {
+        position: relative;
         display: block;
         width: 100%;
         height: 180px;
         background-repeat: no-repeat;
         background-position: center;
         background-size: cover;
+
+        &:hover .video-item__thumbnail-bottom {
+            opacity: 1;
+        }
+    }
+
+    &__thumbnail-bottom {
+        opacity: 0;
+        position: absolute;
+        display: flex;
+        justify-content: space-between;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        padding: 10px;
+        background: rgba(51, 51, 51, 0.5);
+        color: $white;
+        font-size: 12px;
+        transition: opacity 0.3s;
+    }
+
+    &__categories {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        flex-grow: 1;
+    }
+
+    &__duration {
+        flex-shrink: 0;
+        margin-left: 20px;
     }
 
     &__title-wrapper {

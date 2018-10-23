@@ -1,4 +1,4 @@
-export const videoPlayer= {
+export const videoPlayer = {
     "id": "123",
     "player": true,
     "title": "Absolute top content from xxxvogue.net",
@@ -12,7 +12,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "1.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3", "category4", "category5"],
+        "duration": "12:23"
     },
     {
         "id": "2",
@@ -20,7 +22,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "2.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3", "category4"],
+        "duration": "12:23"
     },
     {
         "id": "3",
@@ -28,7 +32,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "3.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "4",
@@ -36,7 +42,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "4.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "5",
@@ -44,7 +52,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "1.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "6",
@@ -52,7 +62,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "2.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "7",
@@ -60,7 +72,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "3.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "8",
@@ -68,7 +82,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "4.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "9",
@@ -76,7 +92,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "1.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "10",
@@ -84,7 +102,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "2.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "11",
@@ -92,7 +112,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "3.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "12",
@@ -100,7 +122,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "4.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "13",
@@ -108,7 +132,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "1.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "14",
@@ -116,7 +142,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "2.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "15",
@@ -124,7 +152,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "3.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "16",
@@ -132,7 +162,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "4.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "17",
@@ -140,7 +172,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "1.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "18",
@@ -148,7 +182,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "2.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "19",
@@ -156,7 +192,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "3.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "20",
@@ -164,7 +202,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "4.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "21",
@@ -172,7 +212,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "1.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "22",
@@ -180,7 +222,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "2.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "23",
@@ -188,7 +232,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "3.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "24",
@@ -196,7 +242,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "4.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "25",
@@ -204,7 +252,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "1.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "26",
@@ -212,7 +262,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "2.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "27",
@@ -220,7 +272,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "3.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "28",
@@ -228,7 +282,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "4.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "29",
@@ -236,7 +292,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "1.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "30",
@@ -244,7 +302,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "2.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "31",
@@ -252,7 +312,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "3.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "32",
@@ -260,7 +322,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "4.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "33",
@@ -268,7 +332,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "1.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "34",
@@ -276,7 +342,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "2.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "35",
@@ -284,7 +352,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "3.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "36",
@@ -292,7 +362,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "4.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "37",
@@ -300,7 +372,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "1.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "38",
@@ -308,7 +382,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "2.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "39",
@@ -316,7 +392,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "3.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "40",
@@ -324,7 +402,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "4.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "41",
@@ -332,7 +412,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "1.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "42",
@@ -340,7 +422,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "2.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "43",
@@ -348,7 +432,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "3.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "44",
@@ -356,7 +442,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "4.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "45",
@@ -364,7 +452,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "1.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "46",
@@ -372,7 +462,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "2.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "47",
@@ -380,7 +472,9 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "3.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
     {
         "id": "48",
@@ -388,6 +482,8 @@ export const videos = [
         "title": "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
         "source": "lorem.com",
         "imgName": "4.jpg",
-        "link": "#someLink"
+        "link": "#someLink",
+        "categories": ["category1", "category2", "category3"],
+        "duration": "12:23"
     },
 ]

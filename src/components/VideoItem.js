@@ -12,6 +12,7 @@ class VideoItem extends Component {
 
     render() {
         const {video} = this.props
+        // const categoryElements = video.categories.join(',')
         return (
             <li className="video-item"
                 ref = {this.videoItemRef}
@@ -24,6 +25,10 @@ class VideoItem extends Component {
                 >
                     <div className="video-item__hd-icon"></div>
                     <div className="video-item__like"></div>
+                    <div className="video-item__thumbnail-bottom">
+                        <div className="video-item__categories">{video.categories.join(', ')}</div>
+                        <div className="video-item__duration">{video.duration}</div>
+                    </div>
                 </a>
                 <div className="video-item__title-wrapper">
                     <a className="video-item__title"
