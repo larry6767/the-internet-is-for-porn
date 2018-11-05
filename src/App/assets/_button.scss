@@ -1,0 +1,31 @@
+.button {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    background: $dark-gray-3;
+    color: $white;
+    border-radius: 2px;
+    cursor: pointer;
+
+    &:hover {
+        background: $gray;
+    }
+
+    &--like::before,
+    &--share::before,
+    &--report::before {
+        content: url('/img/like.svg');
+        display: block;
+        width: 14px;
+        height: 14px;
+        margin: 0 5px 4px 0;
+    }
+
+    &--share::before {
+        content: url('/img/share.svg');
+    }
+
+    &--report::before {
+        content: url('/img/info.svg');
+    }
+}

@@ -1,0 +1,36 @@
+// This is workaround becouse i don't know how do this better now
+// I'll come up with another solution later.
+@import './src/App/assets/mixins.scss';
+//
+
+// .languageSelect {
+//     width: 160px;
+//     display: flex;
+//     justify-content: flex-end;
+
+//     @include sm {
+//         width: 120px;
+//         margin-left: 0;
+//     }
+// }
+
+.English,
+.Italiano,
+.Français {
+    margin: 0 10px 3px 0;
+    width: 24px;
+    height: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-image: url('./English.svg');
+}
+
+.Italiano {
+    background-image: url('./Italiano.svg');
+}
+
+.Français {
+    background-image: url('./Français.svg');
+}
+
+// https://www.flaticon.com/packs/flags-3

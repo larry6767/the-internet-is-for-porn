@@ -1,0 +1,1 @@
+export const navigation = ['Home', 'All Niches', 'All movies', 'Pornstars']

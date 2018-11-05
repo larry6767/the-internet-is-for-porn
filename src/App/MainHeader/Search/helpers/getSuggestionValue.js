@@ -1,0 +1,1 @@
+export default (suggestion) => suggestion.label

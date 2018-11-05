@@ -1,0 +1,15 @@
+@import './normalize.scss';
+
+html,
+body {
+	min-height: 100vh;
+	min-width: 320px;
+}
+* {
+    box-sizing: border-box;
+}
+*::before,
+*::after {
+	transition-duration: .2s;
+	transition-timing-function: ease;
+}

@@ -1,0 +1,16 @@
+.container {
+    width: 1280px;
+    margin: 0 auto;
+
+    @include md {
+        width: 1024px;
+    }
+
+    @include sm {
+        width: 100%;
+    }
+
+    @include xs {
+        width: 100%;
+    }
+}
