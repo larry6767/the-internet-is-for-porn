@@ -8,7 +8,6 @@ export default combineReducers({
     // Navigation UI state reducer
     ui: handleActions({
         [toggleNavigation]: (state, action) => {
-            console.log(action)
             return state.set('currentPage', action.payload)
         }
     }, fromJS({currentPage: 0}))

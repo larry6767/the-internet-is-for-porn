@@ -1,11 +1,14 @@
 import {createStore, applyMiddleware} from 'redux'
-import reducers from './reducers.js'
+import createRootReducer from './reducers.js'
 import {fromJS} from 'immutable'
 import logger from './middlewares/logger'
 
+import {routerMiddleware} from 'connected-react-router'
+import history from './history'
+
 const
-    enhancer = applyMiddleware(logger),
-    store = createStore(reducers, fromJS({}), enhancer)
+    enhancer = applyMiddleware(routerMiddleware(history), logger),
+    store = createStore(createRootReducer(history), fromJS({}), enhancer)
 
 // dev only
 window.store = store
