@@ -3,7 +3,7 @@ import createRootReducer from './reducers.js'
 import {fromJS} from 'immutable'
 import logger from './middlewares/logger'
 
-import {routerMiddleware} from 'connected-react-router'
+import {routerMiddleware} from 'connected-react-router/immutable'
 import history from './history'
 
 const
