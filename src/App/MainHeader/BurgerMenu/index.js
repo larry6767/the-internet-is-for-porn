@@ -39,14 +39,14 @@ const
             }}
         >
             {
-                navigation.map((item, index) => (
+                Object.keys(navigation).map((item, index) => (
                     <MenuItem
-                        key={item}
+                        key={index}
                         selected={index === navigationUi.get('currentPage')}
                         onClick={toggleNavigationAction}
                         data-index={index}
                     >
-                        {item}
+                        {navigation[`${item}`]}
                     </MenuItem>
                 ))
             }

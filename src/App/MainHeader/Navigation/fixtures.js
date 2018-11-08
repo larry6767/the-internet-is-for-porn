@@ -1,1 +1,6 @@
-export const navigation = ['Home', 'All Niches', 'All movies', 'Pornstars']
+export const navigation = {
+    '/': 'Home',
+    '/all-niches': 'All Niches',
+    '/all-movies': 'All Movies',
+    '/pornstars': 'Pornstars'
+}

@@ -1,0 +1,30 @@
+// This is workaround becouse i don't know how do this better now
+// I'll come up with another solution later.
+@import './src/App/assets/mixins.scss';
+@import './src/App/assets/variables.scss';
+//
+
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px 10px;
+    margin: 0 auto;
+
+    @include xl {
+        width: 1400px;
+    }
+
+    @include lg {
+        width: 1200px;
+    }
+
+    @include sm {
+        padding: 12px 10px;
+    }
+
+    @include xs {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}

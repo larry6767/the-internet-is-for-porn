@@ -16,10 +16,6 @@ const
             isXS = appUi.get('currentBreakpoint') === 'xs',
             isSearchShown = mainHeaderUi.get('isSearchShown')
 
-            console.log('---isXS: ', isXS)
-            console.log('---isSearchShown: ', isSearchShown)
-            console.log(isXS && isSearchShown)
-
         return <header className={css.header}>
             <div className={css.top}>
                 <div className={css.topInner}>

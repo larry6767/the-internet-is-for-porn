@@ -5,20 +5,23 @@ import MainFooter from './MainFooter'
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import {blueGrey, amber} from '@material-ui/core/colors/'
-import css from './assets/_.module.scss'
+import './assets/_.module.scss'
 
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
 import {throttle} from 'lodash'
 import {resize} from './actions'
 
-import {Route, NavLink, Switch} from 'react-router-dom'
+import {Route, Switch, Redirect} from 'react-router-dom'
 
 import Home from './Home'
 import AllNiches from './AllNiches'
 import AllMovies from './AllMovies'
 import Pornstars from './Pornstars'
 import NotFound from './NotFound'
+
+import history from '../history'
+import {ConnectedRouter} from 'connected-react-router/immutable'
 
 const
     theme = createMuiTheme({
@@ -31,32 +34,37 @@ const
         },
     }),
 
-    App = () => <MuiThemeProvider theme={theme}>
-        <div className='App'>
-            <MainHeader/>
-            <div className={css.page}>
-                <ul>
-                    <li><NavLink activeStyle={{color: 'red'}} to='/categories'>categories</NavLink></li>
-                    <li><NavLink activeStyle={{color: 'red'}} to='/all-movies.html'>all-movies.html</NavLink></li>
-                    <li><NavLink activeStyle={{color: 'red'}} to='/porn-stars.html'>porn-stars.html</NavLink></li>
-                </ul>
+    App = ({location}) => <MuiThemeProvider theme={theme}>
+        <ConnectedRouter history={history}>
+            <div className='App'>
+                <MainHeader/>
 
-                {/* <VideoList/> */}
                 <Switch>
-                    <Route path="/" component={Home}/>
-                    <Route path="/categories" component={AllNiches}/>
-                    <Route path="/all-movies.html" component={AllMovies}/>
-                    <Route path="/porn-stars.html" component={Pornstars}/>
+                    <Route exact path="/" render={() => (
+                        location.get('search') === '?categories'
+                            ? <Redirect to='/all-niches'/>
+                            : <Home/>
+                    )}/>
+                    <Route path="/all-niches" component={AllNiches}/>
+
+                    <Route exact path="/all-movies.html" render={() => <Redirect to='/all-movies'/>}/>
+                    <Route path="/all-movies" component={AllMovies}/>
+
+                    <Route exact path="/porn-stars.html" render={() => <Redirect to='/pornstars'/>}/>
+                    <Route path="/pornstars" component={Pornstars}/>
                     <Route path="*" component={NotFound}/>
                 </Switch>
+
+                <MainFooter/>
             </div>
-            <MainFooter/>
-        </div>
+        </ConnectedRouter>
     </MuiThemeProvider>
 
 export default compose(
 	connect(
-        null,
+        state => ({
+            location: state.getIn(['router', 'location'])
+        }),
 		dispatch => ({
 			resizeAction: event => dispatch(resize(event.srcElement.outerWidth))
 		})

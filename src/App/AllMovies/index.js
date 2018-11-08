@@ -1,7 +1,8 @@
 import React from 'react'
+import css from '../assets/_.module.scss'
 
 const
-    AllMovies = () => <div>        
+    AllMovies = () => <div className={css.page}>        
         <h1>AllMovies</h1>
     </div>
 
