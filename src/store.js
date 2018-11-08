@@ -7,7 +7,7 @@ import {routerMiddleware} from 'connected-react-router/immutable'
 import history from './history'
 
 const
-    sagaMiddleware = createSagaMiddleware(), 
+    sagaMiddleware = createSagaMiddleware(),
     enhancer = applyMiddleware(
         routerMiddleware(history),
         sagaMiddleware,
@@ -17,6 +17,4 @@ const
 
 store.runSaga = sagaMiddleware.run
 
-// dev only
-window.store = store
 export default store
