@@ -1,20 +1,24 @@
 import React from 'react'
-import {List, ListItem, ListItemIcon, ListItemText} from '@material-ui/core'
+import {connect} from 'react-redux'
+import {compose, lifecycle} from 'recompose'
+import {
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    CircularProgress
+} from '@material-ui/core'
 import FolderIcon from '@material-ui/icons/Folder'
-import {withStyles} from '@material-ui/core/styles'
-import {niches} from './fixtures'
+import {withStylesProps} from '../helpers'
+import {loadPageRequest} from './actions'
 import css from './assets/_.module.scss'
 
-console.log(niches)
 const
-    listHeight = Math.ceil(Object.keys(niches).length / 5) * 64,
-    styles = {
+    styles = (theme, {nichesList}) => ({
         root: {
-            width: '20%',
-            height: listHeight,
-            display: 'flex',
-            flexDirection: 'column',
-            flexWrap: 'wrap'
+            display: 'grid',
+            gridAutoFlow: 'column',
+            gridTemplateRows: `repeat(${Math.ceil(nichesList.size / 5)}, 1fr)`,
         },
         listItemTextRoot: {
             paddingLeft: 0
@@ -27,34 +31,68 @@ const
         secondaryTypography: {
             fontSize: 12
         }
-    },
+    }),
 
     ListItemLink = (props) => <ListItem button component="a" {...props} />,
 
-    AllNiches = ({classes}) => <div className={css.page}>
-        <List
-            component="div"
-            classes={{
-                root: classes.root
-            }}
-        >
-            {
-                Object.keys(niches).map((item, index) => <ListItemLink key={item} button href="/">
-                    <ListItemIcon>
-                        <FolderIcon/>
-                    </ListItemIcon>
-                    <ListItemText
-                        classes={{
-                            root: classes.listItemTextRoot,
-                            primary: classes.primaryTypography,
-                            secondary: classes.secondaryTypography
-                        }}
-                        primary={niches[item].name}
-                        secondary={niches[item].items_count}
-                    />
-                </ListItemLink>)
-            }
-        </List>
+    renderListItemLink = (x, classes) =>
+        <ListItemLink key={x.get('id')} button href="/">
+            <ListItemIcon>
+                <FolderIcon/>
+            </ListItemIcon>
+            <ListItemText
+                classes={{
+                    root: classes.listItemTextRoot,
+                    primary: classes.primaryTypography,
+                    secondary: classes.secondaryTypography
+                }}
+                primary={x.get('name')}
+                secondary={x.get('items_count')}
+            />
+        </ListItemLink>,
+
+    AllNiches = ({
+        classes,
+        nichesList,
+        isLoading,
+        isFailed
+    }) => <div className={css.page}>
+        { isFailed
+            ? <h1>Error! Page data loading is failed!</h1>
+            : <List
+                component="div"
+                classes={{
+                    root: classes.root
+                }}
+            >
+                {
+                    isLoading
+                        ? <CircularProgress/>
+                        : nichesList.map((x, idx) =>
+                            renderListItemLink(x, classes))
+                }
+            </List>
+        }
     </div>
 
-export default withStyles(styles)(AllNiches)
+export default compose(
+    connect(
+        state => ({
+            nichesList: state.getIn(['app', 'niches', 'nichesList']),
+            isLoading: state.getIn(['app', 'niches', 'isLoading']),
+            isLoaded: state.getIn(['app', 'niches', 'isLoaded']),
+            isFailed: state.getIn(['app', 'niches', 'isFailed']),
+        }),
+        dispatch => ({
+            loadPage: (event, value) => dispatch(loadPageRequest())
+        })
+    ),
+    lifecycle({
+        componentDidMount() {
+            if (!this.props.isLoading && !this.props.isLoaded) {
+                this.props.loadPage()
+            }
+        }
+    }),
+    withStylesProps(styles)
+)(AllNiches)

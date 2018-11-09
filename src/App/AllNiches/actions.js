@@ -2,12 +2,17 @@ import {createAction} from 'redux-actions'
 
 const
 	types = {
-		GET_INITIAL_DATA : 'ALL_NICHES@GET_INITIAL_DATA'
+		LOAD_PAGE_REQUEST: 'ALL_NICHES@LOAD_PAGE_REQUEST',
+		LOAD_PAGE_SUCCESS: 'ALL_NICHES@LOAD_PAGE_SUCCESS',
+		LOAD_PAGE_FAILURE: 'ALL_NICHES@LOAD_PAGE_FAILURE',
 	},
 
-	getInititalData = createAction(types.GET_INITIAL_DATA)
+	loadPageRequest = createAction(types.LOAD_PAGE_REQUEST),
+	loadPageSuccess = createAction(types.LOAD_PAGE_SUCCESS),
+	loadPageFailure = createAction(types.LOAD_PAGE_FAILURE)
 
 export {
-	getInititalData,
-	types
+	loadPageRequest,
+	loadPageSuccess,
+	loadPageFailure,
 }
