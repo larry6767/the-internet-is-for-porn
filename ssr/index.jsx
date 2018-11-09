@@ -33,7 +33,9 @@ const
     routeMapping = {
         '/': mkHandlers('get', [
             (req, res, next) =>
-                req.url === '' ? res.redirect('/all-niches') : next(),
+                req.url === '/?categories'
+                    ? res.redirect('/all-niches')
+                    : next(),
 
             (req, res) => res.end(renderToString(<div>TODO...</div>)),
         ]),
