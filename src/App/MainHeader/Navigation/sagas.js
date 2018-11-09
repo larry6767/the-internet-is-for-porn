@@ -10,5 +10,5 @@ function* togglePage(action) {
 }
 
 export default function* saga() {
-	yield takeEvery(types.TOGGLE_NAVIGATION, togglePage)
+    yield takeEvery(types.TOGGLE_NAVIGATION, togglePage)
 }

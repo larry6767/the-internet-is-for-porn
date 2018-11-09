@@ -19,7 +19,7 @@ export default combineReducers({
     burgerMenu: burgerMenuReducer,
 
     // MainHeader UI state reducer
-	ui: handleActions({
-		[toggleSearch]: state => state.set('isSearchShown', !state.get('isSearchShown'))
-	}, fromJS({isSearchShown: false}))
+    ui: handleActions({
+        [toggleSearch]: state => state.set('isSearchShown', !state.get('isSearchShown'))
+    }, fromJS({isSearchShown: false}))
 })

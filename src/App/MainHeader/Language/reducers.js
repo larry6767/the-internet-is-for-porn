@@ -5,8 +5,8 @@ import {fromJS} from 'immutable'
 
 export default combineReducers({
 
-	// Language UI state reducer
-	ui: handleActions({
-		[toggleLanguage]: (state, action) => state.set('currentLanguage', action.payload)
-	}, fromJS({currentLanguage: 'English'}))
+    // Language UI state reducer
+    ui: handleActions({
+        [toggleLanguage]: (state, action) => state.set('currentLanguage', action.payload)
+    }, fromJS({currentLanguage: 'English'}))
 })

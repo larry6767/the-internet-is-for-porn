@@ -1,13 +1,13 @@
 import {createAction} from 'redux-actions'
 
 const
-	types = {
-		RESIZE : 'APP@RESIZE'
-	},
+    types = {
+        RESIZE : 'APP@RESIZE'
+    },
 
-	resize = createAction(types.RESIZE)
+    resize = createAction(types.RESIZE)
 
 export {
-	resize,
-	types
+    resize,
+    types
 }

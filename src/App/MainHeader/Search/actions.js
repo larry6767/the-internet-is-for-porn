@@ -1,7 +1,7 @@
 import {createAction} from 'redux-actions'
 
 const
-	types = {
+    types = {
         SUGGESTIONS_FETCH_REQUEST: 'SEARCH@SUGGESTIONS_FETCH_REQUEST',
         SUGGESTIONS_CLEAR_REQUEST: 'SEARCH@SUGGESTIONS_CLEAR_REQUEST',
         TOGGLE_CHANGE: 'SEARCH@TOGGLE_CHANGE'

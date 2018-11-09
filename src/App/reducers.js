@@ -8,12 +8,12 @@ import nichesReducer from './AllNiches/reducers'
 // import videoListReducer from './VideoList/reducers'
 
 export default combineReducers({
-	mainHeader: mainHeaderReducer,
-	niches: nichesReducer,
-	// videoList: videoListReducer,
+    mainHeader: mainHeaderReducer,
+    niches: nichesReducer,
+    // videoList: videoListReducer,
 
-	// App UI state reducer
-	ui: handleActions({
-		[resize]: (state, action) => state.set('currentBreakpoint', getCurrentBreakpoint(action.paylod))
-	}, fromJS({currentBreakpoint: getCurrentBreakpoint(), contentMinHeight: ''}))
+    // App UI state reducer
+    ui: handleActions({
+        [resize]: (state, action) => state.set('currentBreakpoint', getCurrentBreakpoint(action.paylod))
+    }, fromJS({currentBreakpoint: getCurrentBreakpoint(), contentMinHeight: ''}))
 })

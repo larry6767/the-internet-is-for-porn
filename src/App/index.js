@@ -61,23 +61,23 @@ const
     </MuiThemeProvider>
 
 export default compose(
-	connect(
+    connect(
         state => ({
             location: state.getIn(['router', 'location'])
         }),
-		dispatch => ({
-			resizeAction: event => dispatch(resize(event.srcElement.outerWidth))
-		})
-	),
+        dispatch => ({
+            resizeAction: event => dispatch(resize(event.srcElement.outerWidth))
+        })
+    ),
 
-	lifecycle({
-		componentDidMount() {
-			this.listener = throttle(this.props.resizeAction.bind(this), 200)
-			window.addEventListener('resize', this.listener)
-		},
+    lifecycle({
+        componentDidMount() {
+            this.listener = throttle(this.props.resizeAction.bind(this), 200)
+            window.addEventListener('resize', this.listener)
+        },
 
-		componentWillUnmount() {
+        componentWillUnmount() {
             window.removeEventListener('resize', this.listener)
         }
-	})
+    })
 )(App)

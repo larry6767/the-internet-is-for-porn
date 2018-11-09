@@ -2,21 +2,21 @@
 
 html,
 body {
-	min-height: 100vh;
-	min-width: 320px;
+    min-height: 100vh;
+    min-width: 320px;
 }
 * {
     box-sizing: border-box;
 }
 *::before,
 *::after {
-	transition-duration: .2s;
-	transition-timing-function: ease;
+    transition-duration: .2s;
+    transition-timing-function: ease;
 }
 
 .page {
-	min-height: calc(100vh - 373px);
-	display: flex;
-	justify-content: center;
-	align-items: center;
+    min-height: calc(100vh - 373px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
