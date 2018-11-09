@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core'
 import FolderIcon from '@material-ui/icons/Folder'
 import {withStylesProps} from '../helpers'
-import {loadPageRequest} from './actions'
+import actions from './actions'
 import css from './assets/_.module.scss'
 
 const
@@ -84,7 +84,7 @@ export default compose(
             isFailed: state.getIn(['app', 'niches', 'isFailed']),
         }),
         dispatch => ({
-            loadPage: (event, value) => dispatch(loadPageRequest())
+            loadPage: (event, value) => dispatch(actions.loadPageRequest())
         })
     ),
     lifecycle({

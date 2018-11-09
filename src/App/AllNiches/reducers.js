@@ -1,23 +1,23 @@
 import {combineReducers} from 'redux-immutable'
 import {handleActions} from 'redux-actions'
 import {fromJS, List} from 'immutable'
-import {loadPageRequest, loadPageSuccess, loadPageFailure} from './actions'
+import actions from './actions'
 
 export default
     handleActions({
-        [loadPageRequest]: (state) => state.merge({
+        [actions.loadPageRequest]: (state) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
             nichesList: List(),
         }),
-        [loadPageSuccess]: (state, {payload}) => state.merge({
+        [actions.loadPageSuccess]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
             nichesList: fromJS(payload),
         }),
-        [loadPageFailure]: (state) => state.merge({
+        [actions.loadPageFailure]: (state) => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,

@@ -1,6 +1,6 @@
 import {map, pick} from "lodash"
 import {put, takeEvery} from 'redux-saga/effects'
-import {loadPageRequest, loadPageSuccess, loadPageFailure} from './actions'
+import actions from './actions'
 
 function* loadPageFlow() {
     try {
@@ -21,16 +21,16 @@ function* loadPageFlow() {
 
         const json = yield response.json()
 
-        yield put(loadPageSuccess(map(
+        yield put(actions.loadPageSuccess(map(
             json.page.TAGS_INFO.items,
             x => pick(x, ['id', 'name', 'sub_url', 'items_count'])
         )))
     } catch (err) {
         console.error('loadPageFlow is failed with exception:', err)
-        yield put(loadPageFailure())
+        yield put(actions.loadPageFailure())
     }
 }
 
 export default function* saga() {
-    yield takeEvery(loadPageRequest, loadPageFlow)
+    yield takeEvery(actions.loadPageRequest, loadPageFlow)
 }
