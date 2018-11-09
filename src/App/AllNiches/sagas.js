@@ -1,6 +1,7 @@
 import {map, pick} from "lodash"
 import {put, takeEvery} from 'redux-saga/effects'
 import actions from './actions'
+import errorActions from '../../generic/ErrorMessage/actions'
 
 function* loadPageFlow() {
     try {
@@ -28,6 +29,7 @@ function* loadPageFlow() {
     } catch (err) {
         console.error('loadPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())
+        yield put(errorActions.openErrorMessage())
     }
 }
 

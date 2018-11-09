@@ -2,7 +2,7 @@ import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import {Tabs, Tab} from '@material-ui/core'
 import css from './assets/_.module.scss'
-import {navigation, redirect} from './fixtures'
+import {navigation} from './fixtures'
 
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
@@ -19,7 +19,7 @@ const
         }
     },
 
-    Navigation = ({classes, ui, location, toggleNavigationAction}) => {
+    Navigation = ({classes, location, toggleNavigationAction}) => {
         return <div className={css.navigation}>
             <Tabs
                 value={Object.keys(navigation).indexOf(location.get('pathname'))}

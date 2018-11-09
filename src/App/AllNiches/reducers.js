@@ -1,4 +1,3 @@
-import {combineReducers} from 'redux-immutable'
 import {handleActions} from 'redux-actions'
 import {fromJS, List} from 'immutable'
 import actions from './actions'

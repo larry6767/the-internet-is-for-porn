@@ -6,9 +6,11 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    CircularProgress
+    CircularProgress,
+    Typography
 } from '@material-ui/core'
 import FolderIcon from '@material-ui/icons/Folder'
+import ErrorMessage from '../../generic/ErrorMessage'
 import {withStylesProps} from '../helpers'
 import actions from './actions'
 import css from './assets/_.module.scss'
@@ -58,7 +60,11 @@ const
         isFailed
     }) => <div className={css.page}>
         { isFailed
-            ? <h1>Error! Page data loading is failed!</h1>
+            ? <div>
+                <Typography variant="body1" gutterBottom>Some shit is happened 8==э</Typography>
+                <Typography variant="body1" gutterBottom>Please try again</Typography>
+                <ErrorMessage/>
+            </div>
             : <List
                 component="div"
                 classes={{
