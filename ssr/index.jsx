@@ -41,7 +41,7 @@ const
         ]),
     }
 
-// boilerplate to add expree.js handlers by iterating `routeMapping`
+// boilerplate to add express.js handlers by iterating `routeMapping`
 for (const route of Object.keys(routeMapping)) {
     const x = routeMapping[route]
 
