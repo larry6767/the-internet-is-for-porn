@@ -29,52 +29,53 @@ const
 
     Niche = ({classes, nicheUi, appUi, toggleNicheAction}) => <div className={css.niche}>
         {
-            appUi.get('currentBreakpoint') !== 'xs' ? <div className={css.nicheWrapper}>
-                <FormControl variant="outlined" className={css.nicheSelect}>
-                    <Select
-                        classes={{
-                            select: classes.select,
-                            icon: classes.icon
-                        }}
-                        value={nicheUi.get('currentNiche')}
-                        onChange={toggleNicheAction}
-                        input={
-                            <OutlinedInput
+            appUi.get('currentBreakpoint') === 'xs' || appUi.get('currentBreakpoint') === 'xxs' ?
+                <div className={css.nicheMobile}>
+                    {
+                        Object.keys(niches).map(key => <div
+                            key={key}
+                            className={nicheUi.get('currentNiche') === key ? css.nicheMobileItemSelected : css.nicheMobileItem}
+                            onClick={toggleNicheAction}
+                            data-value={key}
+                        >
+                            {`${String.fromCharCode(niches[key])} ${key}`}
+                        </div>)
+                    }
+                </div>
+                :
+                <div className={css.nicheWrapper}>
+                        <FormControl variant="outlined" className={css.nicheSelect}>
+                            <Select
                                 classes={{
-                                    notchedOutline: classes.notchedOutline
+                                    select: classes.select,
+                                    icon: classes.icon
                                 }}
-                                labelWidth={0}
-                                name="niche"
-                                id="niche"
-                            />
-                        }
-                    >
-                        {
-                            Object.keys(niches).map(key => {
-                                return <MenuItem
-                                    key={key}
-                                    value={key}>
-                                        <div className={css.textIcon}>{String.fromCharCode(niches[key])}</div>
-                                        {key}
-                                </MenuItem>
-                            })
-                        }
-                    </Select>
-                </FormControl>
-            </div>
-            :
-            <div className={css.nicheMobile}>
-                {
-                    Object.keys(niches).map(key => <div
-                        key={key}
-                        className={nicheUi.get('currentNiche') === key ? css.nicheMobileItemSelected : css.nicheMobileItem}
-                        onClick={toggleNicheAction}
-                        data-value={key}
-                    >
-                        {`${String.fromCharCode(niches[key])} ${key}`}
-                    </div>)
-                }
-            </div>
+                                value={nicheUi.get('currentNiche')}
+                                onChange={toggleNicheAction}
+                                input={
+                                    <OutlinedInput
+                                        classes={{
+                                            notchedOutline: classes.notchedOutline
+                                        }}
+                                        labelWidth={0}
+                                        name="niche"
+                                        id="niche"
+                                    />
+                                }
+                            >
+                                {
+                                    Object.keys(niches).map(key => {
+                                        return <MenuItem
+                                            key={key}
+                                            value={key}>
+                                                <div className={css.textIcon}>{String.fromCharCode(niches[key])}</div>
+                                                {key}
+                                        </MenuItem>
+                                    })
+                                }
+                            </Select>
+                        </FormControl>
+                    </div>
         }
     </div>
 
