@@ -13,7 +13,7 @@ import {toggleSearch} from './actions'
 const
     MainHeader = ({appUi, mainHeaderUi, toggleSearchAction}) => {
         const
-            isXS = appUi.get('currentBreakpoint') === 'xs',
+            isXSorXXS = appUi.get('currentBreakpoint') === 'xs' || appUi.get('currentBreakpoint') === 'xxs',
             isSearchShown = mainHeaderUi.get('isSearchShown')
 
         return <header className={css.header}>
@@ -21,20 +21,20 @@ const
                 <div className={css.topInner}>
                     <div className={css.searchWrapper}>
                         {
-                            isXS && isSearchShown ? '' :
-                            isXS ? <BurgerMenu/> : ''
+                            isXSorXXS && isSearchShown ? '' :
+                            isXSorXXS ? <BurgerMenu/> : ''
                         }
-                        {   
-                            isXS && isSearchShown ? '' :
+                        {
+                            isXSorXXS && isSearchShown ? '' :
                             <img className={css.logo} src="/img/logo.png" alt="logo"/>
                         }
                         {
-                            isXS && isSearchShown ? <div className={css.searchIconClose} onClick={toggleSearchAction}></div> :
-                            isXS ? <div className={css.searchIcon} onClick={toggleSearchAction}></div> : ''
+                            isXSorXXS && isSearchShown ? <div className={css.searchIconClose} onClick={toggleSearchAction}></div> :
+                            isXSorXXS ? <div className={css.searchIcon} onClick={toggleSearchAction}></div> : ''
                         }
                         {
-                            !isXS ? <Search/> :
-                            isXS && isSearchShown ? <Search/> : ''
+                            !isXSorXXS ? <Search/> :
+                            isXSorXXS && isSearchShown ? <Search/> : ''
                         }
                     </div>
                     <Niche/>

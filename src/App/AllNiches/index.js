@@ -16,29 +16,56 @@ import actions from './actions'
 import css from './assets/_.module.scss'
 
 const
-    styles = (theme, {nichesList}) => ({
+    styles = (theme, {nichesList, currentBreakpoint, isLoading}) => ({
         root: {
+            width: isLoading ? 'auto' : '100%',
             display: 'grid',
             gridAutoFlow: 'column',
-            gridTemplateRows: `repeat(${Math.ceil(nichesList.size / 5)}, 1fr)`,
+            gridTemplateRows:
+                currentBreakpoint === 'md'
+                    ? `repeat(${Math.ceil(nichesList.size / 4)}, 1fr)`
+                    : currentBreakpoint === 'sm'
+                    ? `repeat(${Math.ceil(nichesList.size / 3)}, 1fr)`
+                    : currentBreakpoint === 'xs'
+                    ? `repeat(${Math.ceil(nichesList.size / 2)}, 1fr)`
+                    : currentBreakpoint === 'xxs'
+                    ? `repeat(${Math.ceil(nichesList.size / 1)}, 1fr)`
+                    : `repeat(${Math.ceil(nichesList.size / 5)}, 1fr)`,
         },
         listItemTextRoot: {
-            paddingLeft: 0
+            paddingLeft: 0,
+            paddingRight: 0,
+            display: currentBreakpoint === 'xxs'
+                ? 'flex'
+                : 'block',
+            alignItems: 'center',
         },
         primaryTypography: {
             fontSize: 14,
             whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis'
+            textOverflow: 'ellipsis',
+            marginRight: currentBreakpoint === 'xxs'
+                ? 10
+                : 0
         },
         secondaryTypography: {
             fontSize: 12
+        },
+        itemGutters: {
+            paddingLeft: 10,
+            paddingRight: 10
         }
     }),
 
-    ListItemLink = (props) => <ListItem button component="a" {...props} />,
-
     renderListItemLink = (x, classes) =>
-        <ListItemLink key={x.get('id')} button href="/">
+        <ListItem
+            key={x.get('id')}
+            button href={x.get('sub_url')}
+            component="a"
+            classes={{
+                gutters: classes.itemGutters
+            }}
+        >
             <ListItemIcon>
                 <FolderIcon/>
             </ListItemIcon>
@@ -51,13 +78,13 @@ const
                 primary={x.get('name')}
                 secondary={x.get('items_count')}
             />
-        </ListItemLink>,
+        </ListItem>,
 
     AllNiches = ({
         classes,
         nichesList,
         isLoading,
-        isFailed
+        isFailed,
     }) => <div className={css.page}>
         { isFailed
             ? <div>
@@ -84,6 +111,7 @@ const
 export default compose(
     connect(
         state => ({
+            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
             nichesList: state.getIn(['app', 'niches', 'nichesList']),
             isLoading: state.getIn(['app', 'niches', 'isLoading']),
             isLoaded: state.getIn(['app', 'niches', 'isLoaded']),
