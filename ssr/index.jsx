@@ -2,6 +2,7 @@ import React from 'react'
 import yargs from 'yargs'
 import express from 'express'
 import {renderToString} from 'react-dom/server'
+import {App} from '../src/App/index'
 
 const
     {port, host} = yargs
