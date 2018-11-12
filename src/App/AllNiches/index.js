@@ -38,7 +38,7 @@ const
     ListItemLink = (props) => <ListItem button component="a" {...props} />,
 
     renderListItemLink = (x, classes) =>
-        <ListItemLink key={x.get('id')} button href="/">
+        <ListItemLink key={x.get('id')} button href={x.get('sub_url')}>
             <ListItemIcon>
                 <FolderIcon/>
             </ListItemIcon>
