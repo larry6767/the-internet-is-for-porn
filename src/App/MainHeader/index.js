@@ -5,10 +5,15 @@ import HDSwitch from './HDSwitch'
 import Language from './Language'
 import Search from './Search'
 import BurgerMenu from './BurgerMenu'
-import css from './assets/_.module.scss'
+
+// TODO FIXME refactor this temporary hack for SSR
+//import css from './assets/_.module.scss'
 
 import {connect} from 'react-redux'
 import {toggleSearch} from './actions'
+
+// TODO FIXME refactor this temporary hack for SSR
+const css = {}
 
 const
     MainHeader = ({appUi, mainHeaderUi, toggleSearchAction}) => {

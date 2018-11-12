@@ -1,12 +1,18 @@
 import React from 'react'
 import {Select, MenuItem, FormControl, OutlinedInput} from '@material-ui/core'
-import css from './assets/_.module.scss'
+
+// TODO FIXME refactor this temporary hack for SSR
+//import css from './assets/_.module.scss'
+
 import {niches} from './fixtures'
 import {withStyles} from '@material-ui/core/styles'
 
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {toggleNiche} from './actions'
+
+// TODO FIXME refactor this temporary hack for SSR
+const css = {}
 
 const
     styles = {

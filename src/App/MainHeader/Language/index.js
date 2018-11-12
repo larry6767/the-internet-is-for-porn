@@ -1,12 +1,18 @@
 import React from 'react'
 import {Select, MenuItem, OutlinedInput} from "@material-ui/core"
-import css from './assets/_.module.scss'
+
+// TODO FIXME refactor this temporary hack for SSR
+//import css from './assets/_.module.scss'
+
 import {withStyles} from '@material-ui/core/styles'
 import {languages} from './fixtures'
 
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {toggleLanguage} from './actions'
+
+// TODO FIXME refactor this temporary hack for SSR
+const css = {}
 
 const
     styles = {
@@ -43,7 +49,7 @@ const
         }
     >
         {
-            languages.map(language => <MenuItem 
+            languages.map(language => <MenuItem
                 classes={{
                     root: classes.menuItemRoot
                 }}

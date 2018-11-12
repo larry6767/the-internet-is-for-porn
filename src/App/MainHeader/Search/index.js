@@ -9,7 +9,9 @@ import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from '@material-ui/core/styles';
 
-import css from './assets/_.module.scss'
+// TODO FIXME refactor this temporary hack for SSR
+//import css from './assets/_.module.scss'
+const css = {}
 
 const suggestions = [
   { label: 'Afghanistan' },

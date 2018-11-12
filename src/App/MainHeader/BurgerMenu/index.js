@@ -2,7 +2,9 @@ import React from 'react'
 import {Menu, MenuItem, IconButton} from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import Language from '../Language'
-import css from './assets/_.module.scss'
+
+// TODO FIXME refactor this temporary hack for SSR
+//import css from './assets/_.module.scss'
 
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
@@ -12,6 +14,9 @@ import {toggleNavigation} from '../Navigation/actions'
 import {openBurgerMenu, closeBurgerMenu} from './actions'
 
 import {withStyles} from '@material-ui/core/styles'
+
+// TODO FIXME refactor this temporary hack for SSR
+const css = {}
 
 const
     styles = {

@@ -1,12 +1,18 @@
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import {Tabs, Tab} from '@material-ui/core'
-import css from './assets/_.module.scss'
+
+// TODO FIXME refactor this temporary hack for SSR
+//import css from './assets/_.module.scss'
+
 import {navigation} from './fixtures'
 
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {toggleNavigation} from './actions'
+
+// TODO FIXME refactor this temporary hack for SSR
+const css = {}
 
 const
     styles = {
