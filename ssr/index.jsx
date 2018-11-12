@@ -1,6 +1,10 @@
+import {readFileSync} from 'fs'
+import {join} from 'path'
+import {set} from 'lodash'
 import React from 'react'
 import yargs from 'yargs'
 import express from 'express'
+import favicon from 'serve-favicon'
 import {fromJS} from 'immutable'
 import {createStore} from 'redux'
 import {Provider} from 'react-redux'
@@ -21,6 +25,7 @@ const
         })
         .argv,
 
+    publicDir = join(__dirname, '..', 'public'),
     app = express(),
     allowedMethods = ['get'],
 
@@ -46,12 +51,27 @@ const
         }
     }),
 
-    newStore = initialStore => createStore(createRootReducer(x => x), initialStore),
+    reducersPatch = reducers => set(reducers, 'router', x => x),
+    newStore = initialStore => createStore(createRootReducer(reducersPatch), initialStore),
+
+    layoutTemplate = (result => ({
+        pre: `${result[0]}<div id="root">`,
+        post: `</div>${result[1]}`,
+    }))(
+        readFileSync(join(publicDir, 'index.html'))
+            .toString()
+            .replace(/%PUBLIC_URL%/g, '')
+            .split('<div id="root"></div>')
+    ),
 
     renderComponent = (childComponent, store) =>
+        layoutTemplate.pre +
+
         renderToString(<Provider store={store}>
             <App>{() => childComponent}</App>
-        </Provider>),
+        </Provider>) +
+
+        layoutTemplate.post,
 
     routeMapping = {
         '/': mkHandlers('get', [
@@ -71,11 +91,17 @@ for (const route of Object.keys(routeMapping)) {
     if (Array.isArray(x)) {
         for (const { method, handler } of x)
             app[method](route, handler)
+    } else if (x !== null && typeof x === 'object') {
+        app[method](x.route, x.handler)
     } else {
         throw new Error(
             `Unexpected mapped route ("${route}") handler type: ${typeof x}`)
     }
 }
+
+app.use(favicon(join(publicDir, 'favicon.ico')))
+app.use('/img', express.static(join(publicDir, 'img')))
+app.get('/manifest.json', (req, res) => res.sendFile(join(publicDir, '/manifest.json')))
 
 app.listen(port, host, () => {
     console.debug(`Start listening HTTP-server on http://${host}:${port}...`)
