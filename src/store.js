@@ -1,9 +1,10 @@
 import {createStore, applyMiddleware} from 'redux'
-import createRootReducer from './reducers.js'
-import {fromJS} from 'immutable'
-import logger from './middlewares/logger'
 import createSagaMiddleware from 'redux-saga'
-import {routerMiddleware} from 'connected-react-router/immutable'
+import {connectRouter, routerMiddleware} from 'connected-react-router/immutable'
+import {fromJS} from 'immutable'
+import {set} from 'lodash'
+import logger from './middlewares/logger'
+import createRootReducer from './reducers.js'
 import history from './history'
 
 const
@@ -13,7 +14,8 @@ const
         sagaMiddleware,
         logger
     ),
-    store = createStore(createRootReducer(history), fromJS({}), enhancer)
+    reducersPatch = reducers => set(reducers, 'router', connectRouter(history)),
+    store = createStore(createRootReducer(reducersPatch), fromJS({}), enhancer)
 
 store.runSaga = sagaMiddleware.run
 

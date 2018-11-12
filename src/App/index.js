@@ -5,7 +5,9 @@ import MainFooter from './MainFooter'
 
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles'
 import {blueGrey, amber} from '@material-ui/core/colors/'
-//import './assets/_.module.scss'
+
+// TODO FIXME refactor this temporary hack for SSR
+//import css from './assets/_.module.scss'
 
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'

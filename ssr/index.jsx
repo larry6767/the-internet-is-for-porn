@@ -1,8 +1,13 @@
 import React from 'react'
 import yargs from 'yargs'
 import express from 'express'
+import {fromJS} from 'immutable'
+import {createStore} from 'redux'
+import {Provider} from 'react-redux'
 import {renderToString} from 'react-dom/server'
-import {App} from '../src/App/index'
+import createRootReducer from '../src/reducers.js'
+import {App} from '../src/App'
+import {Home} from '../src/App/Home'
 
 const
     {port, host} = yargs
@@ -31,6 +36,23 @@ const
     mkHandlers = (method, handlers) =>
         handlers.map(handler => mkHandler(method, handler)),
 
+    initialStore = fromJS({
+        router: {
+            location: {
+                hash: '',
+                pathname: '/',
+                search: '',
+            }
+        }
+    }),
+
+    newStore = initialStore => createStore(createRootReducer(x => x), initialStore),
+
+    renderComponent = (childComponent, store) =>
+        renderToString(<Provider store={store}>
+            <App>{() => childComponent}</App>
+        </Provider>),
+
     routeMapping = {
         '/': mkHandlers('get', [
             (req, res, next) =>
@@ -38,7 +60,7 @@ const
                     ? res.redirect('/all-niches')
                     : next(),
 
-            (req, res) => res.end(renderToString(<div>TODO...</div>)),
+            (req, res) => res.end(renderComponent(<Home/>, newStore(initialStore))),
         ]),
     }
 

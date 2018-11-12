@@ -18,7 +18,10 @@ const css = {}
 const
     MainHeader = ({appUi, mainHeaderUi, toggleSearchAction}) => {
         const
-            isXSorXXS = appUi.get('currentBreakpoint') === 'xs' || appUi.get('currentBreakpoint') === 'xxs',
+            isXSorXXS =
+                appUi.get('currentBreakpoint') === 'xs' ||
+                appUi.get('currentBreakpoint') === 'xxs',
+
             isSearchShown = mainHeaderUi.get('isSearchShown')
 
         return <header className={css.header}>
@@ -34,8 +37,13 @@ const
                             <img className={css.logo} src="/img/logo.png" alt="logo"/>
                         }
                         {
-                            isXSorXXS && isSearchShown ? <div className={css.searchIconClose} onClick={toggleSearchAction}></div> :
-                            isXSorXXS ? <div className={css.searchIcon} onClick={toggleSearchAction}></div> : ''
+                            isXSorXXS && isSearchShown ? <div
+                                className={css.searchIconClose}
+                                onClick={toggleSearchAction}
+                            /> : isXSorXXS ? <div
+                                className={css.searchIcon}
+                                onClick={toggleSearchAction}
+                            /> : ''
                         }
                         {
                             !isXSorXXS ? <Search/> :

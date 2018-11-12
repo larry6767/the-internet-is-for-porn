@@ -25,31 +25,29 @@ const
         }
     },
 
-    Navigation = ({classes, location, toggleNavigationAction}) => {
-        return <div className={css.navigation}>
-            <Tabs
-                value={Object.keys(navigation).indexOf(location.get('pathname'))}
-                onChange={toggleNavigationAction}
-                indicatorColor="primary"
-                textColor="primary"
-                scrollable
-                scrollButtons="off"
-            >
-                {
-                    Object.keys(navigation).map((item, index) => {
-                        return <Tab
-                            key={index}
-                            label={navigation[`${item}`]}
-                            classes={{
-                                root: classes.labelRoot,
-                                label: classes.label
-                            }}
-                        />
-                    })
-                }
-            </Tabs>
-        </div>
-    }
+    Navigation = ({classes, location, toggleNavigationAction}) => <div className={css.navigation}>
+        <Tabs
+            value={Object.keys(navigation).indexOf(location.get('pathname'))}
+            onChange={toggleNavigationAction}
+            indicatorColor="primary"
+            textColor="primary"
+            scrollable
+            scrollButtons="off"
+        >
+            {
+                Object.keys(navigation).map((item, index) => {
+                    return <Tab
+                        key={index}
+                        label={navigation[`${item}`]}
+                        classes={{
+                            root: classes.labelRoot,
+                            label: classes.label
+                        }}
+                    />
+                })
+            }
+        </Tabs>
+    </div>
 
 export default compose(
     connect(
