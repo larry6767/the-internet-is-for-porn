@@ -1,52 +1,52 @@
 import React from 'react'
 import {Typography} from '@material-ui/core'
-
-// TODO FIXME refactor this temporary hack for SSR
-//import css from './assets/_.module.scss'
-
 import {IMG_PATH} from '../../config'
 import {links, linksToProtect} from './fixtures'
-
-// TODO FIXME refactor this temporary hack for SSR
-const css = {}
+import {
+    Footer,
+    FooterInner,
+    TextBlock,
+    LinkList,
+    LinkItem,
+    Link,
+    QRCodeBlock
+} from './assets'
 
 const
-    SimpleAppBar = () => <div className={css.footer}>
-        <div className={css.footerInner}>
-            <div className={css.textBlock}>
-                <ul className={css.linkList}>
+    SimpleAppBar = () => <Footer>
+        <FooterInner>
+            <TextBlock>
+                <LinkList>
                     {
-                        links.map(link => <li className={css.linkItem} key={link.id}>
-                            <a
+                        links.map(link => <LinkItem key={link.id}>
+                            <Link
                                 href={link.href}
-                                className={css.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
                                 {link.text}
-                            </a>
-                        </li>
+                            </Link>
+                        </LinkItem>
                     )}
-                </ul>
+                </LinkList>
 
                 <Typography variant="body2" gutterBottom>
                     Parents&nbsp;&mdash; Protect your children from adult content with these services:
                 </Typography>
 
-                <ul className={css.linkList}>
+                <LinkList>
                     {
-                        linksToProtect.map(link => <li className={css.linkItem} key={link.id}>
-                            <a
+                        linksToProtect.map(link => <LinkItem key={link.id}>
+                            <Link
                                 href={link.href}
-                                className={css.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
                                 {link.text}
-                            </a>
-                        </li>
+                            </Link>
+                        </LinkItem>
                     )}
-                </ul>
+                </LinkList>
 
                 <Typography variant="body2" gutterBottom color="textSecondary">
                     Disclaimer: All models on&nbsp;this website are 18&nbsp;years or&nbsp;older.
@@ -59,11 +59,11 @@ const
                 <Typography variant="body2" gutterBottom color="textSecondary">
                     {(new Date()).getFullYear()} &copy;&nbsp;Copyright videosection.com
                 </Typography>
-            </div>
-            <div className={css.QRCodeBlock}>
+            </TextBlock>
+            <QRCodeBlock>
                 <img src={`${IMG_PATH}qrcode.svg`} alt="qrcode"/>
-            </div>
-        </div>
-    </div>
+            </QRCodeBlock>
+        </FooterInner>
+    </Footer>
 
 export default SimpleAppBar
