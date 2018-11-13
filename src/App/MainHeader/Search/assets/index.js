@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const Search = styled.header`
+export const Search = styled.div`
     position: relative;
     width: 100%;
 
@@ -38,7 +38,7 @@ export const Search = styled.header`
 //     }
 // `
 
-export const SearchButton = styled.header`
+export const SearchButton = styled.button`
     position: absolute;
     top: 0;
     right: 0;
