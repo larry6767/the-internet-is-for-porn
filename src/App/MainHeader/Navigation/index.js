@@ -1,18 +1,11 @@
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
 import {Tabs, Tab} from '@material-ui/core'
-
-// TODO FIXME refactor this temporary hack for SSR
-//import css from './assets/_.module.scss'
-
 import {navigation} from './fixtures'
-
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {toggleNavigation} from './actions'
-
-// TODO FIXME refactor this temporary hack for SSR
-const css = {}
+import {Nav} from './assets'
 
 const
     styles = {
@@ -25,7 +18,7 @@ const
         }
     },
 
-    Navigation = ({classes, location, toggleNavigationAction}) => <div className={css.navigation}>
+    Navigation = ({classes, location, toggleNavigationAction}) => <Nav>
         <Tabs
             value={Object.keys(navigation).indexOf(location.get('pathname'))}
             onChange={toggleNavigationAction}
@@ -47,7 +40,7 @@ const
                 })
             }
         </Tabs>
-    </div>
+    </Nav>
 
 export default compose(
     connect(
