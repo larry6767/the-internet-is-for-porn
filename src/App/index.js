@@ -23,7 +23,10 @@ const
         },
     })
 
-export const App = ({location, children}) => <MuiThemeProvider theme={muiTheme}>
+export const App = ({sheetsManager, location, children}) => <MuiThemeProvider
+    theme={muiTheme}
+    sheetsManager={sheetsManager}
+>
     <SCThemeProvider theme={theme}>
         <Fragment>
             <Normalize/>

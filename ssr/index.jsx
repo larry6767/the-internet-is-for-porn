@@ -10,6 +10,9 @@ import {fromJS} from 'immutable'
 import {createStore} from 'redux'
 import {Provider} from 'react-redux'
 import {ServerStyleSheet} from 'styled-components'
+import {SheetsRegistry} from 'jss'
+import JssProvider from 'react-jss/lib/JssProvider'
+import {createGenerateClassName} from '@material-ui/core/styles'
 import {renderToNodeStream} from 'react-dom/server'
 import createRootReducer from '../src/reducers.js'
 import {App} from '../src/App'
@@ -68,19 +71,34 @@ const
 
     // renders a component to a stream of a server `response` object
     renderComponent = (res, childComponent, store) => {
-        res.write(layoutTemplate.pre);
+        res.write(layoutTemplate.pre)
 
         const
-            sheet = new ServerStyleSheet(),
+            serverStyleSheet = new ServerStyleSheet(),
+            jssSheetsRegistry = new SheetsRegistry(),
+            generateClassName = createGenerateClassName(),
+            sheetsManager = new Map(), // is needed to fix styles not rendered after page reload
 
-            jsx = sheet.collectStyles(<Provider store={store}>
-                <App>{() => childComponent}</App>
+            jsx = serverStyleSheet.collectStyles(<Provider store={store}>
+                <JssProvider registry={jssSheetsRegistry} generateClassName={generateClassName}>
+                    <App sheetsManager={sheetsManager}>{() => childComponent}</App>
+                </JssProvider>
             </Provider>)
 
-        sheet
+        serverStyleSheet
             .interleaveWithNodeStream(renderToNodeStream(jsx))
+            .on('end', () => {
+                res.write('<style id="jss-server-side">')
+
+                for (const styleSheet of jssSheetsRegistry.registry)
+                    if (styleSheet.attached)
+                        res.write(`${styleSheet}\n`)
+
+                res.write('</style>')
+
+                res.end(layoutTemplate.post)
+            })
             .pipe(res, {end: false})
-            .on('end', () => res.end(layoutTemplate.post))
     },
 
     routeMapping = {

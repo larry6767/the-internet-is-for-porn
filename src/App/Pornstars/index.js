@@ -1,8 +1,10 @@
 import React from 'react'
-import css from '../assets/_.module.scss'
+
+// TODO FIXME refactor styles
+const css = {}
 
 const
-    Pornstars = () => <div className={css.page}>        
+    Pornstars = () => <div className={css.page}>
         <h1>Pornstars</h1>
     </div>
 

@@ -1,5 +1,7 @@
 import React from 'react'
-import css from '../assets/_.module.scss'
+
+// TODO FIXME refactor styles
+const css = {}
 
 const
     NotFound = () => <div className={css.page}>

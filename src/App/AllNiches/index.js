@@ -13,7 +13,9 @@ import FolderIcon from '@material-ui/icons/Folder'
 import ErrorMessage from '../../generic/ErrorMessage'
 import {withStylesProps} from '../helpers'
 import actions from './actions'
-import css from './assets/_.module.scss'
+
+// TODO FIXME refactor styles
+const css = {}
 
 const
     styles = (theme, {nichesList, currentBreakpoint, isLoading}) => ({
