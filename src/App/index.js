@@ -1,21 +1,19 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import MainHeader from './MainHeader'
-// import VideoList from './VideoList'
 import MainFooter from './MainFooter'
-
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles'
 import {blueGrey, amber} from '@material-ui/core/colors/'
-
-// TODO FIXME refactor this temporary hack for SSR
-//import css from './assets/_.module.scss'
-
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
 import {throttle} from 'lodash'
 import {resize} from './actions'
+import {ThemeProvider as SCThemeProvider} from 'styled-components'
+import theme from './assets/theme'
+import GlobalStyle from './assets/style'
+import {Normalize} from 'styled-normalize'
 
 const
-    theme = createMuiTheme({
+    muiTheme = createMuiTheme({
         palette: {
             primary: blueGrey,
             secondary: amber,
@@ -25,12 +23,19 @@ const
         },
     })
 
-export const App = ({location, children}) => <MuiThemeProvider theme={theme}>
-    <div className='App'>
-        <MainHeader/>
-        {children ? children({location}) : null}
-        <MainFooter/>
-    </div>
+export const App = ({location, children}) => <MuiThemeProvider theme={muiTheme}>
+    <SCThemeProvider theme={theme}>
+        <Fragment>
+            <Normalize/>
+            <GlobalStyle/>
+
+            <div className='App'>
+                <MainHeader/>
+                {children ? children({location}) : null}
+                <MainFooter/>
+            </div>
+        </Fragment>
+    </SCThemeProvider>
 </MuiThemeProvider>
 
 export default compose(
