@@ -1,5 +1,6 @@
 import {readFileSync} from 'fs'
 import {join} from 'path'
+import stream from 'stream'
 import {set} from 'lodash'
 import React from 'react'
 import yargs from 'yargs'
@@ -8,7 +9,8 @@ import favicon from 'serve-favicon'
 import {fromJS} from 'immutable'
 import {createStore} from 'redux'
 import {Provider} from 'react-redux'
-import {renderToString} from 'react-dom/server'
+import {ServerStyleSheet} from 'styled-components'
+import {renderToNodeStream} from 'react-dom/server'
 import createRootReducer from '../src/reducers.js'
 import {App} from '../src/App'
 import {Home} from '../src/App/Home'
@@ -64,14 +66,22 @@ const
             .split('<div id="root"></div>')
     ),
 
-    renderComponent = (childComponent, store) =>
-        layoutTemplate.pre +
+    // renders a component to a stream of a server `response` object
+    renderComponent = (res, childComponent, store) => {
+        res.write(layoutTemplate.pre);
 
-        renderToString(<Provider store={store}>
-            <App>{() => childComponent}</App>
-        </Provider>) +
+        const
+            sheet = new ServerStyleSheet(),
 
-        layoutTemplate.post,
+            jsx = sheet.collectStyles(<Provider store={store}>
+                <App>{() => childComponent}</App>
+            </Provider>)
+
+        sheet
+            .interleaveWithNodeStream(renderToNodeStream(jsx))
+            .pipe(res, {end: false})
+            .on('end', () => res.end(layoutTemplate.post))
+    },
 
     routeMapping = {
         '/': mkHandlers('get', [
@@ -80,7 +90,7 @@ const
                     ? res.redirect('/all-niches')
                     : next(),
 
-            (req, res) => res.end(renderComponent(<Home/>, newStore(initialStore))),
+            (req, res) => renderComponent(res, <Home/>, newStore(initialStore)),
         ]),
     }
 
