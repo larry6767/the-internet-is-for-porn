@@ -1,5 +1,4 @@
 import React from 'react'
-import css from '../assets/_.module.scss'
 import {Page} from './assets'
 
 const
