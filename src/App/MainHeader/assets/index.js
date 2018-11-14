@@ -38,6 +38,8 @@ export const SearchWrapper = styled(Wrapper)`
 
 export const NavigationWrapper = styled(Wrapper)`
     padding-left: 177px;
+    display: flex;
+    justify-content: space-between;
 
     ${({theme}) => theme.media.sm`padding-left: 0;`}
 `
@@ -73,7 +75,7 @@ export const Icon = styled.div`
 `
 
 export const BottomInner = styled.div`
-    border-bottom: 1px solid $additional-color;
+    border-bottom: 1px solid ${({theme}) => theme.colors.additionalColor};
     display: flex;
     justify-content: space-between;
     align-items: center;

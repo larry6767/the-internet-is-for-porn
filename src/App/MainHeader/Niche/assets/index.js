@@ -11,8 +11,6 @@ export const NicheWrapper = styled.div`
     flex-grow: 1;
     display: flex;
     justify-content: flex-end;
-
-    ${({theme}) => theme.media.xs`display: none;`}
 `
 
 export const NicheMobile = styled.div`

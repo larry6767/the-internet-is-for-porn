@@ -4,7 +4,7 @@ export const Search = styled.div`
     position: relative;
     width: 100%;
 
-    ${({theme}) => theme.media.xs`width: calc(100% - 60px); margin-bottom: 20px; order: 1;`}
+    ${({theme}) => theme.media.mobile`width: calc(100% - 60px); order: 1;`}
 `
 
 // export const SearchInput = styled.header`

@@ -1,9 +1,9 @@
 import React from 'react'
-import css from '../assets/_.module.scss'
+import {Page} from './assets'
 
 const
-    NotFound = () => <div className={css.page}>
+    NotFound = () => <Page>
         <h1>NotFound</h1>
-    </div>
+    </Page>
 
 export default NotFound

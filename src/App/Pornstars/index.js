@@ -1,9 +1,10 @@
 import React from 'react'
 import css from '../assets/_.module.scss'
+import {Page} from './assets'
 
 const
-    Pornstars = () => <div className={css.page}>        
+    Pornstars = () => <Page>
         <h1>Pornstars</h1>
-    </div>
+    </Page>
 
 export default Pornstars
