@@ -14,8 +14,7 @@ import {
     SearchWrapper,
     NavigationWrapper,
     Logo,
-    SearchIcon,
-    SearchIconClose,
+    Icon,
     BottomInner
 } from './assets'
 
@@ -41,15 +40,12 @@ const
                             <Logo src="/img/logo.png" alt="logo"/>
                         }
                         {
-                            isXSorXXS && isSearchShown ?
-                                <SearchIconClose
+                            isXSorXXS
+                                ? <Icon
+                                    type={isXSorXXS && isSearchShown ? 'close' : isXSorXXS ? 'search' : ''}
                                     onClick={toggleSearchAction}
                                 />
-                            : isXSorXXS ?
-                                <SearchIcon
-                                    onClick={toggleSearchAction}
-                                />
-                            : ''
+                                : ''
                         }
                         {
                             !isXSorXXS ? <Search/> :
@@ -59,15 +55,19 @@ const
                     <Niche/>
                 </TopInner>
             </Top>
-            <div>
-                <BottomInner>
-                    <NavigationWrapper>
-                        <Navigation/>
-                        <HDSwitch/>
-                    </NavigationWrapper>
-                    <Language/>
-                </BottomInner>
-            </div>
+            {
+                !isXSorXXS
+                    ? <div>
+                        <BottomInner>
+                            <NavigationWrapper>
+                                <Navigation/>
+                                <HDSwitch/>
+                            </NavigationWrapper>
+                            <Language/>
+                        </BottomInner>
+                    </div>
+                    : ''
+            }
         </Header>
     }
 

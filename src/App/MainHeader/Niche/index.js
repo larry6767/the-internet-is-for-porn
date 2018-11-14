@@ -33,7 +33,7 @@ const
         }
     },
 
-    Niche = ({classes, nicheUi, appUi, toggleNicheAction}) =>{console.log(appUi.get('currentBreakpoint') === 'xs' || appUi.get('currentBreakpoint') === 'xxs'); return <NicheBlock>
+    Niche = ({classes, nicheUi, appUi, toggleNicheAction}) => <NicheBlock>
         {
             appUi.get('currentBreakpoint') === 'xs' || appUi.get('currentBreakpoint') === 'xxs' ?
                 <NicheMobile>
@@ -95,7 +95,7 @@ const
                     </FormControl>
                 </NicheWrapper>
         }
-    </NicheBlock>}
+    </NicheBlock>
 
 export default compose(
     connect(

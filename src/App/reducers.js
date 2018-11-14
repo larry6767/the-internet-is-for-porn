@@ -15,6 +15,6 @@ export default combineReducers({
     // App UI state reducer
     ui: handleActions({
         [resize]: (state, action) =>
-            state.set('currentBreakpoint', getCurrentBreakpoint(action.paylod))
+            state.set('currentBreakpoint', getCurrentBreakpoint(action.payload))
     }, fromJS({currentBreakpoint: getCurrentBreakpoint()}))
 })
