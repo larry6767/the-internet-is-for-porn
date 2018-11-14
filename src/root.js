@@ -15,6 +15,7 @@ const
     Root = () => <Provider store={store}>
         <ConnectedRouter history={history}>
             <App>
+                // WARNING! keep this up to date with SSR routing!
                 {({location}) => <Switch>
                     <Route exact path="/" render={() => (
                         location.get('search') === '?categories'

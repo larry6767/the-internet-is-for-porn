@@ -15,6 +15,7 @@ import {SheetsRegistry} from 'jss'
 import JssProvider from 'react-jss/lib/JssProvider'
 import {createGenerateClassName} from '@material-ui/core/styles'
 import {renderToNodeStream} from 'react-dom/server'
+
 import createRootReducer from '../src/reducers.js'
 import {App} from '../src/App'
 import Home from '../src/App/Home'
@@ -113,6 +114,7 @@ const
             .pipe(res, {end: false})
     },
 
+    // WARNING! keep this up to date with front-end routing!
     routeMapping = {
         '/': mkHandlers('get', [
             (req, res, next) =>
