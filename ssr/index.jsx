@@ -1,6 +1,7 @@
 import {readFileSync} from 'fs'
 import {join} from 'path'
 import stream from 'stream'
+import url from 'url'
 import {set} from 'lodash'
 import React from 'react'
 import yargs from 'yargs'
@@ -16,7 +17,12 @@ import {createGenerateClassName} from '@material-ui/core/styles'
 import {renderToNodeStream} from 'react-dom/server'
 import createRootReducer from '../src/reducers.js'
 import {App} from '../src/App'
-import {Home} from '../src/App/Home'
+import Home from '../src/App/Home'
+import AllNiches from '../src/App/AllNiches'
+import AllMovies from '../src/App/AllMovies'
+import Pornstars from '../src/App/Pornstars'
+import NotFound from '../src/App/NotFound'
+
 
 const
     {port, host} = yargs
@@ -55,6 +61,12 @@ const
             }
         }
     }),
+
+    initialStoreOnUrl = reqUrl =>
+        initialStore.updateIn(['router', 'location'], x => {
+            const {pathname, search, hash} = url.parse(reqUrl)
+            return x.merge({pathname: pathname || '', search: search || '', hash: hash || ''})
+        }),
 
     reducersPatch = reducers => set(reducers, 'router', x => x),
     newStore = initialStore => createStore(createRootReducer(reducersPatch), initialStore),
@@ -108,9 +120,32 @@ const
                     ? res.redirect('/all-niches')
                     : next(),
 
-            (req, res) => renderComponent(res, <Home/>, newStore(initialStore)),
+            (req, res) => renderComponent(res, <Home/>, newStore(initialStoreOnUrl(req.url))),
         ]),
+
+        '/all-niches': mkHandler('get', (req, res) =>
+            renderComponent(res, <AllNiches/>, newStore(initialStoreOnUrl(req.url)))
+        ),
+
+        '/all-movies.html': mkHandler('get', (req, res) => res.redirect('/all-movies')),
+        '/all-movies': mkHandler('get', (req, res) =>
+            renderComponent(res, <AllMovies/>, newStore(initialStoreOnUrl(req.url)))
+        ),
+
+        '/porn-stars.html': mkHandler('get', (req, res) => res.redirect('/pornstars')),
+        '/pornstars': mkHandler('get', (req, res) =>
+            renderComponent(res, <Pornstars/>, newStore(initialStoreOnUrl(req.url)))
+        ),
+
+        '*': mkHandler('get', (req, res) => {
+            res.status(404)
+            renderComponent(res, <NotFound/>, newStore(initialStoreOnUrl(req.url)))
+        }),
     }
+
+app.use(favicon(join(publicDir, 'favicon.ico')))
+app.use('/img', express.static(join(publicDir, 'img')))
+app.get('/manifest.json', (req, res) => res.sendFile(join(publicDir, '/manifest.json')))
 
 // boilerplate to add express.js handlers by iterating `routeMapping`
 for (const route of Object.keys(routeMapping)) {
@@ -120,16 +155,12 @@ for (const route of Object.keys(routeMapping)) {
         for (const { method, handler } of x)
             app[method](route, handler)
     } else if (x !== null && typeof x === 'object') {
-        app[method](x.route, x.handler)
+        app[x.method](route, x.handler)
     } else {
         throw new Error(
             `Unexpected mapped route ("${route}") handler type: ${typeof x}`)
     }
 }
-
-app.use(favicon(join(publicDir, 'favicon.ico')))
-app.use('/img', express.static(join(publicDir, 'img')))
-app.get('/manifest.json', (req, res) => res.sendFile(join(publicDir, '/manifest.json')))
 
 app.listen(port, host, () => {
     console.debug(`Start listening HTTP-server on http://${host}:${port}...`)
