@@ -7,6 +7,10 @@ const GlobalStyle = createGlobalStyle`
         min-width: 320px;
     }
 
+    html {
+        font-family: "PT Sans", sans-serif;
+    }
+
     * {
         box-sizing: border-box;
     }

@@ -1,12 +1,8 @@
 import React from 'react'
+import {Page} from './assets'
 
-// TODO FIXME refactor this temporary hack for SSR
-//import css from './assets/_.module.scss'
-const css = {}
-
-const
-    Home = () => <div className={css.page}>
-        <h1>Home</h1>
-    </div>
+export const Home = () => <Page>
+    <h1>Home</h1>
+</Page>
 
 export default Home

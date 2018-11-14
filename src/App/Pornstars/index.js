@@ -1,11 +1,9 @@
 import React from 'react'
-
-// TODO FIXME refactor styles
-const css = {}
+import {Page} from './assets'
 
 const
-    Pornstars = () => <div className={css.page}>
+    Pornstars = () => <Page>
         <h1>Pornstars</h1>
-    </div>
+    </Page>
 
 export default Pornstars

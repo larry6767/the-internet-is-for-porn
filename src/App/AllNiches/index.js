@@ -13,9 +13,7 @@ import FolderIcon from '@material-ui/icons/Folder'
 import ErrorMessage from '../../generic/ErrorMessage'
 import {withStylesProps} from '../helpers'
 import actions from './actions'
-
-// TODO FIXME refactor styles
-const css = {}
+import {Page} from './assets'
 
 const
     styles = (theme, {nichesList, currentBreakpoint, isLoading}) => ({
@@ -87,7 +85,7 @@ const
         nichesList,
         isLoading,
         isFailed,
-    }) => <div className={css.page}>
+    }) => <Page>
         { isFailed
             ? <div>
                 <Typography variant="body1" gutterBottom>Some shit is happened 8==э</Typography>
@@ -108,7 +106,7 @@ const
                 }
             </List>
         }
-    </div>
+    </Page>
 
 export default compose(
     connect(

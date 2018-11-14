@@ -1,11 +1,9 @@
 import React from 'react'
-
-// TODO FIXME refactor styles
-const css = {}
+import {Page} from './assets'
 
 const
-    NotFound = () => <div className={css.page}>
+    NotFound = () => <Page>
         <h1>NotFound</h1>
-    </div>
+    </Page>
 
 export default NotFound

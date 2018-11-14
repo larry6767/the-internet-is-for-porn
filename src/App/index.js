@@ -6,7 +6,7 @@ import {blueGrey, amber} from '@material-ui/core/colors/'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
 import {throttle} from 'lodash'
-import {resize} from './actions'
+import actions from './actions'
 import {ThemeProvider as SCThemeProvider} from 'styled-components'
 import theme from './assets/theme'
 import GlobalStyle from './assets/style'
@@ -47,7 +47,9 @@ export default compose(
             location: state.getIn(['router', 'location'])
         }),
         dispatch => ({
-            resizeAction: event => dispatch(resize(event.srcElement.outerWidth))
+            resizeAction: event => dispatch(actions.resize(
+                typeof event === "number" ? event : event.srcElement.outerWidth
+            ))
         })
     ),
 
@@ -55,6 +57,7 @@ export default compose(
         componentDidMount() {
             this.listener = throttle(this.props.resizeAction, 200)
             window.addEventListener('resize', this.listener)
+            this.props.resizeAction(window.outerWidth)
         },
 
         componentWillUnmount() {
