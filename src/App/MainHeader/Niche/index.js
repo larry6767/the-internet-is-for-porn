@@ -1,12 +1,18 @@
 import React from 'react'
 import {Select, MenuItem, FormControl, OutlinedInput} from '@material-ui/core'
-import css from './assets/_.module.scss'
 import {niches} from './fixtures'
 import {withStyles} from '@material-ui/core/styles'
-
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {toggleNiche} from './actions'
+import {
+    NicheBlock,
+    NicheWrapper,
+    NicheMobile,
+    NicheMobileItem,
+    NicheMobileItemSelected,
+    TextIcon
+} from './assets'
 
 const
     styles = {
@@ -27,57 +33,69 @@ const
         }
     },
 
-    Niche = ({classes, nicheUi, appUi, toggleNicheAction}) => <div className={css.niche}>
+    Niche = ({classes, nicheUi, appUi, toggleNicheAction}) => <NicheBlock>
         {
             appUi.get('currentBreakpoint') === 'xs' || appUi.get('currentBreakpoint') === 'xxs' ?
-                <div className={css.nicheMobile}>
+                <NicheMobile>
                     {
-                        Object.keys(niches).map(key => <div
-                            key={key}
-                            className={nicheUi.get('currentNiche') === key ? css.nicheMobileItemSelected : css.nicheMobileItem}
-                            onClick={toggleNicheAction}
-                            data-value={key}
-                        >
-                            {`${String.fromCharCode(niches[key])} ${key}`}
-                        </div>)
+                        Object.keys(niches).map(key => {
+
+                            return nicheUi.get('currentNiche') === key
+                                ?
+                                    <NicheMobileItemSelected
+                                        key={key}
+                                        onClick={toggleNicheAction}
+                                        data-value={key}
+                                    >
+                                        {`${String.fromCharCode(niches[key])} ${key}`}
+                                    </NicheMobileItemSelected>
+                                :
+                                    <NicheMobileItem
+                                        key={key}
+                                        onClick={toggleNicheAction}
+                                        data-value={key}
+                                    >
+                                        {`${String.fromCharCode(niches[key])} ${key}`}
+                                    </NicheMobileItem>
+                        })
                     }
-                </div>
+                </NicheMobile>
                 :
-                <div className={css.nicheWrapper}>
-                        <FormControl variant="outlined" className={css.nicheSelect}>
-                            <Select
-                                classes={{
-                                    select: classes.select,
-                                    icon: classes.icon
-                                }}
-                                value={nicheUi.get('currentNiche')}
-                                onChange={toggleNicheAction}
-                                input={
-                                    <OutlinedInput
-                                        classes={{
-                                            notchedOutline: classes.notchedOutline
-                                        }}
-                                        labelWidth={0}
-                                        name="niche"
-                                        id="niche"
-                                    />
-                                }
-                            >
-                                {
-                                    Object.keys(niches).map(key => {
-                                        return <MenuItem
-                                            key={key}
-                                            value={key}>
-                                                <div className={css.textIcon}>{String.fromCharCode(niches[key])}</div>
-                                                {key}
-                                        </MenuItem>
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
-                    </div>
+                <NicheWrapper>
+                    <FormControl variant="outlined">
+                        <Select
+                            classes={{
+                                select: classes.select,
+                                icon: classes.icon
+                            }}
+                            value={nicheUi.get('currentNiche')}
+                            onChange={toggleNicheAction}
+                            input={
+                                <OutlinedInput
+                                    classes={{
+                                        notchedOutline: classes.notchedOutline
+                                    }}
+                                    labelWidth={0}
+                                    name="niche"
+                                    id="niche"
+                                />
+                            }
+                        >
+                            {
+                                Object.keys(niches).map(key => {
+                                    return <MenuItem
+                                        key={key}
+                                        value={key}>
+                                            <TextIcon>{String.fromCharCode(niches[key])}</TextIcon>
+                                            {key}
+                                    </MenuItem>
+                                })
+                            }
+                        </Select>
+                    </FormControl>
+                </NicheWrapper>
         }
-    </div>
+    </NicheBlock>
 
 export default compose(
     connect(

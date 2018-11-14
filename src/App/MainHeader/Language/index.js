@@ -1,12 +1,11 @@
 import React from 'react'
 import {Select, MenuItem, OutlinedInput} from "@material-ui/core"
-import css from './assets/_.module.scss'
 import {withStyles} from '@material-ui/core/styles'
 import {languages} from './fixtures'
-
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {toggleLanguage} from './actions'
+import {Item} from './assets'
 
 const
     styles = {
@@ -43,14 +42,15 @@ const
         }
     >
         {
-            languages.map(language => <MenuItem 
+            Object.keys(languages).map(language => <MenuItem
                 classes={{
                     root: classes.menuItemRoot
                 }}
                 key={language}
-                value={language}>
-                    <div className={css[language]}></div>
-                    {language}
+                value={language}
+            >
+                <Item type={language}></Item>
+                {languages[language]}
             </MenuItem>)
         }
     </Select>

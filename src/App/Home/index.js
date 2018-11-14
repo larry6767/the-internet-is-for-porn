@@ -1,9 +1,8 @@
 import React from 'react'
-import css from '../assets/_.module.scss'
+import {Page} from './assets'
 
-const
-    Home = () => <div className={css.page}>        
-        <h1>Home</h1>
-    </div>
+export const Home = () => <Page>
+    <h1>Home</h1>
+</Page>
 
 export default Home

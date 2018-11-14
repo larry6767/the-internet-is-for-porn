@@ -5,51 +5,70 @@ import HDSwitch from './HDSwitch'
 import Language from './Language'
 import Search from './Search'
 import BurgerMenu from './BurgerMenu'
-import css from './assets/_.module.scss'
-
 import {connect} from 'react-redux'
 import {toggleSearch} from './actions'
+import {
+    Header,
+    Top,
+    TopInner,
+    SearchWrapper,
+    NavigationWrapper,
+    Logo,
+    Icon,
+    BottomInner
+} from './assets'
 
 const
     MainHeader = ({appUi, mainHeaderUi, toggleSearchAction}) => {
         const
-            isXSorXXS = appUi.get('currentBreakpoint') === 'xs' || appUi.get('currentBreakpoint') === 'xxs',
+            isXSorXXS =
+                appUi.get('currentBreakpoint') === 'xs' ||
+                appUi.get('currentBreakpoint') === 'xxs',
+
             isSearchShown = mainHeaderUi.get('isSearchShown')
 
-        return <header className={css.header}>
-            <div className={css.top}>
-                <div className={css.topInner}>
-                    <div className={css.searchWrapper}>
+        return <Header>
+            <Top>
+                <TopInner>
+                    <SearchWrapper>
                         {
                             isXSorXXS && isSearchShown ? '' :
                             isXSorXXS ? <BurgerMenu/> : ''
                         }
                         {
                             isXSorXXS && isSearchShown ? '' :
-                            <img className={css.logo} src="/img/logo.png" alt="logo"/>
+                            <Logo src="/img/logo.png" alt="logo"/>
                         }
                         {
-                            isXSorXXS && isSearchShown ? <div className={css.searchIconClose} onClick={toggleSearchAction}></div> :
-                            isXSorXXS ? <div className={css.searchIcon} onClick={toggleSearchAction}></div> : ''
+                            isXSorXXS
+                                ? <Icon
+                                    type={isXSorXXS && isSearchShown ? 'close' : isXSorXXS ? 'search' : ''}
+                                    onClick={toggleSearchAction}
+                                />
+                                : ''
                         }
                         {
                             !isXSorXXS ? <Search/> :
                             isXSorXXS && isSearchShown ? <Search/> : ''
                         }
-                    </div>
+                    </SearchWrapper>
                     <Niche/>
-                </div>
-            </div>
-            <div className={css.bottom}>
-                <div className={css.bottomInner}>
-                    <div className={css.navigationWrapper}>
-                        <Navigation/>
-                        <HDSwitch/>
+                </TopInner>
+            </Top>
+            {
+                !isXSorXXS
+                    ? <div>
+                        <BottomInner>
+                            <NavigationWrapper>
+                                <Navigation/>
+                                <HDSwitch/>
+                            </NavigationWrapper>
+                            <Language/>
+                        </BottomInner>
                     </div>
-                    <Language/>
-                </div>
-            </div>
-        </header>
+                    : ''
+            }
+        </Header>
     }
 
 export default connect(

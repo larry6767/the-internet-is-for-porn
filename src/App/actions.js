@@ -1,13 +1,7 @@
-import {createAction} from 'redux-actions'
+import {createActions} from './helpers'
 
-const
-    types = {
-        RESIZE : 'APP@RESIZE'
-    },
+const actions = createActions('APP', [
+    'RESIZE'
+])
 
-    resize = createAction(types.RESIZE)
-
-export {
-    resize,
-    types
-}
+export default actions

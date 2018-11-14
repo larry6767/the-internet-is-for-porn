@@ -2,7 +2,6 @@ import React from 'react'
 import VideoItem from './VideoItem'
 import VideoPlayer from './VideoPlayer'
 import {connect} from 'react-redux'
-import css from './assets/_.module.scss'
 
 const
     VideoList = ({videosUi}) => <ul className={css.videoList}>
