@@ -19,8 +19,7 @@ export const TopInner = styled.div`
     ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}
     ${({theme}) => theme.media.sm`padding: 12px 10px;`}
-    ${({theme}) => theme.media.xs`flex-wrap: wrap; justify-content: center; width: 100%;`}
-    ${({theme}) => theme.media.xxs`flex-wrap: wrap; justify-content: center; width: 100%;`}
+    ${({theme}) => theme.media.mobile`flex-wrap: wrap; justify-content: center; width: 100%;`}
 `
 
 const Wrapper = styled.div`
@@ -34,7 +33,7 @@ const Wrapper = styled.div`
 export const SearchWrapper = styled(Wrapper)`
     justify-content: space-between;
 
-    ${({theme}) => theme.media.xs`width: 100%; min-height: 70px; flex-wrap: wrap;`}
+    ${({theme}) => theme.media.mobile`width: 100%; min-height: 70px; flex-wrap: wrap;`}
 `
 
 export const NavigationWrapper = styled(Wrapper)`
@@ -50,7 +49,7 @@ export const Logo = styled.img`
     height: 50px;
 
     ${({theme}) => theme.media.sm`width: 135px; height: 37px;`}
-    ${({theme}) => theme.media.xs`margin: 0 10px 20px;`}
+    ${({theme}) => theme.media.mobile`margin: 0 10px`}
 `
 
 export const Icon = styled.div`
@@ -60,7 +59,6 @@ export const Icon = styled.div`
     background-repeat: no-repeat;
     background-position: center;
     background-size: 25px;
-    margin-bottom: 20px;
     ${({type}) => {
         if (type === 'search')
         return 'background-image: url(/img/search.svg);'
@@ -71,7 +69,7 @@ export const Icon = styled.div`
         `
     }}
 
-    ${({theme}) => theme.media.xs`display: block;`}
+    ${({theme}) => theme.media.mobile`display: block;`}
 `
 
 export const BottomInner = styled.div`

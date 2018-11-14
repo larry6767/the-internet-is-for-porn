@@ -4,7 +4,7 @@ export const NicheBlock = styled.div`
     flex-grow: 1;
 
     ${({theme}) => theme.media.sm`flex-grow: 0;`}
-    ${({theme}) => theme.media.xs`width: 100%;`}
+    ${({theme}) => theme.media.mobile`width: 100%; margin-top: 10px;`}
 `
 
 export const NicheWrapper = styled.div`

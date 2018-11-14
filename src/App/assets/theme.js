@@ -17,6 +17,10 @@ const breakPoints = {
         min: 600,
         max: 960-1
     },
+    mobile: {
+        min: 320,
+        max: 600-1
+    },
     xs: {
         min: 375,
         max: 600-1
