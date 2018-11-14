@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {IMG_PATH} from '../../../config'
-import css from './assets/_.module.scss'
 
 class VideoItem extends Component {
     constructor(props) {

@@ -2,7 +2,6 @@ import React from 'react'
 import Autosuggest from 'react-autosuggest'
 import {Paper} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
-import css from './assets/_.module.scss'
 import {renderInputComponent, renderSuggestion, getSuggestionValue} from './helpers'
 
 import {compose} from 'recompose'
