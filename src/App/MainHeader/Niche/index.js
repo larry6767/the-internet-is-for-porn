@@ -33,14 +33,14 @@ const
         }
     },
 
-    Niche = ({classes, nicheUi, appUi, toggleNicheAction}) => <NicheBlock>
+    Niche = ({classes, currentNiche, currentBreakpoint, toggleNicheAction}) => <NicheBlock>
         {
-            appUi.get('currentBreakpoint') === 'xs' || appUi.get('currentBreakpoint') === 'xxs' ?
+            currentBreakpoint === 'xs' || currentBreakpoint === 'xxs' ?
                 <NicheMobile>
                     {
                         Object.keys(niches).map(key => {
 
-                            return nicheUi.get('currentNiche') === key
+                            return currentNiche === key
                                 ?
                                     <NicheMobileItemSelected
                                         key={key}
@@ -68,7 +68,7 @@ const
                                 select: classes.select,
                                 icon: classes.icon
                             }}
-                            value={nicheUi.get('currentNiche')}
+                            value={currentNiche}
                             onChange={toggleNicheAction}
                             input={
                                 <OutlinedInput
@@ -100,8 +100,8 @@ const
 export default compose(
     connect(
         state => ({
-            nicheUi: state.getIn(['app', 'mainHeader', 'niche', 'ui']),
-            appUi: state.getIn(['app', 'ui'])
+            currentNiche: state.getIn(['app', 'mainHeader', 'niche', 'currentNiche']),
+            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint'])
         }),
         dispatch => ({
             toggleNicheAction: event => dispatch(toggleNiche(event))

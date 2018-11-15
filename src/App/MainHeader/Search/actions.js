@@ -1,5 +1,5 @@
 import {createAction} from 'redux-actions'
-
+// TODO FIXME: Now it isn't used
 const
     types = {
         SUGGESTIONS_FETCH_REQUEST: 'SEARCH@SUGGESTIONS_FETCH_REQUEST',

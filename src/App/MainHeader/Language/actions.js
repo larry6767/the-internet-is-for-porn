@@ -1,13 +1,7 @@
-import {createAction} from 'redux-actions'
+import {createActions} from '../../helpers'
 
-const
-    types = {
-        TOGGLE_LANGUAGE: 'LANGUAGE@TOGGLE_LANGUAGE'
-    },
-    
-    toggleLanguage = createAction(types.TOGGLE_LANGUAGE)
+const actions = createActions('LANGUAGE', [
+    'SET_NEW_LANGUAGE'
+])
 
-export {
-    toggleLanguage,
-    types
-}
+export default actions

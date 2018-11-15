@@ -6,7 +6,7 @@ import Switch from '@material-ui/core/Switch'
 
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
-import {toggleHD} from './actions'
+import actions from './actions'
 
 const
     styles = theme => ({
@@ -56,7 +56,7 @@ const
         },
     }),
 
-    HDSwitch = ({classes, ui, toggleHDAction}) => <FormGroup row>
+    HDSwitch = ({classes, hdState, toggleHdAction}) => <FormGroup row>
         <FormControlLabel
             classes={{
                 root: classes.labelRoot,
@@ -74,8 +74,8 @@ const
                     }}
                     disableRipple
                     value="HD"
-                    checked={ui.get('HD')}
-                    onChange={toggleHDAction}
+                    checked={hdState}
+                    onChange={toggleHdAction}
                 />
             }
             label="Only HD"
@@ -85,10 +85,10 @@ const
 export default compose(
     connect(
         state => ({
-            ui: state.getIn(['app', 'mainHeader', 'HDSwitch', 'ui'])
+            hdState: state.getIn(['app', 'mainHeader', 'HDSwitch', 'hdState'])
         }),
         dispatch => ({
-            toggleHDAction: event => dispatch(toggleHD(event.target.checked))
+            toggleHdAction: event => dispatch(actions.toggleHd(event.target.checked))
         })
     ),
     withStyles(styles)

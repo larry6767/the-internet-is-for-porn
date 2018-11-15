@@ -4,7 +4,7 @@ import {Tabs, Tab} from '@material-ui/core'
 import {navigation} from './fixtures'
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
-import {toggleNavigation} from './actions'
+import actions from './actions'
 import {Nav} from './assets'
 
 const
@@ -18,10 +18,10 @@ const
         }
     },
 
-    Navigation = ({classes, location, toggleNavigationAction}) => <Nav>
+    Navigation = ({classes, location, setNewPathAction}) => <Nav>
         <Tabs
             value={Object.keys(navigation).indexOf(location.get('pathname'))}
-            onChange={toggleNavigationAction}
+            onChange={setNewPathAction}
             indicatorColor="primary"
             textColor="primary"
             scrollable
@@ -45,11 +45,10 @@ const
 export default compose(
     connect(
         state => ({
-            ui: state.getIn(['app', 'mainHeader', 'navigation', 'ui']),
             location: state.getIn(['router', 'location'])
         }),
         dispatch => ({
-            toggleNavigationAction: (event, value) => dispatch(toggleNavigation(value))
+            setNewPathAction: (event, value) => dispatch(actions.setNewPath(value))
         })
     ),
     withStyles(styles)

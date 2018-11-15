@@ -4,7 +4,7 @@ import {withStyles} from '@material-ui/core/styles'
 import {languages} from './fixtures'
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
-import {toggleLanguage} from './actions'
+import actions from './actions'
 import {Item} from './assets'
 
 const
@@ -24,17 +24,17 @@ const
         }
     },
 
-    LanguageSelect = ({classes, ui, toggleLanguageAction}) => <Select
+    LanguageSelect = ({classes, currentLanguage, setNewLanguageAction}) => <Select
         classes={{
             select: classes.select
         }}
-        value={ui.get('currentLanguage')}
+        value={currentLanguage}
         input={
             <OutlinedInput
                 classes={{
                     notchedOutline: classes.notchedOutline
                 }}
-                onChange={toggleLanguageAction}
+                onChange={setNewLanguageAction}
                 labelWidth={0}
                 name="language"
                 id="language"
@@ -58,10 +58,10 @@ const
 export default compose(
     connect(
         state => ({
-            ui: state.getIn(['app', 'mainHeader', 'language', 'ui'])
+            currentLanguage: state.getIn(['app', 'mainHeader', 'language', 'currentLanguage'])
         }),
         dispatch => ({
-            toggleLanguageAction: event => dispatch(toggleLanguage(event.target.value))
+            setNewLanguageAction: event => dispatch(actions.setNewLanguage(event.target.value))
         })
     ),
     withStyles(styles)
