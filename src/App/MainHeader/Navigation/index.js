@@ -27,18 +27,16 @@ const
             scrollable
             scrollButtons="off"
         >
-            {
-                Object.keys(navigation).map((item, index) => {
-                    return <Tab
-                        key={index}
-                        label={navigation[`${item}`]}
-                        classes={{
-                            root: classes.labelRoot,
-                            label: classes.label
-                        }}
-                    />
-                })
-            }
+            {Object.keys(navigation).map((item, index) =>
+                <Tab
+                    key={index}
+                    label={navigation[`${item}`]}
+                    classes={{
+                        root: classes.labelRoot,
+                        label: classes.label
+                    }}
+                />
+            )}
         </Tabs>
     </Nav>
 
