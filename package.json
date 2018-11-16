@@ -32,7 +32,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start-ssr": "nodemon --watch src/ --watch ssr/ ssr/index.jsx --exec babel-node --presets es2015,stage-2,react"
+    "start-ssr": "nodemon --watch src/ --watch ssr/ ssr/index.jsx --exec babel-node --presets es2015,stage-2,react --"
   },
   "eslintConfig": {
     "extends": "react-app"

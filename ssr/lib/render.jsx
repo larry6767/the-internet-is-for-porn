@@ -1,7 +1,4 @@
 import React from 'react'
-import {readFileSync} from 'fs'
-import {join} from 'path'
-
 import {Provider} from 'react-redux'
 import {ServerStyleSheet} from 'styled-components'
 import {SheetsRegistry} from 'jss'
@@ -12,47 +9,44 @@ import {renderToNodeStream} from 'react-dom/server'
 import {App} from '../../src/App'
 
 
-const
-    publicDir = join(__dirname, '..', '..', 'public'),
-
-    layoutTemplate = (result => ({
-        pre: `${result[0]}<div id="root">`,
-        post: `</div>${result[1]}`,
-    }))(
-        readFileSync(join(publicDir, 'index.html'))
-            .toString()
-            .replace(/%PUBLIC_URL%/g, '')
-            .split('<div id="root"></div>')
-    )
-
 // renders a component to a stream of a server `response` object
-export const renderComponent = (res, childComponent, store) => {
-    res.write(layoutTemplate.pre)
+export const renderComponent =
+    ({pre, post}) => // <- pre-bound layout template object
+    (res, childComponent, store) =>
+    new Promise((resolve, reject) => {
+        res.write(pre)
 
-    const
-        serverStyleSheet = new ServerStyleSheet(),
-        jssSheetsRegistry = new SheetsRegistry(),
-        generateClassName = createGenerateClassName(),
-        sheetsManager = new Map(), // is needed to fix styles not rendered after page reload
+        const
+            serverStyleSheet = new ServerStyleSheet(),
+            jssSheetsRegistry = new SheetsRegistry(),
+            generateClassName = createGenerateClassName(),
+            sheetsManager = new Map(), // is needed to fix styles not rendered after page reload
 
-        jsx = serverStyleSheet.collectStyles(<Provider store={store}>
-            <JssProvider registry={jssSheetsRegistry} generateClassName={generateClassName}>
-                <App sheetsManager={sheetsManager}>{() => childComponent}</App>
-            </JssProvider>
-        </Provider>)
+            jsx = serverStyleSheet.collectStyles(<Provider store={store}>
+                <JssProvider registry={jssSheetsRegistry} generateClassName={generateClassName}>
+                    <App sheetsManager={sheetsManager}>{() => childComponent}</App>
+                </JssProvider>
+            </Provider>)
 
-    serverStyleSheet
-        .interleaveWithNodeStream(renderToNodeStream(jsx))
-        .on('end', () => {
-            res.write('<style id="jss-server-side">')
+        serverStyleSheet
+            .interleaveWithNodeStream(renderToNodeStream(jsx))
+            .on('error', err => reject(err))
+            .on('end', () => {
+                try {
+                    res.write('<style id="jss-server-side">')
 
-            for (const styleSheet of jssSheetsRegistry.registry)
-                if (styleSheet.attached)
-                    res.write(`${styleSheet}\n`)
+                    for (const styleSheet of jssSheetsRegistry.registry)
+                        if (styleSheet.attached)
+                            res.write(`${styleSheet}\n`)
 
-            res.write('</style>')
+                    res.write('</style>')
 
-            res.end(layoutTemplate.post)
-        })
-        .pipe(res, {end: false})
-}
+                    res.end(post)
+                    resolve()
+                } catch (e) {
+                    reject(e)
+                }
+            })
+            .pipe(res, {end: false})
+            .on('error', err => reject(err))
+    })

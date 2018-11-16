@@ -15,3 +15,9 @@ To customize port or/and host use command-line arguments:
 ```bash
 npm run start-ssr -- --port=8111 --host=0.0.0.0
 ```
+
+To run production build (produced by `npm run build`):
+
+```bash
+npm run start-ssr -- --production
+```
