@@ -14,6 +14,7 @@ import ErrorMessage from '../../generic/ErrorMessage'
 import {withStylesProps} from '../helpers'
 import actions from './actions'
 import {Page} from './assets'
+import {Link} from 'react-router-dom'
 
 const
     styles = (theme, {nichesList, currentBreakpoint, isLoading}) => ({
@@ -58,27 +59,27 @@ const
     }),
 
     renderListItemLink = (x, classes) =>
-        <ListItem
-            key={x.get('id')}
-            button href={x.get('sub_url')}
-            component="a"
-            classes={{
-                gutters: classes.itemGutters
-            }}
-        >
-            <ListItemIcon>
-                <FolderIcon/>
-            </ListItemIcon>
-            <ListItemText
+        <Link to={`/all-niches/${x.get('sub_url')}`} key={x.get('id')}>
+            <ListItem
+                button
                 classes={{
-                    root: classes.listItemTextRoot,
-                    primary: classes.primaryTypography,
-                    secondary: classes.secondaryTypography
+                    gutters: classes.itemGutters
                 }}
-                primary={x.get('name')}
-                secondary={x.get('items_count')}
-            />
-        </ListItem>,
+            >
+                <ListItemIcon>
+                    <FolderIcon/>
+                </ListItemIcon>
+                <ListItemText
+                    classes={{
+                        root: classes.listItemTextRoot,
+                        primary: classes.primaryTypography,
+                        secondary: classes.secondaryTypography
+                    }}
+                    primary={x.get('name')}
+                    secondary={x.get('items_count')}
+                />
+            </ListItem>
+        </Link>,
 
     AllNiches = ({
         classes,

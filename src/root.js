@@ -7,6 +7,7 @@ import store from './store'
 import App from './App'
 import Home from './App/Home'
 import AllNiches from './App/AllNiches'
+import Niche from './App/AllNiches/Niche'
 import AllMovies from './App/AllMovies'
 import Pornstars from './App/Pornstars'
 import NotFound from './App/NotFound'
@@ -22,7 +23,9 @@ const
                             ? <Redirect to='/all-niches'/>
                             : <Home/>
                     )}/>
-                    <Route path="/all-niches" component={AllNiches}/>
+                    <Route exact path="/all-niches" component={AllNiches}/>
+
+                    <Route path='/all-niches/*' component={Niche}/>
 
                     <Route exact path="/all-movies.html" render={() => <Redirect to='/all-movies'/>}/>
                     <Route path="/all-movies" component={AllMovies}/>

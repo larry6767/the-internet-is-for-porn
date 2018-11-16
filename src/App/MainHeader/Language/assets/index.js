@@ -6,7 +6,7 @@ export const Item = styled.div`
     height: 24px;
     background-size: contain;
     background-repeat: no-repeat;
-    ${({type}) => `background-image: url('./img/flags/${type}.svg');`}
+    ${({type}) => `background-image: url('/img/flags/${type}.svg');`}
 `
 
 // https://www.flaticon.com/packs/flags-3
