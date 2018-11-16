@@ -1,10 +1,13 @@
 import React from 'react'
-import {Select, MenuItem, FormControl, OutlinedInput} from '@material-ui/core'
-import {niches} from './fixtures'
-import {withStyles} from '@material-ui/core/styles'
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
-import {toggleNiche} from './actions'
+import {withStyles} from '@material-ui/core/styles'
+import {Select, MenuItem, FormControl, OutlinedInput} from '@material-ui/core'
+
+import {compareCurrentBreakpoint, breakpointXS} from '../../helpers'
+
+import {niches} from './fixtures'
+import actions from './actions'
 import {
     NicheBlock,
     NicheWrapper,
@@ -35,65 +38,64 @@ const
 
     Niche = ({classes, currentNiche, currentBreakpoint, toggleNicheAction}) => <NicheBlock>
         {
-            currentBreakpoint === 'xs' || currentBreakpoint === 'xxs' ?
-                <NicheMobile>
-                    {
-                        Object.keys(niches).map(key => {
+            compareCurrentBreakpoint(currentBreakpoint, breakpointXS) <= 0
 
-                            return currentNiche === key
-                                ?
-                                    <NicheMobileItemSelected
-                                        key={key}
-                                        onClick={toggleNicheAction}
-                                        data-value={key}
-                                    >
-                                        {`${String.fromCharCode(niches[key])} ${key}`}
-                                    </NicheMobileItemSelected>
-                                :
-                                    <NicheMobileItem
-                                        key={key}
-                                        onClick={toggleNicheAction}
-                                        data-value={key}
-                                    >
-                                        {`${String.fromCharCode(niches[key])} ${key}`}
-                                    </NicheMobileItem>
-                        })
-                    }
-                </NicheMobile>
-                :
-                <NicheWrapper>
-                    <FormControl variant="outlined">
-                        <Select
-                            classes={{
-                                select: classes.select,
-                                icon: classes.icon
-                            }}
-                            value={currentNiche}
-                            onChange={toggleNicheAction}
-                            input={
-                                <OutlinedInput
-                                    classes={{
-                                        notchedOutline: classes.notchedOutline
-                                    }}
-                                    labelWidth={0}
-                                    name="niche"
-                                    id="niche"
-                                />
-                            }
-                        >
-                            {
-                                Object.keys(niches).map(key => {
-                                    return <MenuItem
-                                        key={key}
-                                        value={key}>
-                                            <TextIcon>{String.fromCharCode(niches[key])}</TextIcon>
-                                            {key}
-                                    </MenuItem>
-                                })
-                            }
-                        </Select>
-                    </FormControl>
-                </NicheWrapper>
+            ? <NicheMobile>
+                {Object.keys(niches).map(key =>
+                    currentNiche === key
+
+                    ? <NicheMobileItemSelected
+                        key={key}
+                        href="/TODO"
+                        onClick={toggleNicheAction}
+                        data-value={key}
+                    >
+                        {`${String.fromCharCode(niches[key])} ${key}`}
+                    </NicheMobileItemSelected>
+
+                    : <NicheMobileItem
+                        key={key}
+                        href="/TODO"
+                        onClick={toggleNicheAction}
+                        data-value={key}
+                    >
+                        {`${String.fromCharCode(niches[key])} ${key}`}
+                    </NicheMobileItem>
+                )}
+            </NicheMobile>
+
+            : <NicheWrapper>
+                <FormControl variant="outlined">
+                    <Select
+                        classes={{
+                            select: classes.select,
+                            icon: classes.icon
+                        }}
+                        value={currentNiche}
+                        onChange={toggleNicheAction}
+                        input={
+                            <OutlinedInput
+                                classes={{
+                                    notchedOutline: classes.notchedOutline
+                                }}
+                                labelWidth={0}
+                                name="niche"
+                                id="niche"
+                            />
+                        }
+                    >
+                        {Object.keys(niches).map(key =>
+                            <MenuItem
+                                key={key}
+                                value={key}
+                            >
+                                <TextIcon>{String.fromCharCode(niches[key])}</TextIcon>
+                                {key}
+                            </MenuItem>
+                        )}
+                    </Select>
+                </FormControl>
+            </NicheWrapper>
         }
     </NicheBlock>
 
@@ -104,7 +106,10 @@ export default compose(
             currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint'])
         }),
         dispatch => ({
-            toggleNicheAction: event => dispatch(toggleNiche(event))
+            toggleNicheAction: event => {
+                event.preventDefault()
+                dispatch(actions.toggleNiche(event.target.value || event.target.dataset.value))
+            }
         })
     ),
     withStyles(styles)

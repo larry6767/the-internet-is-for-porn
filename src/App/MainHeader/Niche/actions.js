@@ -1,13 +1,7 @@
-import {createAction} from 'redux-actions'
+import {createActions} from '../../helpers'
 
-const
-    types = {
-        TOGGLE_NICHE: 'NICHE@TOGGLE_NICHE'
-    },
-    
-    toggleNiche = createAction(types.TOGGLE_NICHE)
+const actions = createActions('NICHE', [
+    'TOGGLE_NICHE',
+])
 
-export {
-    toggleNiche,
-    types
-}
+export default actions
