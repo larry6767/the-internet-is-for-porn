@@ -29,8 +29,9 @@ const
         >
             {Object.keys(navigation).map((item, index) =>
                 <Tab
+                    href={item}
                     key={index}
-                    label={navigation[`${item}`]}
+                    label={navigation[item]}
                     classes={{
                         root: classes.labelRoot,
                         label: classes.label
@@ -46,7 +47,10 @@ export default compose(
             location: state.getIn(['router', 'location'])
         }),
         dispatch => ({
-            setNewPathAction: (event, value) => dispatch(actions.setNewPath(value))
+            setNewPathAction: (event, value) => {
+                event.preventDefault()
+                dispatch(actions.setNewPath(value))
+            }
         })
     ),
     withStyles(styles)
