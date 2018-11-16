@@ -1,12 +1,7 @@
-import {combineReducers} from 'redux-immutable'
 import {handleActions} from 'redux-actions'
-import {toggleHD} from './actions'
+import actions from './actions'
 import {fromJS} from 'immutable'
 
-export default combineReducers({
-
-    // HD UI state reducer
-    ui: handleActions({
-        [toggleHD]: (state, action) => state.set('HD', action.payload)
-    }, fromJS({HD: false}))
-})
+export default handleActions({
+    [actions.toggleHd]: (state, action) => state.set('hdState', action.payload)
+}, fromJS({hdState: false}))

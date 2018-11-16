@@ -1,3 +1,4 @@
+// TODO FIXME: Now it isn't used
 import {combineReducers} from 'redux-immutable'
 import {handleActions} from 'redux-actions'
 import {suggestionsFetchRequest, suggestionsClearRequest, toggleChange} from './actions'

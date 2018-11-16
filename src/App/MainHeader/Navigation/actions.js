@@ -1,14 +1,7 @@
-import {createAction} from 'redux-actions'
+import {createActions} from '../../helpers'
 
-const
-    types = {
-        // TODO give it better name (like "go to menu link" or smth like that)
-        TOGGLE_NAVIGATION: 'NAVIGATION@TOGGLE_NAVIGATION'
-    },
+const actions = createActions('NAVIGATION', [
+    'SET_NEW_PATH'
+])
 
-    toggleNavigation = createAction(types.TOGGLE_NAVIGATION)
-
-export {
-    toggleNavigation,
-    types
-}
+export default actions

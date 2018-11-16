@@ -1,13 +1,7 @@
-import {createAction} from 'redux-actions'
+import {createActions} from '../../helpers'
 
-const
-    types = {
-        TOGGLE_HD: 'HDSWITCH@TOGGLE_HD'
-    },
+const actions = createActions('HDSWITCH', [
+    'TOGGLE_HD'
+])
 
-    toggleHD = createAction(types.TOGGLE_HD)
-
-export {
-    toggleHD,
-    types
-}
+export default actions

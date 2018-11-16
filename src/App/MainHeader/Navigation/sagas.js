@@ -1,5 +1,5 @@
 import {put, takeEvery} from 'redux-saga/effects'
-import {types} from './actions'
+import actions from './actions'
 import {push} from 'connected-react-router/immutable'
 import {navigation} from './fixtures'
 
@@ -10,5 +10,5 @@ function* togglePage(action) {
 }
 
 export default function* saga() {
-    yield takeEvery(types.TOGGLE_NAVIGATION, togglePage)
+    yield takeEvery(actions.setNewPath, togglePage)
 }

@@ -1,14 +1,13 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {Menu, MenuItem, IconButton} from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
 import Language from '../Language'
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {navigation} from '../Navigation/fixtures'
-import {toggleNavigation} from '../Navigation/actions'
-import {openBurgerMenu, closeBurgerMenu} from './actions'
+import actionsNavigation from '../Navigation/actions'
+import actions from './actions'
 import {withStyles} from '@material-ui/core/styles'
-import {Burger} from './assets'
 
 const
     styles = {
@@ -17,20 +16,20 @@ const
         }
     },
 
-    BurgerMenu = ({classes, burgerMenuUi, navigationUi, openBurgerMenuAction, closeBurgerMenuAction, toggleNavigationAction}) => <Burger>
+    BurgerMenu = ({classes, anchorEl, currentPath, openAction, closeAction, toggleNavigationAction}) => <Fragment>
         <IconButton
-            aria-owns={burgerMenuUi.get('anchorEl') ? 'burger-menu' : undefined}
+            aria-owns={anchorEl ? 'burger-menu' : undefined}
             aria-label="burger-menu"
             aria-haspopup="true"
-            onClick={openBurgerMenuAction}
+            onClick={openAction}
         >
             <MenuIcon style={{fill: "#a1a7b1"}}/>
         </IconButton>
         <Menu
             id="burger-menu"
-            anchorEl={burgerMenuUi.get('anchorEl')}
-            open={Boolean(burgerMenuUi.get('anchorEl'))}
-            onClose={closeBurgerMenuAction}
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={closeAction}
             classes={{
                 paper: classes.paper
             }}
@@ -39,7 +38,7 @@ const
                 Object.keys(navigation).map((item, index) => (
                     <MenuItem
                         key={index}
-                        selected={index === navigationUi.get('currentPage')}
+                        selected={index === currentPath}
                         onClick={toggleNavigationAction}
                         data-index={index}
                     >
@@ -49,21 +48,21 @@ const
             }
             <Language/>
         </Menu>
-    </Burger>
+    </Fragment>
 
 export default compose(
     connect(
         state => ({
-            burgerMenuUi: state.getIn(['app', 'mainHeader', 'burgerMenu', 'ui']),
-            navigationUi: state.getIn(['app', 'mainHeader', 'navigation', 'ui'])
+            anchorEl: state.getIn(['app', 'mainHeader', 'burgerMenu', 'anchorEl']),
+            currentPath: state.getIn(['app', 'mainHeader', 'navigation', 'currentPath'])
         }),
         dispatch => ({
             toggleNavigationAction: (event) => {
-                dispatch(toggleNavigation(Number(event.target.dataset.index)))
-                dispatch(closeBurgerMenu())
+                dispatch(actionsNavigation.setNewPath(Number(event.target.dataset.index)))
+                dispatch(actions.close())
             },
-            openBurgerMenuAction: event => dispatch(openBurgerMenu(event)),
-            closeBurgerMenuAction: () => dispatch(closeBurgerMenu())
+            openAction: event => dispatch(actions.open(event)),
+            closeAction: () => dispatch(actions.close())
         })
     ),
     withStyles(styles)
