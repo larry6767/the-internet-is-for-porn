@@ -55,11 +55,17 @@ const
         itemGutters: {
             paddingLeft: 10,
             paddingRight: 10
+        },
+        routerLink: {
+            textDecoration: 'none'
         }
     }),
 
     renderListItemLink = (x, classes) =>
-        <Link to={`/all-niches/${x.get('sub_url')}`} key={x.get('id')}>
+        <Link to={`/all-niches/${x.get('sub_url')}`}
+            key={x.get('id')}
+            className={classes.routerLink}
+        >
             <ListItem
                 button
                 classes={{
@@ -113,10 +119,10 @@ export default compose(
     connect(
         state => ({
             currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            nichesList: state.getIn(['app', 'niches', 'nichesList']),
-            isLoading: state.getIn(['app', 'niches', 'isLoading']),
-            isLoaded: state.getIn(['app', 'niches', 'isLoaded']),
-            isFailed: state.getIn(['app', 'niches', 'isFailed']),
+            nichesList: state.getIn(['app', 'niches', 'all', 'nichesList']),
+            isLoading: state.getIn(['app', 'niches', 'all', 'isLoading']),
+            isLoaded: state.getIn(['app', 'niches', 'all', 'isLoaded']),
+            isFailed: state.getIn(['app', 'niches', 'all', 'isFailed']),
         }),
         dispatch => ({
             loadPage: (event, value) => dispatch(actions.loadPageRequest())

@@ -1,8 +1,7 @@
-import {map, pick} from "lodash"
+import {map, reverse} from "lodash"
 import {put, takeEvery} from 'redux-saga/effects'
 import actions from './actions'
-import errorActions from '../../generic/ErrorMessage/actions'
-import nicheSaga from './Niche/sagas'
+import errorActions from '../../../generic/ErrorMessage/actions'
 
 function* loadPageFlow() {
     try {
@@ -14,7 +13,7 @@ function* loadPageFlow() {
             },
             body: JSON.stringify({
                 operation: 'getPageDataByUrl',
-                params: {'url': '/?categories'}
+                params: {'url': '/3d-porn.html'}
             }),
         })
 
@@ -23,10 +22,15 @@ function* loadPageFlow() {
 
         const json = yield response.json()
 
-        yield put(actions.loadPageSuccess(map(
-            json.page.TAGS_INFO.items,
-            x => pick(x, ['id', 'name', 'sub_url', 'items_count'])
-        )))
+        const tagArchiveList = reverse(map(json.page.TAG_ARCHIVE_LIST_FULL, x => {
+            x.month = json.page.MONTHS_NAMES[Number(x.month) < 10
+                ? x.month.slice(1)
+                : x.month
+            ]
+            return x
+        }))
+
+        yield put(actions.loadPageSuccess(tagArchiveList))
     } catch (err) {
         console.error('loadPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())
@@ -36,5 +40,4 @@ function* loadPageFlow() {
 
 export default function* saga() {
     yield takeEvery(actions.loadPageRequest, loadPageFlow)
-    yield nicheSaga()
 }

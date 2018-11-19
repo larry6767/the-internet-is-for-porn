@@ -1,44 +1,40 @@
-import {combineReducers} from 'redux-immutable'
 import {handleActions} from 'redux-actions'
 import {fromJS, List} from 'immutable'
 import actions from './actions'
-import nicheReducer from './Niche/reducers'
 
-export default combineReducers({
-    niche: nicheReducer,
-
-    all: handleActions({
+export default
+    handleActions({
         [actions.loadPageRequest]: (state) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            nichesList: List(),
+            tagArchiveList: List(),
         }),
         [actions.loadPageSuccess]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            nichesList: fromJS(payload),
+            tagArchiveList: fromJS(payload),
         }),
         [actions.loadPageFailure]: (state) => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
-            nichesList: List(),
+            tagArchiveList: List(),
         }),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        nichesList: [
+        tagArchiveList: [
             /*
-              {
-                id: 0,
-                name: '',
-                sub_url: '',
-                items_count: 0,
-              }
+                {
+                    "archive_date": 0,
+                    "year": 0,
+                    "month": '',
+                    "items_count": 0,
+                    "url": ''
+                }
             */
         ]
     }))
-})

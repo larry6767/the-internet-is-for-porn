@@ -1,89 +1,180 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import {connect} from 'react-redux'
+import {compose, lifecycle} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
+import actions from './actions'
+import nichesListActions from '../actions'
 import {
     ListSubheader,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
-    Collapse
+    CircularProgress,
+    Typography
 } from '@material-ui/core'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
-import DraftsIcon from '@material-ui/icons/Drafts'
-import SendIcon from '@material-ui/icons/Send'
-import ExpandLess from '@material-ui/icons/ExpandLess'
-import ExpandMore from '@material-ui/icons/ExpandMore'
-import StarBorder from '@material-ui/icons/StarBorder'
+import ArrowRight from '@material-ui/icons/ChevronRight'
+import ErrorMessage from '../../../generic/ErrorMessage'
+import {
+    Page,
+    ListsWrapper
+} from './assets'
 
-import {Page} from './assets'
+let
+    currentYear
 
-const styles = theme => ({
-    root: {
-        width: '100%',
-        maxWidth: 360,
-        backgroundColor: theme.palette.background.paper,
+const
+    styles = theme => ({
+        root: {
+            width: '100%',
+            maxWidth: 360,
+            backgroundColor: theme.palette.background.paper
+        },
+        listSubheader: {
+            backgroundColor: '#fff'
+        },
+        itemRoot: {
+            paddingTop: 5,
+            paddingBottom: 5
+        },
+        itemTextRoot: {
+            padding: 0,
+            width: 210,
+            display: 'flex',
+            alignItems: 'center'
+        },
+        primaryTypography: {
+            marginRight: 10
+        },
+        listSection: {
+            backgroundColor: 'inherit',
+        },
+        ul: {
+            backgroundColor: 'inherit',
+            padding: 0,
+        }
+    }),
+
+    ErrorContent = () => <div>
+        <Typography variant="body1" gutterBottom>Some shit is happened 8==э</Typography>
+        <Typography variant="body1" gutterBottom>Please try again</Typography>
+        <ErrorMessage/>
+    </div>,
+
+    renderListItem = (x, classes) => {
+        if (x.get('year') === currentYear)
+        return <ListItem
+            button
+            key={
+                x.get('archive_date') || x.get('id')
+            }
+            classes={{
+                root: classes.itemRoot
+            }}
+        >
+            <ListItemIcon>
+                <ArrowRight />
+            </ListItemIcon>
+            <ListItemText
+                inset
+                primary={
+                    x.get('month') || x.get('name')
+                }
+                secondary={x.get('items_count')}
+                classes={{
+                    root: classes.itemTextRoot,
+                    primary: classes.primaryTypography
+                }}
+            />
+        </ListItem>
     },
-    nested: {
-        paddingLeft: theme.spacing.unit * 4,
-    },
-})
 
-class NestedList extends React.Component {
-    state = {
-        open: true,
-    }
+    Niche = ({classes,
+        isLoading,
+        isFailed,
+        tagArchiveList,
+        nichesList,
+        nichesListIsLoading,
+        nichesListIsFailed
+    }) => <Page>
+        {isFailed
+            ? <ErrorContent/>
+            : <ListsWrapper>
+                {nichesListIsFailed
+                    ? <ErrorContent/>
+                    : nichesListIsLoading
+                    ? <CircularProgress/>
+                    : <List
+                        component="nav"
+                        subheader={
+                            <ListSubheader classes={{
+                                root: classes.listSubheader
+                            }}>
+                                All straight films
+                            </ListSubheader>
+                        }
+                    >
+                        {nichesList.map(x => renderListItem(x, classes))}
+                    </List>
+                }
+                <List
+                    component="nav"
+                    subheader={<li/>}
+                >
+                    {isLoading
+                        ? <CircularProgress/>
+                        : tagArchiveList.map(x => {
+                            if (x.get('year') !== currentYear) {
+                                currentYear = x.get('year')
 
-    handleClick = () => {
-        this.setState(state => ({ open: !state.open }))
-    }
-
-    render() {
-        const { classes } = this.props
-
-        return (
-        <Page>
-            <List
-            component="nav"
-            subheader={<ListSubheader component="div">Nested List Items</ListSubheader>}
-            >
-            <ListItem button>
-                <ListItemIcon>
-                <SendIcon />
-                </ListItemIcon>
-                <ListItemText inset primary="Sent mail" />
-            </ListItem>
-            <ListItem button>
-                <ListItemIcon>
-                <DraftsIcon />
-                </ListItemIcon>
-                <ListItemText inset primary="Drafts" />
-            </ListItem>
-            <ListItem button onClick={this.handleClick}>
-                <ListItemIcon>
-                <InboxIcon />
-                </ListItemIcon>
-                <ListItemText inset primary="Inbox" />
-                {this.state.open ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                <ListItem button className={classes.nested}>
-                    <ListItemIcon>
-                    <StarBorder />
-                    </ListItemIcon>
-                    <ListItemText inset primary="Starred" />
-                </ListItem>
+                                return <li
+                                    key={`section-${x.get('year')}`}
+                                    className={classes.listSection}
+                                >
+                                    <ul className={classes.ul}>
+                                        <ListSubheader classes={{
+                                            root: classes.listSubheader
+                                        }}>
+                                            {`Archives ${x.get('year')}`}
+                                        </ListSubheader>
+                                        {tagArchiveList.map(x => renderListItem(x, classes))}
+                                    </ul>
+                                </li>
+                            }
+                        })
+                    }
                 </List>
-            </Collapse>
-            </List>
-        </Page>
-        )
-    }
-}
+            </ListsWrapper>
+        }
+    </Page>
 
-NestedList.propTypes = {
-    classes: PropTypes.object.isRequired,
-}
+export default compose(
+    connect(
+        state => ({
+            tagArchiveList: state.getIn(['app', 'niches', 'niche', 'tagArchiveList']),
+            isLoading: state.getIn(['app', 'niches', 'niche', 'isLoading']),
+            isLoaded: state.getIn(['app', 'niches', 'niche', 'isLoaded']),
+            isFailed: state.getIn(['app', 'niches', 'niche', 'isFailed']),
 
-export default withStyles(styles)(NestedList)
+            nichesList: state.getIn(['app', 'niches', 'all', 'nichesList']),
+            nichesListIsLoading: state.getIn(['app', 'niches', 'all', 'isLoading']),
+            nichesListIsLoaded: state.getIn(['app', 'niches', 'all', 'isLoaded']),
+            nichesListIsFailed: state.getIn(['app', 'niches', 'all', 'isFailed']),
+        }),
+        dispatch => ({
+            loadPage: (event, value) => dispatch(actions.loadPageRequest()),
+            loadNichesList: (event, value) => dispatch(nichesListActions.loadPageRequest())
+        })
+    ),
+    lifecycle({
+        componentDidMount() {
+            if (!this.props.isLoading && !this.props.isLoaded) {
+                this.props.loadPage()
+            }
+            if (!this.props.nichesListIsLoading && !this.props.nichesListIsLoaded) {
+                this.props.loadNichesList()
+            }
+        }
+    }),
+    withStyles(styles)
+)(Niche)
