@@ -36,9 +36,10 @@ const
         }
     },
 
-    Niche = ({classes, currentNiche, currentBreakpoint, toggleNicheAction}) => <NicheBlock>
+    Niche = ({classes, currentNiche, currentBreakpoint, toggleNicheAction, isSSR}) => <NicheBlock>
         {
-            compareCurrentBreakpoint(currentBreakpoint, breakpointXS) <= 0
+            /* rendering mobile version for SSR to render links with "href"s for search engines */
+            (isSSR || compareCurrentBreakpoint(currentBreakpoint, breakpointXS) <= 0)
 
             ? <NicheMobile>
                 {Object.keys(niches).map(key =>
@@ -103,7 +104,8 @@ export default compose(
     connect(
         state => ({
             currentNiche: state.getIn(['app', 'mainHeader', 'niche', 'currentNiche']),
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint'])
+            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
+            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
         }),
         dispatch => ({
             toggleNicheAction: event => {

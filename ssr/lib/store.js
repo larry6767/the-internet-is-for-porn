@@ -12,8 +12,13 @@ export const initialStore = fromJS({
             hash: '',
             pathname: '/',
             search: '',
-        }
-    }
+        },
+    },
+    app: {
+        ssr: {
+            isSSR: true,
+        },
+    },
 })
 
 
