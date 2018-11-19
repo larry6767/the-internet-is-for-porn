@@ -18,10 +18,10 @@ const
         }
     },
 
-    Navigation = ({classes, location, setNewPathAction}) => <Nav>
+    Navigation = ({classes, location, goToPath}) => <Nav>
         <Tabs
             value={Object.keys(navigation).indexOf(location.get('pathname'))}
-            onChange={setNewPathAction}
+            onChange={goToPath}
             indicatorColor="primary"
             textColor="primary"
             scrollable
@@ -44,10 +44,10 @@ const
 export default compose(
     connect(
         state => ({
-            location: state.getIn(['router', 'location'])
+            location: state.getIn(['router', 'location']),
         }),
         dispatch => ({
-            setNewPathAction: (event, value) => {
+            goToPath: (event, value) => {
                 event.preventDefault()
                 dispatch(actions.setNewPath(value))
             }

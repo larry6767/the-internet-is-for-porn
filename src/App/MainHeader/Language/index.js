@@ -5,7 +5,7 @@ import {languages} from './fixtures'
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import actions from './actions'
-import {Item} from './assets'
+import {Item, InlinedSelectionWrap, InlinedSelectionList, InlinedSelectionItem} from './assets'
 
 const
     styles = {
@@ -24,7 +24,7 @@ const
         }
     },
 
-    LanguageSelect = ({classes, currentLanguage, setNewLanguageAction}) => <Select
+    LanguageSelectMaterial = ({classes, currentLanguage, chooseLanguage}) => <Select
         classes={{
             select: classes.select
         }}
@@ -34,7 +34,7 @@ const
                 classes={{
                     notchedOutline: classes.notchedOutline
                 }}
-                onChange={setNewLanguageAction}
+                onChange={chooseLanguage}
                 labelWidth={0}
                 name="language"
                 id="language"
@@ -53,15 +53,47 @@ const
                 {languages[language]}
             </MenuItem>)
         }
-    </Select>
+    </Select>,
+
+    // implementation for SSR, to give search engines bare links they could follow
+    LanguageSelectInlined = ({classes, currentLanguage, chooseLanguage}) => <InlinedSelectionWrap>
+        <InlinedSelectionList>
+            {Object.keys(languages).map(language =>
+                <InlinedSelectionItem
+                    key={language}
+                    href="/TODO"
+                    isActive={currentLanguage === language}
+                >
+                    <Item type={language}></Item>
+                    {languages[language]}
+                </InlinedSelectionItem>
+            )}
+        </InlinedSelectionList>
+    </InlinedSelectionWrap>,
+
+    LanguageSelect = ({isSSR, classes, currentLanguage, chooseLanguage}) => isSSR
+        ? <LanguageSelectInlined
+            classes={classes}
+            currentLanguage={currentLanguage}
+            chooseLanguage={chooseLanguage}
+        />
+        : <LanguageSelectMaterial
+            classes={classes}
+            currentLanguage={currentLanguage}
+            chooseLanguage={chooseLanguage}
+        />
 
 export default compose(
     connect(
         state => ({
-            currentLanguage: state.getIn(['app', 'mainHeader', 'language', 'currentLanguage'])
+            currentLanguage: state.getIn(['app', 'mainHeader', 'language', 'currentLanguage']),
+            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
         }),
         dispatch => ({
-            setNewLanguageAction: event => dispatch(actions.setNewLanguage(event.target.value))
+            chooseLanguage: event => {
+                event.preventDefault()
+                dispatch(actions.setNewLanguage(event.target.value))
+            },
         })
     ),
     withStyles(styles)

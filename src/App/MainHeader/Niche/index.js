@@ -36,7 +36,7 @@ const
         }
     },
 
-    Niche = ({classes, currentNiche, currentBreakpoint, toggleNicheAction, isSSR}) => <NicheBlock>
+    Niche = ({classes, currentNiche, currentBreakpoint, selectNiche, isSSR}) => <NicheBlock>
         {
             /* rendering mobile version for SSR to render links with "href"s for search engines */
             (isSSR || compareCurrentBreakpoint(currentBreakpoint, breakpointXS) <= 0)
@@ -48,7 +48,7 @@ const
                     ? <NicheMobileItemSelected
                         key={key}
                         href="/TODO"
-                        onClick={toggleNicheAction}
+                        onClick={selectNiche}
                         data-value={key}
                     >
                         {`${String.fromCharCode(niches[key])} ${key}`}
@@ -57,7 +57,7 @@ const
                     : <NicheMobileItem
                         key={key}
                         href="/TODO"
-                        onClick={toggleNicheAction}
+                        onClick={selectNiche}
                         data-value={key}
                     >
                         {`${String.fromCharCode(niches[key])} ${key}`}
@@ -73,7 +73,7 @@ const
                             icon: classes.icon
                         }}
                         value={currentNiche}
-                        onChange={toggleNicheAction}
+                        onChange={selectNiche}
                         input={
                             <OutlinedInput
                                 classes={{
@@ -108,7 +108,7 @@ export default compose(
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
         }),
         dispatch => ({
-            toggleNicheAction: event => {
+            selectNiche: event => {
                 event.preventDefault()
                 dispatch(actions.toggleNiche(event.target.value || event.target.dataset.value))
             }

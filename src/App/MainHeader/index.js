@@ -19,7 +19,7 @@ import {
 } from './assets'
 
 const
-    MainHeader = ({appUi, mainHeaderUi, toggleSearchAction}) => {
+    MainHeader = ({isSSR, appUi, mainHeaderUi, toggleSearchAction}) => {
         const
             isXSorXXS =
                 appUi.get('currentBreakpoint') === 'xs' ||
@@ -58,7 +58,7 @@ const
             {
                 !isXSorXXS
                     ? <div>
-                        <BottomInner>
+                        <BottomInner isSSR={isSSR}>
                             <NavigationWrapper>
                                 <Navigation/>
                                 <HDSwitch/>
@@ -74,7 +74,8 @@ const
 export default connect(
     state => ({
         appUi: state.getIn(['app', 'ui']),
-        mainHeaderUi: state.getIn(['app', 'mainHeader', 'ui'])
+        mainHeaderUi: state.getIn(['app', 'mainHeader', 'ui']),
+        isSSR: state.getIn(['app', 'ssr', 'isSSR']),
     }),
     dispatch => ({
         toggleSearchAction: () => dispatch(toggleSearch())
