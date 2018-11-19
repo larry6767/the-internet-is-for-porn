@@ -37,3 +37,14 @@ npm run start-production-ssr -- --port=8123
 - `--port=8001`
 - `--host=127.0.0.1`
 - `--production`
+
+### All steps to deploy and run production service
+
+```bash
+npm i
+npm run build
+npm run start-production-ssr
+```
+
+It will start HTTP server on `http://127.0.0.1:8001` and you could proxy it with __nginx__ or other
+HTTP(S) endpoint server.

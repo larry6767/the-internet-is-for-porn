@@ -9,11 +9,19 @@ import history from './history'
 
 const
     sagaMiddleware = createSagaMiddleware(),
-    enhancer = applyMiddleware(
-        routerMiddleware(history),
-        sagaMiddleware,
-        logger
-    ),
+
+    enhancer =
+        process.env.NODE_ENV === 'production'
+            ? applyMiddleware( // not using store logger in production mode
+                routerMiddleware(history),
+                sagaMiddleware
+            )
+            : applyMiddleware(
+                routerMiddleware(history),
+                sagaMiddleware,
+                logger
+            ),
+
     reducersPatch = reducers => set(reducers, 'router', connectRouter(history)),
     store = createStore(createRootReducer(reducersPatch), fromJS({}), enhancer)
 
