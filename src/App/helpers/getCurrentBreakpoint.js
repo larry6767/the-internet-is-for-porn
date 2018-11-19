@@ -29,6 +29,6 @@ export default (currentWidth = null) =>
     : breakpointXL
 
 export const compareCurrentBreakpoint = (a, b) =>
-    breakpoints.indexOf(a) == breakpoints.indexOf(b) ? 0 : // equals
-    breakpoints.indexOf(a) >  breakpoints.indexOf(b) ? 1 : // greater
+    breakpoints.indexOf(a) === breakpoints.indexOf(b) ? 0 : // equals
+    breakpoints.indexOf(a) >   breakpoints.indexOf(b) ? 1 : // greater
     -1 // less
