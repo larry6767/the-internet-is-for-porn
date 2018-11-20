@@ -1,10 +1,9 @@
-import {handleActions} from 'redux-actions'
-import {toggleNiche} from './actions'
 import {fromJS} from 'immutable'
+import {handleActions} from 'redux-actions'
+
+import actions from './actions'
 import {niches} from './fixtures'
 
 export default handleActions({
-    [toggleNiche]: (state, action) => {
-        const event = action.payload
-        return state.set('currentNiche', event.target.value || event.target.dataset.value)}
+    [actions.toggleNiche]: (state, {payload}) => state.set('currentNiche', payload),
 }, fromJS({currentNiche: Object.keys(niches)[0]}))

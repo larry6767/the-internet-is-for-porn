@@ -18,44 +18,39 @@ const
         }
     },
 
-    Navigation = ({classes, pathname, setNewPathAction}) => {
-        const value = Object.keys(navigation).reduce((target, item) => {
-            return (~pathname.indexOf(item)) ? target = item : target
-        }, 0)
-
-        return <Nav>
-            <Tabs
-                value={value}
-                onChange={setNewPathAction}
-                indicatorColor="primary"
-                textColor="primary"
-                scrollable
-                scrollButtons="off"
-            >
-                {
-                    Object.keys(navigation).map((item, index) => {
-                        return <Tab
-                            key={index}
-                            value={item}
-                            label={navigation[`${item}`]}
-                            classes={{
-                                root: classes.labelRoot,
-                                label: classes.label
-                            }}
-                        />
-                    })
-                }
-            </Tabs>
-        </Nav>
-    }
+    Navigation = ({classes, location, goToPath}) => <Nav>
+        <Tabs
+            value={Object.keys(navigation).indexOf(location.get('pathname'))}
+            onChange={goToPath}
+            indicatorColor="primary"
+            textColor="primary"
+            scrollable
+            scrollButtons="off"
+        >
+            {Object.keys(navigation).map((item, index) =>
+                <Tab
+                    href={item}
+                    key={index}
+                    label={navigation[item]}
+                    classes={{
+                        root: classes.labelRoot,
+                        label: classes.label
+                    }}
+                />
+            )}
+        </Tabs>
+    </Nav>
 
 export default compose(
     connect(
         state => ({
-            pathname: state.getIn(['router', 'location', 'pathname'])
+            location: state.getIn(['router', 'location']),
         }),
         dispatch => ({
-            setNewPathAction: (event, value) => dispatch(actions.setNewPath(value))
+            goToPath: (event, value) => {
+                event.preventDefault()
+                dispatch(actions.setNewPath(value))
+            }
         })
     ),
     withStyles(styles)

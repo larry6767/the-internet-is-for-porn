@@ -48,7 +48,7 @@ export default compose(
         }),
         dispatch => ({
             resizeAction: event => dispatch(actions.resize(
-                typeof event === "number" ? event : event.srcElement.outerWidth
+                typeof event === "number" ? event : event.srcElement.innerWidth
             ))
         })
     ),
@@ -57,7 +57,7 @@ export default compose(
         componentDidMount() {
             this.listener = throttle(this.props.resizeAction, 200)
             window.addEventListener('resize', this.listener)
-            this.props.resizeAction(window.outerWidth)
+            this.props.resizeAction(window.innerWidth)
         },
 
         componentWillUnmount() {

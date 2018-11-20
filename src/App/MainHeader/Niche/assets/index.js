@@ -13,17 +13,18 @@ export const NicheWrapper = styled.div`
     justify-content: flex-end;
 `
 
-export const NicheMobile = styled.div`
+export const NicheMobile = styled.nav`
     display: flex;
     width: 100%;
     justify-content: center;
 `
-export const NicheMobileItem = styled.div`
+export const NicheMobileItem = styled.a`
     width: 33.33%;
     padding: 10px 0;
     border: 2px solid ${({theme}) => theme.colors.mainColor2};
     text-align: center;
     color: ${({theme}) => theme.colors.additionalColor};
+    text-decoration: none;
 
     &:first-child {
         border-radius: 4px 0 0 4px;
