@@ -18,33 +18,41 @@ const
         }
     },
 
-    Navigation = ({classes, location, goToPath}) => <Nav>
-        <Tabs
-            value={Object.keys(navigation).indexOf(location.get('pathname'))}
-            onChange={goToPath}
-            indicatorColor="primary"
-            textColor="primary"
-            scrollable
-            scrollButtons="off"
-        >
-            {Object.keys(navigation).map((item, index) =>
-                <Tab
-                    href={item}
-                    key={index}
-                    label={navigation[item]}
-                    classes={{
-                        root: classes.labelRoot,
-                        label: classes.label
-                    }}
-                />
-            )}
-        </Tabs>
-    </Nav>
+    Navigation = ({classes, pathname, goToPath}) => {
+        const value = Object.keys(navigation).reduce((target, item) => {
+            return (~pathname.indexOf(item)) ? target = item : target
+        }, 0)
+
+        return <Nav>
+            <Tabs
+                value={value}
+                onChange={goToPath}
+                indicatorColor="primary"
+                textColor="primary"
+                scrollable
+                scrollButtons="off"
+            >
+                {
+                    Object.keys(navigation).map((item, index) => {
+                        return <Tab
+                            key={index}
+                            value={item}
+                            label={navigation[`${item}`]}
+                            classes={{
+                                root: classes.labelRoot,
+                                label: classes.label
+                            }}
+                        />
+                    })
+                }
+            </Tabs>
+        </Nav>
+    }
 
 export default compose(
     connect(
         state => ({
-            location: state.getIn(['router', 'location']),
+            pathname: state.getIn(['router', 'location', 'pathname'])
         }),
         dispatch => ({
             goToPath: (event, value) => {
