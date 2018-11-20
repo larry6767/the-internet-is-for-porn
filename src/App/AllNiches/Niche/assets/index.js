@@ -3,12 +3,14 @@ import styled from 'styled-components'
 export const Page = styled.div`
     min-height: calc(100vh - 373px);
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
     padding-top: 20px;
 `
 
 export const Content = styled.div`
     display: flex;
+    width: 100%;
 `
 
 export const ListsWrapper = styled.div`

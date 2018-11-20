@@ -1,4 +1,4 @@
-import {map, reverse} from "lodash"
+import {map, reverse, pick, reduce, assign} from "lodash"
 import {put, takeEvery} from 'redux-saga/effects'
 import actions from './actions'
 import errorActions from '../../../generic/ErrorMessage/actions'
@@ -16,7 +16,14 @@ function* loadPageFlow({payload}) {
             },
             body: JSON.stringify({
                 operation: 'getPageDataByUrl',
-                params: {'url': requestUrl}
+                params: {
+                    'url': requestUrl,
+                    'options': {
+                        'blocks': {
+                            'allTagsBlock': 1
+                        }
+                    }
+                }
             }),
         })
 
@@ -26,6 +33,7 @@ function* loadPageFlow({payload}) {
         const
             json = yield response.json(),
             data = {
+                lastRoute: payload,
                 pageUrl: json.page.PAGE_URL,
                 pageNumber: json.page.PAGE_NUMBER,
                 pageText: {
@@ -38,6 +46,11 @@ function* loadPageFlow({payload}) {
                     title: json.page.PAGE_TEXT.TITLE
                 },
                 pagesCount: json.page.PAGES_COUNT,
+                tagList: map(
+                    reduce(json.page.TAGS_BY_LETTERS.letters, (tagList, letter) =>
+                        assign(tagList, letter)),
+                    x => pick(x, ['id', 'name', 'sub_url', 'items_count'])
+                ),
             }
 
         data.tagArchiveList = reverse(map(json.page.TAG_ARCHIVE_LIST_FULL, x => {
