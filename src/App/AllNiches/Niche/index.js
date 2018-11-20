@@ -2,8 +2,6 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
-import actions from './actions'
-import nichesListActions from '../actions'
 import {
     ListSubheader,
     List,
@@ -15,9 +13,14 @@ import {
 } from '@material-ui/core'
 import ArrowRight from '@material-ui/icons/ChevronRight'
 import ErrorMessage from '../../../generic/ErrorMessage'
+import actions from './actions'
+import nichesListActions from '../actions'
+import ControlBar from '../../../generic/ControlBar'
 import {
     Page,
-    ListsWrapper
+    Content,
+    ListsWrapper,
+    PageWrapper
 } from './assets'
 
 let
@@ -89,62 +92,83 @@ const
         </ListItem>
     },
 
-    Niche = ({classes,
+    Niche = ({
+        classes,
         isLoading,
         isFailed,
         tagArchiveList,
         nichesList,
+        pagesCount,
+        pageUrl,
+        pageNumber,
+        sortList,
         nichesListIsLoading,
-        nichesListIsFailed
+        nichesListIsFailed,
     }) => <Page>
         {isFailed
             ? <ErrorContent/>
-            : <ListsWrapper>
-                {nichesListIsFailed
-                    ? <ErrorContent/>
-                    : nichesListIsLoading
-                    ? <CircularProgress/>
-                    : <List
-                        component="nav"
-                        subheader={
-                            <ListSubheader classes={{
-                                root: classes.listSubheader
-                            }}>
-                                All straight films
-                            </ListSubheader>
-                        }
-                    >
-                        {nichesList.map(x => renderListItem(x, classes))}
-                    </List>
-                }
-                <List
-                    component="nav"
-                    subheader={<li/>}
-                >
-                    {isLoading
+            : <Content>
+                <ListsWrapper>
+                    {nichesListIsFailed
+                        ? <ErrorContent/>
+                        : nichesListIsLoading
                         ? <CircularProgress/>
-                        : tagArchiveList.map(x => {
-                            if (x.get('year') !== currentYear) {
-                                currentYear = x.get('year')
-
-                                return <li
-                                    key={`section-${x.get('year')}`}
-                                    className={classes.listSection}
-                                >
-                                    <ul className={classes.ul}>
-                                        <ListSubheader classes={{
-                                            root: classes.listSubheader
-                                        }}>
-                                            {`Archives ${x.get('year')}`}
-                                        </ListSubheader>
-                                        {tagArchiveList.map(x => renderListItem(x, classes))}
-                                    </ul>
-                                </li>
+                        : <List
+                            component="nav"
+                            subheader={
+                                <ListSubheader classes={{
+                                    root: classes.listSubheader
+                                }}>
+                                    All straight films
+                                </ListSubheader>
                             }
-                        })
+                        >
+                            {nichesList.map(x => renderListItem(x, classes))}
+                        </List>
                     }
-                </List>
-            </ListsWrapper>
+                    <List
+                        component="nav"
+                        subheader={<li/>}
+                    >
+                        {isLoading
+                            ? <CircularProgress/>
+                            : tagArchiveList.map(x => {
+                                if (x.get('year') !== currentYear) {
+                                    currentYear = x.get('year')
+
+                                    return <li
+                                        key={`section-${x.get('year')}`}
+                                        className={classes.listSection}
+                                    >
+                                        <ul className={classes.ul}>
+                                            <ListSubheader classes={{
+                                                root: classes.listSubheader
+                                            }}>
+                                                {`Archives ${x.get('year')}`}
+                                            </ListSubheader>
+                                            {tagArchiveList.map(x => renderListItem(x, classes))}
+                                        </ul>
+                                    </li>
+                                }
+                            })
+                        }
+                    </List>
+                </ListsWrapper>
+                <PageWrapper>
+                    <Typography
+                        variant="h4"
+                        gutterBottom
+                    >
+                        {'3D Porn: 11629 Films, sorted by Popularity'}
+                    </Typography>
+                    <ControlBar
+                        pagesCount={pagesCount}
+                        pageUrl={pageUrl}
+                        pageNumber={pageNumber}
+                        sortList={sortList}
+                    />
+                </PageWrapper>
+            </Content>
         }
     </Page>
 
@@ -152,6 +176,10 @@ export default compose(
     connect(
         state => ({
             tagArchiveList: state.getIn(['app', 'niches', 'niche', 'tagArchiveList']),
+            pagesCount: state.getIn(['app', 'niches', 'niche', 'pagesCount']),
+            pageUrl: state.getIn(['app', 'niches', 'niche', 'pageUrl']),
+            pageNumber: state.getIn(['app', 'niches', 'niche', 'pageNumber']),
+            sortList: state.getIn(['app', 'niches', 'niche', 'sortList']),
             isLoading: state.getIn(['app', 'niches', 'niche', 'isLoading']),
             isLoaded: state.getIn(['app', 'niches', 'niche', 'isLoaded']),
             isFailed: state.getIn(['app', 'niches', 'niche', 'isFailed']),

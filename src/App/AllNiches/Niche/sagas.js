@@ -1,4 +1,4 @@
-import {map, reverse} from "lodash"
+import {map, reverse, pick} from "lodash"
 import {put, takeEvery} from 'redux-saga/effects'
 import actions from './actions'
 import errorActions from '../../../generic/ErrorMessage/actions'
@@ -20,9 +20,15 @@ function* loadPageFlow() {
         if (response.status !== 200)
             throw new Error(`Response status is ${response.status} (not 200)`)
 
-        const json = yield response.json()
+        const
+            json = yield response.json(),
+            data = {
+                pageUrl: json.page.PAGE_URL,
+                pageNumber: json.page.PAGE_NUMBER,
+                pagesCount: json.page.PAGES_COUNT,
+            }
 
-        const tagArchiveList = reverse(map(json.page.TAG_ARCHIVE_LIST_FULL, x => {
+        data.tagArchiveList = reverse(map(json.page.TAG_ARCHIVE_LIST_FULL, x => {
             x.month = json.page.MONTHS_NAMES[Number(x.month) < 10
                 ? x.month.slice(1)
                 : x.month
@@ -30,7 +36,7 @@ function* loadPageFlow() {
             return x
         }))
 
-        yield put(actions.loadPageSuccess(tagArchiveList))
+        yield put(actions.loadPageSuccess(data))
     } catch (err) {
         console.error('loadPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())

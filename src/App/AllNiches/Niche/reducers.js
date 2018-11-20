@@ -9,18 +9,27 @@ export default
             isLoaded: false,
             isFailed: false,
             tagArchiveList: List(),
+            pageUrl: '',
+            pageNumber: null,
+            pagesCount: null,
         }),
         [actions.loadPageSuccess]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            tagArchiveList: fromJS(payload),
+            tagArchiveList: fromJS(payload.tagArchiveList),
+            pageUrl: payload.pageUrl,
+            pageNumber: payload.pageNumber,
+            pagesCount: payload.pagesCount,
         }),
         [actions.loadPageFailure]: (state) => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
             tagArchiveList: List(),
+            pageUrl: '',
+            pageNumber: null,
+            pagesCount: null,
         }),
     }, fromJS({
         isLoading: false,
@@ -36,5 +45,8 @@ export default
                     "url": ''
                 }
             */
-        ]
+        ],
+        pageUrl: '',
+        pageNumber: null,
+        pagesCount: null,
     }))
