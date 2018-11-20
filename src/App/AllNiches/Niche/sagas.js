@@ -1,9 +1,12 @@
-import {map, reverse, pick} from "lodash"
+import {map, reverse} from "lodash"
 import {put, takeEvery} from 'redux-saga/effects'
 import actions from './actions'
 import errorActions from '../../../generic/ErrorMessage/actions'
 
-function* loadPageFlow() {
+function* loadPageFlow({payload}) {
+    const
+        requestUrl = `${payload.slice(payload.lastIndexOf('/'))}.html`
+
     try {
         const response = yield fetch('/react', {
             method: "POST",
@@ -13,7 +16,7 @@ function* loadPageFlow() {
             },
             body: JSON.stringify({
                 operation: 'getPageDataByUrl',
-                params: {'url': '/3d-porn.html'}
+                params: {'url': requestUrl}
             }),
         })
 
@@ -25,6 +28,15 @@ function* loadPageFlow() {
             data = {
                 pageUrl: json.page.PAGE_URL,
                 pageNumber: json.page.PAGE_NUMBER,
+                pageText: {
+                    description: json.page.PAGE_TEXT.DESCRIPTION,
+                    headerDescription: json.page.PAGE_TEXT['HEADER-DESCRIPTION'],
+                    headerTitle: json.page.PAGE_TEXT['HEADER-TITLE'],
+                    keywords: json.page.PAGE_TEXT.KEYWORDS,
+                    listHeader: json.page.PAGE_TEXT['LIST-HEADER'],
+                    listHeaderEmpty: json.page.PAGE_TEXT['LIST-HEADER-EMPTY'],
+                    title: json.page.PAGE_TEXT.TITLE
+                },
                 pagesCount: json.page.PAGES_COUNT,
             }
 
@@ -35,6 +47,8 @@ function* loadPageFlow() {
             ]
             return x
         }))
+
+        console.log('data: ', data)
 
         yield put(actions.loadPageSuccess(data))
     } catch (err) {

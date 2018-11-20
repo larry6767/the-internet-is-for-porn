@@ -11,6 +11,7 @@ export default
             tagArchiveList: List(),
             pageUrl: '',
             pageNumber: null,
+            pageText: List(),
             pagesCount: null,
         }),
         [actions.loadPageSuccess]: (state, {payload}) => state.merge({
@@ -20,6 +21,7 @@ export default
             tagArchiveList: fromJS(payload.tagArchiveList),
             pageUrl: payload.pageUrl,
             pageNumber: payload.pageNumber,
+            pageText: fromJS(payload.pageText),
             pagesCount: payload.pagesCount,
         }),
         [actions.loadPageFailure]: (state) => state.merge({
@@ -29,6 +31,7 @@ export default
             tagArchiveList: List(),
             pageUrl: '',
             pageNumber: null,
+            pageText: List(),
             pagesCount: null,
         }),
     }, fromJS({
@@ -48,5 +51,6 @@ export default
         ],
         pageUrl: '',
         pageNumber: null,
+        pageText: [],
         pagesCount: null,
     }))

@@ -1,6 +1,5 @@
 import React from 'react'
 import {withStyles} from '@material-ui/core/styles'
-import {pick, map} from 'lodash'
 import {
     Typography,
     Button,

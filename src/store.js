@@ -27,4 +27,7 @@ const
 
 store.runSaga = sagaMiddleware.run
 
+if (process.env.NODE_ENV === 'development')
+window.store = store
+
 export default store

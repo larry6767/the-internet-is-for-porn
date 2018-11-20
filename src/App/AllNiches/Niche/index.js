@@ -98,9 +98,10 @@ const
         isFailed,
         tagArchiveList,
         nichesList,
-        pagesCount,
         pageUrl,
         pageNumber,
+        pageText,
+        pagesCount,
         sortList,
         nichesListIsLoading,
         nichesListIsFailed,
@@ -150,6 +151,7 @@ const
                                         </ul>
                                     </li>
                                 }
+                                return ''
                             })
                         }
                     </List>
@@ -159,7 +161,7 @@ const
                         variant="h4"
                         gutterBottom
                     >
-                        {'3D Porn: 11629 Films, sorted by Popularity'}
+                        {pageText.get('listHeader')}
                     </Typography>
                     <ControlBar
                         pagesCount={pagesCount}
@@ -176,10 +178,11 @@ export default compose(
     connect(
         state => ({
             tagArchiveList: state.getIn(['app', 'niches', 'niche', 'tagArchiveList']),
-            pagesCount: state.getIn(['app', 'niches', 'niche', 'pagesCount']),
             pageUrl: state.getIn(['app', 'niches', 'niche', 'pageUrl']),
             pageNumber: state.getIn(['app', 'niches', 'niche', 'pageNumber']),
             sortList: state.getIn(['app', 'niches', 'niche', 'sortList']),
+            pageText: state.getIn(['app', 'niches', 'niche', 'pageText']),
+            pagesCount: state.getIn(['app', 'niches', 'niche', 'pagesCount']),
             isLoading: state.getIn(['app', 'niches', 'niche', 'isLoading']),
             isLoaded: state.getIn(['app', 'niches', 'niche', 'isLoaded']),
             isFailed: state.getIn(['app', 'niches', 'niche', 'isFailed']),
@@ -188,16 +191,18 @@ export default compose(
             nichesListIsLoading: state.getIn(['app', 'niches', 'all', 'isLoading']),
             nichesListIsLoaded: state.getIn(['app', 'niches', 'all', 'isLoaded']),
             nichesListIsFailed: state.getIn(['app', 'niches', 'all', 'isFailed']),
+
+            pathname: state.getIn(['router', 'location', 'pathname']),
         }),
         dispatch => ({
-            loadPage: (event, value) => dispatch(actions.loadPageRequest()),
+            loadPage: (pathname) => dispatch(actions.loadPageRequest(pathname)),
             loadNichesList: (event, value) => dispatch(nichesListActions.loadPageRequest())
         })
     ),
     lifecycle({
         componentDidMount() {
             if (!this.props.isLoading && !this.props.isLoaded) {
-                this.props.loadPage()
+                this.props.loadPage(this.props.pathname)
             }
             if (!this.props.nichesListIsLoading && !this.props.nichesListIsLoaded) {
                 this.props.loadNichesList()

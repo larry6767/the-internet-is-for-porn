@@ -10,7 +10,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import {withStyles} from '@material-ui/core/styles'
 import {
     Search,
-    SearchInput,
     SearchButton
 } from './assets'
 
