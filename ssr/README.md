@@ -48,3 +48,45 @@ npm run start-production-ssr
 
 It will start HTTP server on `http://127.0.0.1:8001` and you could proxy it with __nginx__ or other
 HTTP(S) endpoint server.
+
+#### Many workers
+
+You probably wish to start few workers in parallel and balance requests between them.
+To do so you could just start them on different ports like this:
+
+```bash
+npm run start-production-ssr -- --port=9001 &
+npm run start-production-ssr -- --port=9002 &
+npm run start-production-ssr -- --port=9003 &
+npm run start-production-ssr -- --port=9004 &
+```
+
+And patch your __nginx__ config with:
+
+```nginx
+http {
+    upstream ssr_workers {
+        server 127.0.0.1:9001;
+        server 127.0.0.1:9002;
+        server 127.0.0.1:9003;
+        server 127.0.0.1:9004;
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://ssr_workers;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header Host $http_host;
+        }
+    }
+}
+```
+
+P.S. You might need to set some __SELinux__ flags to make it work, such as theese
+(please make sure you clearly understand security risks while doing this):
+
+```bash
+setsebool -P httpd_can_network_connect 1
+```
