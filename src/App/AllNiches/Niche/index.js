@@ -12,6 +12,7 @@ import {
     Typography
 } from '@material-ui/core'
 import ArrowRight from '@material-ui/icons/ChevronRight'
+import Immutable from 'immutable'
 
 import ErrorMessage from '../../../generic/ErrorMessage'
 import ControlBar from '../../../generic/ControlBar'
@@ -148,12 +149,25 @@ const
                 </PageWrapper>
             </Content>
         }
-    </Page>
+    </Page>,
+
+    // `Record` for filtering taken data from store
+    NicheRecord = Immutable.Record({
+        isLoading: false,
+        isLoaded: false,
+        isFailed: false,
+        tagList: Immutable.List(),
+        tagArchiveList: Immutable.List(),
+        pageText: Immutable.Map(),
+        pagesCount: 1,
+        pageUrl: '',
+        pageNumber: 1,
+    })
 
 export default compose(
     connect(
         state => ({
-            niche: state.getIn(['app', 'niches', 'niche']),
+            niche: NicheRecord(state.getIn(['app', 'niches', 'niche'])),
         }),
         dispatch => ({
             loadPage: subPage => dispatch(actions.loadPageRequest(subPage)),

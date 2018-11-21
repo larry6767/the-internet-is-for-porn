@@ -1,4 +1,3 @@
-import {map, reverse, pick, reduce, assign} from "lodash"
 import {put, takeEvery} from 'redux-saga/effects'
 
 import {BACKEND_URL} from '../../../config'

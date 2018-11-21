@@ -141,7 +141,6 @@ const styles = theme => ({
     },
     input: {
         width: '100%',
-        display: 'flex',
         alignItems: 'center',
         border: 'none',
         borderRadius: '4px',

@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
+import {Link} from 'react-router-dom'
 import {
     List,
     ListItem,
@@ -10,56 +11,63 @@ import {
     Typography
 } from '@material-ui/core'
 import FolderIcon from '@material-ui/icons/Folder'
+import Immutable from 'immutable'
+
 import ErrorMessage from '../../generic/ErrorMessage'
 import {withStylesProps} from '../helpers'
+
 import actions from './actions'
 import {Page} from './assets'
-import {Link} from 'react-router-dom'
 
 const
-    styles = (theme, {nichesList, currentBreakpoint, isLoading}) => ({
-        root: {
-            width: isLoading ? 'auto' : '100%',
-            display: 'grid',
-            gridAutoFlow: 'column',
-            gridTemplateRows:
-                currentBreakpoint === 'md'
-                    ? `repeat(${Math.ceil(nichesList.size / 4)}, 1fr)`
-                    : currentBreakpoint === 'sm'
-                    ? `repeat(${Math.ceil(nichesList.size / 3)}, 1fr)`
-                    : currentBreakpoint === 'xs'
-                    ? `repeat(${Math.ceil(nichesList.size / 2)}, 1fr)`
-                    : currentBreakpoint === 'xxs'
-                    ? `repeat(${Math.ceil(nichesList.size / 1)}, 1fr)`
-                    : `repeat(${Math.ceil(nichesList.size / 5)}, 1fr)`,
-        },
-        listItemTextRoot: {
-            paddingLeft: 0,
-            paddingRight: 0,
-            display: currentBreakpoint === 'xxs'
-                ? 'flex'
-                : 'block',
-            alignItems: 'center',
-        },
-        primaryTypography: {
-            fontSize: 14,
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            marginRight: currentBreakpoint === 'xxs'
-                ? 10
-                : 0
-        },
-        secondaryTypography: {
-            fontSize: 12
-        },
-        itemGutters: {
-            paddingLeft: 10,
-            paddingRight: 10
-        },
-        routerLink: {
-            textDecoration: 'none'
+    styles = (theme, {niches, currentBreakpoint}) => {
+        const
+            nichesList = niches.get('nichesList')
+
+        return {
+            root: {
+                width: niches.get('isLoading') ? 'auto' : '100%',
+                display: 'grid',
+                gridAutoFlow: 'column',
+                gridTemplateRows:
+                    currentBreakpoint === 'md'
+                        ? `repeat(${Math.ceil(nichesList.size / 4)}, 1fr)`
+                        : currentBreakpoint === 'sm'
+                        ? `repeat(${Math.ceil(nichesList.size / 3)}, 1fr)`
+                        : currentBreakpoint === 'xs'
+                        ? `repeat(${Math.ceil(nichesList.size / 2)}, 1fr)`
+                        : currentBreakpoint === 'xxs'
+                        ? `repeat(${Math.ceil(nichesList.size / 1)}, 1fr)`
+                        : `repeat(${Math.ceil(nichesList.size / 5)}, 1fr)`,
+            },
+            listItemTextRoot: {
+                paddingLeft: 0,
+                paddingRight: 0,
+                display: currentBreakpoint === 'xxs'
+                    ? 'flex'
+                    : 'block',
+                alignItems: 'center',
+            },
+            primaryTypography: {
+                fontSize: 14,
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                marginRight: currentBreakpoint === 'xxs'
+                    ? 10
+                    : 0
+            },
+            secondaryTypography: {
+                fontSize: 12
+            },
+            itemGutters: {
+                paddingLeft: 10,
+                paddingRight: 10
+            },
+            routerLink: {
+                textDecoration: 'none'
+            }
         }
-    }),
+    },
 
     renderListItemLink = (x, classes) =>
         <Link to={`/all-niches/${x.get('subPage')}`}
@@ -87,13 +95,8 @@ const
             </ListItem>
         </Link>,
 
-    AllNiches = ({
-        classes,
-        nichesList,
-        isLoading,
-        isFailed,
-    }) => <Page>
-        { isFailed
+    AllNiches = ({classes, niches}) => <Page>
+        { niches.get('isFailed')
             ? <div>
                 <Typography variant="body1" gutterBottom>Some shit is happened 8==э</Typography>
                 <Typography variant="body1" gutterBottom>Please try again</Typography>
@@ -105,24 +108,27 @@ const
                     root: classes.root
                 }}
             >
-                {
-                    isLoading
-                        ? <CircularProgress/>
-                        : nichesList.map((x, idx) =>
-                            renderListItemLink(x, classes))
+                { niches.get('isLoading')
+                    ? <CircularProgress/>
+                    : niches.get('nichesList').map(x => renderListItemLink(x, classes))
                 }
             </List>
         }
-    </Page>
+    </Page>,
+
+    // `Record` for filtering taken data from store
+    NichesRecord = Immutable.Record({
+        isLoading: false,
+        isLoaded: false,
+        isFailed: false,
+        nichesList: Immutable.List(),
+    })
 
 export default compose(
     connect(
         state => ({
             currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            nichesList: state.getIn(['app', 'niches', 'all', 'nichesList']),
-            isLoading: state.getIn(['app', 'niches', 'all', 'isLoading']),
-            isLoaded: state.getIn(['app', 'niches', 'all', 'isLoaded']),
-            isFailed: state.getIn(['app', 'niches', 'all', 'isFailed']),
+            niches: NichesRecord(state.getIn(['app', 'niches', 'all'])),
         }),
         dispatch => ({
             loadPage: (event, value) => dispatch(actions.loadPageRequest())
@@ -130,7 +136,7 @@ export default compose(
     ),
     lifecycle({
         componentDidMount() {
-            if (!this.props.isLoading && !this.props.isLoaded) {
+            if (!this.props.niches.get('isLoading') && !this.props.niches.get('isLoaded')) {
                 this.props.loadPage()
             }
         }
