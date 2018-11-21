@@ -25,7 +25,7 @@ const
                     )}/>
                     <Route exact path="/all-niches" component={AllNiches}/>
 
-                    <Route path='/all-niches/*' component={Niche}/>
+                    <Route path='/all-niches/:child' component={Niche}/>
 
                     <Route exact path="/all-movies.html" render={() => <Redirect to='/all-movies'/>}/>
                     <Route path="/all-movies" component={AllMovies}/>

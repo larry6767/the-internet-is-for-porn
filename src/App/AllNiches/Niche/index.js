@@ -190,7 +190,7 @@ export default compose(
     lifecycle({
         componentDidMount() {
             const
-                subPage = this.props.match.params[0]
+                subPage = this.props.match.params.child
 
             if (typeof subPage !== 'string')
                 throw new Error(
