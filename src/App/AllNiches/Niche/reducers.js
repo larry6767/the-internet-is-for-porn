@@ -1,18 +1,18 @@
 import {handleActions} from 'redux-actions'
-import {fromJS, List} from 'immutable'
+import {fromJS, List, Map} from 'immutable'
 import actions from './actions'
 
 export default
     handleActions({
-        [actions.loadPageRequest]: (state) => state.merge({
+        [actions.loadPageRequest]: state => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
             lastSubPage: '',
             pageUrl: '',
-            pageNumber: null,
-            pageText: List(),
-            pagesCount: null,
+            pageNumber: 1,
+            pageText: Map(),
+            pagesCount: 1,
             tagList: List(),
             tagArchiveList: List(),
         }),
@@ -23,20 +23,20 @@ export default
             lastSubPage: subPage,
             pageUrl: data.pageUrl,
             pageNumber: data.pageNumber,
-            pageText: fromJS(data.pageText),
+            pageText: Map(fromJS(data.pageText)),
             pagesCount: data.pagesCount,
-            tagList: fromJS(data.tagList),
-            tagArchiveList: fromJS(data.tagArchiveList),
+            tagList: List(fromJS(data.tagList)),
+            tagArchiveList: List(fromJS(data.tagArchiveList)),
         }),
-        [actions.loadPageFailure]: (state) => state.merge({
+        [actions.loadPageFailure]: state => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
             lastSubPage: '',
             pageUrl: '',
-            pageNumber: null,
-            pageText: List(),
-            pagesCount: null,
+            pageNumber: 1,
+            pageText: Map(),
+            pagesCount: 1,
             tagList: List(),
             tagArchiveList: List(),
         }),
@@ -46,9 +46,19 @@ export default
         isFailed: false,
         lastSubPage: '',
         pageUrl: '',
-        pageNumber: null,
-        pageText: [],
-        pagesCount: null,
+        pageNumber: 1,
+        pageText: {
+            /*
+            description: '',
+            headerDescription: '',
+            headerTitle: '',
+            keywords: '',
+            listHeader: '',
+            listHeaderEmpty: '',
+            title: '',
+            */
+        },
+        pagesCount: 1,
         tagList: [
             /*
             {
@@ -66,7 +76,7 @@ export default
                 year: 0,
                 month: '',
                 itemsCount: 0,
-                url: ''
+                url: '',
             }
             */
         ],

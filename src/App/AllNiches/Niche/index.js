@@ -69,9 +69,7 @@ const
         if (x.get('year') === currentYear) // TODO FIXME fix this anti-pattern!
         return <ListItem
             button
-            key={
-                x.get('archiveDate') || x.get('id')
-            }
+            key={x.get('archiveDate') || x.get('id')}
             classes={{
                 root: classes.itemRoot
             }}
@@ -81,9 +79,7 @@ const
             </ListItemIcon>
             <ListItemText
                 inset
-                primary={
-                    x.get('month') || x.get('name')
-                }
+                primary={x.get('month') || x.get('name')}
                 secondary={x.get('itemsCount')}
                 classes={{
                     root: classes.itemTextRoot,
@@ -93,21 +89,10 @@ const
         </ListItem>
     },
 
-    Niche = ({
-        classes,
-        isLoading,
-        isFailed,
-        pageUrl,
-        pageNumber,
-        pageText,
-        pagesCount,
-        tagList,
-        tagArchiveList,
-        sortList
-    }) => <Page>
-        {isFailed
+    Niche = ({classes, niche}) => <Page>
+        { niche.get('isFailed')
             ? <ErrorContent/>
-            : isLoading
+            : niche.get('isLoading')
             ? <CircularProgress/>
             : <Content>
                 <ListsWrapper>
@@ -121,13 +106,10 @@ const
                             </ListSubheader>
                         }
                     >
-                        {tagList.map(x => renderListItem(x, classes))}
+                        {niche.get('tagList').map(x => renderListItem(x, classes))}
                     </List>
-                    <List
-                        component="nav"
-                        subheader={<li/>}
-                    >
-                        {tagArchiveList.map(x => {
+                    <List component="nav" subheader={<li/>}>
+                        {niche.get('tagArchiveList').map(x => {
                             // TODO FIXME fix this anti-pattern!
                             if (x.get('year') !== currentYear) {
                                 currentYear = x.get('year') // TODO FIXME fix this anti-pattern!
@@ -142,7 +124,10 @@ const
                                         }}>
                                             {`Archives ${x.get('year')}`}
                                         </ListSubheader>
-                                        {tagArchiveList.map(x => renderListItem(x, classes))}
+                                        {
+                                            niche.get('tagArchiveList')
+                                                .map(x => renderListItem(x, classes))
+                                        }
                                     </ul>
                                 </li>
                             }
@@ -151,17 +136,14 @@ const
                     </List>
                 </ListsWrapper>
                 <PageWrapper>
-                    <Typography
-                        variant="h4"
-                        gutterBottom
-                    >
-                        {pageText.get('listHeader')}
+                    <Typography variant="h4" gutterBottom>
+                        {niche.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <ControlBar
-                        pagesCount={pagesCount}
-                        pageUrl={pageUrl}
-                        pageNumber={pageNumber}
-                        sortList={sortList}
+                        pagesCount={niche.get('pagesCount')}
+                        pageUrl={niche.get('pageUrl')}
+                        pageNumber={niche.get('pageNumber')}
+                        sortList={undefined}
                     />
                 </PageWrapper>
             </Content>
@@ -171,17 +153,7 @@ const
 export default compose(
     connect(
         state => ({
-            isLoading: state.getIn(['app', 'niches', 'niche', 'isLoading']),
-            isLoaded: state.getIn(['app', 'niches', 'niche', 'isLoaded']),
-            isFailed: state.getIn(['app', 'niches', 'niche', 'isFailed']),
-            lastSubPage: state.getIn(['app', 'niches', 'niche', 'lastSubPage']),
-            pageUrl: state.getIn(['app', 'niches', 'niche', 'pageUrl']),
-            pageNumber: state.getIn(['app', 'niches', 'niche', 'pageNumber']),
-            pageText: state.getIn(['app', 'niches', 'niche', 'pageText']),
-            pagesCount: state.getIn(['app', 'niches', 'niche', 'pagesCount']),
-            tagList: state.getIn(['app', 'niches', 'niche', 'tagList']),
-            tagArchiveList: state.getIn(['app', 'niches', 'niche', 'tagArchiveList']),
-            sortList: state.getIn(['app', 'niches', 'niche', 'sortList']),
+            niche: state.getIn(['app', 'niches', 'niche']),
         }),
         dispatch => ({
             loadPage: subPage => dispatch(actions.loadPageRequest(subPage)),
@@ -199,8 +171,11 @@ export default compose(
                 )
 
             if (
-                !this.props.isLoading &&
-                (!this.props.isLoaded || subPage !== this.props.lastSubPage)
+                !this.props.niche.get('isLoading') &&
+                (
+                    !this.props.niche.get('isLoaded') ||
+                    subPage !== this.props.niche.get('lastSubPage')
+                )
             )
                 this.props.loadPage(subPage)
         }
