@@ -61,7 +61,7 @@ npm run start-production-ssr -- --port=9003 &
 npm run start-production-ssr -- --port=9004 &
 ```
 
-And patch your __nginx__ config with:
+And patch your __nginx__ config relying on this example:
 
 ```nginx
 http {
@@ -84,8 +84,8 @@ http {
 }
 ```
 
-P.S. You might need to set some __SELinux__ flags to make it work, such as theese
-(please make sure you clearly understand security risks while doing this):
+P.S. You might need to set some __SELinux__ flags to make it work, such as these
+(__please make sure you clearly understand security risks while doing this__):
 
 ```bash
 setsebool -P httpd_can_network_connect 1
