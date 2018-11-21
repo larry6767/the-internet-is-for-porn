@@ -19,9 +19,12 @@ const
     },
 
     Navigation = ({classes, pathname, goToPath}) => {
-        const value = Object.keys(navigation).reduce((target, item) => {
-            return (~pathname.indexOf(item)) ? target = item : target
-        }, 0)
+        // checking if we're on exact page or on nested child one.
+        // main page supposed to be excluded from nested children pages check
+        // (every page is child relative to main page `/`), so by adding another slash in second
+        // condition we're just broking it (`//...` will never be the case, it's already done).
+        const value =
+            Object.keys(navigation).find(x => x === pathname || pathname.indexOf(`${x}/`) === 0)
 
         return <Nav>
             <Tabs
@@ -32,19 +35,19 @@ const
                 scrollable
                 scrollButtons="off"
             >
-                {
-                    Object.keys(navigation).map((item, index) => {
-                        return <Tab
-                            key={index}
-                            value={item}
-                            label={navigation[`${item}`]}
-                            classes={{
-                                root: classes.labelRoot,
-                                label: classes.label
-                            }}
-                        />
-                    })
-                }
+                {Object.keys(navigation).map((item, index) =>
+                    /* WARNING! <a> with `href` attribute is important to give bare links to SSR */
+                    <Tab
+                        key={index}
+                        href={item}
+                        value={item}
+                        label={navigation[`${item}`]}
+                        classes={{
+                            root: classes.labelRoot,
+                            label: classes.label
+                        }}
+                    />
+                )}
             </Tabs>
         </Nav>
     }

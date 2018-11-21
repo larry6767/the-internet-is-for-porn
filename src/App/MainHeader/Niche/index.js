@@ -39,6 +39,8 @@ const
     Niche = ({classes, currentNiche, currentBreakpoint, selectNiche, isSSR}) => <NicheBlock>
         {
             /* rendering mobile version for SSR to render links with "href"s for search engines */
+            /* TODO FIXME set proper `href` attribute */
+            /* WARNING! <a> with `href` attribute is important to give bare links to SSR */
             (isSSR || compareCurrentBreakpoint(currentBreakpoint, breakpointXS) <= 0)
 
             ? <NicheMobile>

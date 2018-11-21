@@ -56,6 +56,8 @@ const
     </Select>,
 
     // implementation for SSR, to give search engines bare links they could follow
+    // TODO FIXME set proper `href` attribute
+    // WARNING! <a> with `href` attribute is important to give bare links to SSR
     LanguageSelectInlined = ({classes, currentLanguage, chooseLanguage}) => <InlinedSelectionWrap>
         <InlinedSelectionList>
             {Object.keys(languages).map(language =>
