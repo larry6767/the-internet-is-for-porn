@@ -49,20 +49,21 @@ const
                 year,
             })
         )),
-    }),
+    })
 
-    // sort of enum (to reduce human-factor mistakes).
-    // required suffix: `PageCode`.
+// sort of enum (to reduce human-factor mistakes).
+// required suffix: `PageCode`.
+export const
     allNichesPageCode = 'all-niches',
     nichePageCode = 'niche'
 
-export const getPageData = async ({headers, pageCode, pageSubCode}) => {
+export const getPageData = async ({headers, pageCode, subPageCode}) => {
     const
         [params, mapFn] =
             pageCode === allNichesPageCode
             ? [{url: '/?categories'}, getAllNichesMap]
             : pageCode === nichePageCode
-            ? [{url: `/${pageSubCode}.html`, options: {blocks: {allTagsBlock: 1}}}, getNicheMap]
+            ? [{url: `/${subPageCode}.html`, options: {blocks: {allTagsBlock: 1}}}, getNicheMap]
             : null
 
     if (params === null)

@@ -3,13 +3,19 @@ import React from 'react'
 import {mkHandler, mkHandlers} from './helpers'
 import {initialStoreOnUrl, newStore} from './store'
 import {renderComponent} from './render'
+import {proxiedHeaders} from './backend-proxy'
+import * as requests from './requests'
+import {logRequestError} from './helpers'
 
 import Home from '../../src/App/Home'
 import AllNiches from '../../src/App/AllNiches'
+import AllNichesActions from '../../src/App/AllNiches/actions'
 import Niche from '../../src/App/AllNiches/Niche'
+import NicheActions from '../../src/App/AllNiches/Niche/actions'
 import AllMovies from '../../src/App/AllMovies'
 import Pornstars from '../../src/App/Pornstars'
 import NotFound from '../../src/App/NotFound'
+import errorActions from '../../src/generic/ErrorMessage/actions'
 
 
 // WARNING! keep this up to date with front-end routing!
@@ -29,13 +35,47 @@ export const routeMapping = render => ({
         (req, res) => render(res, <Home/>, newStore(initialStoreOnUrl(req.url))),
     ]),
 
-    '/all-niches': mkHandler('get', (req, res) =>
-        render(res, <AllNiches/>, newStore(initialStoreOnUrl(req.url)))
-    ),
+    '/all-niches': mkHandler('get', async (req, res) => {
+        const store = newStore(initialStoreOnUrl(req.url))
 
-    '/all-niches/:child': mkHandler('get', (req, res) =>
-        render(res, <Niche/>, newStore(initialStoreOnUrl(req.url)))
-    ),
+        try {
+            store.dispatch(AllNichesActions.loadPageSuccess(
+                await requests.getPageData({
+                    headers: proxiedHeaders(req),
+                    pageCode: requests.allNichesPageCode,
+                })
+            ))
+        } catch (err) {
+            logRequestError(req)(err)
+            store.dispatch(AllNichesActions.loadPageFailure())
+            store.dispatch(errorActions.openErrorMessage())
+            res.status(500)
+        }
+
+        return render(res, <AllNiches/>, store)
+    }),
+
+    '/all-niches/:child': mkHandler('get', async (req, res) => {
+        const store = newStore(initialStoreOnUrl(req.url))
+
+        try {
+            store.dispatch(NicheActions.loadPageSuccess({
+                subPage: requests.allNichesPageCode,
+                data: await requests.getPageData({
+                    headers: proxiedHeaders(req),
+                    pageCode: requests.nichePageCode,
+                    subPageCode: req.params.child,
+                })
+            }))
+        } catch (err) {
+            logRequestError(req)(err)
+            store.dispatch(NicheActions.loadPageFailure())
+            store.dispatch(errorActions.openErrorMessage())
+            res.status(500)
+        }
+
+        return render(res, <Niche/>, store)
+    }),
 
     '/all-movies.html': mkHandler('get', (req, res) => res.redirect('/all-movies')),
     '/all-movies': mkHandler('get', (req, res) =>

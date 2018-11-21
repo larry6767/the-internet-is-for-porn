@@ -1,6 +1,7 @@
 import {cloneDeep} from 'lodash'
 
 import {backendHost} from '../config'
+import {logRequestError} from './helpers'
 import * as requests from './requests'
 
 export const proxiedHeaders = (req) => {
@@ -24,15 +25,8 @@ export const proxiedHeaders = (req) => {
 }
 
 const
-    throw500 = (req, res) => err => {
-        console.error(
-            new Date(),
-            'Some unexpected exception is thrown:', err,
-            'Request method:', req.method,
-            'Request URL:', req.url,
-            'Request body:', req.body,
-            'Request headers:', req.headers
-        )
+    jsonThrow500 = (req, res) => err => {
+        logRequestError(req)(err)
 
         res.status(500).json({
             status: 'error',
@@ -43,7 +37,7 @@ const
         }).end()
     },
 
-    throw400 = (req, res) => (message, additionalData) => {
+    jsonThrow400 = (req, res) => (message, additionalData) => {
         console.debug(
             new Date(),
             'Bad request.',
@@ -67,7 +61,7 @@ const
             invalidKeys = Object.keys(req.body).filter(x => !~validTopLevelKeys.indexOf(x))
 
         if (invalidKeys.length !== 0)
-            throw400(req, res)('Found unexpected/unknown top-level keys in request body', {
+            jsonThrow400(req, res)('Found unexpected/unknown top-level keys in request body', {
                 request: {
                     method: req.method,
                     operation: req.params.operation,
@@ -80,17 +74,17 @@ const
                 pageCode: req.body.pageCode,
             })
             .then(x => res.json(x).end())
-            .catch(throw500(req, res))
+            .catch(jsonThrow500(req, res))
         else if (req.body.pageCode === 'niche')
             requests.getPageData({
                 headers: proxiedHeaders(req),
-                pageCode: req.body.pageCode,
-                pageSubCode: req.body.pageSubCode,
+                pageCode: 'all-niches',
+                subPageCode: req.body.subPageCode,
             })
             .then(x => res.json(x).end())
-            .catch(throw500(req, res))
+            .catch(jsonThrow500(req, res))
         else
-            throw400(req, res)('Unexpected/unknown "pageCode" value in request body', {
+            jsonThrow400(req, res)('Unexpected/unknown "pageCode" value in request body', {
                 request: {
                     method: req.method,
                     operation: req.params.operation,
@@ -98,7 +92,7 @@ const
                 },
             })
     })({
-        validTopLevelKeys: ['pageCode', 'pageSubCode'],
+        validTopLevelKeys: ['pageCode', 'subPageCode'],
     })
 
 export default (req, res) => {
@@ -106,7 +100,7 @@ export default (req, res) => {
         req.headers['accept'] !== 'application/json' ||
         req.headers['content-type'] !== 'application/json; charset=utf-8'
     )
-        throw400(req, res)(
+        jsonThrow400(req, res)(
             'Only JSON API is supported, check "Accept" and "Content-Type" headers',
             {
                 request: {
@@ -122,7 +116,7 @@ export default (req, res) => {
     else if (req.method === 'POST' && req.params.operation === 'get-page-data')
         getPageData(req, res)
     else
-        throw400(req, res)('Unexpected request, check method and operation', {
+        jsonThrow400(req, res)('Unexpected request, check method and operation', {
             request: {
                 method: req.method,
                 operation: req.params.operation,

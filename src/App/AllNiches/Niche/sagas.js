@@ -13,7 +13,7 @@ function* loadNichePageFlow({payload: subPage}) {
                 'Content-Type': 'application/json; charset=utf-8',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({pageCode: 'niche', pageSubCode: subPage}),
+            body: JSON.stringify({pageCode: 'niche', subPageCode: subPage}),
         })
 
         if (response.status !== 200)
