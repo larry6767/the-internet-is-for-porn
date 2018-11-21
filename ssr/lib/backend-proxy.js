@@ -71,14 +71,14 @@ const
         else if (req.body.pageCode === 'all-niches')
             requests.getPageData({
                 headers: proxiedHeaders(req),
-                pageCode: req.body.pageCode,
+                pageCode: requests.allNichesPageCode,
             })
             .then(x => res.json(x).end())
             .catch(jsonThrow500(req, res))
         else if (req.body.pageCode === 'niche')
             requests.getPageData({
                 headers: proxiedHeaders(req),
-                pageCode: 'all-niches',
+                pageCode: requests.nichePageCode,
                 subPageCode: req.body.subPageCode,
             })
             .then(x => res.json(x).end())
