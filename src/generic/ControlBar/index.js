@@ -95,7 +95,7 @@ const
                     value={Object.keys(sortList)[0]}
                     input={
                         <OutlinedInput
-                            onChange={console.log(0)}
+                            onChange={() => console.log('OutlinedInput::onChange')}
                             labelWidth={0}
                             name="sort"
                             id="sort"

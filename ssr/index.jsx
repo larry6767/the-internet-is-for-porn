@@ -5,9 +5,11 @@ import React from 'react'
 import yargs from 'yargs'
 import express from 'express'
 import favicon from 'serve-favicon'
+import {json} from 'body-parser'
 
 import {renderComponent} from './lib/render'
 import {routeMapping} from './lib/routes'
+import backendProxyHandler from './lib/backend-proxy'
 
 
 const
@@ -50,6 +52,8 @@ if (isProduction)
     app.use('/static/js', express.static(join(publicDir, 'static', 'js')))
 
 app.get('/manifest.json', (req, res) => res.sendFile(join(publicDir, '/manifest.json')))
+
+app.use('/backend-proxy/:operation', json(), backendProxyHandler)
 
 // boilerplate to add express.js handlers by iterating `routeMapping`
 for (const route of Object.keys(routes)) {

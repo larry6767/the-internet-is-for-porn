@@ -1,40 +1,34 @@
-import {map, pick} from "lodash"
 import {put, takeEvery} from 'redux-saga/effects'
-import actions from './actions'
-import errorActions from '../../generic/ErrorMessage/actions'
-import nicheSaga from './Niche/sagas'
 
-function* loadPageFlow() {
+import {BACKEND_URL} from '../../config'
+import errorActions from '../../generic/ErrorMessage/actions'
+
+import nicheSaga from './Niche/sagas'
+import actions from './actions'
+
+function* loadAllNichesPageFlow() {
     try {
-        const response = yield fetch('/react', {
-            method: "POST",
+        const response = yield fetch(`${BACKEND_URL}/get-page-data`, {
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json; charset=utf-8",
-                "Accept": "application/json",
+                'Content-Type': 'application/json; charset=utf-8',
+                'Accept': 'application/json',
             },
-            body: JSON.stringify({
-                operation: 'getPageDataByUrl',
-                params: {'url': '/?categories'}
-            }),
+            body: JSON.stringify({pageCode: 'all-niches'}),
         })
 
         if (response.status !== 200)
             throw new Error(`Response status is ${response.status} (not 200)`)
 
-        const json = yield response.json()
-
-        yield put(actions.loadPageSuccess(map(
-            json.page.TAGS_INFO.items,
-            x => pick(x, ['id', 'name', 'sub_url', 'items_count'])
-        )))
+        yield put(actions.loadPageSuccess(yield response.json()))
     } catch (err) {
-        console.error('loadPageFlow is failed with exception:', err)
+        console.error('loadAllNichesPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())
         yield put(errorActions.openErrorMessage())
     }
 }
 
 export default function* saga() {
-    yield takeEvery(actions.loadPageRequest, loadPageFlow)
+    yield takeEvery(actions.loadPageRequest, loadAllNichesPageFlow)
     yield nicheSaga()
 }

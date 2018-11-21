@@ -8,7 +8,7 @@ export default
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            lastRoute: '',
+            lastSubPage: '',
             pageUrl: '',
             pageNumber: null,
             pageText: List(),
@@ -16,23 +16,23 @@ export default
             tagList: List(),
             tagArchiveList: List(),
         }),
-        [actions.loadPageSuccess]: (state, {payload}) => state.merge({
+        [actions.loadPageSuccess]: (state, {payload: {data, subPage}}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            lastRoute: payload.lastRoute,
-            pageUrl: payload.pageUrl,
-            pageNumber: payload.pageNumber,
-            pageText: fromJS(payload.pageText),
-            pagesCount: payload.pagesCount,
-            tagList: fromJS(payload.tagList),
-            tagArchiveList: fromJS(payload.tagArchiveList),
+            lastSubPage: subPage,
+            pageUrl: data.pageUrl,
+            pageNumber: data.pageNumber,
+            pageText: fromJS(data.pageText),
+            pagesCount: data.pagesCount,
+            tagList: fromJS(data.tagList),
+            tagArchiveList: fromJS(data.tagArchiveList),
         }),
         [actions.loadPageFailure]: (state) => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
-            lastRoute: '',
+            lastSubPage: '',
             pageUrl: '',
             pageNumber: null,
             pageText: List(),
@@ -44,30 +44,30 @@ export default
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        lastRoute: '',
+        lastSubPage: '',
         pageUrl: '',
         pageNumber: null,
         pageText: [],
         pagesCount: null,
         tagList: [
             /*
-              {
+            {
                 id: 0,
                 name: '',
-                sub_url: '',
-                items_count: 0,
-              }
+                subPage: '',
+                itemsCount: 0,
+            }
             */
         ],
         tagArchiveList: [
             /*
-                {
-                    "archive_date": 0,
-                    "year": 0,
-                    "month": '',
-                    "items_count": 0,
-                    "url": ''
-                }
+            {
+                archiveDate: 0,
+                year: 0,
+                month: '',
+                itemsCount: 0,
+                url: ''
+            }
             */
         ],
     }))

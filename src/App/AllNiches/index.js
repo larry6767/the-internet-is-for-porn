@@ -62,7 +62,7 @@ const
     }),
 
     renderListItemLink = (x, classes) =>
-        <Link to={`/all-niches/${x.get('sub_url')}`}
+        <Link to={`/all-niches/${x.get('subPage')}`}
             key={x.get('id')}
             className={classes.routerLink}
         >
@@ -82,7 +82,7 @@ const
                         secondary: classes.secondaryTypography
                     }}
                     primary={x.get('name')}
-                    secondary={x.get('items_count')}
+                    secondary={x.get('itemsCount')}
                 />
             </ListItem>
         </Link>,

@@ -12,18 +12,20 @@ import {
     Typography
 } from '@material-ui/core'
 import ArrowRight from '@material-ui/icons/ChevronRight'
+
 import ErrorMessage from '../../../generic/ErrorMessage'
-import actions from './actions'
 import ControlBar from '../../../generic/ControlBar'
+
 import {
     Page,
     Content,
     ListsWrapper,
     PageWrapper
 } from './assets'
+import actions from './actions'
 
 let
-    currentYear
+    currentYear // TODO FIXME fix this anti-pattern!
 
 const
     styles = theme => ({
@@ -64,11 +66,11 @@ const
     </div>,
 
     renderListItem = (x, classes) => {
-        if (x.get('year') === currentYear)
+        if (x.get('year') === currentYear) // TODO FIXME fix this anti-pattern!
         return <ListItem
             button
             key={
-                x.get('archive_date') || x.get('id')
+                x.get('archiveDate') || x.get('id')
             }
             classes={{
                 root: classes.itemRoot
@@ -82,7 +84,7 @@ const
                 primary={
                     x.get('month') || x.get('name')
                 }
-                secondary={x.get('items_count')}
+                secondary={x.get('itemsCount')}
                 classes={{
                     root: classes.itemTextRoot,
                     primary: classes.primaryTypography
@@ -126,8 +128,9 @@ const
                         subheader={<li/>}
                     >
                         {tagArchiveList.map(x => {
+                            // TODO FIXME fix this anti-pattern!
                             if (x.get('year') !== currentYear) {
-                                currentYear = x.get('year')
+                                currentYear = x.get('year') // TODO FIXME fix this anti-pattern!
 
                                 return <li
                                     key={`section-${x.get('year')}`}
@@ -171,28 +174,35 @@ export default compose(
             isLoading: state.getIn(['app', 'niches', 'niche', 'isLoading']),
             isLoaded: state.getIn(['app', 'niches', 'niche', 'isLoaded']),
             isFailed: state.getIn(['app', 'niches', 'niche', 'isFailed']),
-            lastRoute: state.getIn(['app', 'niches', 'niche', 'lastRoute']),
+            lastSubPage: state.getIn(['app', 'niches', 'niche', 'lastSubPage']),
             pageUrl: state.getIn(['app', 'niches', 'niche', 'pageUrl']),
             pageNumber: state.getIn(['app', 'niches', 'niche', 'pageNumber']),
             pageText: state.getIn(['app', 'niches', 'niche', 'pageText']),
             pagesCount: state.getIn(['app', 'niches', 'niche', 'pagesCount']),
             tagList: state.getIn(['app', 'niches', 'niche', 'tagList']),
             tagArchiveList: state.getIn(['app', 'niches', 'niche', 'tagArchiveList']),
-            pathname: state.getIn(['router', 'location', 'pathname']),
             sortList: state.getIn(['app', 'niches', 'niche', 'sortList']),
         }),
         dispatch => ({
-            loadPage: (pathname) => dispatch(actions.loadPageRequest(pathname))
+            loadPage: subPage => dispatch(actions.loadPageRequest(subPage)),
         })
     ),
     lifecycle({
         componentDidMount() {
+            const
+                subPage = this.props.match.params[0]
+
+            if (typeof subPage !== 'string')
+                throw new Error(
+                    `Something went wront, unexpected "subPage" type: "${typeof subPage}"` +
+                    ' (this is supposed to be provided by router via props to the component)'
+                )
+
             if (
                 !this.props.isLoading &&
-                (!this.props.isLoaded || this.props.pathname !== this.props.lastRoute)
-            ) {
-                this.props.loadPage(this.props.pathname)
-            }
+                (!this.props.isLoaded || subPage !== this.props.lastSubPage)
+            )
+                this.props.loadPage(subPage)
         }
     }),
     withStyles(styles)

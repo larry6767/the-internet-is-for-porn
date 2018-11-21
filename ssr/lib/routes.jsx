@@ -6,6 +6,7 @@ import {renderComponent} from './render'
 
 import Home from '../../src/App/Home'
 import AllNiches from '../../src/App/AllNiches'
+import Niche from '../../src/App/AllNiches/Niche'
 import AllMovies from '../../src/App/AllMovies'
 import Pornstars from '../../src/App/Pornstars'
 import NotFound from '../../src/App/NotFound'
@@ -30,6 +31,10 @@ export const routeMapping = render => ({
 
     '/all-niches': mkHandler('get', (req, res) =>
         render(res, <AllNiches/>, newStore(initialStoreOnUrl(req.url)))
+    ),
+
+    '/all-niches/:child': mkHandler('get', (req, res) =>
+        render(res, <Niche/>, newStore(initialStoreOnUrl(req.url)))
     ),
 
     '/all-movies.html': mkHandler('get', (req, res) => res.redirect('/all-movies')),

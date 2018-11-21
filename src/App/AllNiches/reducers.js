@@ -32,12 +32,12 @@ export default combineReducers({
         isFailed: false,
         nichesList: [
             /*
-              {
+            {
                 id: 0,
                 name: '',
-                sub_url: '',
-                items_count: 0,
-              }
+                subPage: '',
+                itemsCount: 0,
+            }
             */
         ]
     }))
