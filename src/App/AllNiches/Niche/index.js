@@ -156,12 +156,16 @@ const
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+
         tagList: Immutable.List(),
         tagArchiveList: Immutable.List(),
+
         pageText: Immutable.Map(),
         pagesCount: 1,
         pageUrl: '',
         pageNumber: 1,
+
+        lastSubPage: '',
     })
 
 export default compose(

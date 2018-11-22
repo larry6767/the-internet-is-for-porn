@@ -2,6 +2,7 @@ import React from 'react'
 import {Provider} from 'react-redux'
 import {Router} from 'react-router'
 import {createMemoryHistory} from 'history'
+import Immutable from 'immutable'
 import {ServerStyleSheet} from 'styled-components'
 import {SheetsRegistry} from 'jss'
 import JssProvider from 'react-jss/lib/JssProvider'
@@ -14,7 +15,7 @@ import {App} from '../../src/App'
 // renders a component to a stream of a server `response` object
 export const renderComponent =
     ({pre, post}) => // <- pre-bound layout template object
-    async (res, childComponent, store) => {
+    async (res, childComponent, store, frontendStorePresetBranches = []) => {
         res.write(pre)
 
         const
@@ -44,6 +45,31 @@ export const renderComponent =
                                 res.write(`${styleSheet}\n`)
 
                         res.write('</style>')
+
+                        try {
+                            const
+                                storePreset = frontendStorePresetBranches.reduce(
+                                    (out, x) => out.setIn(x, store.getState().getIn(x)),
+                                    Immutable.Map()
+                                ),
+
+                                storePresetJSON = JSON.stringify(storePreset.toJS())
+
+                            res.write('<script>')
+                            res.write('window.storePreset = ')
+                            res.write(storePresetJSON)
+                            res.write('</script>')
+                        } catch (exception) {
+                            // it's okay, we can load page without store preset,
+                            // just logging this incident.
+                            console.error(
+                                '[%s] Building front-end store preset of branches ' +
+                                    `${JSON.stringify(frontendStorePresetBranches)} ` +
+                                    'is failed with exception:',
+                                new Date(),
+                                exception
+                            )
+                        }
 
                         res.end(post)
                         resolve()

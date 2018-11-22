@@ -121,6 +121,7 @@ const
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+
         nichesList: Immutable.List(),
     })
 

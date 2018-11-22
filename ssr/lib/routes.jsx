@@ -52,7 +52,10 @@ export const routeMapping = render => ({
             res.status(500)
         }
 
-        return render(res, <AllNiches/>, store)
+        return render(res, <AllNiches/>, store, [
+            ['app', 'niches', 'all'],
+            ['generic', 'errorMessage'],
+        ])
     }),
 
     '/all-niches/:child': mkHandler('get', async (req, res) => {
@@ -60,7 +63,7 @@ export const routeMapping = render => ({
 
         try {
             store.dispatch(NicheActions.loadPageSuccess({
-                subPage: requests.allNichesPageCode,
+                subPage: req.params.child,
                 data: await requests.getPageData({
                     headers: proxiedHeaders(req),
                     pageCode: requests.nichePageCode,
@@ -74,7 +77,10 @@ export const routeMapping = render => ({
             res.status(500)
         }
 
-        return render(res, <Niche/>, store)
+        return render(res, <Niche/>, store, [
+            ['app', 'niches', 'niche'],
+            ['generic', 'errorMessage'],
+        ])
     }),
 
     '/all-movies.html': mkHandler('get', (req, res) => res.redirect('/all-movies')),

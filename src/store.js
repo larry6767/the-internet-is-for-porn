@@ -23,11 +23,11 @@ const
             ),
 
     reducersPatch = reducers => set(reducers, 'router', connectRouter(history)),
-    store = createStore(createRootReducer(reducersPatch), fromJS({}), enhancer)
+    storePreset = window.storePreset ? window.storePreset : {},
+    store = createStore(createRootReducer(reducersPatch), fromJS(storePreset), enhancer)
 
 store.runSaga = sagaMiddleware.run
 
-if (process.env.NODE_ENV === 'development')
-window.store = store
+if (process.env.NODE_ENV === 'development') window.store = store
 
 export default store
