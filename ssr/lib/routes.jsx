@@ -61,15 +61,19 @@ export const routeMapping = render => ({
     }),
 
     '/all-niches/:child': mkHandler('get', async (req, res) => {
-        const store = newStore(initialStoreOnUrl(req.url))
+        const
+            store = newStore(initialStoreOnUrl(req.url)),
+            subPage = req.query.sort && req.query.sort !== 'popular'
+                ? `${req.params.child}-${req.query.sort}`
+                : req.params.child
 
         try {
             store.dispatch(NicheActions.loadPageSuccess({
-                subPage: req.params.child,
+                subPage,
                 data: await requests.getPageData({
                     headers: proxiedHeaders(req),
                     pageCode: requests.nichePageCode,
-                    subPageCode: req.params.child,
+                    subPageCode: subPage,
                 })
             }))
         } catch (err) {

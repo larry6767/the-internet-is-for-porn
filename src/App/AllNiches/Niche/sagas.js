@@ -1,4 +1,5 @@
 import {put, takeEvery} from 'redux-saga/effects'
+import {push} from 'connected-react-router/immutable'
 
 import {BACKEND_URL} from '../../../config'
 import errorActions from '../../../generic/ErrorMessage/actions'
@@ -27,6 +28,11 @@ function* loadNichePageFlow({payload: subPage}) {
     }
 }
 
+function* setNewSort({payload}) {
+    yield put(push(`?sort=${payload}`))
+}
+
 export default function* saga() {
     yield takeEvery(actions.loadPageRequest, loadNichePageFlow)
+    yield takeEvery(actions.setNewSort, setNewSort)
 }

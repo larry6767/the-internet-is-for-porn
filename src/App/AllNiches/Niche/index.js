@@ -1,4 +1,5 @@
 import React from 'react'
+import _, {chain, partial, split} from 'lodash'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
@@ -90,7 +91,7 @@ const
         </ListItem>
     },
 
-    Niche = ({classes, niche}) => <Page>
+    Niche = ({classes, niche, chooseSort, isSSR}) => <Page>
         { niche.get('isFailed')
             ? <ErrorContent/>
             : niche.get('isLoading')
@@ -144,7 +145,10 @@ const
                         pagesCount={niche.get('pagesCount')}
                         pageUrl={niche.get('pageUrl')}
                         pageNumber={niche.get('pageNumber')}
-                        sortList={undefined}
+                        sortList={niche.get('sortList')}
+                        currentSort={niche.get('currentSort')}
+                        chooseSort={chooseSort}
+                        isSSR={isSSR}
                     />
                 </PageWrapper>
             </Content>
@@ -159,6 +163,7 @@ const
 
         tagList: Immutable.List(),
         tagArchiveList: Immutable.List(),
+        sortList: Immutable.List(),
 
         pageText: Immutable.Map(),
         pagesCount: 1,
@@ -172,15 +177,27 @@ export default compose(
     connect(
         state => ({
             niche: NicheRecord(state.getIn(['app', 'niches', 'niche'])),
+            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
+            search: state.getIn(['router', 'location', 'search']),
         }),
         dispatch => ({
             loadPage: subPage => dispatch(actions.loadPageRequest(subPage)),
+            chooseSort: event => dispatch(actions.setNewSort(event.target.value))
         })
     ),
     lifecycle({
         componentDidMount() {
             const
-                subPage = this.props.match.params.child
+                sort = chain(this.props.search)
+                    .replace('?', '')
+                    .split('&')
+                    .map(partial(split, _, '=', 2))
+                    .fromPairs()
+                    .value()
+                    .sort,
+                subPage = sort && sort !== 'popular'
+                    ? this.props.match.params.child + '-' + sort
+                    : this.props.match.params.child
 
             if (typeof subPage !== 'string')
                 throw new Error(

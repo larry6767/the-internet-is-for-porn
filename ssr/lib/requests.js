@@ -1,4 +1,11 @@
-import {map, reverse, reduce, set, assign} from 'lodash'
+import {
+    map,
+    reverse,
+    reduce,
+    set,
+    assign,
+    pick
+} from 'lodash'
 import rp from 'request-promise-native'
 
 import {backendUrl} from '../config'
@@ -14,42 +21,76 @@ const
         })
     ),
 
-    getNicheMap = x => ({
-        pageUrl: x.page.PAGE_URL,
-        pageNumber: x.page.PAGE_NUMBER,
-        pageText: {
-            description: x.page.PAGE_TEXT.DESCRIPTION,
-            headerDescription: x.page.PAGE_TEXT['HEADER-DESCRIPTION'],
-            headerTitle: x.page.PAGE_TEXT['HEADER-TITLE'],
-            keywords: x.page.PAGE_TEXT.KEYWORDS,
-            listHeader: x.page.PAGE_TEXT['LIST-HEADER'],
-            listHeaderEmpty: x.page.PAGE_TEXT['LIST-HEADER-EMPTY'],
-            title: x.page.PAGE_TEXT.TITLE
-        },
-        pagesCount: x.page.PAGES_COUNT,
-        tagList: map(
-            reduce(
-                x.page.TAGS_BY_LETTERS.letters,
-                (tagList, letter) => assign(tagList, letter)
+    getNicheMap = x => {
+        const sortList = map(
+            pick(
+                x.page.ACTIVE_NAV_TABS,
+                ['sort_LATEST', 'sort_LONGEST', 'sort_POPULAR']
             ),
-            ({id, name, sub_url, items_count}) => ({
-                id,
-                name,
-                subPage: sub_url,
-                itemsCount: items_count,
-            })
-        ),
-        tagArchiveList: reverse(map(
-            x.page.TAG_ARCHIVE_LIST_FULL,
-            ({archive_date, items_count, month, url, year}) => ({
-                archiveDate: archive_date,
-                itemsCount: items_count,
-                month: x.page.MONTHS_NAMES[Number(month) < 10 ? month.slice(1) : month],
-                url,
-                year,
-            })
-        )),
-    })
+            ({ACTIVE}, key) => {
+                key = key.slice(key.indexOf('_') + 1).toLowerCase()
+                return {
+                    active: ACTIVE,
+                    url: `?sort=${key}`,
+                    value: key,
+                    localText: getLocalText(x.page.LANG_ID, key)
+                }
+            }
+        )
+
+        return {
+            pageUrl: x.page.PAGE_URL,
+            pageNumber: x.page.PAGE_NUMBER,
+            pageText: {
+                description: x.page.PAGE_TEXT.DESCRIPTION,
+                headerDescription: x.page.PAGE_TEXT['HEADER-DESCRIPTION'],
+                headerTitle: x.page.PAGE_TEXT['HEADER-TITLE'],
+                keywords: x.page.PAGE_TEXT.KEYWORDS,
+                listHeader: x.page.PAGE_TEXT['LIST-HEADER'],
+                listHeaderEmpty: x.page.PAGE_TEXT['LIST-HEADER-EMPTY'],
+                title: x.page.PAGE_TEXT.TITLE
+            },
+            pagesCount: x.page.PAGES_COUNT,
+            tagList: map(
+                reduce(
+                    x.page.TAGS_BY_LETTERS.letters,
+                    (tagList, letter) => assign(tagList, letter)
+                ),
+                ({id, name, sub_url, items_count}) => ({
+                    id,
+                    name,
+                    subPage: sub_url,
+                    itemsCount: items_count,
+                })
+            ),
+            tagArchiveList: reverse(map(
+                x.page.TAG_ARCHIVE_LIST_FULL,
+                ({archive_date, items_count, month, url, year}) => ({
+                    archiveDate: archive_date,
+                    itemsCount: items_count,
+                    month: x.page.MONTHS_NAMES[Number(month) < 10 ? month.slice(1) : month],
+                    url,
+                    year,
+                })
+            )),
+            sortList: sortList,
+            currentSort: sortList.reduce((value, x) =>
+                x.active ? x.value : value, sortList[0].value),
+        }
+    },
+
+    getLocalText = (languageId, key) => {
+        switch (languageId) {
+            case 'eng':
+                return key === 'latest'
+                    ? 'Recent'
+                    : key === 'longest'
+                    ? 'Duration'
+                    : key === 'popular'
+                    ? 'Popularity'
+                    : undefined
+        }
+    }
 
 // sort of enum (to reduce human-factor mistakes).
 // required suffix: `PageCode`.

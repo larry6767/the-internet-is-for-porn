@@ -11,7 +11,10 @@ import {Link} from 'react-router-dom'
 import {
     Wrapper,
     ButtonsList,
-    SortWrapper
+    SortWrapper,
+    InlinedSelectionWrap,
+    InlinedSelectionList,
+    InlinedSelectionItem,
 } from './assets'
 
 const
@@ -30,9 +33,6 @@ const
         typographyRoot: {
             marginRight: 15
         },
-        menuItemRoot: {
-            display: 'flex'
-        },
         selectRoot: {
             paddingTop: 9,
             paddingBottom: 9,
@@ -44,7 +44,54 @@ const
         }
     },
 
-    ControlBar = ({classes, pagesCount, pageUrl, pageNumber, sortList = [1,2,3]}) => {
+    SortSelectMaterial = ({classes, sortList, chooseSort, currentSort}) => <Select
+        classes={{
+            select: classes.selectRoot
+        }}
+        value={currentSort}
+        input={
+            <OutlinedInput
+                onChange={chooseSort}
+                labelWidth={0}
+                name="sort"
+                id="sort"
+            />
+        }
+    >
+        {sortList.map(x =>
+            <MenuItem
+                key={x.get('value')}
+                value={x.get('value')}
+            >
+                {x.get('localText')}
+            </MenuItem>
+        )}
+    </Select>,
+
+    SortSelectInlined = ({sortList}) => <InlinedSelectionWrap>
+        <InlinedSelectionList>
+            {sortList.map(x =>
+                <InlinedSelectionItem
+                    key={x.get('value')}
+                    href={x.get('url')}
+                    isActive={x.get('active')}
+                >
+                    {x.get('localText')}
+                </InlinedSelectionItem>
+            )}
+        </InlinedSelectionList>
+    </InlinedSelectionWrap>,
+
+    ControlBar = ({
+        classes,
+        isSSR,
+        pagesCount,
+        pageUrl,
+        pageNumber,
+        sortList,
+        currentSort = 'popular', // TODO FIXME
+        chooseSort
+    }) => {
         const
             array = Array.from(Array(pagesCount).keys()),
             buttonsElements = array.map((x, idx) => {
@@ -88,32 +135,17 @@ const
                 >
                     sort:
                 </Typography>
-                <Select
-                    classes={{
-                        select: classes.selectRoot
-                    }}
-                    value={Object.keys(sortList)[0]}
-                    input={
-                        <OutlinedInput
-                            onChange={() => console.log('OutlinedInput::onChange')}
-                            labelWidth={0}
-                            name="sort"
-                            id="sort"
-                        />
-                    }
-                >
-                    {Object.keys(sortList).map((x, idx) =>
-                        <MenuItem
-                            key={idx}
-                            classes={{
-                                root: classes.menuItemRoot
-                            }}
-                            value={x}
-                        >
-                            {x}
-                        </MenuItem>
-                    )}
-                </Select>
+                {isSSR
+                    ? <SortSelectInlined
+                        sortList={sortList}
+                    />
+                    : <SortSelectMaterial
+                        classes={classes}
+                        sortList={sortList}
+                        chooseSort={chooseSort}
+                        currentSort={currentSort}
+                    />
+                }
             </SortWrapper>
         </Wrapper>
     }

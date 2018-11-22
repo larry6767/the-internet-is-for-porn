@@ -15,6 +15,8 @@ export default
             pagesCount: 1,
             tagList: List(),
             tagArchiveList: List(),
+            sortList: List(),
+            currentSort: '',
         }),
         [actions.loadPageSuccess]: (state, {payload: {data, subPage}}) => state.merge({
             isLoading: false,
@@ -27,6 +29,8 @@ export default
             pagesCount: data.pagesCount,
             tagList: List(fromJS(data.tagList)),
             tagArchiveList: List(fromJS(data.tagArchiveList)),
+            sortList: List(fromJS(data.sortList)),
+            currentSort: data.currentSort,
         }),
         [actions.loadPageFailure]: state => state.merge({
             isLoading: false,
@@ -39,7 +43,10 @@ export default
             pagesCount: 1,
             tagList: List(),
             tagArchiveList: List(),
+            sortList: List(),
+            currentSort: ''
         }),
+        [actions.setNewSort]: (state, {payload}) => state.set('currentSort', {payload}),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
@@ -80,4 +87,14 @@ export default
             }
             */
         ],
+        sortList: [
+            /*
+            {
+                active: false,
+                url: '',
+                localText: '',
+            }
+            */
+        ],
+        currentSort: '',
     }))
