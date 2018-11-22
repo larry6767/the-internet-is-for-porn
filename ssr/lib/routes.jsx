@@ -24,6 +24,8 @@ import errorActions from '../../src/generic/ErrorMessage/actions'
 //   1. Response object from express.js
 //   2. React component (like jsx of <SomeComponent/>)
 //   3. Initial store state, some immutable.js object such as `fromJS({})`
+//   4. Optional store branches paths to send to front-end to avoid double backend data request
+//      (an example: `[['one', 'branch', 'path'], ['second', 'branch', 'path']]`)
 // `render` is an async function which returns a `Promise`
 export const routeMapping = render => ({
     '/': mkHandlers('get', [
