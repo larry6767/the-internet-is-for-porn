@@ -14,12 +14,11 @@ export const mkHandlers = (method, handlers) =>
 
 export const logRequestError = req => err =>
     console.error(
-        new Date(),
-        'Some unexpected exception is thrown:', err,
-        'Request method:', req.method,
-        'Request URL:', req.url,
-        'Request body:', req.body,
-        'Request headers:', req.headers
+        '[%s] Some unexpected exception is thrown:', new Date(), err, '\n',
+        '  Request method:', req.method, '\n',
+        '  Request URL:', req.url, '\n',
+        '  Request body:', req.body, '\n',
+        '  Request headers:', req.headers
     )
 
 export const logRequestErrorAndFail = (req, res) => err => {

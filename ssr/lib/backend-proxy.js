@@ -39,14 +39,13 @@ const
 
     jsonThrow400 = (req, res) => (message, additionalData) => {
         console.debug(
-            new Date(),
-            'Bad request.',
-            'Error message:', message,
-            'Additional data:', additionalData,
-            'Request method:', req.method,
-            'Request URL:', req.url,
-            'Request body:', req.body,
-            'Request headers:', req.headers
+            '[%s] Bad request.\n', new Date(),
+            '  Error message:', message, '\n',
+            '  Additional data:', additionalData, '\n',
+            '  Request method:', req.method, '\n',
+            '  Request URL:', req.url, '\n',
+            '  Request body:', req.body, '\n',
+            '  Request headers:', req.headers
         )
 
         res.status(400).json({
