@@ -1,5 +1,5 @@
 import React from 'react'
-import _, {chain, partial, split} from 'lodash'
+import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
@@ -175,13 +175,7 @@ const
 
     loadPageFlow = ({search, match, niche, loadPage}) => {
         const
-            sort = chain(search)
-                .replace('?', '')
-                .split('&')
-                .map(partial(split, _, '=', 2))
-                .fromPairs()
-                .value()
-                .sort,
+            sort = queryString.parse(search).sort,
 
             subPage = sort && sort !== 'popular'
                 ? match.params.child + '-' + sort
