@@ -15,6 +15,7 @@ import {
 import ArrowRight from '@material-ui/icons/ChevronRight'
 import Immutable from 'immutable'
 
+import getSubPage from '../../../shared-src/routes/niche/get-subpage'
 import ErrorMessage from '../../../generic/ErrorMessage'
 import ControlBar from '../../../generic/ControlBar'
 
@@ -174,26 +175,10 @@ const
         lastSubPage: '',
     }),
 
-    // api accepts requests like '/somepage-latest-5.html',
-    // but on the client side this is implemented like '/section/somepage?sort=lates&page=5'
-    // WARNING! keep this up to date with __Niche__ component (/src/App/AllNiches/Niche/index.js)
     loadPageFlow = ({search, match, niche, loadPage}) => {
         const
-            parsedQS = queryString.parse(search),
-            sort = parsedQS.sort,
-
-            // because '/section/somepage?page=1' corresponds to '/somepage.html',
-            // '/section/somepage?page=2' matches '/somepage-1.html', etc
-            page = parsedQS.page - 1
-
-        let // !== popular - because popular by default, without postfix '-popular'
-            subPage = sort && sort !== 'popular'
-                ? `${match.params.child}-${sort}`
-                : match.params.child
-
-        subPage = page
-            ? `${subPage}-${page}`
-            : subPage
+            {sort, page} = queryString.parse(search),
+            subPage = getSubPage(match.params.child, sort, page)
 
         if (typeof subPage !== 'string')
             throw new Error(

@@ -16,6 +16,7 @@ import AllMovies from '../../src/App/AllMovies'
 import Pornstars from '../../src/App/Pornstars'
 import NotFound from '../../src/App/NotFound'
 import errorActions from '../../src/generic/ErrorMessage/actions'
+import getSubPage from '../../shared-src/routes/niche/get-subpage'
 
 
 // WARNING! keep this up to date with front-end routing!
@@ -60,28 +61,10 @@ export const routeMapping = render => ({
         ])
     }),
 
-
-    // api accepts requests like '/somepage-latest-5.html',
-    // but on the client side this is implemented like '/section/somepage?sort=lates&page=5'
-    // WARNING! keep this up to date with __Niche__ component (/src/App/AllNiches/Niche/index.js)
     '/all-niches/:child': mkHandler('get', async (req, res) => {
         const
             store = newStore(initialStoreOnUrl(req.url)),
-            child = req.params.child,
-            sort = req.query.sort,
-
-            // because '/section/somepage?page=1' corresponds to '/somepage.html',
-            // '/section/somepage?page=2' matches '/somepage-1.html', etc
-            pagination = Number(req.query.page) - 1
-
-        let // !== popular - because popular by default, without postfix '-popular'
-            subPage = sort && sort !== 'popular'
-                ? `${child}-${sort}`
-                : child
-
-        subPage = pagination
-            ? `${subPage}-${pagination}`
-            : subPage
+            subPage = getSubPage(req.params.child, req.query.sort, req.query.page)
 
         try {
             store.dispatch(NicheActions.loadPageSuccess({
