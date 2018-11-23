@@ -1,4 +1,5 @@
 import React from 'react'
+import queryString from 'query-string'
 import {withStyles} from '@material-ui/core/styles'
 import {
     Typography,
@@ -44,14 +45,21 @@ const
         }
     },
 
-    SortSelectMaterial = ({classes, sortList, chooseSort, currentSort}) => <Select
+    SortSelectMaterial = ({classes, search, sortList, chooseSort, currentSort}) => <Select
         classes={{
             select: classes.selectRoot
         }}
         value={currentSort}
         input={
             <OutlinedInput
-                onChange={chooseSort}
+                onChange={(event) => {
+                    const
+                        parsedQS = queryString.parse(search),
+                        newSortValue = event.target.value
+
+                    parsedQS.sort = newSortValue
+                    chooseSort(newSortValue, `?${queryString.stringify(parsedQS)}`)
+                }}
                 labelWidth={0}
                 name="sort"
                 id="sort"
@@ -68,47 +76,57 @@ const
         )}
     </Select>,
 
-    SortSelectInlined = ({sortList}) => <InlinedSelectionWrap>
+    SortSelectInlined = ({sortList, pageUrl, search}) => <InlinedSelectionWrap>
         <InlinedSelectionList>
-            {sortList.map(x =>
-                <InlinedSelectionItem
+            {sortList.map(x => {
+                const parsedQS = queryString.parse(search)
+                parsedQS.sort = x.get('value')
+                const link = `${pageUrl}?${queryString.stringify(parsedQS)}`
+
+                return <InlinedSelectionItem
                     key={x.get('value')}
-                    href={`?sort=${x.get('value')}`}
+                    href={link}
                     isActive={x.get('active')}
                 >
                     {x.get('localText')}
                 </InlinedSelectionItem>
-            )}
+            })}
         </InlinedSelectionList>
     </InlinedSelectionWrap>,
 
     ControlBar = ({
         classes,
-        isSSR,
-        pagesCount,
         pageUrl,
+        search,
+        isSSR,
+        chooseSort,
+        pagesCount,
         pageNumber,
         sortList,
         currentSort,
-        chooseSort
     }) => {
         const
             array = Array.from(Array(pagesCount).keys()),
-            buttonsElements = array.map((x, idx) => <Link
-                key={idx + 1}
-                to={idx === 0 ? pageUrl : `${pageUrl}-${idx}`}
-                className={classes.link}
-            >
-                <Button
-                    classes={{
-                        root: classes.paginationButtonRoot
-                    }}
-                    variant={(idx + 1 === pageNumber) ? 'contained' : 'outlined'}
-                    color="primary"
+            buttonsElements = array.map((x, idx) => {
+                const parsedQS = queryString.parse(search)
+                parsedQS.page = idx + 1
+                const link = `${pageUrl}?${queryString.stringify(parsedQS)}`
+
+                return <Link
+                    key={idx + 1}
+                    to={link}
+                    className={classes.link}
                 >
-                    {idx + 1}
-                </Button>
-            </Link>)
+                    <Button
+                        classes={{
+                            root: classes.paginationButtonRoot
+                        }}
+                        variant={(idx + 1 === pageNumber) ? 'contained' : 'outlined'}
+                        color="primary"
+                    >
+                        {idx + 1}
+                    </Button>
+                </Link>})
 
         return <Wrapper>
             <ButtonsList>
@@ -136,10 +154,13 @@ const
                 {isSSR
                     ? <SortSelectInlined
                         sortList={sortList}
+                        pageUrl={pageUrl}
+                        search={search}
                     />
                     : <SortSelectMaterial
                         classes={classes}
                         sortList={sortList}
+                        search={search}
                         chooseSort={chooseSort}
                         currentSort={currentSort}
                     />

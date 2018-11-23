@@ -45,7 +45,7 @@ export default
             sortList: List(),
             currentSort: ''
         }),
-        [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload),
+        [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
     }, fromJS({
         isLoading: false,
         isLoaded: false,

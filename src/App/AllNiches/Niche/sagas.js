@@ -29,7 +29,7 @@ function* loadNichePageFlow({payload: subPage}) {
 }
 
 function* setNewSort({payload}) {
-    yield put(push(`?sort=${payload}`))
+    yield put(push(payload.stringifiedQS))
 }
 
 export default function* saga() {

@@ -115,7 +115,7 @@ const
         </List>
     },
 
-    Niche = ({classes, niche, chooseSort, isSSR}) => <Page>
+    Niche = ({classes, pageUrl, search, niche, chooseSort, isSSR}) => <Page>
         { niche.get('isFailed')
             ? <ErrorContent/>
             : niche.get('isLoading')
@@ -141,13 +141,14 @@ const
                         {niche.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <ControlBar
+                        pageUrl={pageUrl}
+                        search={search}
+                        chooseSort={chooseSort}
+                        isSSR={isSSR}
                         pagesCount={niche.get('pagesCount')}
-                        pageUrl={niche.get('pageUrl')}
                         pageNumber={niche.get('pageNumber')}
                         sortList={niche.get('sortList')}
                         currentSort={niche.get('currentSort')}
-                        chooseSort={chooseSort}
-                        isSSR={isSSR}
                     />
                 </PageWrapper>
             </Content>
@@ -173,13 +174,26 @@ const
         lastSubPage: '',
     }),
 
+    // api accepts requests like '/somepage-latest-5.html',
+    // but on the client side this is implemented like '/section/somepage?sort=lates&page=5'
+    // WARNING! keep this up to date with __Niche__ component (/src/App/AllNiches/Niche/index.js)
     loadPageFlow = ({search, match, niche, loadPage}) => {
         const
-            sort = queryString.parse(search).sort,
+            parsedQS = queryString.parse(search),
+            sort = parsedQS.sort,
 
+            // because '/section/somepage?page=1' corresponds to '/somepage.html',
+            // '/section/somepage?page=2' matches '/somepage-1.html', etc
+            page = parsedQS.page - 1
+
+        let // !== popular - because popular by default, without postfix '-popular'
             subPage = sort && sort !== 'popular'
-                ? match.params.child + '-' + sort
+                ? `${match.params.child}-${sort}`
                 : match.params.child
+
+        subPage = page
+            ? `${subPage}-${page}`
+            : subPage
 
         if (typeof subPage !== 'string')
             throw new Error(
@@ -204,11 +218,15 @@ export default compose(
         state => ({
             niche: NicheRecord(state.getIn(['app', 'niches', 'niche'])),
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
+            pageUrl: state.getIn(['router', 'location', 'pathname']),
             search: state.getIn(['router', 'location', 'search']),
         }),
         dispatch => ({
             loadPage: subPage => dispatch(actions.loadPageRequest(subPage)),
-            chooseSort: event => dispatch(actions.setNewSort(event.target.value))
+            chooseSort: (newSortValue, stringifiedQS) => dispatch(actions.setNewSort({
+                newSortValue: newSortValue,
+                stringifiedQS: stringifiedQS
+            }))
         })
     ),
     lifecycle({
