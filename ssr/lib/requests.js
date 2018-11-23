@@ -30,7 +30,6 @@ const
                 key = key.slice(key.indexOf('_') + 1).toLowerCase()
                 return {
                     active: ACTIVE,
-                    url: `?sort=${key}`,
                     value: key,
                     localText: getLocalText(x.page.LANG_ID, key)
                 }

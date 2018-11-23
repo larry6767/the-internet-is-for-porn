@@ -171,7 +171,39 @@ const
         pageNumber: 1,
 
         lastSubPage: '',
-    })
+    }),
+
+    loadPageFlow = ({search, match, niche, loadPage}) => {
+        const
+            sort = chain(search)
+                .replace('?', '')
+                .split('&')
+                .map(partial(split, _, '=', 2))
+                .fromPairs()
+                .value()
+                .sort,
+
+            subPage = sort && sort !== 'popular'
+                ? match.params.child + '-' + sort
+                : match.params.child
+
+        if (typeof subPage !== 'string')
+            throw new Error(
+                `Something went wront, unexpected "subPage" type: "${typeof subPage}"` +
+                ' (this is supposed to be provided by router via props to the component)'
+            )
+
+        // "unless" condition.
+        // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
+        if (!(
+            niche.get('isLoading') ||
+            (
+                (niche.get('isLoaded') || niche.get('isFailed')) &&
+                subPage === niche.get('lastSubPage')
+            )
+        ))
+            loadPage(subPage)
+    }
 
 export default compose(
     connect(
@@ -187,33 +219,12 @@ export default compose(
     ),
     lifecycle({
         componentDidMount() {
-            const
-                sort = chain(this.props.search)
-                    .replace('?', '')
-                    .split('&')
-                    .map(partial(split, _, '=', 2))
-                    .fromPairs()
-                    .value()
-                    .sort,
-                subPage = sort && sort !== 'popular'
-                    ? this.props.match.params.child + '-' + sort
-                    : this.props.match.params.child
+            loadPageFlow(this.props)
+        },
 
-            if (typeof subPage !== 'string')
-                throw new Error(
-                    `Something went wront, unexpected "subPage" type: "${typeof subPage}"` +
-                    ' (this is supposed to be provided by router via props to the component)'
-                )
-
-            if (
-                !this.props.niche.get('isLoading') &&
-                (
-                    !this.props.niche.get('isLoaded') ||
-                    subPage !== this.props.niche.get('lastSubPage')
-                )
-            )
-                this.props.loadPage(subPage)
-        }
+        componentWillReceiveProps(nextProps) {
+            loadPageFlow(nextProps)
+        },
     }),
     withStyles(styles)
 )(Niche)

@@ -73,7 +73,7 @@ const
             {sortList.map(x =>
                 <InlinedSelectionItem
                     key={x.get('value')}
-                    href={x.get('url')}
+                    href={`?sort=${x.get('value')}`}
                     isActive={x.get('active')}
                 >
                     {x.get('localText')}

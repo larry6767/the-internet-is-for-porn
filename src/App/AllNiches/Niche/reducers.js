@@ -4,11 +4,11 @@ import actions from './actions'
 
 export default
     handleActions({
-        [actions.loadPageRequest]: state => state.merge({
+        [actions.loadPageRequest]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            lastSubPage: '',
+            lastSubPage: payload,
             pageUrl: '',
             pageNumber: 1,
             pageText: Map(),
@@ -36,7 +36,6 @@ export default
             isLoading: false,
             isLoaded: false,
             isFailed: true,
-            lastSubPage: '',
             pageUrl: '',
             pageNumber: 1,
             pageText: Map(),
@@ -91,7 +90,7 @@ export default
             /*
             {
                 active: false,
-                url: '',
+                value: '',
                 localText: '',
             }
             */
