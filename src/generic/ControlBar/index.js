@@ -89,28 +89,26 @@ const
         pageUrl,
         pageNumber,
         sortList,
-        currentSort = 'popular', // TODO FIXME
+        currentSort,
         chooseSort
     }) => {
         const
             array = Array.from(Array(pagesCount).keys()),
-            buttonsElements = array.map((x, idx) => {
-                return <Link
-                    key={idx + 1}
-                    to={idx === 0 ? pageUrl : `${pageUrl}-${idx}`}
-                    className={classes.link}
+            buttonsElements = array.map((x, idx) => <Link
+                key={idx + 1}
+                to={idx === 0 ? pageUrl : `${pageUrl}-${idx}`}
+                className={classes.link}
+            >
+                <Button
+                    classes={{
+                        root: classes.paginationButtonRoot
+                    }}
+                    variant={(idx + 1 === pageNumber) ? 'contained' : 'outlined'}
+                    color="primary"
                 >
-                    <Button
-                        classes={{
-                            root: classes.paginationButtonRoot
-                        }}
-                        variant={(idx + 1 === pageNumber) ? 'contained' : 'outlined'}
-                        color="primary"
-                    >
-                        {idx + 1}
-                    </Button>
-                </Link>
-            })
+                    {idx + 1}
+                </Button>
+            </Link>)
 
         return <Wrapper>
             <ButtonsList>

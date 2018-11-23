@@ -1,6 +1,5 @@
 import {
     map,
-    reverse,
     reduce,
     set,
     assign,
@@ -63,7 +62,7 @@ const
                     itemsCount: items_count,
                 })
             ),
-            tagArchiveList: reverse(map(
+            tagArchiveList: map(
                 x.page.TAG_ARCHIVE_LIST_FULL,
                 ({archive_date, items_count, month, url, year}) => ({
                     archiveDate: archive_date,
@@ -72,10 +71,9 @@ const
                     url,
                     year,
                 })
-            )),
+            ),
             sortList: sortList,
-            currentSort: sortList.reduce((value, x) =>
-                x.active ? x.value : value, sortList[0].value),
+            currentSort: sortList.find(x => x.active).value,
         }
     },
 

@@ -26,9 +26,6 @@ import {
 } from './assets'
 import actions from './actions'
 
-let
-    currentYear // TODO FIXME fix this anti-pattern!
-
 const
     styles = theme => ({
         root: {
@@ -67,28 +64,55 @@ const
         <ErrorMessage/>
     </div>,
 
-    renderListItem = (x, classes) => {
-        if (x.get('year') === currentYear) // TODO FIXME fix this anti-pattern!
-        return <ListItem
-            button
-            key={x.get('archiveDate') || x.get('id')}
+    // Generic list item component generator
+    renderListItem = (idKey, titleKey, countKey) => (x, classes) => <ListItem
+        button
+        key={x.get(idKey)}
+        classes={{
+            root: classes.itemRoot
+        }}
+    >
+        <ListItemIcon>
+            <ArrowRight />
+        </ListItemIcon>
+        <ListItemText
+            inset
+            primary={x.get(titleKey)}
+            secondary={x.get(countKey)}
             classes={{
-                root: classes.itemRoot
+                root: classes.itemTextRoot,
+                primary: classes.primaryTypography
             }}
-        >
-            <ListItemIcon>
-                <ArrowRight />
-            </ListItemIcon>
-            <ListItemText
-                inset
-                primary={x.get('month') || x.get('name')}
-                secondary={x.get('itemsCount')}
-                classes={{
-                    root: classes.itemTextRoot,
-                    primary: classes.primaryTypography
-                }}
-            />
-        </ListItem>
+        />
+    </ListItem>,
+
+    NichesListItem = renderListItem('id', 'name', 'itemsCount'),
+    ArchiveYearListItem = renderListItem('archiveDate', 'month', 'itemsCount'),
+
+    ArchiveList = ({classes, tagArchiveList}) => {
+        const
+            years = tagArchiveList
+                .groupBy(x => x.get('year'))
+                .sortBy((v, year) => year, (a, b) => a < b ? 1 : -1)
+                .map(x => x.sortBy(y => y.get('archiveDate')))
+
+        return <List component="nav" subheader={<li/>}>
+            {years.map((listByYear, year) =>
+                <li
+                    key={`section-${year}`}
+                    className={classes.listSection}
+                >
+                    <ul className={classes.ul}>
+                        <ListSubheader classes={{
+                            root: classes.listSubheader
+                        }}>
+                            {`Archives ${year}`}
+                        </ListSubheader>
+                        {listByYear.map(x => ArchiveYearListItem(x, classes))}
+                    </ul>
+                </li>
+            ).toList()}
+        </List>
     },
 
     Niche = ({classes, niche, chooseSort, isSSR}) => <Page>
@@ -108,34 +132,9 @@ const
                             </ListSubheader>
                         }
                     >
-                        {niche.get('tagList').map(x => renderListItem(x, classes))}
+                        {niche.get('tagList').map(x => NichesListItem(x, classes))}
                     </List>
-                    <List component="nav" subheader={<li/>}>
-                        {niche.get('tagArchiveList').map(x => {
-                            // TODO FIXME fix this anti-pattern!
-                            if (x.get('year') !== currentYear) {
-                                currentYear = x.get('year') // TODO FIXME fix this anti-pattern!
-
-                                return <li
-                                    key={`section-${x.get('year')}`}
-                                    className={classes.listSection}
-                                >
-                                    <ul className={classes.ul}>
-                                        <ListSubheader classes={{
-                                            root: classes.listSubheader
-                                        }}>
-                                            {`Archives ${x.get('year')}`}
-                                        </ListSubheader>
-                                        {
-                                            niche.get('tagArchiveList')
-                                                .map(x => renderListItem(x, classes))
-                                        }
-                                    </ul>
-                                </li>
-                            }
-                            return ''
-                        })}
-                    </List>
+                    <ArchiveList classes={classes} tagArchiveList={niche.get('tagArchiveList')}/>
                 </ListsWrapper>
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
@@ -164,6 +163,7 @@ const
         tagList: Immutable.List(),
         tagArchiveList: Immutable.List(),
         sortList: Immutable.List(),
+        currentSort: '',
 
         pageText: Immutable.Map(),
         pagesCount: 1,
