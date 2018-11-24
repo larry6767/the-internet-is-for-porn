@@ -25,6 +25,7 @@ const
                     )}/>
                     <Route exact path="/all-niches" component={AllNiches}/>
 
+                    <Route path='/all-niches/:child/archive/(\d{4})-(\d{2})' component={Niche}/>
                     <Route path='/all-niches/:child' component={Niche}/>
 
                     <Route exact path="/all-movies.html" render={() => <Redirect to='/all-movies'/>}/>

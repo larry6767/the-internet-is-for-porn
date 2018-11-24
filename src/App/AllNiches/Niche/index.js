@@ -218,6 +218,10 @@ export default compose(
     ),
     lifecycle({
         componentDidMount() {
+            // '/all-niches/foo/archive/2018-02'
+            // this.props.match.params.child // foo
+            // this.props.match.params[0] // 2018
+            // this.props.match.params[1] // 02
             loadPageFlow(this.props)
         },
 
