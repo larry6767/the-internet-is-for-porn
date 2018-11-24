@@ -150,6 +150,7 @@ const
                         pageNumber={niche.get('pageNumber')}
                         sortList={niche.get('sortList')}
                         currentSort={niche.get('currentSort')}
+                        archiveFilms={niche.get('archiveFilms')}
                     />
                 </PageWrapper>
             </Content>
@@ -162,15 +163,16 @@ const
         isLoaded: false,
         isFailed: false,
 
+        pageUrl: '',
+        pageNumber: 1,
+        pageText: Immutable.Map(),
+        pagesCount: 1,
+
         tagList: Immutable.List(),
         tagArchiveList: Immutable.List(),
         sortList: Immutable.List(),
         currentSort: '',
-
-        pageText: Immutable.Map(),
-        pagesCount: 1,
-        pageUrl: '',
-        pageNumber: 1,
+        archiveFilms: Immutable.Map(),
 
         lastSubPage: '',
     }),

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import queryString from 'query-string'
 import {withStyles} from '@material-ui/core/styles'
 import {
@@ -104,6 +104,7 @@ const
         pageNumber,
         sortList,
         currentSort,
+        archiveFilms,
     }) => {
         const
             array = Array.from(Array(pagesCount).keys()),
@@ -129,43 +130,83 @@ const
                 </Link>})
 
         return <Wrapper>
-            <ButtonsList>
-                {buttonsElements}
-            </ButtonsList>
-            <Button
-                variant="outlined"
-                color="primary"
-                classes={{
-                    root: classes.buttonRoot
-                }}
-            >
-                Archive films
-            </Button>
-            <SortWrapper>
-                <Typography
-                    variant="body1"
-                    gutterBottom
-                    classes={{
-                        root: classes.typographyRoot
-                    }}
-                >
-                    sort:
-                </Typography>
-                {isSSR
-                    ? <SortSelectInlined
-                        sortList={sortList}
-                        pageUrl={pageUrl}
-                        search={search}
-                    />
-                    : <SortSelectMaterial
-                        classes={classes}
-                        sortList={sortList}
-                        search={search}
-                        chooseSort={chooseSort}
-                        currentSort={currentSort}
-                    />
-                }
-            </SortWrapper>
+            {archiveFilms.get('active') === 0
+                ? <Fragment>
+                    <Button
+                            variant="outlined"
+                            color="primary"
+                            classes={{
+                                root: classes.buttonRoot
+                            }}
+                            href={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
+                        >
+                        previous month
+                    </Button>
+                    <ButtonsList>
+                        {buttonsElements}
+                    </ButtonsList>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        classes={{
+                            root: classes.buttonRoot
+                        }}
+                        href={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
+                    >
+                        next month
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        classes={{
+                            root: classes.buttonRoot
+                        }}
+                        href={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
+                    >
+                        Top Films
+                    </Button>
+                </Fragment>
+                : <Fragment>
+                    <ButtonsList>
+                        {buttonsElements}
+                    </ButtonsList>
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        classes={{
+                            root: classes.buttonRoot
+                        }}
+                        href={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
+                    >
+                        Archive films
+                    </Button>
+                    <SortWrapper>
+                        <Typography
+                            variant="body1"
+                            gutterBottom
+                            classes={{
+                                root: classes.typographyRoot
+                            }}
+                        >
+                            sort:
+                        </Typography>
+                        {isSSR
+                            ? <SortSelectInlined
+                                sortList={sortList}
+                                pageUrl={pageUrl}
+                                search={search}
+                            />
+                            : <SortSelectMaterial
+                                classes={classes}
+                                sortList={sortList}
+                                search={search}
+                                chooseSort={chooseSort}
+                                currentSort={currentSort}
+                            />
+                        }
+                    </SortWrapper>
+                </Fragment>
+            }
         </Wrapper>
     }
 

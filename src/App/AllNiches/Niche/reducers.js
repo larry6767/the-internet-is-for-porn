@@ -17,6 +17,7 @@ export default
             tagArchiveList: List(),
             sortList: List(),
             currentSort: '',
+            archiveFilms: fromJS(),
         }),
         [actions.loadPageSuccess]: (state, {payload: {data, subPage}}) => state.merge({
             isLoading: false,
@@ -31,6 +32,7 @@ export default
             tagArchiveList: List(fromJS(data.tagArchiveList)),
             sortList: List(fromJS(data.sortList)),
             currentSort: data.currentSort,
+            archiveFilms: fromJS(data.archiveFilms),
         }),
         [actions.loadPageFailure]: state => state.merge({
             isLoading: false,
@@ -43,7 +45,8 @@ export default
             tagList: List(),
             tagArchiveList: List(),
             sortList: List(),
-            currentSort: ''
+            currentSort: '',
+            archiveFilms: fromJS(),
         }),
         [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
     }, fromJS({
@@ -96,4 +99,12 @@ export default
             */
         ],
         currentSort: '',
+        archiveFilms: {
+            /*
+            {
+                active: false,
+                url: '',
+            }
+            */
+        }
     }))

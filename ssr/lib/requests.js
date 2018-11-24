@@ -3,7 +3,7 @@ import {
     reduce,
     set,
     assign,
-    pick
+    pick,
 } from 'lodash'
 import rp from 'request-promise-native'
 
@@ -31,7 +31,7 @@ const
                 return {
                     active: ACTIVE,
                     value: key,
-                    localText: getLocalText(x.page.LANG_ID, key)
+                    localText: getLocalText(x.page.LANG_ID, key),
                 }
             }
         )
@@ -46,7 +46,7 @@ const
                 keywords: x.page.PAGE_TEXT.KEYWORDS,
                 listHeader: x.page.PAGE_TEXT['LIST-HEADER'],
                 listHeaderEmpty: x.page.PAGE_TEXT['LIST-HEADER-EMPTY'],
-                title: x.page.PAGE_TEXT.TITLE
+                title: x.page.PAGE_TEXT.TITLE,
             },
             pagesCount: x.page.PAGES_COUNT,
             tagList: map(
@@ -73,6 +73,20 @@ const
             ),
             sortList: sortList,
             currentSort: sortList.find(x => x.active).value,
+            archiveFilms: x.page.ACTIVE_NAV_TABS.tag_archive_gals
+                ? {
+                    current: x.page.ACTIVE_NAV_TABS.tag_archive_gals.ACTIVE,
+                    monthForLink: x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL
+                        .slice(
+                            x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL.lastIndexOf('/') + 1,
+                            x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL.lastIndexOf('-archive.html')
+                        )
+                } : undefined,
+            topFilms: x.page.ACTIVE_NAV_TABS.tag_top_gals
+                ? {
+                    url: x.page.ACTIVE_NAV_TABS.tag_top_gals.URL
+                } : undefined,
+
         }
     },
 
