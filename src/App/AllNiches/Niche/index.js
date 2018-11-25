@@ -13,7 +13,7 @@ import {
     Typography
 } from '@material-ui/core'
 import ArrowRight from '@material-ui/icons/ChevronRight'
-import Immutable from 'immutable'
+import Immutable, { fromJS } from 'immutable'
 
 import getSubPage from '../../../shared-src/routes/niche/get-subpage'
 import ErrorMessage from '../../../generic/ErrorMessage'
@@ -116,7 +116,7 @@ const
         </List>
     },
 
-    Niche = ({classes, pageUrl, search, niche, chooseSort, isSSR}) => <Page>
+    Niche = ({classes, pageUrl, search, match, niche, chooseSort, isSSR}) => <Page>
         { niche.get('isFailed')
             ? <ErrorContent/>
             : niche.get('isLoading')
@@ -144,6 +144,7 @@ const
                     <ControlBar
                         pageUrl={pageUrl}
                         search={search}
+                        match={match}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
                         pagesCount={niche.get('pagesCount')}
@@ -151,7 +152,12 @@ const
                         sortList={niche.get('sortList')}
                         currentSort={niche.get('currentSort')}
                         archiveFilms={niche.get('archiveFilms')}
+                        tagArchiveListOlder={niche.get('tagArchiveListOlder')}
+                        tagArchiveListNewer={niche.get('tagArchiveListNewer')}
                     />
+                    <Typography variant="body1" gutterBottom>
+                        {`Showing 1 - ${niche.get('itemsCount')}`}
+                    </Typography>
                 </PageWrapper>
             </Content>
         }
@@ -173,14 +179,20 @@ const
         sortList: Immutable.List(),
         currentSort: '',
         archiveFilms: Immutable.Map(),
+        tagArchiveListOlder: Immutable.fromJS(),
+        tagArchiveListNewer: Immutable.fromJS(),
+        itemsCount: 0,
 
         lastSubPage: '',
     }),
 
     loadPageFlow = ({search, match, niche, loadPage}) => {
         const
+            path = match.params[0] && match.params[1]
+                ? `${match.params.child}/${match.params[0]}-${match.params[1]}-archive`
+                : match.params.child,
             {sort, page} = queryString.parse(search),
-            subPage = getSubPage(match.params.child, sort, page)
+            subPage = getSubPage(path, sort, page)
 
         if (typeof subPage !== 'string')
             throw new Error(
@@ -218,10 +230,6 @@ export default compose(
     ),
     lifecycle({
         componentDidMount() {
-            // '/all-niches/foo/archive/2018-02'
-            // this.props.match.params.child // foo
-            // this.props.match.params[0] // 2018
-            // this.props.match.params[1] // 02
             loadPageFlow(this.props)
         },
 

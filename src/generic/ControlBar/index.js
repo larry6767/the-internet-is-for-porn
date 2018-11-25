@@ -6,7 +6,7 @@ import {
     Button,
     Select,
     MenuItem,
-    OutlinedInput
+    OutlinedInput,
 } from '@material-ui/core'
 import {Link} from 'react-router-dom'
 import {
@@ -28,8 +28,11 @@ const
             minWidth: 36,
             marginRight: 5
         },
+        buttonsList: {
+            marginRight: 15
+        },
         buttonRoot: {
-            margin: '0 15px'
+            marginRight: 15
         },
         typographyRoot: {
             marginRight: 15
@@ -45,7 +48,13 @@ const
         }
     },
 
-    SortSelectMaterial = ({classes, search, sortList, chooseSort, currentSort}) => <Select
+    SortSelectMaterial = ({
+        classes,
+        search,
+        sortList,
+        chooseSort,
+        currentSort,
+    }) => <Select
         classes={{
             select: classes.selectRoot
         }}
@@ -76,7 +85,11 @@ const
         )}
     </Select>,
 
-    SortSelectInlined = ({sortList, pageUrl, search}) => <InlinedSelectionWrap>
+    SortSelectInlined = ({
+        sortList,
+        pageUrl,
+        search,
+    }) => <InlinedSelectionWrap>
         <InlinedSelectionList>
             {sortList.map(x => {
                 const parsedQS = queryString.parse(search)
@@ -94,10 +107,105 @@ const
         </InlinedSelectionList>
     </InlinedSelectionWrap>,
 
+    WrappedButton = ({
+        classes,
+        link,
+        text
+    }) => <Link
+        to={link}
+        className={classes.link}
+    >
+        <Button
+            variant="outlined"
+            color="primary"
+            classes={{
+                root: classes.buttonRoot
+            }}
+        >
+            {text}
+        </Button>
+    </Link>,
+
+    NicheControlBar = ({
+        classes,
+        pageUrl,
+        search,
+        isSSR,
+        chooseSort,
+        buttonsElements,
+        sortList,
+        currentSort,
+        archiveFilms,
+    }) => <Fragment>
+        <ButtonsList>
+            {buttonsElements}
+        </ButtonsList>
+        <WrappedButton
+            classes={classes}
+            link={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
+            text="Archive films"
+        />
+        <SortWrapper>
+            <Typography
+                variant="body1"
+                gutterBottom
+                classes={{
+                    root: classes.typographyRoot
+                }}
+            >
+                sort:
+            </Typography>
+            {isSSR
+                ? <SortSelectInlined
+                    sortList={sortList}
+                    pageUrl={pageUrl}
+                    search={search}
+                />
+                : <SortSelectMaterial
+                    classes={classes}
+                    sortList={sortList}
+                    search={search}
+                    chooseSort={chooseSort}
+                    currentSort={currentSort}
+                />
+            }
+        </SortWrapper>
+    </Fragment>,
+
+    ArchiveControlBar = ({
+        classes,
+        match,
+        buttonsElements,
+        tagArchiveListOlder,
+        tagArchiveListNewer,
+    }) => <Fragment>
+        <WrappedButton
+            classes={classes}
+            link={`/all-niches/${match.params.child}/archive/${
+                    tagArchiveListOlder.get('year')}-${tagArchiveListOlder.get('month')}`}
+            text="previous month"
+        />
+        <ButtonsList>
+            {buttonsElements}
+        </ButtonsList>
+        <WrappedButton
+            classes={classes}
+            link={`/all-niches/${match.params.child}/archive/${
+                tagArchiveListNewer.get('year')}-${tagArchiveListNewer.get('month')}`}
+            text="next month"
+        />
+        <WrappedButton
+            classes={classes}
+            link={`/all-niches/${match.params.child}`}
+            text="Top Films"
+        />
+    </Fragment>,
+
     ControlBar = ({
         classes,
         pageUrl,
         search,
+        match,
         isSSR,
         chooseSort,
         pagesCount,
@@ -105,6 +213,8 @@ const
         sortList,
         currentSort,
         archiveFilms,
+        tagArchiveListOlder,
+        tagArchiveListNewer,
     }) => {
         const
             array = Array.from(Array(pagesCount).keys()),
@@ -130,82 +240,25 @@ const
                 </Link>})
 
         return <Wrapper>
-            {archiveFilms.get('active') === 0
-                ? <Fragment>
-                    <Button
-                            variant="outlined"
-                            color="primary"
-                            classes={{
-                                root: classes.buttonRoot
-                            }}
-                            href={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
-                        >
-                        previous month
-                    </Button>
-                    <ButtonsList>
-                        {buttonsElements}
-                    </ButtonsList>
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        classes={{
-                            root: classes.buttonRoot
-                        }}
-                        href={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
-                    >
-                        next month
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        classes={{
-                            root: classes.buttonRoot
-                        }}
-                        href={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
-                    >
-                        Top Films
-                    </Button>
-                </Fragment>
-                : <Fragment>
-                    <ButtonsList>
-                        {buttonsElements}
-                    </ButtonsList>
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        classes={{
-                            root: classes.buttonRoot
-                        }}
-                        href={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
-                    >
-                        Archive films
-                    </Button>
-                    <SortWrapper>
-                        <Typography
-                            variant="body1"
-                            gutterBottom
-                            classes={{
-                                root: classes.typographyRoot
-                            }}
-                        >
-                            sort:
-                        </Typography>
-                        {isSSR
-                            ? <SortSelectInlined
-                                sortList={sortList}
-                                pageUrl={pageUrl}
-                                search={search}
-                            />
-                            : <SortSelectMaterial
-                                classes={classes}
-                                sortList={sortList}
-                                search={search}
-                                chooseSort={chooseSort}
-                                currentSort={currentSort}
-                            />
-                        }
-                    </SortWrapper>
-                </Fragment>
+            {archiveFilms.get('current') !== 0
+                ? <ArchiveControlBar
+                    classes={classes}
+                    match={match}
+                    buttonsElements={buttonsElements}
+                    tagArchiveListOlder={tagArchiveListOlder}
+                    tagArchiveListNewer={tagArchiveListNewer}
+                />
+                : <NicheControlBar
+                    classes={classes}
+                    pageUrl={pageUrl}
+                    search={search}
+                    isSSR={isSSR}
+                    chooseSort={chooseSort}
+                    buttonsElements={buttonsElements}
+                    sortList={sortList}
+                    currentSort={currentSort}
+                    archiveFilms={archiveFilms}
+                />
             }
         </Wrapper>
     }

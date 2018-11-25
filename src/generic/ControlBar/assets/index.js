@@ -2,10 +2,12 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.div`
     display: flex;
+    margin-bottom: 12px;
 `
 
 export const ButtonsList = styled.div`
     display: flex;
+    margin-right: 10px;
 `
 
 export const SortWrapper = styled.div`

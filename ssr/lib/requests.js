@@ -71,8 +71,16 @@ const
                     year,
                 })
             ),
+            tagArchiveListOlder: pick(
+                x.page.TAG_ARCHIVE_OLDER,
+                ['month', 'year']
+            ),
+            tagArchiveListNewer: pick(
+                x.page.TAG_ARCHIVE_NEWER,
+                ['month', 'year']
+            ),
             sortList: sortList,
-            currentSort: sortList.find(x => x.active).value,
+            currentSort: sortList.length ? sortList.find(x => x.active).value : '',
             archiveFilms: x.page.ACTIVE_NAV_TABS.tag_archive_gals
                 ? {
                     current: x.page.ACTIVE_NAV_TABS.tag_archive_gals.ACTIVE,
@@ -82,11 +90,7 @@ const
                             x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL.lastIndexOf('-archive.html')
                         )
                 } : undefined,
-            topFilms: x.page.ACTIVE_NAV_TABS.tag_top_gals
-                ? {
-                    url: x.page.ACTIVE_NAV_TABS.tag_top_gals.URL
-                } : undefined,
-
+            itemsCount: x.page.ITEMS_COUNT,
         }
     },
 

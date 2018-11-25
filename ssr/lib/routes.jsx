@@ -61,6 +61,36 @@ export const routeMapping = render => ({
         ])
     }),
 
+    // '/all-niches/:child/archive/(\d{4})-(\d{2})': mkHandler('get', async (req, res) => {
+    //     const
+    //         path = req.params[0] && req.params[1]
+    //             ? `${req.params.child}/${req.params[0]}-${req.params[1]}-archive`
+    //             : req.params.child,
+    //         store = newStore(initialStoreOnUrl(req.url)),
+    //         subPage = getSubPage(path, req.query.sort, req.query.page)
+
+    //     try {
+    //         store.dispatch(NicheActions.loadPageSuccess({
+    //             subPage,
+    //             data: await requests.getPageData({
+    //                 headers: proxiedHeaders(req),
+    //                 pageCode: requests.nichePageCode,
+    //                 subPageCode: subPage,
+    //             })
+    //         }))
+    //     } catch (err) {
+    //         logRequestError(req)(err)
+    //         store.dispatch(NicheActions.loadPageFailure())
+    //         store.dispatch(errorActions.openErrorMessage())
+    //         res.status(500)
+    //     }
+
+    //     return render(res, <Niche/>, store, [
+    //         ['app', 'niches', 'niche'],
+    //         ['generic', 'errorMessage'],
+    //     ])
+    // }),
+
     '/all-niches/:child': mkHandler('get', async (req, res) => {
         const
             store = newStore(initialStoreOnUrl(req.url)),
