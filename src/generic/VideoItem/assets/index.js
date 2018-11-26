@@ -12,21 +12,6 @@ export const Wrapper = styled.div`
         margin-right: 0;
     }
 `
-
-export const VideoPreview = styled.div`
-    display: flex;
-    align-items: flex-end;
-    height: 180px;
-    width: 100%;
-    border: 1px solid #000;
-    border-radius: 1px;
-    overflow: hidden;
-
-    ${'' /* &:hover .VideoPreviewBar {
-        transform: translateY(0px);
-    } */}
-`
-
 export const VideoPreviewBar = styled.div`
     display: flex;
     justify-content: space-between;
@@ -35,6 +20,21 @@ export const VideoPreviewBar = styled.div`
     height: 31px;
     transform: translateY(31px);
     transition: transform 0.2s;
+`
+
+export const VideoPreview = styled.div`
+    display: flex;
+    align-items: flex-end;
+    height: 180px;
+    width: 100%;
+    border: 1px solid #000;
+    background: ${({thumb}) => `url(${thumb})`};
+    border-radius: 1px;
+    overflow: hidden;
+
+    &:hover ${VideoPreviewBar} {
+        transform: translateY(0px);
+    }
 `
 
 export const InfoBlock = styled.div`

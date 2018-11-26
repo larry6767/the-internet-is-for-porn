@@ -18,14 +18,44 @@ const
     styles = theme => ({
         typography: {
             color: theme.palette.primary.contrastText
+        },
+        typographyTitle: {
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            cursor: 'help',
+        },
+        typographyTags: {
+            cursor: 'help',
+        },
+        favoriteIcon: {
+            transition: 'width 0.2s, height 0.2s, top 0.2s, left 0.2s',
+            '&:hover': {
+                color: 'red',
+                width: '1.1em',
+                height: '1.1em',
+                position: 'relative',
+                top: '-0.05em',
+                left: '-0.05em',
+            }
         }
     }),
 
-    VideoItem = ({classes}) => <Wrapper>
-        <VideoPreview>
+    VideoItem = ({
+        classes,
+        thumb,
+        title,
+        sponsorid,
+        tags,
+        tagsShort,
+        urlRegular,
+        favorite,
+        duration,
+    }) => <Wrapper>
+        <VideoPreview thumb={thumb}>
             <VideoPreviewBar>
                 <Like>
-                    <Favorite/>
+                    <Favorite classes={{root: classes.favoriteIcon}}/>
                 </Like>
                 <Duration>
                     <Typography
@@ -34,16 +64,33 @@ const
                             root: classes.typography
                         }}
                     >
-                        12:23
+                        {`${Math.floor(duration / 60)}:${
+                            duration % 60 < 10 ? '0' + duration % 60 : duration % 60}`}
                     </Typography>
                 </Duration>
             </VideoPreviewBar>
         </VideoPreview>
         <InfoBlock>
-            <Typography variant="body1">some name</Typography>
+            <Typography
+                variant="body1"
+                classes={{
+                    root: classes.typographyTitle
+                }}
+                title={title}
+            >
+                {title}
+            </Typography>
             <InfoBlockInner>
-                <Typography variant="body2">resourse</Typography>
-                <Typography variant="body2">category</Typography>
+                <Typography variant="body2">pornSharing</Typography>
+                <Typography
+                    variant="body2"
+                    classes={{
+                        root: classes.typographyTags
+                    }}
+                    title={tags}
+                >
+                    {tagsShort}
+                </Typography>
             </InfoBlockInner>
         </InfoBlock>
     </Wrapper>

@@ -1,5 +1,5 @@
 import {handleActions} from 'redux-actions'
-import {fromJS, List, Map} from 'immutable'
+import {fromJS, List, OrderedMap, Map} from 'immutable'
 import actions from './actions'
 
 export default
@@ -21,6 +21,7 @@ export default
             tagArchiveListOlder: fromJS(),
             tagArchiveListNewer: fromJS(),
             itemsCount: 0,
+            videosList: List(),
         }),
         [actions.loadPageSuccess]: (state, {payload: {data, subPage}}) => state.merge({
             isLoading: false,
@@ -39,6 +40,7 @@ export default
             tagArchiveListOlder: fromJS(data.tagArchiveListOlder),
             tagArchiveListNewer: fromJS(data.tagArchiveListNewer),
             itemsCount: data.itemsCount,
+            videosList: List(fromJS(data.videosList)),
         }),
         [actions.loadPageFailure]: state => state.merge({
             isLoading: false,
@@ -46,7 +48,7 @@ export default
             isFailed: true,
             pageUrl: '',
             pageNumber: 1,
-            pageText: Map(),
+            pageText: OrderedMap(),
             pagesCount: 1,
             tagList: List(),
             tagArchiveList: List(),
@@ -56,6 +58,7 @@ export default
             tagArchiveListOlder: fromJS(),
             tagArchiveListNewer: fromJS(),
             itemsCount: 0,
+            videosList: List(),
         }),
         [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
     }, fromJS({
@@ -133,4 +136,20 @@ export default
             */
         },
         itemsCount: 0,
+        videosList: [
+            /*
+            {
+                id: 0,
+                thumb,
+                title: '',
+                sponsorId: 0,
+                tags: '',
+                tagsShort: '',
+                urlRegular: '',
+                favorite: 0,
+                duration: 0,
+
+            }
+            */
+        ],
     }))

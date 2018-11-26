@@ -1,9 +1,12 @@
-import {
+import _, {
     map,
     reduce,
     set,
     assign,
     pick,
+    sortBy,
+    toPairs,
+    values,
 } from 'lodash'
 import rp from 'request-promise-native'
 
@@ -21,20 +24,31 @@ const
     ),
 
     getNicheMap = x => {
-        const sortList = map(
-            pick(
-                x.page.ACTIVE_NAV_TABS,
-                ['sort_LATEST', 'sort_LONGEST', 'sort_POPULAR']
-            ),
-            ({ACTIVE}, key) => {
-                key = key.slice(key.indexOf('_') + 1).toLowerCase()
-                return {
-                    active: ACTIVE,
-                    value: key,
-                    localText: getLocalText(x.page.LANG_ID, key),
+        const
+            sortList = map(
+                pick(
+                    x.page.ACTIVE_NAV_TABS,
+                    ['sort_LATEST', 'sort_LONGEST', 'sort_POPULAR']
+                ),
+                ({ACTIVE}, key) => {
+                    key = key.slice(key.indexOf('_') + 1).toLowerCase()
+                    return {
+                        active: ACTIVE,
+                        value: key,
+                        localText: getLocalText(x.page.LANG_ID, key),
+                    }
                 }
-            }
-        )
+            ),
+            idsOrdering = values(map(
+                sortBy(
+                    toPairs(x.page.GALS_INFO.ids), 0),
+                    x => x[1]
+                )
+            ),
+            orderedVideoList = sortBy(
+                x.page.GALS_INFO.items,
+                ({id}) => idsOrdering.indexOf(Number(id))
+            )
 
         return {
             pageUrl: x.page.PAGE_URL,
@@ -91,6 +105,26 @@ const
                         )
                 } : undefined,
             itemsCount: x.page.ITEMS_COUNT,
+            videosList: map(
+                orderedVideoList,
+                ({id, thumb_url, title, id_sponsor, tags, url_regular, thumb_top, length}) => ({
+                    id,
+                    thumb: thumb_url,
+                    title,
+                    sponsorId: id_sponsor,
+                    tags: tags.reduce((acc, x, idx) => idx === 0 ? acc += x : acc += `, ${x}`, ''),
+                    tagsShort: tags.reduce((acc, x, idx) =>
+                        acc === ''
+                            ? acc += x
+                            : acc.length + x.length < 20
+                            ? acc += `, ${x}`
+                            : acc
+                    , ''),
+                    urlRegular: url_regular,
+                    favorite: thumb_top,
+                    duration: length,
+                })
+            )
         }
     },
 

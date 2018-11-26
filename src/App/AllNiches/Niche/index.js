@@ -13,7 +13,7 @@ import {
     Typography
 } from '@material-ui/core'
 import ArrowRight from '@material-ui/icons/ChevronRight'
-import Immutable, { fromJS } from 'immutable'
+import Immutable from 'immutable'
 
 import getSubPage from '../../../shared-src/routes/niche/get-subpage'
 import ErrorMessage from '../../../generic/ErrorMessage'
@@ -174,11 +174,19 @@ const
                         {`Showing 1 - ${niche.get('itemsCount')}`}
                     </Typography>
                     <VideoList>
-                        <VideoItem/>
-                        <VideoItem/>
-                        <VideoItem/>
-                        <VideoItem/>
-                        <VideoItem/>
+                        {niche.get('videosList').map(x =>
+                            <VideoItem
+                                key={x.get('id')}
+                                thumb={x.get('thumb')}
+                                title={x.get('title')}
+                                sponsorId={x.get('sponsorId')}
+                                tags={x.get('tags')}
+                                tagsShort={x.get('tagsShort')}
+                                urlRegular={x.get('urlRegular')}
+                                favorite={x.get('favorite')}
+                                duration={x.get('duration')}
+                            />
+                        )}
                     </VideoList>
                 </PageWrapper>
             </Content>
@@ -204,6 +212,7 @@ const
         tagArchiveListOlder: Immutable.fromJS(),
         tagArchiveListNewer: Immutable.fromJS(),
         itemsCount: 0,
+        videosList: Immutable.List(),
 
         lastSubPage: '',
     }),
