@@ -17,13 +17,15 @@ import Immutable, { fromJS } from 'immutable'
 
 import getSubPage from '../../../shared-src/routes/niche/get-subpage'
 import ErrorMessage from '../../../generic/ErrorMessage'
+import VideoItem from '../../../generic/VideoItem'
 import ControlBar from '../../../generic/ControlBar'
 
 import {
     Page,
     Content,
     ListsWrapper,
-    PageWrapper
+    PageWrapper,
+    VideoList,
 } from './assets'
 import actions from './actions'
 
@@ -35,20 +37,31 @@ const
             backgroundColor: theme.palette.background.paper
         },
         listSubheader: {
-            backgroundColor: '#fff'
+            backgroundColor: '#fff',
+            paddingRight: 5,
+            paddingLeft: 15,
         },
         itemRoot: {
             paddingTop: 5,
-            paddingBottom: 5
+            paddingBottom: 5,
+            paddingRight: 0,
+            paddingLeft: 5,
+        },
+        iconRoot: {
+            marginRight: 5,
         },
         itemTextRoot: {
             padding: 0,
-            width: 210,
+            width: 185,
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
         },
         primaryTypography: {
-            marginRight: 10
+            marginRight: 5,
+            maxWidth: 150,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
         },
         listSection: {
             backgroundColor: 'inherit',
@@ -73,8 +86,10 @@ const
             root: classes.itemRoot
         }}
     >
-        <ListItemIcon>
-            <ArrowRight />
+        <ListItemIcon classes={{
+            root: classes.iconRoot
+        }}>
+            <ArrowRight/>
         </ListItemIcon>
         <ListItemText
             inset
@@ -158,6 +173,13 @@ const
                     <Typography variant="body1" gutterBottom>
                         {`Showing 1 - ${niche.get('itemsCount')}`}
                     </Typography>
+                    <VideoList>
+                        <VideoItem/>
+                        <VideoItem/>
+                        <VideoItem/>
+                        <VideoItem/>
+                        <VideoItem/>
+                    </VideoList>
                 </PageWrapper>
             </Content>
         }
