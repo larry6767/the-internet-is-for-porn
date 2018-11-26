@@ -39,13 +39,20 @@ const
                     }
                 }
             ),
-            idsOrdering = x.page.GALS_INFO.ids,
+
+            // Just on `Niche` page it's `Array` but on archive page it's `Object`.
+            idsOrdering =
+                Array.isArray(x.page.GALS_INFO.ids)
+                ? x.page.GALS_INFO.ids
+                : _(x.page.GALS_INFO.ids).toPairs().sortBy(0).map(([k, v]) => Number(v)).value(),
+
             orderedVideoList = sortBy(
                 x.page.GALS_INFO.items,
                 ({id}) => idsOrdering.indexOf(Number(id))
             )
 
         return {
+            currentNiche: x.page.TAG_URL_NAME,
             pageUrl: x.page.PAGE_URL,
             pageNumber: x.page.PAGE_NUMBER,
             pageText: {

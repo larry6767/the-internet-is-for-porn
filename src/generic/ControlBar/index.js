@@ -174,15 +174,15 @@ const
 
     ArchiveControlBar = ({
         classes,
-        match,
+        currentNiche,
         buttonsElements,
         tagArchiveListOlder,
         tagArchiveListNewer,
     }) => <Fragment>
         <WrappedButton
             classes={classes}
-            link={`/all-niches/${match.params.child}/archive/${
-                    tagArchiveListOlder.get('year')}-${tagArchiveListOlder.get('month')}`}
+            link={`/all-niches/${currentNiche}/archive/${
+                tagArchiveListOlder.get('year')}-${tagArchiveListOlder.get('month')}`}
             text="previous month"
         />
         <ButtonsList>
@@ -190,13 +190,13 @@ const
         </ButtonsList>
         <WrappedButton
             classes={classes}
-            link={`/all-niches/${match.params.child}/archive/${
+            link={`/all-niches/${currentNiche}/archive/${
                 tagArchiveListNewer.get('year')}-${tagArchiveListNewer.get('month')}`}
             text="next month"
         />
         <WrappedButton
             classes={classes}
-            link={`/all-niches/${match.params.child}`}
+            link={`/all-niches/${currentNiche}`}
             text="Top Films"
         />
     </Fragment>,
@@ -205,9 +205,9 @@ const
         classes,
         pageUrl,
         search,
-        match,
         isSSR,
         chooseSort,
+        currentNiche,
         pagesCount,
         pageNumber,
         sortList,
@@ -243,7 +243,7 @@ const
             {archiveFilms.get('current') !== 0
                 ? <ArchiveControlBar
                     classes={classes}
-                    match={match}
+                    currentNiche={currentNiche}
                     buttonsElements={buttonsElements}
                     tagArchiveListOlder={tagArchiveListOlder}
                     tagArchiveListNewer={tagArchiveListNewer}

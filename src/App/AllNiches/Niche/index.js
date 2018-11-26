@@ -131,7 +131,7 @@ const
         </List>
     },
 
-    Niche = ({classes, pageUrl, search, match, niche, chooseSort, isSSR}) => <Page>
+    Niche = ({classes, pageUrl, search, niche, chooseSort, isSSR}) => <Page>
         { niche.get('isFailed')
             ? <ErrorContent/>
             : niche.get('isLoading')
@@ -159,9 +159,9 @@ const
                     <ControlBar
                         pageUrl={pageUrl}
                         search={search}
-                        match={match}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
+                        currentNiche={niche.get('currentNiche')}
                         pagesCount={niche.get('pagesCount')}
                         pageNumber={niche.get('pageNumber')}
                         sortList={niche.get('sortList')}
@@ -199,6 +199,8 @@ const
         isLoaded: false,
         isFailed: false,
 
+        currentNiche: '',
+
         pageUrl: '',
         pageNumber: 1,
         pageText: Immutable.Map(),
@@ -219,11 +221,12 @@ const
 
     loadPageFlow = ({search, match, niche, loadPage}) => {
         const
-            path = match.params[0] && match.params[1]
-                ? `${match.params.child}/${match.params[0]}-${match.params[1]}-archive`
-                : match.params.child,
             {sort, page} = queryString.parse(search),
-            subPage = getSubPage(path, sort, page)
+
+            subPage =
+                match.params[0] && match.params[1]
+                ? getSubPage(match.params.child, sort, page, [match.params[0], match.params[1]])
+                : getSubPage(match.params.child, sort, page)
 
         if (typeof subPage !== 'string')
             throw new Error(

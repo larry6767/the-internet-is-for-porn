@@ -56,9 +56,7 @@ app.get('/manifest.json', (req, res) => res.sendFile(join(publicDir, '/manifest.
 app.use('/backend-proxy/:operation', json(), backendProxyHandler)
 
 // boilerplate to add express.js handlers by iterating `routeMapping`
-for (const route of Object.keys(routes)) {
-    const x = routes[route]
-
+for (const [route, x] of routes) {
     if (Array.isArray(x)) {
         for (const {method, handler} of x)
             app[method](route, handler)
