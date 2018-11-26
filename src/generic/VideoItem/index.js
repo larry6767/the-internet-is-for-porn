@@ -87,7 +87,7 @@ const
                     classes={{
                         root: classes.typographyTags
                     }}
-                    title={tags}
+                    title={tags.join(', ')}
                 >
                     {tagsShort}
                 </Typography>

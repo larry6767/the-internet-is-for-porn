@@ -39,12 +39,7 @@ const
                     }
                 }
             ),
-            idsOrdering = values(map(
-                sortBy(
-                    toPairs(x.page.GALS_INFO.ids), 0),
-                    x => x[1]
-                )
-            ),
+            idsOrdering = x.page.GALS_INFO.ids,
             orderedVideoList = sortBy(
                 x.page.GALS_INFO.items,
                 ({id}) => idsOrdering.indexOf(Number(id))
@@ -108,18 +103,22 @@ const
             videosList: map(
                 orderedVideoList,
                 ({id, thumb_url, title, id_sponsor, tags, url_regular, thumb_top, length}) => ({
-                    id,
+                    // It's supposed to be a number (not a string, as returned by backend),
+                    // because `x.page.GALS_INFO.ids` contains these ids as numbers.
+                    id: Number(id),
+
                     thumb: thumb_url,
                     title,
                     sponsorId: id_sponsor,
-                    tags: tags.reduce((acc, x, idx) => idx === 0 ? acc += x : acc += `, ${x}`, ''),
-                    tagsShort: tags.reduce((acc, x, idx) =>
-                        acc === ''
-                            ? acc += x
-                            : acc.length + x.length < 20
-                            ? acc += `, ${x}`
-                            : acc
-                    , ''),
+                    tags,
+
+                    // This is for very small string under a video preview,
+                    // it's usually only one single tag.
+                    tagsShort: tags.reduce((acc, tag) => {
+                        const newAcc = acc === '' ? tag : `${acc}, ${tag}`
+                        return newAcc.length <= 22 ? newAcc : acc
+                    }, ''),
+
                     urlRegular: url_regular,
                     favorite: thumb_top,
                     duration: length,
