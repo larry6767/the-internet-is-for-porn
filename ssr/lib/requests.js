@@ -70,6 +70,7 @@ const
                     archiveDate: archive_date,
                     itemsCount: items_count,
                     month: x.page.MONTHS_NAMES[Number(month) < 10 ? month.slice(1) : month],
+                    monthNumber: month,
                     url,
                     year,
                 })

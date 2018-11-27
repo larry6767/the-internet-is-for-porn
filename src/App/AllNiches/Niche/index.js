@@ -2,6 +2,7 @@ import React from 'react'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
+import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
 import {
     ListSubheader,
@@ -69,7 +70,10 @@ const
         ul: {
             backgroundColor: 'inherit',
             padding: 0,
-        }
+        },
+        routerLink: {
+            textDecoration: 'none'
+        },
     }),
 
     ErrorContent = () => <div>
@@ -79,33 +83,41 @@ const
     </div>,
 
     // Generic list item component generator
-    renderListItem = (idKey, titleKey, countKey) => (x, classes) => <ListItem
-        button
+    renderListItem = (idKey, titleKey, countKey, subPage, year, monthNumber) => (x, classes, pageUrl) => <Link
+        to={x.get(subPage)
+            ? `/all-niches/${x.get(subPage)}`
+            : `${pageUrl}/${year && monthNumber ? `archive/${x.get(year)}-${x.get(monthNumber)}` : ''}`
+        }
         key={x.get(idKey)}
-        classes={{
-            root: classes.itemRoot
-        }}
+        className={classes.routerLink}
     >
-        <ListItemIcon classes={{
-            root: classes.iconRoot
-        }}>
-            <ArrowRight/>
-        </ListItemIcon>
-        <ListItemText
-            inset
-            primary={x.get(titleKey)}
-            secondary={x.get(countKey)}
+        <ListItem
+            button
             classes={{
-                root: classes.itemTextRoot,
-                primary: classes.primaryTypography
+                root: classes.itemRoot
             }}
-        />
-    </ListItem>,
+        >
+            <ListItemIcon classes={{
+                root: classes.iconRoot
+            }}>
+                <ArrowRight/>
+            </ListItemIcon>
+            <ListItemText
+                inset
+                primary={x.get(titleKey)}
+                secondary={(console.log(x), x.get(countKey))}
+                classes={{
+                    root: classes.itemTextRoot,
+                    primary: classes.primaryTypography
+                }}
+            />
+        </ListItem>
+    </Link>,
 
-    NichesListItem = renderListItem('id', 'name', 'itemsCount'),
-    ArchiveYearListItem = renderListItem('archiveDate', 'month', 'itemsCount'),
+    NichesListItem = renderListItem('id', 'name', 'itemsCount', 'subPage'),
+    ArchiveYearListItem = renderListItem('archiveDate', 'month', 'itemsCount', 'subPage', 'year', 'monthNumber'),
 
-    ArchiveList = ({classes, tagArchiveList}) => {
+    ArchiveList = ({classes, tagArchiveList, pageUrl}) => {
         const
             years = tagArchiveList
                 .groupBy(x => x.get('year'))
@@ -124,7 +136,7 @@ const
                         }}>
                             {`Archives ${year}`}
                         </ListSubheader>
-                        {listByYear.map(x => ArchiveYearListItem(x, classes))}
+                        {listByYear.map(x => ArchiveYearListItem(x, classes, pageUrl))}
                     </ul>
                 </li>
             ).toList()}
@@ -150,7 +162,11 @@ const
                     >
                         {niche.get('tagList').map(x => NichesListItem(x, classes))}
                     </List>
-                    <ArchiveList classes={classes} tagArchiveList={niche.get('tagArchiveList')}/>
+                    <ArchiveList
+                        classes={classes}
+                        tagArchiveList={niche.get('tagArchiveList')}
+                        pageUrl={pageUrl}
+                    />
                 </ListsWrapper>
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>

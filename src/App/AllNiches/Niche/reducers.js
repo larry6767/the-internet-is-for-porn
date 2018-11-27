@@ -96,6 +96,7 @@ export default
                 archiveDate: 0,
                 year: 0,
                 month: '',
+                monthNumber: 0,
                 itemsCount: 0,
                 url: '',
             }
