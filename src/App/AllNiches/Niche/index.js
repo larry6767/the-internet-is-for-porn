@@ -105,7 +105,7 @@ const
             <ListItemText
                 inset
                 primary={x.get(titleKey)}
-                secondary={(console.log(x), x.get(countKey))}
+                secondary={x.get(countKey)}
                 classes={{
                     root: classes.itemTextRoot,
                     primary: classes.primaryTypography
