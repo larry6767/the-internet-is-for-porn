@@ -10,7 +10,6 @@ export default
             isFailed: false,
             lastSubPage: payload,
             currentNiche: '',
-            pageUrl: '',
             pageNumber: 1,
             pageText: Map(),
             pagesCount: 1,
@@ -30,7 +29,6 @@ export default
             isFailed: false,
             lastSubPage: subPage,
             currentNiche: data.currentNiche,
-            pageUrl: data.pageUrl,
             pageNumber: data.pageNumber,
             pageText: Map(fromJS(data.pageText)),
             pagesCount: data.pagesCount,
@@ -49,7 +47,6 @@ export default
             isLoaded: false,
             isFailed: true,
             currentNiche: '',
-            pageUrl: '',
             pageNumber: 1,
             pageText: OrderedMap(),
             pagesCount: 1,
@@ -70,7 +67,6 @@ export default
         isFailed: false,
         lastSubPage: '',
         currentNiche: '',
-        pageUrl: '',
         pageNumber: 1,
         pageText: {
             /*

@@ -8,7 +8,7 @@ export const Wrapper = styled.div`
     margin-bottom: 5px;
     cursor: pointer;
 
-    &:nth-child(4n) {
+    &:nth-of-type(4n) {
         margin-right: 0;
     }
 `

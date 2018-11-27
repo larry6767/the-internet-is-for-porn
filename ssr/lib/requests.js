@@ -1,27 +1,26 @@
 import _, {
     map,
-    reduce,
-    set,
-    assign,
     pick,
     sortBy,
-    toPairs,
-    values,
 } from 'lodash'
 import rp from 'request-promise-native'
-
+import {getLocalText, getTagList} from './helpers/requests'
 import {backendUrl} from '../config'
 
 const
-    getAllNichesMap = x => map(
-        x.page.TAGS_INFO.items,
-        ({id, name, sub_url, items_count}) => ({
-            id,
-            name,
-            subPage: sub_url,
-            itemsCount: items_count,
-        })
-    ),
+    getAllNichesMap = x => getTagList(x.page.TAGS_BY_LETTERS.letters),
+    // sortBy(
+    //     map(
+    //         x.page.TAGS_INFO.items,
+    //         ({id, name, sub_url, items_count}) => ({
+    //             id,
+    //             name,
+    //             subPage: sub_url,
+    //             itemsCount: items_count,
+    //         })
+    //     ),
+    //     o => o.name
+    // ),
 
     getNicheMap = x => {
         const
@@ -53,7 +52,6 @@ const
 
         return {
             currentNiche: x.page.TAG_URL_NAME,
-            pageUrl: x.page.PAGE_URL,
             pageNumber: x.page.PAGE_NUMBER,
             pageText: {
                 description: x.page.PAGE_TEXT.DESCRIPTION,
@@ -65,18 +63,7 @@ const
                 title: x.page.PAGE_TEXT.TITLE,
             },
             pagesCount: x.page.PAGES_COUNT,
-            tagList: map(
-                reduce(
-                    x.page.TAGS_BY_LETTERS.letters,
-                    (tagList, letter) => assign(tagList, letter)
-                ),
-                ({id, name, sub_url, items_count}) => ({
-                    id,
-                    name,
-                    subPage: sub_url,
-                    itemsCount: items_count,
-                })
-            ),
+            tagList: getTagList(x.page.TAGS_BY_LETTERS.letters),
             tagArchiveList: map(
                 x.page.TAG_ARCHIVE_LIST_FULL,
                 ({archive_date, items_count, month, url, year}) => ({
@@ -132,19 +119,6 @@ const
                 })
             )
         }
-    },
-
-    getLocalText = (languageId, key) => {
-        switch (languageId) {
-            case 'eng':
-                return key === 'latest'
-                    ? 'Recent'
-                    : key === 'longest'
-                    ? 'Duration'
-                    : key === 'popular'
-                    ? 'Popularity'
-                    : undefined
-        }
     }
 
 // sort of enum (to reduce human-factor mistakes).
@@ -157,7 +131,7 @@ export const getPageData = async ({headers, pageCode, subPageCode}) => {
     const
         [params, mapFn] =
             pageCode === allNichesPageCode
-            ? [{url: '/?categories'}, getAllNichesMap]
+            ? [{url: '/?categories', options: {blocks: {allTagsBlock: 1}}}, getAllNichesMap]
             : pageCode === nichePageCode
             ? [{url: `/${subPageCode}.html`, options: {blocks: {allTagsBlock: 1}}}, getNicheMap]
             : null

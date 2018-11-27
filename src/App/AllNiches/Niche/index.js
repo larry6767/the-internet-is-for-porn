@@ -201,7 +201,6 @@ const
 
         currentNiche: '',
 
-        pageUrl: '',
         pageNumber: 1,
         pageText: Immutable.Map(),
         pagesCount: 1,

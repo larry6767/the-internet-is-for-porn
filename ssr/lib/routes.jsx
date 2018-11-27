@@ -2,7 +2,6 @@ import React from 'react'
 
 import {mkHandler, mkHandlers} from './helpers'
 import {initialStoreOnUrl, newStore} from './store'
-import {renderComponent} from './render'
 import {proxiedHeaders} from './backend-proxy'
 import * as requests from './requests'
 import {logRequestError} from './helpers'
