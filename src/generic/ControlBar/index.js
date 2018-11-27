@@ -179,21 +179,27 @@ const
         tagArchiveListOlder,
         tagArchiveListNewer,
     }) => <Fragment>
-        <WrappedButton
-            classes={classes}
-            link={`/all-niches/${currentNiche}/archive/${
-                tagArchiveListOlder.get('year')}-${tagArchiveListOlder.get('month')}`}
-            text="previous month"
-        />
+        {tagArchiveListOlder.size
+            ? <WrappedButton
+                classes={classes}
+                link={`/all-niches/${currentNiche}/archive/${
+                    tagArchiveListOlder.get('year')}-${tagArchiveListOlder.get('month')}`}
+                text="previous month"
+            /> : null
+        }
         <ButtonsList>
             {buttonsElements}
         </ButtonsList>
-        <WrappedButton
-            classes={classes}
-            link={`/all-niches/${currentNiche}/archive/${
-                tagArchiveListNewer.get('year')}-${tagArchiveListNewer.get('month')}`}
-            text="next month"
-        />
+        {tagArchiveListNewer.size
+            ? <WrappedButton
+                classes={classes}
+                link={`/all-niches/${currentNiche}/archive/${
+                    tagArchiveListNewer.get('year')}-${tagArchiveListNewer.get('month')}`}
+                text="next month"
+            />
+            : null
+        }
+
         <WrappedButton
             classes={classes}
             link={`/all-niches/${currentNiche}`}
