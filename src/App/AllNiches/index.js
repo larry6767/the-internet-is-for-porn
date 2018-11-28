@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
 import {Link} from 'react-router-dom'
 import {
-    List,
+    List as ListComponent,
     ListItem,
     ListItemIcon,
     ListItemText,
@@ -15,7 +15,7 @@ import {
     List,
 } from 'immutable'
 
-import ErrorContent from '../../generic/ErrorConent'
+import ErrorContent from '../../generic/ErrorContent'
 import {withStylesProps} from '../helpers'
 import actions from './actions'
 import {Page} from './assets'
@@ -59,7 +59,7 @@ const
     AllNiches = ({classes, niches}) => <Page>
         { niches.get('isFailed')
             ? <ErrorContent/>
-            : <List
+            : <ListComponent
                 component="div"
                 classes={{
                     root: classes.root
@@ -69,7 +69,7 @@ const
                     ? <CircularProgress/>
                     : niches.get('nichesList').map(x => renderListItemLink(x, classes))
                 }
-            </List>
+            </ListComponent>
         }
     </Page>
 
