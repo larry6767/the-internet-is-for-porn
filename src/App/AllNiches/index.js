@@ -8,19 +8,28 @@ import {
     ListItemIcon,
     ListItemText,
     CircularProgress,
-    Typography
 } from '@material-ui/core'
 import FolderIcon from '@material-ui/icons/Folder'
-import Immutable from 'immutable'
+import {
+    Record,
+    List,
+} from 'immutable'
 
-import ErrorMessage from '../../generic/ErrorMessage'
+import ErrorContent from '../../generic/ErrorConent'
 import {withStylesProps} from '../helpers'
-
 import actions from './actions'
 import {Page} from './assets'
 import {muiStyles} from './assets/muiStyles'
 
 const
+    NichesRecord = Record({
+        isLoading: false,
+        isLoaded: false,
+        isFailed: false,
+
+        nichesList: List(),
+    }),
+
     renderListItemLink = (x, classes) =>
         <Link to={`/all-niches/${x.get('subPage')}`}
             key={x.get('id')}
@@ -49,11 +58,7 @@ const
 
     AllNiches = ({classes, niches}) => <Page>
         { niches.get('isFailed')
-            ? <div>
-                <Typography variant="body1" gutterBottom>Some shit is happened 8==э</Typography>
-                <Typography variant="body1" gutterBottom>Please try again</Typography>
-                <ErrorMessage/>
-            </div>
+            ? <ErrorContent/>
             : <List
                 component="div"
                 classes={{
@@ -66,16 +71,7 @@ const
                 }
             </List>
         }
-    </Page>,
-
-    // `Record` for filtering taken data from store
-    NichesRecord = Immutable.Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
-
-        nichesList: Immutable.List(),
-    })
+    </Page>
 
 export default compose(
     connect(
