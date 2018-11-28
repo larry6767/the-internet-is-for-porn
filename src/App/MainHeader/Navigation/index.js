@@ -6,18 +6,9 @@ import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import actions from './actions'
 import {Nav} from './assets'
+import {muiStyles} from './assets/muiStyles'
 
 const
-    styles = {
-        labelRoot: {
-            minWidth: 'auto'
-        },
-        label: {
-            textTransform: 'none',
-            fontSize: 14
-        }
-    },
-
     Navigation = ({classes, pathname, goToPath}) => {
         // checking if we're on exact page or on nested child one.
         // main page supposed to be excluded from nested children pages check
@@ -64,5 +55,5 @@ export default compose(
             }
         })
     ),
-    withStyles(styles)
+    withStyles(muiStyles)
 )(Navigation)
