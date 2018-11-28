@@ -26,8 +26,3 @@ export const PageWrapper = styled.div`
     flex-direction: column;
     width: 975px;
 `
-
-export const VideoList = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-`

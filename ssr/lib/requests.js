@@ -94,8 +94,8 @@ const
                             x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL.lastIndexOf('-archive.html')
                         )
                 } : undefined,
-            itemsCount: x.page.ITEMS_COUNT,
-            videosList: map(
+            itemsCount: x.page.ITEMS_PER_PAGE,
+            videoList: map(
                 orderedVideoList,
                 ({id, thumb_url, title, id_sponsor, tags, url_regular, thumb_top, length}) => ({
                     // It's supposed to be a number (not a string, as returned by backend),

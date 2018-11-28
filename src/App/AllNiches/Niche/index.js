@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
 import {
     ListSubheader,
-    List,
+    List as ListComponent,
     ListItem,
     ListItemIcon,
     ListItemText,
@@ -14,19 +14,21 @@ import {
     Typography
 } from '@material-ui/core'
 import ArrowRight from '@material-ui/icons/ChevronRight'
-import Immutable from 'immutable'
-
+import {
+    Record,
+    Map,
+    List,
+    fromJS
+} from 'immutable'
 import getSubPage from '../../../shared-src/routes/niche/get-subpage'
 import ErrorMessage from '../../../generic/ErrorMessage'
-import VideoItem from '../../../generic/VideoItem'
+import VideoList from '../../../generic/VideoList'
 import ControlBar from '../../../generic/ControlBar'
-
 import {
     Page,
     Content,
     ListsWrapper,
     PageWrapper,
-    VideoList,
 } from './assets'
 import actions from './actions'
 
@@ -124,7 +126,7 @@ const
                 .sortBy((v, year) => year, (a, b) => a < b ? 1 : -1)
                 .map(x => x.sortBy(y => y.get('archiveDate')))
 
-        return <List component="nav" subheader={<li/>}>
+        return <ListComponent component="nav" subheader={<li/>}>
             {years.map((listByYear, year) =>
                 <li
                     key={`section-${year}`}
@@ -140,7 +142,13 @@ const
                     </ul>
                 </li>
             ).toList()}
-        </List>
+        </ListComponent>
+    },
+
+    ShowedElements = ({itemsCount, pageNumber}) => {
+        return <Typography variant="body1" gutterBottom>
+            {`Showing ${itemsCount * pageNumber - (itemsCount - 1)} - ${itemsCount * pageNumber}`}
+        </Typography>
     },
 
     Niche = ({classes, pageUrl, search, niche, chooseSort, isSSR}) => <Page>
@@ -150,7 +158,7 @@ const
             ? <CircularProgress/>
             : <Content>
                 <ListsWrapper>
-                    <List
+                    <ListComponent
                         component="nav"
                         subheader={
                             <ListSubheader classes={{
@@ -161,7 +169,7 @@ const
                         }
                     >
                         {niche.get('tagList').map(x => NichesListItem(x, classes))}
-                    </List>
+                    </ListComponent>
                     <ArchiveList
                         classes={classes}
                         tagArchiveList={niche.get('tagArchiveList')}
@@ -186,31 +194,20 @@ const
                         tagArchiveListOlder={niche.get('tagArchiveListOlder')}
                         tagArchiveListNewer={niche.get('tagArchiveListNewer')}
                     />
-                    <Typography variant="body1" gutterBottom>
-                        {`Showing 1 - ${niche.get('itemsCount')}`}
-                    </Typography>
-                    <VideoList>
-                        {niche.get('videosList').map(x =>
-                            <VideoItem
-                                key={x.get('id')}
-                                thumb={x.get('thumb')}
-                                title={x.get('title')}
-                                sponsorId={x.get('sponsorId')}
-                                tags={x.get('tags')}
-                                tagsShort={x.get('tagsShort')}
-                                urlRegular={x.get('urlRegular')}
-                                favorite={x.get('favorite')}
-                                duration={x.get('duration')}
-                            />
-                        )}
-                    </VideoList>
+                    <ShowedElements
+                        itemsCount={niche.get('itemsCount')}
+                        pageNumber={niche.get('pageNumber')}
+                    />
+                    <VideoList
+                        videoList={niche.get('videoList')}
+                    />
                 </PageWrapper>
             </Content>
         }
     </Page>,
 
     // `Record` for filtering taken data from store
-    NicheRecord = Immutable.Record({
+    NicheRecord = Record({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
@@ -218,18 +215,18 @@ const
         currentNiche: '',
 
         pageNumber: 1,
-        pageText: Immutable.Map(),
+        pageText: Map(),
         pagesCount: 1,
 
-        tagList: Immutable.List(),
-        tagArchiveList: Immutable.List(),
-        sortList: Immutable.List(),
+        tagList: List(),
+        tagArchiveList: List(),
+        sortList: List(),
         currentSort: '',
-        archiveFilms: Immutable.Map(),
-        tagArchiveListOlder: Immutable.fromJS(),
-        tagArchiveListNewer: Immutable.fromJS(),
+        archiveFilms: Map(),
+        tagArchiveListOlder: fromJS(),
+        tagArchiveListNewer: fromJS(),
         itemsCount: 0,
-        videosList: Immutable.List(),
+        videoList: List(),
 
         lastSubPage: '',
     }),

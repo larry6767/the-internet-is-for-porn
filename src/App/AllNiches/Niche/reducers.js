@@ -21,7 +21,7 @@ export default
             tagArchiveListOlder: fromJS(),
             tagArchiveListNewer: fromJS(),
             itemsCount: 0,
-            videosList: List(),
+            videoList: List(),
         }),
         [actions.loadPageSuccess]: (state, {payload: {data, subPage}}) => state.merge({
             isLoading: false,
@@ -40,7 +40,7 @@ export default
             tagArchiveListOlder: fromJS(data.tagArchiveListOlder),
             tagArchiveListNewer: fromJS(data.tagArchiveListNewer),
             itemsCount: data.itemsCount,
-            videosList: List(fromJS(data.videosList)),
+            videoList: List(fromJS(data.videoList)),
         }),
         [actions.loadPageFailure]: state => state.merge({
             isLoading: false,
@@ -58,7 +58,7 @@ export default
             tagArchiveListOlder: fromJS(),
             tagArchiveListNewer: fromJS(),
             itemsCount: 0,
-            videosList: List(),
+            videoList: List(),
         }),
         [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
     }, fromJS({
@@ -137,7 +137,7 @@ export default
             */
         },
         itemsCount: 0,
-        videosList: [
+        videoList: [
             /*
             {
                 id: 0,
