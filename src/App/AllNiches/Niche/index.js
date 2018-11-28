@@ -13,8 +13,8 @@ import {
     fromJS,
 } from 'immutable'
 import getSubPage from '../../../shared-src/routes/niche/get-subpage'
-import ErrorMessage from '../../../generic/ErrorMessage'
 import ControlBar from '../../../generic/ControlBar'
+import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
 import {
@@ -25,11 +25,29 @@ import {
 import actions from './actions'
 
 const
-    ErrorContent = () => <div>
-        <Typography variant="body1" gutterBottom>Some shit is happened 8==э</Typography>
-        <Typography variant="body1" gutterBottom>Please try again</Typography>
-        <ErrorMessage/>
-    </div>,
+    NicheRecord = Record({
+        isLoading: false,
+        isLoaded: false,
+        isFailed: false,
+
+        currentNiche: '',
+
+        pageNumber: 1,
+        pageText: Map(),
+        pagesCount: 1,
+
+        tagList: List(),
+        tagArchiveList: List(),
+        sortList: List(),
+        currentSort: '',
+        archiveFilms: Map(),
+        tagArchiveListOlder: fromJS(),
+        tagArchiveListNewer: fromJS(),
+        itemsCount: 0,
+        videoList: List(),
+
+        lastSubPage: '',
+    }),
 
     Niche = ({pageUrl, search, niche, chooseSort, isSSR}) => <Page>
         { niche.get('isFailed')
@@ -68,31 +86,6 @@ const
             </Content>
         }
     </Page>,
-
-    // `Record` for filtering taken data from store
-    NicheRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
-
-        currentNiche: '',
-
-        pageNumber: 1,
-        pageText: Map(),
-        pagesCount: 1,
-
-        tagList: List(),
-        tagArchiveList: List(),
-        sortList: List(),
-        currentSort: '',
-        archiveFilms: Map(),
-        tagArchiveListOlder: fromJS(),
-        tagArchiveListNewer: fromJS(),
-        itemsCount: 0,
-        videoList: List(),
-
-        lastSubPage: '',
-    }),
 
     loadPageFlow = ({search, match, niche, loadPage}) => {
         const
