@@ -7,23 +7,9 @@ import actions from './actions'
 import CloseIcon from '@material-ui/icons/Close'
 import ErrorIcon from '@material-ui/icons/Error'
 import IconButton from '@material-ui/core/IconButton'
+import {muiStyles} from './assets/muiStyles'
 
 const
-    styles = theme => ({
-        error: {
-            backgroundColor: theme.palette.error.dark,
-        },
-        iconVariant: {
-            fontSize: 20,
-            opacity: 0.9,
-            marginRight: theme.spacing.unit,
-        },
-        message: {
-            display: 'flex',
-            alignItems: 'center',
-        },
-    }),
-
     ErrorMessage = ({classes, isOpen, onClose}) => <Snackbar
         anchorOrigin={{
             vertical: 'bottom',
@@ -65,5 +51,5 @@ export default compose(
             onClose: (event, value) => dispatch(actions.closeErrorMessage())
         })
     ),
-    withStyles(styles)
+    withStyles(muiStyles)
 )(ErrorMessage)

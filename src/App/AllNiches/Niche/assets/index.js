@@ -15,12 +15,6 @@ export const Content = styled.div`
     width: 100%;
 `
 
-export const ListsWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-right: 6px;
-`
-
 export const PageWrapper = styled.div`
     display: flex;
     flex-direction: column;

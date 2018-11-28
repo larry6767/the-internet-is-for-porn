@@ -5,25 +5,15 @@ import {languages} from './fixtures'
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import actions from './actions'
-import {Item, InlinedSelectionWrap, InlinedSelectionList, InlinedSelectionItem} from './assets'
+import {
+    Item,
+    InlinedSelectionWrap,
+    InlinedSelectionList,
+    InlinedSelectionItem
+} from './assets'
+import {muiStyles} from './assets/muiStyles'
 
 const
-    styles = {
-        menuItemRoot: {
-            display: 'flex'
-        },
-        select: {
-            paddingRight: 25,
-            paddingTop: 11.5,
-            paddingBottom: 9,
-            display: 'flex',
-            alignItems: 'center'
-        },
-        notchedOutline: {
-            border: 'none'
-        }
-    },
-
     LanguageSelectMaterial = ({classes, currentLanguage, chooseLanguage}) => <Select
         classes={{
             select: classes.select
@@ -98,5 +88,5 @@ export default compose(
             },
         })
     ),
-    withStyles(styles)
+    withStyles(muiStyles)
 )(LanguageSelect)

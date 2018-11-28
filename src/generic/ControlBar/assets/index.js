@@ -2,6 +2,11 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.div`
     display: flex;
+    flex-direction: column;
+`
+
+export const ControlButtons = styled.div`
+    display: flex;
     margin-bottom: 12px;
 `
 

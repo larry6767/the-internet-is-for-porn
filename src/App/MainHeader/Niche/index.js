@@ -16,26 +16,9 @@ import {
     NicheMobileItemSelected,
     TextIcon
 } from './assets'
+import {muiStyles} from './assets/muiStyles'
 
 const
-    styles = {
-        menuItemRoot: {
-            display: 'flex'
-        },
-        select: {
-            color: '#ffffff',
-            paddingRight: 25,
-            display: 'flex',
-            alignItems: 'center'
-        },
-        icon: {
-            color: '#ffffff'
-        },
-        notchedOutline: {
-            border: 'none'
-        }
-    },
-
     Niche = ({classes, currentNiche, currentBreakpoint, selectNiche, isSSR}) => <NicheBlock>
         {
             /* rendering mobile version for SSR to render links with "href"s for search engines */
@@ -116,5 +99,5 @@ export default compose(
             }
         })
     ),
-    withStyles(styles)
+    withStyles(muiStyles)
 )(Niche)

@@ -2,180 +2,46 @@ import React from 'react'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
-import {Link} from 'react-router-dom'
-import {withStyles} from '@material-ui/core/styles'
 import {
-    ListSubheader,
-    List as ListComponent,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
     CircularProgress,
     Typography
 } from '@material-ui/core'
-import ArrowRight from '@material-ui/icons/ChevronRight'
 import {
     Record,
     Map,
     List,
-    fromJS
+    fromJS,
 } from 'immutable'
 import getSubPage from '../../../shared-src/routes/niche/get-subpage'
 import ErrorMessage from '../../../generic/ErrorMessage'
-import VideoList from '../../../generic/VideoList'
 import ControlBar from '../../../generic/ControlBar'
+import Lists from '../../../generic/Lists'
+import VideoList from '../../../generic/VideoList'
 import {
     Page,
     Content,
-    ListsWrapper,
     PageWrapper,
 } from './assets'
 import actions from './actions'
 
 const
-    styles = theme => ({
-        root: {
-            width: '100%',
-            maxWidth: 360,
-            backgroundColor: theme.palette.background.paper
-        },
-        listSubheader: {
-            backgroundColor: '#fff',
-            paddingRight: 5,
-            paddingLeft: 15,
-        },
-        itemRoot: {
-            paddingTop: 5,
-            paddingBottom: 5,
-            paddingRight: 0,
-            paddingLeft: 5,
-        },
-        iconRoot: {
-            marginRight: 5,
-        },
-        itemTextRoot: {
-            padding: 0,
-            width: 185,
-            display: 'flex',
-            alignItems: 'center',
-        },
-        primaryTypography: {
-            marginRight: 5,
-            maxWidth: 150,
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-        },
-        listSection: {
-            backgroundColor: 'inherit',
-        },
-        ul: {
-            backgroundColor: 'inherit',
-            padding: 0,
-        },
-        routerLink: {
-            textDecoration: 'none'
-        },
-    }),
-
     ErrorContent = () => <div>
         <Typography variant="body1" gutterBottom>Some shit is happened 8==э</Typography>
         <Typography variant="body1" gutterBottom>Please try again</Typography>
         <ErrorMessage/>
     </div>,
 
-    // Generic list item component generator
-    renderListItem = (idKey, titleKey, countKey, subPage, year, monthNumber) => (x, classes, pageUrl) => <Link
-        to={x.get(subPage)
-            ? `/all-niches/${x.get(subPage)}`
-            : `${pageUrl}/${year && monthNumber ? `archive/${x.get(year)}-${x.get(monthNumber)}` : ''}`
-        }
-        key={x.get(idKey)}
-        className={classes.routerLink}
-    >
-        <ListItem
-            button
-            classes={{
-                root: classes.itemRoot
-            }}
-        >
-            <ListItemIcon classes={{
-                root: classes.iconRoot
-            }}>
-                <ArrowRight/>
-            </ListItemIcon>
-            <ListItemText
-                inset
-                primary={x.get(titleKey)}
-                secondary={x.get(countKey)}
-                classes={{
-                    root: classes.itemTextRoot,
-                    primary: classes.primaryTypography
-                }}
-            />
-        </ListItem>
-    </Link>,
-
-    NichesListItem = renderListItem('id', 'name', 'itemsCount', 'subPage'),
-    ArchiveYearListItem = renderListItem('archiveDate', 'month', 'itemsCount', 'subPage', 'year', 'monthNumber'),
-
-    ArchiveList = ({classes, tagArchiveList, pageUrl}) => {
-        const
-            years = tagArchiveList
-                .groupBy(x => x.get('year'))
-                .sortBy((v, year) => year, (a, b) => a < b ? 1 : -1)
-                .map(x => x.sortBy(y => y.get('archiveDate')))
-
-        return <ListComponent component="nav" subheader={<li/>}>
-            {years.map((listByYear, year) =>
-                <li
-                    key={`section-${year}`}
-                    className={classes.listSection}
-                >
-                    <ul className={classes.ul}>
-                        <ListSubheader classes={{
-                            root: classes.listSubheader
-                        }}>
-                            {`Archives ${year}`}
-                        </ListSubheader>
-                        {listByYear.map(x => ArchiveYearListItem(x, classes, pageUrl))}
-                    </ul>
-                </li>
-            ).toList()}
-        </ListComponent>
-    },
-
-    ShowedElements = ({itemsCount, pageNumber}) => {
-        return <Typography variant="body1" gutterBottom>
-            {`Showing ${itemsCount * pageNumber - (itemsCount - 1)} - ${itemsCount * pageNumber}`}
-        </Typography>
-    },
-
-    Niche = ({classes, pageUrl, search, niche, chooseSort, isSSR}) => <Page>
+    Niche = ({pageUrl, search, niche, chooseSort, isSSR}) => <Page>
         { niche.get('isFailed')
             ? <ErrorContent/>
             : niche.get('isLoading')
             ? <CircularProgress/>
             : <Content>
-                <ListsWrapper>
-                    <ListComponent
-                        component="nav"
-                        subheader={
-                            <ListSubheader classes={{
-                                root: classes.listSubheader
-                            }}>
-                                All straight films
-                            </ListSubheader>
-                        }
-                    >
-                        {niche.get('tagList').map(x => NichesListItem(x, classes))}
-                    </ListComponent>
-                    <ArchiveList
-                        classes={classes}
-                        tagArchiveList={niche.get('tagArchiveList')}
-                        pageUrl={pageUrl}
-                    />
-                </ListsWrapper>
+                <Lists
+                    pageUrl={pageUrl}
+                    tagList={niche.get('tagList')}
+                    tagArchiveList={niche.get('tagArchiveList')}
+                />
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
                         {niche.getIn(['pageText', 'listHeader'])}
@@ -188,15 +54,12 @@ const
                         currentNiche={niche.get('currentNiche')}
                         pagesCount={niche.get('pagesCount')}
                         pageNumber={niche.get('pageNumber')}
+                        itemsCount={niche.get('itemsCount')}
                         sortList={niche.get('sortList')}
                         currentSort={niche.get('currentSort')}
                         archiveFilms={niche.get('archiveFilms')}
                         tagArchiveListOlder={niche.get('tagArchiveListOlder')}
                         tagArchiveListNewer={niche.get('tagArchiveListNewer')}
-                    />
-                    <ShowedElements
-                        itemsCount={niche.get('itemsCount')}
-                        pageNumber={niche.get('pageNumber')}
                     />
                     <VideoList
                         videoList={niche.get('videoList')}
@@ -282,6 +145,5 @@ export default compose(
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
         },
-    }),
-    withStyles(styles)
+    })
 )(Niche)

@@ -11,43 +11,16 @@ import {
 import {Link} from 'react-router-dom'
 import {
     Wrapper,
+    ControlButtons,
     ButtonsList,
     SortWrapper,
     InlinedSelectionWrap,
     InlinedSelectionList,
     InlinedSelectionItem,
 } from './assets'
+import {muiStyles} from './assets/muiStyles'
 
 const
-    styles = {
-        link: {
-            textDecoration: 'none'
-        },
-        paginationButtonRoot: {
-            padding: 8,
-            minWidth: 36,
-            marginRight: 5
-        },
-        buttonsList: {
-            marginRight: 15
-        },
-        buttonRoot: {
-            marginRight: 15
-        },
-        typographyRoot: {
-            marginRight: 15
-        },
-        selectRoot: {
-            paddingTop: 9,
-            paddingBottom: 9,
-            display: 'flex',
-            alignItems: 'center'
-        },
-        notchedOutlineRoot: {
-            border: 'none'
-        }
-    },
-
     SortSelectMaterial = ({
         classes,
         search,
@@ -207,6 +180,10 @@ const
         />
     </Fragment>,
 
+    ShowedElements = ({itemsCount, pageNumber}) => <Typography variant="body1" gutterBottom>
+        {`Showing ${itemsCount * pageNumber - (itemsCount - 1)} - ${itemsCount * pageNumber}`}
+    </Typography>,
+
     ControlBar = ({
         classes,
         pageUrl,
@@ -216,6 +193,7 @@ const
         currentNiche,
         pagesCount,
         pageNumber,
+        itemsCount,
         sortList,
         currentSort,
         archiveFilms,
@@ -246,27 +224,33 @@ const
                 </Link>})
 
         return <Wrapper>
-            {archiveFilms.get('current') !== 0
-                ? <ArchiveControlBar
-                    classes={classes}
-                    currentNiche={currentNiche}
-                    buttonsElements={buttonsElements}
-                    tagArchiveListOlder={tagArchiveListOlder}
-                    tagArchiveListNewer={tagArchiveListNewer}
-                />
-                : <NicheControlBar
-                    classes={classes}
-                    pageUrl={pageUrl}
-                    search={search}
-                    isSSR={isSSR}
-                    chooseSort={chooseSort}
-                    buttonsElements={buttonsElements}
-                    sortList={sortList}
-                    currentSort={currentSort}
-                    archiveFilms={archiveFilms}
-                />
-            }
+            <ControlButtons>
+                {archiveFilms.get('current') !== 0
+                    ? <ArchiveControlBar
+                        classes={classes}
+                        currentNiche={currentNiche}
+                        buttonsElements={buttonsElements}
+                        tagArchiveListOlder={tagArchiveListOlder}
+                        tagArchiveListNewer={tagArchiveListNewer}
+                    />
+                    : <NicheControlBar
+                        classes={classes}
+                        pageUrl={pageUrl}
+                        search={search}
+                        isSSR={isSSR}
+                        chooseSort={chooseSort}
+                        buttonsElements={buttonsElements}
+                        sortList={sortList}
+                        currentSort={currentSort}
+                        archiveFilms={archiveFilms}
+                    />
+                }
+            </ControlButtons>
+            <ShowedElements
+                itemsCount={itemsCount}
+                pageNumber={pageNumber}
+            />
         </Wrapper>
     }
 
-export default withStyles(styles)(ControlBar)
+export default withStyles(muiStyles)(ControlBar)

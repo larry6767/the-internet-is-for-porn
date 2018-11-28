@@ -13,34 +13,9 @@ import {
     Like,
     Duration,
 } from './assets'
+import {muiStyles} from './assets/muiStyles'
 
 const
-    styles = theme => ({
-        typography: {
-            color: theme.palette.primary.contrastText
-        },
-        typographyTitle: {
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-            whiteSpace: 'nowrap',
-            cursor: 'help',
-        },
-        typographyTags: {
-            cursor: 'help',
-        },
-        favoriteIcon: {
-            transition: 'width 0.2s, height 0.2s, top 0.2s, left 0.2s',
-            '&:hover': {
-                color: 'red',
-                width: '1.1em',
-                height: '1.1em',
-                position: 'relative',
-                top: '-0.05em',
-                left: '-0.05em',
-            }
-        }
-    }),
-
     VideoItem = ({
         classes,
         thumb,
@@ -95,4 +70,4 @@ const
         </InfoBlock>
     </Wrapper>
 
-export default withStyles(styles)(VideoItem)
+export default withStyles(muiStyles)(VideoItem)

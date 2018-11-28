@@ -8,14 +8,9 @@ import {navigation} from '../Navigation/fixtures'
 import actionsNavigation from '../Navigation/actions'
 import actions from './actions'
 import {withStyles} from '@material-ui/core/styles'
+import {muiStyles} from './assets/muiStyles'
 
 const
-    styles = {
-        paper: {
-            width: 150
-        }
-    },
-
     BurgerMenu = ({classes, anchorEl, currentPath, openAction, closeAction, toggleNavigationAction}) => <Fragment>
         <IconButton
             aria-owns={anchorEl ? 'burger-menu' : undefined}
@@ -65,5 +60,5 @@ export default compose(
             closeAction: () => dispatch(actions.close())
         })
     ),
-    withStyles(styles)
+    withStyles(muiStyles)
 )(BurgerMenu)
