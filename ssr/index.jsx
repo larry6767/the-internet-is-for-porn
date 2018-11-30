@@ -52,14 +52,12 @@ const
     routes = routeMapping(render),
     app = express()
 
+// it's recommended to serve these files by nginx as static files
 app.use(favicon(join(publicDir, 'favicon.ico')))
-app.use('/img', express.static(join(publicDir, 'img')))
-
-if (isProduction)
-    app.use('/static/js', express.static(join(publicDir, 'static', 'js')))
-
-app.get('/manifest.json', (req, res) => res.sendFile(join(publicDir, '/manifest.json')))
 app.get('/robots.txt', (req, res) => res.sendFile(robotsTxtFilePath))
+app.get('/manifest.json', (req, res) => res.sendFile(join(publicDir, '/manifest.json')))
+app.use('/img', express.static(join(publicDir, 'img')))
+if (isProduction) app.use('/static/js', express.static(join(publicDir, 'static', 'js')))
 
 app.use('/backend-proxy/:operation', json(), backendProxyHandler)
 

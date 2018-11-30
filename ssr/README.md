@@ -99,3 +99,39 @@ P.S. You might need to set some __SELinux__ flags to make it work, such as these
 ```bash
 setsebool -P httpd_can_network_connect 1
 ```
+
+#### Serving static files by __nginx__
+
+```nginx
+http {
+    upstream ssr_workers {
+        server 127.0.0.1:9001;
+        server 127.0.0.1:9002;
+        server 127.0.0.1:9003;
+        server 127.0.0.1:9004;
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://ssr_workers;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header Host $http_host;
+        }
+    }
+
+    set $dir '/home/videosectionssr/project/xxxvogue';
+
+    # For production
+    location /robots.txt { alias $dir/robots/production/robots.txt; }
+    # Or use this instead if it's running on Release Candidate/testing server
+    # (to prevent search engines from indexing it).
+    #location /robots.txt { alias $dir/robots/rc/robots.txt; }
+
+    location /favicon.ico { alias $dir/build/$uri; }
+    location /manifest.json { alias $dir/build/$uri; }
+    location ^~ /img/ { root $dir/build/; }
+    location ^~ /static/js/ { root $dir/build/; }
+}
+```
