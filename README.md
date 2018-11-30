@@ -67,7 +67,7 @@ ExecStart=/bin/bash ./launch.sh --port=%i
 
 StandardOutput=syslog
 StandardError=syslog
-SyslogIdentifier=ssrworker
+SyslogIdentifier=videosection-ssr-worker
 
 User=videosectionssr
 Group=videosectionssr
