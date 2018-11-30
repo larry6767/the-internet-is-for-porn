@@ -13,7 +13,7 @@ import backendProxyHandler from './lib/backend-proxy'
 
 
 const
-    {port, host, production: isProduction} = yargs
+    {port, host, production: isProduction, rc: isRC} = yargs
         .option('port', {
             description: 'Port to start listening HTTP-server on',
             default: 8001,
@@ -26,11 +26,18 @@ const
             description: 'Run in production mode (will use production build)',
             default: false,
         })
+        .option('rc', {
+            description: 'Running testing server (will use proper robots.txt file)',
+            default: false,
+        })
         .argv,
 
     publicDir = isProduction
         ? join(__dirname, '..', 'build')
         : join(__dirname, '..', 'public'),
+
+    robotsTxtFilePath =
+        join(__dirname, '..', 'robots', (isRC ? 'rc' : 'production'), 'robots.txt'),
 
     render = renderComponent((result => ({
         pre: `${result[0]}<div id="root">`,
@@ -52,6 +59,7 @@ if (isProduction)
     app.use('/static/js', express.static(join(publicDir, 'static', 'js')))
 
 app.get('/manifest.json', (req, res) => res.sendFile(join(publicDir, '/manifest.json')))
+app.get('/robots.txt', (req, res) => res.sendFile(robotsTxtFilePath))
 
 app.use('/backend-proxy/:operation', json(), backendProxyHandler)
 
@@ -70,5 +78,6 @@ for (const [route, x] of routes) {
 
 app.listen(port, host, () => {
     if (isProduction) console.info('Running in production mode...')
+    if (isRC) console.info('Running Release Candidate server...')
     console.debug(`Start listening HTTP-server on http://${host}:${port}...`)
 })

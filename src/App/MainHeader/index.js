@@ -37,7 +37,7 @@ const
                         }
                         {
                             isXSorXXS && isSearchShown ? '' :
-                            <Logo src="/img/logo.png" alt="logo"/>
+                            <Logo src="/img/logo.png" alt="VideoSection logo"/>
                         }
                         {
                             isXSorXXS

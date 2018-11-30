@@ -1,4 +1,4 @@
-# XXXVogue
+# VideoSection
 
 Website built on top of React.js framework and its ecosystem.
 
@@ -45,18 +45,24 @@ So you just need to start both front-end development server and SSR service in p
 
 ### Production
 
-An example of systemd-service (`/etc/systemd/system/ssrworker@.service`):
+An example of __systemd__ service (`/etc/systemd/system/videosection-ssr-worker@.service`):
 
 ```systemd
 [Unit]
-Description=SSR Worker - Node.js based Servers-Side-Rendering service [ worker port: %I ]
+Description=VideoSection SSR Worker - Node.js based Servers-Side-Rendering service [ worker port: %I ]
 After=multi-user.target
 
 [Service]
 WorkingDirectory=/home/videosectionssr/project/xxxvogue
 Type=simple
 
+# For production
 ExecStart=/bin/bash ./launch.sh --port=%i
+
+# Or use this instead if it's running on Release Candidate/testing server
+# (to prevent search engines from indexing it).
+#ExecStart=/bin/bash ./launch.sh --rc --port=%i
+
 #Restart=on-failure
 
 StandardOutput=syslog
@@ -66,7 +72,6 @@ SyslogIdentifier=ssrworker
 User=videosectionssr
 Group=videosectionssr
 
-
 [Install]
 WantedBy=multi-user.target
 ```
@@ -75,20 +80,20 @@ To add workers aliased to specific ports (9001–9004):
 
 ```bash
 cd /etc/systemd/system/multi-user.target.wants/
-ln -s /etc/systemd/system/ssrworker@.service ssrworker@9001.service
-ln -s /etc/systemd/system/ssrworker@.service ssrworker@9002.service
-ln -s /etc/systemd/system/ssrworker@.service ssrworker@9003.service
-ln -s /etc/systemd/system/ssrworker@.service ssrworker@9004.service
+ln -s /etc/systemd/system/videosection-ssr-worker@.service videosection-ssr-worker@9001.service
+ln -s /etc/systemd/system/videosection-ssr-worker@.service videosection-ssr-worker@9002.service
+ln -s /etc/systemd/system/videosection-ssr-worker@.service videosection-ssr-worker@9003.service
+ln -s /etc/systemd/system/videosection-ssr-worker@.service videosection-ssr-worker@9004.service
 ```
 
 To restart all workers:
 
 ```bash
-systemctl restart ssrworker@900*
+systemctl restart videosection-ssr-worker@900*
 ```
 
 To see if all of them working:
 
 ```bash
-systemctl status ssrworker@900*
+systemctl status videosection-ssr-worker@900*
 ```
