@@ -12,7 +12,7 @@ import {
     List,
     fromJS,
 } from 'immutable'
-import getSubPage from '../../../shared-src/routes/niche/get-subpage'
+import getSubPage from '../../../shared-src/routes/niche/getSubPage'
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
@@ -30,7 +30,9 @@ const
         isLoaded: false,
         isFailed: false,
 
-        currentNiche: '',
+        currentPage: '',
+        currentSubPage: '',
+        lastSubPageForRequest: '',
 
         pageNumber: 1,
         pageText: Map(),
@@ -45,8 +47,6 @@ const
         tagArchiveListNewer: fromJS(),
         itemsCount: 0,
         videoList: List(),
-
-        lastSubPage: '',
     }),
 
     Niche = ({pageUrl, search, niche, chooseSort, isSSR}) => <Page>
@@ -69,7 +69,8 @@ const
                         search={search}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        currentNiche={niche.get('currentNiche')}
+                        page={niche.get('currentPage')}
+                        subPage={niche.get('currentSubPage')}
                         pagesCount={niche.get('pagesCount')}
                         pageNumber={niche.get('pageNumber')}
                         itemsCount={niche.get('itemsCount')}
@@ -91,14 +92,15 @@ const
         const
             {sort, page} = queryString.parse(search),
 
-            subPage =
+            subPageForRequest =
                 match.params[0] && match.params[1]
                 ? getSubPage(match.params.child, sort, page, [match.params[0], match.params[1]])
                 : getSubPage(match.params.child, sort, page)
 
-        if (typeof subPage !== 'string')
+        if (typeof subPageForRequest !== 'string')
             throw new Error(
-                `Something went wront, unexpected "subPage" type: "${typeof subPage}"` +
+                `Something went wront, unexpected "subPageForRequest" type: "${
+                    typeof subPageForRequest}"` +
                 ' (this is supposed to be provided by router via props to the component)'
             )
 
@@ -108,10 +110,10 @@ const
             niche.get('isLoading') ||
             (
                 (niche.get('isLoaded') || niche.get('isFailed')) &&
-                subPage === niche.get('lastSubPage')
+                subPageForRequest === niche.get('lastSubPageForRequest')
             )
         ))
-            loadPage(subPage)
+            loadPage(subPageForRequest)
     }
 
 export default compose(
@@ -123,7 +125,7 @@ export default compose(
             search: state.getIn(['router', 'location', 'search']),
         }),
         dispatch => ({
-            loadPage: subPage => dispatch(actions.loadPageRequest(subPage)),
+            loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
             chooseSort: (newSortValue, stringifiedQS) => dispatch(actions.setNewSort({
                 newSortValue: newSortValue,
                 stringifiedQS: stringifiedQS

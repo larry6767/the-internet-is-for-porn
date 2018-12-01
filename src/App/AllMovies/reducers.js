@@ -9,7 +9,6 @@ export default
             isLoaded: false,
             isFailed: false,
             currentPage: '',
-            currentSubPage: '',
             lastSubPageForRequest: payload,
             pageNumber: 1,
             pageText: Map(),
@@ -29,7 +28,6 @@ export default
             isLoaded: true,
             isFailed: false,
             currentPage: data.currentPage,
-            currentSubPage: data.currentSubPage,
             lastSubPageForRequest: subPageForRequest,
             pageNumber: data.pageNumber,
             pageText: Map(fromJS(data.pageText)),
@@ -49,7 +47,6 @@ export default
             isLoaded: false,
             isFailed: true,
             currentPage: '',
-            currentSubPage: '',
             lastSubPageForRequest: '',
             pageNumber: 1,
             pageText: OrderedMap(),
@@ -70,8 +67,8 @@ export default
         isLoaded: false,
         isFailed: false,
         currentPage: '',
-        currentSubPage: '',
         lastSubPageForRequest: '',
+        currentNiche: '',
         pageNumber: 1,
         pageText: {
             /*

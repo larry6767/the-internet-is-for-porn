@@ -30,31 +30,30 @@ const
         nichesList: List(),
     }),
 
-    renderListItemLink = (x, classes) =>
-        <Link to={`/all-niches/${x.get('subPage')}`}
-            key={x.get('id')}
-            className={classes.routerLink}
+    renderListItemLink = (x, classes) => <Link to={`/all-niches/${x.get('subPage')}`}
+        key={x.get('id')}
+        className={classes.routerLink}
+    >
+        <ListItem
+            button
+            classes={{
+                gutters: classes.itemGutters
+            }}
         >
-            <ListItem
-                button
+            <ListItemIcon>
+                <FolderIcon/>
+            </ListItemIcon>
+            <ListItemText
                 classes={{
-                    gutters: classes.itemGutters
+                    root: classes.listItemTextRoot,
+                    primary: classes.primaryTypography,
+                    secondary: classes.secondaryTypography
                 }}
-            >
-                <ListItemIcon>
-                    <FolderIcon/>
-                </ListItemIcon>
-                <ListItemText
-                    classes={{
-                        root: classes.listItemTextRoot,
-                        primary: classes.primaryTypography,
-                        secondary: classes.secondaryTypography
-                    }}
-                    primary={x.get('name')}
-                    secondary={x.get('itemsCount')}
-                />
-            </ListItem>
-        </Link>,
+                primary={x.get('name')}
+                secondary={x.get('itemsCount')}
+            />
+        </ListItem>
+    </Link>,
 
     AllNiches = ({classes, niches}) => <Page>
         { niches.get('isFailed')

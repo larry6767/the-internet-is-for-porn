@@ -14,11 +14,11 @@ export default combineReducers({
             isFailed: false,
             nichesList: List(),
         }),
-        [actions.loadPageSuccess]: (state, {payload}) => state.merge({
+        [actions.loadPageSuccess]: (state, {payload: {data}}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            nichesList: fromJS(payload),
+            nichesList: fromJS(data),
         }),
         [actions.loadPageFailure]: (state) => state.merge({
             isLoading: false,

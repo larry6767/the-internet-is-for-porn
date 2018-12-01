@@ -147,7 +147,8 @@ const
 
     ArchiveControlBar = ({
         classes,
-        currentNiche,
+        page,
+        subPage,
         buttonsElements,
         tagArchiveListOlder,
         tagArchiveListNewer,
@@ -155,7 +156,7 @@ const
         {tagArchiveListOlder.size
             ? <WrappedButton
                 classes={classes}
-                link={`/all-niches/${currentNiche}/archive/${
+                link={`/${page}${subPage ? `/${subPage}` : ''}/archive/${
                     tagArchiveListOlder.get('year')}-${tagArchiveListOlder.get('month')}`}
                 text="previous month"
             /> : null
@@ -166,7 +167,7 @@ const
         {tagArchiveListNewer.size
             ? <WrappedButton
                 classes={classes}
-                link={`/all-niches/${currentNiche}/archive/${
+                link={`/${page}${subPage ? `/${subPage}` : ''}/archive/${
                     tagArchiveListNewer.get('year')}-${tagArchiveListNewer.get('month')}`}
                 text="next month"
             />
@@ -175,7 +176,7 @@ const
 
         <WrappedButton
             classes={classes}
-            link={`/all-niches/${currentNiche}`}
+            link={`/${page}${subPage ? `/${subPage}` : ''}`}
             text="Top Films"
         />
     </Fragment>,
@@ -190,7 +191,8 @@ const
         search,
         isSSR,
         chooseSort,
-        currentNiche,
+        page,
+        subPage,
         pagesCount,
         pageNumber,
         itemsCount,
@@ -228,7 +230,8 @@ const
                 {archiveFilms.get('current') !== 0
                     ? <ArchiveControlBar
                         classes={classes}
-                        currentNiche={currentNiche}
+                        page={page}
+                        subPage={subPage}
                         buttonsElements={buttonsElements}
                         tagArchiveListOlder={tagArchiveListOlder}
                         tagArchiveListNewer={tagArchiveListNewer}
