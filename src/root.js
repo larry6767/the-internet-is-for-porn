@@ -29,6 +29,7 @@ const
                     <Route path='/all-niches/:child' component={Niche}/>
 
                     <Route exact path="/all-movies.html" render={() => <Redirect to='/all-movies'/>}/>
+                    {/* <Route path='/all-movies/archive/(\d{4})-(\d{2})' component={AllMovies}/> */}
                     <Route path="/all-movies" component={AllMovies}/>
 
                     <Route exact path="/porn-stars.html" render={() => <Redirect to='/pornstars'/>}/>

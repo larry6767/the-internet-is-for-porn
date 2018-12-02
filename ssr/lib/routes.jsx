@@ -8,37 +8,65 @@ import {logRequestError} from './helpers'
 
 import Home from '../../src/App/Home'
 import AllNiches from '../../src/App/AllNiches'
-import AllNichesActions from '../../src/App/AllNiches/actions'
+import allNichesActions from '../../src/App/AllNiches/actions'
 import Niche from '../../src/App/AllNiches/Niche'
-import NicheActions from '../../src/App/AllNiches/Niche/actions'
+import nicheActions from '../../src/App/AllNiches/Niche/actions'
 import AllMovies from '../../src/App/AllMovies'
+import allMoviesActions from '../../src/App/AllMovies/actions'
 import Pornstars from '../../src/App/Pornstars'
 import NotFound from '../../src/App/NotFound'
 import errorActions from '../../src/generic/ErrorMessage/actions'
-import getSubPage from '../../shared-src/routes/niche/get-subpage'
+import getSubPage from '../../shared-src/routes/niche/getSubPage'
 
 const
-    nichePageHandler = async (render, req, res, subPage) => {
-        const store = newStore(initialStoreOnUrl(req.url))
+    pageHandler = async (req, res, pageCode, subPage, pageActions) => {
+        const
+            store = newStore(initialStoreOnUrl(req.url))
 
         try {
-            store.dispatch(NicheActions.loadPageSuccess({
+            store.dispatch(pageActions.loadPageSuccess({
                 subPage,
                 data: await requests.getPageData({
                     headers: proxiedHeaders(req),
-                    pageCode: requests.nichePageCode,
+                    pageCode: pageCode,
                     subPageCode: subPage,
                 })
             }))
         } catch (err) {
             logRequestError(req)(err)
-            store.dispatch(NicheActions.loadPageFailure())
+            store.dispatch(pageActions.loadPageFailure())
             store.dispatch(errorActions.openErrorMessage())
             res.status(500)
         }
+        return store
+    },
+
+    allNichesHandler = async (render, req, res, subPage) => {
+        const
+            store = await pageHandler(req, res, requests.allNichesPageCode, subPage, allNichesActions)
+
+        return render(res, <AllNiches/>, store, [
+            ['app', 'niches', 'all'],
+            ['generic', 'errorMessage'],
+        ])
+    },
+
+    nichePageHandler = async (render, req, res, subPage) => {
+        const
+            store = await pageHandler(req, res, requests.nichePageCode, subPage, nicheActions)
 
         return render(res, <Niche/>, store, [
             ['app', 'niches', 'niche'],
+            ['generic', 'errorMessage'],
+        ])
+    },
+
+    allMoviesPageHandler = async (render, req, res, subPage) => {
+        const
+            store = await pageHandler(req, res, requests.allMoviesPageCode, subPage, allMoviesActions)
+
+        return render(res, <AllMovies/>, store, [
+            ['app', 'allMovies'],
             ['generic', 'errorMessage'],
         ])
     }
@@ -62,28 +90,10 @@ export const routeMapping = render => [
         (req, res) => render(res, <Home/>, newStore(initialStoreOnUrl(req.url))),
     ])],
 
-    ['/all-niches', mkHandler('get', async (req, res) => {
-        const store = newStore(initialStoreOnUrl(req.url))
-
-        try {
-            store.dispatch(AllNichesActions.loadPageSuccess(
-                await requests.getPageData({
-                    headers: proxiedHeaders(req),
-                    pageCode: requests.allNichesPageCode,
-                })
-            ))
-        } catch (err) {
-            logRequestError(req)(err)
-            store.dispatch(AllNichesActions.loadPageFailure())
-            store.dispatch(errorActions.openErrorMessage())
-            res.status(500)
-        }
-
-        return render(res, <AllNiches/>, store, [
-            ['app', 'niches', 'all'],
-            ['generic', 'errorMessage'],
-        ])
-    })],
+    ['/all-niches', mkHandler('get', async (req, res) =>
+        await allNichesHandler(
+            render, req, res
+        ))],
 
     // front-end route: /all-niches/:child/archive/(\d{4})-(\d{2})
     [/^\/all-niches\/([^\/]+)\/archive\/(\d{4})-(\d{2})$/, mkHandler('get', async (req, res) =>
@@ -99,13 +109,33 @@ export const routeMapping = render => [
 
     ['/all-niches/:child', mkHandler('get', async (req, res) =>
         await nichePageHandler(
-            render, req, res, getSubPage(req.params.child, req.query.sort, req.query.page)
+            render, req, res,
+            getSubPage(req.params.child, req.query.sort, req.query.page)
         ))],
 
     ['/all-movies.html', mkHandler('get', (req, res) => res.redirect('/all-movies'))],
-    ['/all-movies', mkHandler('get', (req, res) =>
-        render(res, <AllMovies/>, newStore(initialStoreOnUrl(req.url)))
-    )],
+
+    // front-end route: /all-niches/archive/(\d{4})-(\d{2})
+    [/^\/all-movies\/archive\/(\d{4})-(\d{2})$/, mkHandler('get', async (req, res) =>
+        await allMoviesPageHandler(
+            render, req, res,
+            getSubPage(
+                null,
+                req.query.sort,
+                req.query.page,
+                [req.params[0], req.params[1]]
+            )
+        ))],
+
+    ['/all-movies', mkHandler('get', async (req, res) =>
+        await allMoviesPageHandler(
+            render, req, res,
+            getSubPage(
+                req.params[0],
+                req.query.sort,
+                req.query.page
+            )
+        ))],
 
     ['/porn-stars.html', mkHandler('get', (req, res) => res.redirect('/pornstars'))],
     ['/pornstars', mkHandler('get', (req, res) =>

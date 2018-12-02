@@ -82,6 +82,14 @@ const
             })
             .then(x => res.json(x).end())
             .catch(jsonThrow500(req, res))
+        else if (req.body.pageCode === 'all-movies')
+            requests.getPageData({
+                headers: proxiedHeaders(req),
+                pageCode: requests.allMoviesPageCode,
+                subPageCode: req.body.subPageCode,
+            })
+            .then(x => res.json(x).end())
+            .catch(jsonThrow500(req, res))
         else
             jsonThrow400(req, res)('Unexpected/unknown "pageCode" value in request body', {
                 request: {
