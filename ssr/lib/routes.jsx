@@ -14,6 +14,7 @@ import nicheActions from '../../src/App/AllNiches/Niche/actions'
 import AllMovies from '../../src/App/AllMovies'
 import allMoviesActions from '../../src/App/AllMovies/actions'
 import Pornstars from '../../src/App/Pornstars'
+import pornstarsActions from '../../src/App/Pornstars/actions'
 import Pornstar from '../../src/App/Pornstars/Pornstar'
 import pornstarActions from '../../src/App/Pornstars/Pornstar/actions'
 import NotFound from '../../src/App/NotFound'
@@ -69,6 +70,16 @@ const
 
         return render(res, <AllMovies/>, store, [
             ['app', 'allMovies'],
+            ['generic', 'errorMessage'],
+        ])
+    },
+
+    pornstarsHandler = async (render, req, res, subPage) => {
+        const
+            store = await pageHandler(req, res, requests.pornstarsPageCode, subPage, pornstarsActions)
+
+        return render(res, <Pornstars/>, store, [
+            ['app', 'pornstars', 'all'],
             ['generic', 'errorMessage'],
         ])
     },
@@ -145,9 +156,10 @@ export const routeMapping = render => [
         ))],
 
     ['/porn-stars.html', mkHandler('get', (req, res) => res.redirect('/pornstars'))],
-    ['/pornstars', mkHandler('get', (req, res) =>
-        render(res, <Pornstars/>, newStore(initialStoreOnUrl(req.url)))
-    )],
+    ['/pornstars', mkHandler('get', async (req, res) =>
+        await pornstarsHandler(
+            render, req, res
+        ))],
     ['/pornstars/:child', mkHandler('get', async (req, res) =>
         await pornstarPageHandler(
             render, req, res,

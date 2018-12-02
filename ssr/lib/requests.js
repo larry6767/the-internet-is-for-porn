@@ -326,6 +326,10 @@ const
                 })
             )
         }
+    },
+
+    getPornstarsMap = x => {
+        return getTagList(x.page.TAGS_BY_LETTERS.letters)
     }
 
 // sort of enum (to reduce human-factor mistakes).
@@ -346,6 +350,8 @@ export const getPageData = async ({headers, pageCode, subPageCode}) => {
             ? [{url: `/${subPageCode}.html`, options: {blocks: {allTagsBlock: 1}}}, getNicheMap]
             : pageCode === allMoviesPageCode
             ? [{url: `/${pageCode}${subPageCode}.html`, options: {blocks: {allTagsBlock: 1}}}, getAllMoviesMap]
+            : pageCode === pornstarsPageCode
+            ? [{url: '/?categories', options: {blocks: {allTagsBlock: 1}}}, getPornstarsMap]
             : pageCode === pornstarPageCode
             ? [{url: `/${subPageCode}.html`, options: {blocks: {allTagsBlock: 1}}}, getPornstarMap]
             : null

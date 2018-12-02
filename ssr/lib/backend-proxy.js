@@ -90,6 +90,13 @@ const
             })
             .then(x => res.json(x).end())
             .catch(jsonThrow500(req, res))
+        else if (req.body.pageCode === 'pornstars')
+            requests.getPageData({
+                headers: proxiedHeaders(req),
+                pageCode: requests.pornstarsPageCode,
+            })
+            .then(x => res.json(x).end())
+            .catch(jsonThrow500(req, res))
         else if (req.body.pageCode === 'pornstar')
             requests.getPageData({
                 headers: proxiedHeaders(req),
