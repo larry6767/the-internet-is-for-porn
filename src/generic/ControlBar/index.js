@@ -113,11 +113,13 @@ const
         <ButtonsList>
             {buttonsElements}
         </ButtonsList>
-        <WrappedButton
-            classes={classes}
-            link={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
-            text="Archive films"
-        />
+        {archiveFilms
+            ? <WrappedButton
+                classes={classes}
+                link={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
+                text="Archive films"
+            /> : null
+        }
         <SortWrapper>
             <Typography
                 variant="body1"
@@ -227,7 +229,7 @@ const
 
         return <Wrapper>
             <ControlButtons>
-                {archiveFilms.get('current') !== 0
+                {archiveFilms && archiveFilms.get('current') !== 0
                     ? <ArchiveControlBar
                         classes={classes}
                         page={page}

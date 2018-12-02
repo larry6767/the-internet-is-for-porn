@@ -6,6 +6,7 @@ import {getCurrentBreakpoint} from './helpers'
 import mainHeaderReducer from './MainHeader/reducers'
 import allMoviesReducer from './AllMovies/reducers'
 import nichesReducer from './AllNiches/reducers'
+import pornstarsReducer from './Pornstars/reducers'
 
 const
     defaultSSR = fromJS({isSSR: false})
@@ -14,6 +15,7 @@ export default combineReducers({
     mainHeader: mainHeaderReducer,
     niches: nichesReducer,
     allMovies: allMoviesReducer,
+    pornstars: pornstarsReducer,
 
     ui: handleActions({
         [actions.resize]: (state, action) =>

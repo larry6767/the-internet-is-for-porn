@@ -1,12 +1,12 @@
 import {put, takeEvery} from 'redux-saga/effects'
 import {push} from 'connected-react-router/immutable'
 
-import {BACKEND_URL} from '../../config'
-import errorActions from '../../generic/ErrorMessage/actions'
+import {BACKEND_URL} from '../../../config'
+import errorActions from '../../../generic/ErrorMessage/actions'
 
 import actions from './actions'
 
-function* loadAllMoviesPageFlow({payload: subPageForRequest}) {
+function* loadPornstarPageFlow({payload: subPageForRequest}) {
     try {
         const response = yield fetch(`${BACKEND_URL}/get-page-data`, {
             method: 'POST',
@@ -14,7 +14,7 @@ function* loadAllMoviesPageFlow({payload: subPageForRequest}) {
                 'Content-Type': 'application/json; charset=utf-8',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({pageCode: 'all-movies', subPageCode: subPageForRequest}),
+            body: JSON.stringify({pageCode: 'pornstar', subPageCode: subPageForRequest}),
         })
 
         if (response.status !== 200)
@@ -22,7 +22,7 @@ function* loadAllMoviesPageFlow({payload: subPageForRequest}) {
 
         yield put(actions.loadPageSuccess({subPageForRequest, data: yield response.json()}))
     } catch (err) {
-        console.error('loadAllMoviesPageFlow is failed with exception:', err)
+        console.error('loadPornstarPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())
         yield put(errorActions.openErrorMessage())
     }
@@ -33,6 +33,6 @@ function* setNewSort({payload}) {
 }
 
 export default function* saga() {
-    yield takeEvery(actions.loadPageRequest, loadAllMoviesPageFlow)
+    yield takeEvery(actions.loadPageRequest, loadPornstarPageFlow)
     yield takeEvery(actions.setNewSort, setNewSort)
 }

@@ -10,6 +10,7 @@ import AllNiches from './App/AllNiches'
 import Niche from './App/AllNiches/Niche'
 import AllMovies from './App/AllMovies'
 import Pornstars from './App/Pornstars'
+import Pornstar from './App/Pornstars/Pornstar'
 import NotFound from './App/NotFound'
 
 const
@@ -24,16 +25,16 @@ const
                             : <Home/>
                     )}/>
                     <Route exact path="/all-niches" component={AllNiches}/>
-
                     <Route path='/all-niches/:child/archive/(\d{4})-(\d{2})' component={Niche}/>
                     <Route path='/all-niches/:child' component={Niche}/>
 
                     <Route exact path="/all-movies.html" render={() => <Redirect to='/all-movies'/>}/>
-                    {/* <Route path='/all-movies/archive/(\d{4})-(\d{2})' component={AllMovies}/> */}
-                    <Route path="/all-movies" component={AllMovies}/>
+                    <Route exact path="/all-movies" component={AllMovies}/>
+                    <Route path='/all-movies/archive/(\d{4})-(\d{2})' component={AllMovies}/>
 
                     <Route exact path="/porn-stars.html" render={() => <Redirect to='/pornstars'/>}/>
-                    <Route path="/pornstars" component={Pornstars}/>
+                    <Route exact path="/pornstars" component={Pornstars}/>
+                    <Route path='/pornstars/:child' component={Pornstar}/>
                     <Route path="*" component={NotFound}/>
                 </Switch>}
             </App>

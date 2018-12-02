@@ -14,6 +14,8 @@ import nicheActions from '../../src/App/AllNiches/Niche/actions'
 import AllMovies from '../../src/App/AllMovies'
 import allMoviesActions from '../../src/App/AllMovies/actions'
 import Pornstars from '../../src/App/Pornstars'
+import Pornstar from '../../src/App/Pornstars/Pornstar'
+import pornstarActions from '../../src/App/Pornstars/Pornstar/actions'
 import NotFound from '../../src/App/NotFound'
 import errorActions from '../../src/generic/ErrorMessage/actions'
 import getSubPage from '../../shared-src/routes/niche/getSubPage'
@@ -69,6 +71,16 @@ const
             ['app', 'allMovies'],
             ['generic', 'errorMessage'],
         ])
+    },
+
+    pornstarPageHandler = async (render, req, res, subPage) => {
+        const
+            store = await pageHandler(req, res, requests.pornstarPageCode, subPage, pornstarActions)
+
+        return render(res, <Pornstar/>, store, [
+            ['app', 'pornstars', 'pornstar'],
+            ['generic', 'errorMessage'],
+        ])
     }
 
 // WARNING! keep this up to date with front-end routing!
@@ -89,12 +101,10 @@ export const routeMapping = render => [
 
         (req, res) => render(res, <Home/>, newStore(initialStoreOnUrl(req.url))),
     ])],
-
     ['/all-niches', mkHandler('get', async (req, res) =>
         await allNichesHandler(
             render, req, res
         ))],
-
     // front-end route: /all-niches/:child/archive/(\d{4})-(\d{2})
     [/^\/all-niches\/([^\/]+)\/archive\/(\d{4})-(\d{2})$/, mkHandler('get', async (req, res) =>
         await nichePageHandler(
@@ -106,7 +116,6 @@ export const routeMapping = render => [
                 [req.params[1], req.params[2]]
             )
         ))],
-
     ['/all-niches/:child', mkHandler('get', async (req, res) =>
         await nichePageHandler(
             render, req, res,
@@ -114,7 +123,15 @@ export const routeMapping = render => [
         ))],
 
     ['/all-movies.html', mkHandler('get', (req, res) => res.redirect('/all-movies'))],
-
+    ['/all-movies', mkHandler('get', async (req, res) =>
+        await allMoviesPageHandler(
+            render, req, res,
+            getSubPage(
+                req.params[0],
+                req.query.sort,
+                req.query.page
+            )
+        ))],
     // front-end route: /all-niches/archive/(\d{4})-(\d{2})
     [/^\/all-movies\/archive\/(\d{4})-(\d{2})$/, mkHandler('get', async (req, res) =>
         await allMoviesPageHandler(
@@ -127,20 +144,15 @@ export const routeMapping = render => [
             )
         ))],
 
-    ['/all-movies', mkHandler('get', async (req, res) =>
-        await allMoviesPageHandler(
-            render, req, res,
-            getSubPage(
-                req.params[0],
-                req.query.sort,
-                req.query.page
-            )
-        ))],
-
     ['/porn-stars.html', mkHandler('get', (req, res) => res.redirect('/pornstars'))],
     ['/pornstars', mkHandler('get', (req, res) =>
         render(res, <Pornstars/>, newStore(initialStoreOnUrl(req.url)))
     )],
+    ['/pornstars/:child', mkHandler('get', async (req, res) =>
+        await pornstarPageHandler(
+            render, req, res,
+            getSubPage(req.params.child, req.query.sort, req.query.page)
+        ))],
 
     ['*', mkHandler('get', (req, res) => {
         res.status(404)
