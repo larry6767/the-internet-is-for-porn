@@ -55,6 +55,21 @@ const
         }).end()
     },
 
+    requestHandler = (req, res, pageCode, subPageCode) => {
+        const
+            params = {
+                headers: proxiedHeaders(req),
+                pageCode
+            }
+
+        if (subPageCode)
+        params.subPageCode = req.body.subPageCode
+
+        requests.getPageData(params)
+        .then(x => res.json(x).end())
+        .catch(jsonThrow500(req, res))
+    },
+
     getPageData = (({validTopLevelKeys}) => (req, res) => {
         const
             invalidKeys = Object.keys(req.body).filter(x => !~validTopLevelKeys.indexOf(x))
@@ -67,44 +82,22 @@ const
                     invalidTopLevelKeys: invalidKeys,
                 },
             })
+
         else if (req.body.pageCode === 'all-niches')
-            requests.getPageData({
-                headers: proxiedHeaders(req),
-                pageCode: requests.allNichesPageCode,
-            })
-            .then(x => res.json(x).end())
-            .catch(jsonThrow500(req, res))
+            requestHandler(req, res, requests.allNichesPageCode)
+
         else if (req.body.pageCode === 'niche')
-            requests.getPageData({
-                headers: proxiedHeaders(req),
-                pageCode: requests.nichePageCode,
-                subPageCode: req.body.subPageCode,
-            })
-            .then(x => res.json(x).end())
-            .catch(jsonThrow500(req, res))
+            requestHandler(req, res, requests.nichePageCode, true)
+
         else if (req.body.pageCode === 'all-movies')
-            requests.getPageData({
-                headers: proxiedHeaders(req),
-                pageCode: requests.allMoviesPageCode,
-                subPageCode: req.body.subPageCode,
-            })
-            .then(x => res.json(x).end())
-            .catch(jsonThrow500(req, res))
+            requestHandler(req, res, requests.allMoviesPageCode, true)
+
         else if (req.body.pageCode === 'pornstars')
-            requests.getPageData({
-                headers: proxiedHeaders(req),
-                pageCode: requests.pornstarsPageCode,
-            })
-            .then(x => res.json(x).end())
-            .catch(jsonThrow500(req, res))
+            requestHandler(req, res, requests.pornstarsPageCode)
+
         else if (req.body.pageCode === 'pornstar')
-            requests.getPageData({
-                headers: proxiedHeaders(req),
-                pageCode: requests.pornstarPageCode,
-                subPageCode: req.body.subPageCode,
-            })
-            .then(x => res.json(x).end())
-            .catch(jsonThrow500(req, res))
+            requestHandler(req, res, requests.pornstarPageCode, true)
+
         else
             jsonThrow400(req, res)('Unexpected/unknown "pageCode" value in request body', {
                 request: {
