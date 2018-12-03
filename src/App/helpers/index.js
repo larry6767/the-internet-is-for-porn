@@ -11,3 +11,4 @@ export {
 
 export {default as withStylesProps} from './withStylesProps'
 export {default as createActions} from './createActions'
+export {default as getValueForNavigation} from './getValueForNavigation'
