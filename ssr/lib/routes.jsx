@@ -160,7 +160,7 @@ export const routeMapping = render => [
         await pornstarsHandler(
             render, req, res
         ))],
-    ['/porn-stars/:child', mkHandler('get', async (req, res) =>
+    ['/porn-star/:child', mkHandler('get', async (req, res) =>
         await pornstarPageHandler(
             render, req, res,
             getSubPage(req.params.child, req.query.sort, req.query.page)

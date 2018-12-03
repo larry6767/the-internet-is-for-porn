@@ -343,7 +343,7 @@ export const
     nichePageCode = 'niche',
     allMoviesPageCode = 'all-movies',
     pornstarsPageCode = 'porn-stars',
-    pornstarPageCode = 'pornstar'
+    pornstarPageCode = 'porn-star'
 
 export const getPageData = async ({headers, pageCode, subPageCode}) => {
     const

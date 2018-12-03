@@ -37,7 +37,7 @@ const
 
     renderListItem = (x, classes) => <PornstarItem key={x.get('id')}>
         <Link
-            to={`/porn-star/${x.get('subPage')}`}
+            to={`/porn-star/${x.get('subPage')}${x.get('sort')}`}
             className={classes.routerLink}
         >
             <Thumb thumb={x.get('thumb')} />

@@ -14,7 +14,7 @@ function* loadPornstarPageFlow({payload: subPageForRequest}) {
                 'Content-Type': 'application/json; charset=utf-8',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({pageCode: 'pornstar', subPageCode: subPageForRequest}),
+            body: JSON.stringify({pageCode: 'porn-star', subPageCode: subPageForRequest}),
         })
 
         if (response.status !== 200)

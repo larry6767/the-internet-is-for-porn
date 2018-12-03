@@ -15,6 +15,10 @@ export default (letters, items) => reduce(
                 subPage: sub_url,
                 itemsCount: items_count,
                 thumb: items[id].thumb_url,
+                sort: items[id].url_galleries.indexOf('latest')
+                    ? '?sort=latest'
+                    : items[id].url_galleries.indexOf('longest')
+                    ? '?sort=longest' : ''
             })),
             o => o.name
         )

@@ -34,7 +34,7 @@ const
 
                     <Route exact path="/porn-stars.html" render={() => <Redirect to='/porn-stars'/>}/>
                     <Route exact path="/porn-stars" component={Pornstars}/>
-                    <Route path='/porn-stars/:child' component={Pornstar}/>
+                    <Route path='/porn-star/:child' component={Pornstar}/>
                     <Route path="*" component={NotFound}/>
                 </Switch>}
             </App>
