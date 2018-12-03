@@ -14,7 +14,7 @@ function* loadPornstarsPageFlow() {
                 'Content-Type': 'application/json; charset=utf-8',
                 'Accept': 'application/json',
             },
-            body: JSON.stringify({pageCode: 'pornstars'}),
+            body: JSON.stringify({pageCode: 'porn-stars'}),
         })
 
         if (response.status !== 200)

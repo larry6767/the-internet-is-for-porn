@@ -92,7 +92,7 @@ const
         else if (req.body.pageCode === 'all-movies')
             requestHandler(req, res, requests.allMoviesPageCode, true)
 
-        else if (req.body.pageCode === 'pornstars')
+        else if (req.body.pageCode === 'porn-stars')
             requestHandler(req, res, requests.pornstarsPageCode)
 
         else if (req.body.pageCode === 'pornstar')

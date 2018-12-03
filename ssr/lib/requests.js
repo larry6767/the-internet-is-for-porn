@@ -4,7 +4,11 @@ import _, {
     sortBy,
 } from 'lodash'
 import rp from 'request-promise-native'
-import {getLocalText, getTagList} from './helpers/requests'
+import {
+    getLocalText,
+    getTagList,
+    getModelsList,
+} from './helpers/requests'
 import {backendUrl} from '../config'
 
 const
@@ -329,7 +333,7 @@ const
     },
 
     getPornstarsMap = x => {
-        return getTagList(x.page.TAGS_BY_LETTERS.letters)
+        return getModelsList(x.page.MODELS_BY_LETTERS.letters, x.page.MODELS_BY_LETTERS_MODELS_INFO.items)
     }
 
 // sort of enum (to reduce human-factor mistakes).
@@ -338,7 +342,7 @@ export const
     allNichesPageCode = 'all-niches',
     nichePageCode = 'niche',
     allMoviesPageCode = 'all-movies',
-    pornstarsPageCode = 'pornstars',
+    pornstarsPageCode = 'porn-stars',
     pornstarPageCode = 'pornstar'
 
 export const getPageData = async ({headers, pageCode, subPageCode}) => {
@@ -351,7 +355,7 @@ export const getPageData = async ({headers, pageCode, subPageCode}) => {
             : pageCode === allMoviesPageCode
             ? [{url: `/${pageCode}${subPageCode}.html`, options: {blocks: {allTagsBlock: 1}}}, getAllMoviesMap]
             : pageCode === pornstarsPageCode
-            ? [{url: '/?categories', options: {blocks: {allTagsBlock: 1}}}, getPornstarsMap]
+            ? [{url: `/${pageCode}.html`}, getPornstarsMap]
             : pageCode === pornstarPageCode
             ? [{url: `/${subPageCode}.html`, options: {blocks: {allTagsBlock: 1}}}, getPornstarMap]
             : null

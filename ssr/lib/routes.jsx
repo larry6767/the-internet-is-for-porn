@@ -155,12 +155,12 @@ export const routeMapping = render => [
             )
         ))],
 
-    ['/porn-stars.html', mkHandler('get', (req, res) => res.redirect('/pornstars'))],
-    ['/pornstars', mkHandler('get', async (req, res) =>
+    ['/porn-stars.html', mkHandler('get', (req, res) => res.redirect('/porn-stars'))],
+    ['/porn-stars', mkHandler('get', async (req, res) =>
         await pornstarsHandler(
             render, req, res
         ))],
-    ['/pornstars/:child', mkHandler('get', async (req, res) =>
+    ['/porn-stars/:child', mkHandler('get', async (req, res) =>
         await pornstarPageHandler(
             render, req, res,
             getSubPage(req.params.child, req.query.sort, req.query.page)

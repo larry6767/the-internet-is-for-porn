@@ -32,9 +32,9 @@ const
                     <Route exact path="/all-movies" component={AllMovies}/>
                     <Route path='/all-movies/archive/(\d{4})-(\d{2})' component={AllMovies}/>
 
-                    <Route exact path="/porn-stars.html" render={() => <Redirect to='/pornstars'/>}/>
-                    <Route exact path="/pornstars" component={Pornstars}/>
-                    <Route path='/pornstars/:child' component={Pornstar}/>
+                    <Route exact path="/porn-stars.html" render={() => <Redirect to='/porn-stars'/>}/>
+                    <Route exact path="/porn-stars" component={Pornstars}/>
+                    <Route path='/porn-stars/:child' component={Pornstar}/>
                     <Route path="*" component={NotFound}/>
                 </Switch>}
             </App>
