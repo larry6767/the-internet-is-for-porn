@@ -10,6 +10,16 @@ export const muiStyles = theme => ({
     },
     typographyTitle: {
         margin: '4px 2px 0',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        width: '100%',
+    },
+    typographyQuantity: {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+        width: '100%',
     },
     favoriteIcon: {
         transition: 'width 0.2s, height 0.2s, top 0.2s, left 0.2s',

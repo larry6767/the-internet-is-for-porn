@@ -51,7 +51,10 @@ const
                 <Like>
                     <Favorite classes={{root: classes.favoriteIcon}}/>
                 </Like>
-                <Typography variant="body2">
+                <Typography
+                    variant="body2"
+                    classes={{root: classes.typographyQuantity}}
+                >
                     {`${x.get('itemsCount')} Films`}
                 </Typography>
             </InfoBar>

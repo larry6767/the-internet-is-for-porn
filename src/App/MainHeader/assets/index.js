@@ -82,6 +82,6 @@ export const BottomInner = styled.div`
     margin: 0 auto;
 
     ${({isSSR}) => `display: ${isSSR ? 'block' : 'flex'};`}
+    ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}
-    ${({theme}) => theme.media.xl`width: 50%;`}
 `
