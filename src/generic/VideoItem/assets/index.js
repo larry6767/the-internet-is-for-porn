@@ -3,13 +3,27 @@ import styled from 'styled-components'
 export const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
-    width: 240px;
+    width: calc((100% - 15px) / 4);
     margin-right: 5px;
     margin-bottom: 5px;
     cursor: pointer;
+    flex-grow: 1;
+
+    ${({theme}) => theme.media.sm`width: calc((100% - 10px) / 3)`}
+    ${({theme}) => theme.media.xs`width: calc((100% - 5px) / 2)`}
 
     &:nth-of-type(4n) {
-        margin-right: 0;
+        ${({theme}) => theme.media.xl`margin-right: 0;`}
+        ${({theme}) => theme.media.lg`margin-right: 0;`}
+        ${({theme}) => theme.media.md`margin-right: 0;`}
+    }
+
+    &:nth-of-type(3n) {
+        ${({theme}) => theme.media.sm`margin-right: 0;`}
+    }
+
+    &:nth-child(2n) {
+        ${({theme}) => theme.media.xs`margin-right: 0;`}
     }
 `
 export const VideoPreviewBar = styled.div`
@@ -25,12 +39,17 @@ export const VideoPreviewBar = styled.div`
 export const VideoPreview = styled.div`
     display: flex;
     align-items: flex-end;
-    height: 180px;
     width: 100%;
     border: 1px solid #000;
     background: ${({thumb}) => `url(${thumb})`};
     border-radius: 1px;
     overflow: hidden;
+
+    &::before {
+        content: '';
+        display: block;
+        padding-top: 75%;
+    }
 
     &:hover ${VideoPreviewBar} {
         transform: translateY(0px);

@@ -7,6 +7,7 @@ export const Wrapper = styled.div`
 
 export const ControlButtons = styled.div`
     display: flex;
+    flex-wrap: wrap;
     margin-bottom: 12px;
 `
 

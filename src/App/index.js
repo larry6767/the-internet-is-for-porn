@@ -47,9 +47,8 @@ export default compose(
             location: state.getIn(['router', 'location'])
         }),
         dispatch => ({
-            resizeAction: clientWidth => dispatch(actions.resize(
-                // typeof event === "number" ? event : event.srcElement.innerWidth
-                clientWidth
+            resizeAction: event => dispatch(actions.resize(
+                typeof event === "number" ? event : event.srcElement.innerWidth
             ))
         })
     ),

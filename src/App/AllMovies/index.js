@@ -2,6 +2,7 @@ import React from 'react'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
+import {withStyles} from '@material-ui/core'
 import {
     CircularProgress,
     Typography
@@ -20,9 +21,10 @@ import VideoList from '../../generic/VideoList'
 import {
     Page,
     Content,
-    PageWrapper,
+    AllMoviesPageWrapper,
 } from './assets'
 import actions from './actions'
+import {muiStyles} from './assets/muiStyles'
 
 const
     AllMoviesRecord = Record({
@@ -50,19 +52,29 @@ const
         lastSubPage: '',
     }),
 
-    AllMovies = ({pageUrl, search, allMovies, chooseSort, isSSR}) => <Page>
+    AllMovies = ({classes, currentBreakpoint, pageUrl, search, allMovies, chooseSort, isSSR}) => <Page>
         { allMovies.get('isFailed')
             ? <ErrorContent/>
             : allMovies.get('isLoading')
             ? <CircularProgress/>
             : <Content>
-                <Lists
-                    pageUrl={pageUrl}
-                    tagList={allMovies.get('tagList')}
-                    tagArchiveList={allMovies.get('tagArchiveList')}
-                />
-                <PageWrapper>
-                    <Typography variant="h4" gutterBottom>
+                {currentBreakpoint === 'md'
+                || currentBreakpoint === 'lg'
+                || currentBreakpoint === 'XL'
+                    ? <Lists
+                        pageUrl={pageUrl}
+                        tagList={allMovies.get('tagList')}
+                        tagArchiveList={allMovies.get('tagArchiveList')}
+                    /> : null
+                }
+                <AllMoviesPageWrapper>
+                    <Typography
+                        variant="h4"
+                        gutterBottom
+                        classes={{
+                            root: classes.typographyTitle
+                        }}
+                    >
                         {allMovies.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <ControlBar
@@ -83,7 +95,7 @@ const
                     <VideoList
                         videoList={allMovies.get('videoList')}
                     />
-                </PageWrapper>
+                </AllMoviesPageWrapper>
             </Content>
         }
     </Page>,
@@ -119,6 +131,7 @@ const
 export default compose(
     connect(
         state => ({
+            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
             allMovies: AllMoviesRecord(state.getIn(['app', 'allMovies'])),
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
             pageUrl: state.getIn(['router', 'location', 'pathname']),
@@ -140,5 +153,6 @@ export default compose(
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
         },
-    })
+    }),
+    withStyles(muiStyles)
 )(AllMovies)
