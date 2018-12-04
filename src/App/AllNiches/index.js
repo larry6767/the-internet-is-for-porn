@@ -8,17 +8,21 @@ import {
     ListItemIcon,
     ListItemText,
     CircularProgress,
+    Typography,
 } from '@material-ui/core'
 import FolderIcon from '@material-ui/icons/Folder'
 import {
     Record,
     List,
 } from 'immutable'
-
 import ErrorContent from '../../generic/ErrorContent'
 import {withStylesProps} from '../helpers'
 import actions from './actions'
-import {Page} from './assets'
+import {
+    AllNichesPage,
+    Content,
+    PageWrapper,
+} from './assets'
 import {muiStyles} from './assets/muiStyles'
 
 const
@@ -55,22 +59,28 @@ const
         </ListItem>
     </Link>,
 
-    AllNiches = ({classes, niches}) => <Page>
+    AllNiches = ({classes, niches}) => <AllNichesPage>
         { niches.get('isFailed')
             ? <ErrorContent/>
-            : <ListComponent
-                component="div"
-                classes={{
-                    root: classes.root
-                }}
-            >
-                { niches.get('isLoading')
-                    ? <CircularProgress/>
-                    : niches.get('nichesList').map(x => renderListItemLink(x, classes))
-                }
-            </ListComponent>
+            : niches.get('isLoading')
+            ? <CircularProgress/>
+            :<Content>
+                <PageWrapper>
+                    <Typography variant="h4" gutterBottom>
+                        All Niches
+                    </Typography>
+                    <ListComponent
+                        component="div"
+                        classes={{
+                            root: classes.root
+                        }}
+                    >
+                        {niches.get('nichesList').map(x => renderListItemLink(x, classes))}
+                    </ListComponent>
+                </PageWrapper>
+            </Content>
         }
-    </Page>
+    </AllNichesPage>
 
 export default compose(
     connect(

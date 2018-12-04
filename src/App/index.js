@@ -47,8 +47,9 @@ export default compose(
             location: state.getIn(['router', 'location'])
         }),
         dispatch => ({
-            resizeAction: event => dispatch(actions.resize(
-                typeof event === "number" ? event : event.srcElement.innerWidth
+            resizeAction: clientWidth => dispatch(actions.resize(
+                // typeof event === "number" ? event : event.srcElement.innerWidth
+                clientWidth
             ))
         })
     ),
@@ -57,7 +58,7 @@ export default compose(
         componentDidMount() {
             this.listener = throttle(this.props.resizeAction, 200)
             window.addEventListener('resize', this.listener)
-            this.props.resizeAction(window.innerWidth)
+            this.props.resizeAction(document.documentElement.clientWidth)
         },
 
         componentWillUnmount() {

@@ -82,7 +82,6 @@ const
 export default compose(
     connect(
         state => ({
-            // currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
             pornstars: PornstarsRecord(state.getIn(['app', 'pornstars', 'all'])),
         }),
         dispatch => ({
