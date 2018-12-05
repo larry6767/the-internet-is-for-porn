@@ -76,24 +76,27 @@ const
         </ListComponent>
     },
 
-    Lists = ({classes, pageUrl, tagList, tagArchiveList}) => <ListsInner>
-        <ListComponent
-            component="nav"
-            subheader={
-                <ListSubheader classes={{
-                    root: classes.listSubheader
-                }}>
-                    All straight films
-                </ListSubheader>
-            }
-        >
-            {tagList.map(x => NichesListItem(x, classes))}
-        </ListComponent>
-        <ArchiveList
-            classes={classes}
-            tagArchiveList={tagArchiveList}
-            pageUrl={pageUrl}
-        />
-    </ListsInner>
+    Lists = ({classes, currentBreakpoint, pageUrl, tagList, tagArchiveList}) => currentBreakpoint === 'md'
+        || currentBreakpoint === 'lg'
+        || currentBreakpoint === 'XL'
+            ? <ListsInner>
+            <ListComponent
+                component="nav"
+                subheader={
+                    <ListSubheader classes={{
+                        root: classes.listSubheader
+                    }}>
+                        All straight films
+                    </ListSubheader>
+                }
+            >
+                {tagList.map(x => NichesListItem(x, classes))}
+            </ListComponent>
+            <ArchiveList
+                classes={classes}
+                tagArchiveList={tagArchiveList}
+                pageUrl={pageUrl}
+            />
+        </ListsInner> : null
 
 export default withStyles(muiStyles)(Lists)

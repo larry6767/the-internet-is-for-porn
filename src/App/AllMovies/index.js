@@ -58,15 +58,12 @@ const
             : allMovies.get('isLoading')
             ? <CircularProgress/>
             : <Content>
-                {currentBreakpoint === 'md'
-                || currentBreakpoint === 'lg'
-                || currentBreakpoint === 'XL'
-                    ? <Lists
-                        pageUrl={pageUrl}
-                        tagList={allMovies.get('tagList')}
-                        tagArchiveList={allMovies.get('tagArchiveList')}
-                    /> : null
-                }
+                <Lists
+                    currentBreakpoint={currentBreakpoint}
+                    pageUrl={pageUrl}
+                    tagList={allMovies.get('tagList')}
+                    tagArchiveList={allMovies.get('tagArchiveList')}
+                />
                 <AllMoviesPageWrapper>
                     <Typography
                         variant="h4"

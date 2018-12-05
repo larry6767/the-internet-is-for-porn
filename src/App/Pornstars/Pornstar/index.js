@@ -49,13 +49,14 @@ const
         videoList: List(),
     }),
 
-    Pornstar = ({pageUrl, search, pornstar, chooseSort, isSSR}) => <Page>
+    Pornstar = ({currentBreakpoint, pageUrl, search, pornstar, chooseSort, isSSR}) => <Page>
         { pornstar.get('isFailed')
             ? <ErrorContent/>
             : pornstar.get('isLoading')
             ? <CircularProgress/>
             : <Content>
                 <Lists
+                    currentBreakpoint={currentBreakpoint}
                     pageUrl={pageUrl}
                     tagList={pornstar.get('tagList')}
                     tagArchiveList={pornstar.get('tagArchiveList')}
@@ -119,6 +120,7 @@ const
 export default compose(
     connect(
         state => ({
+            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
             pornstar: PornstarRecord(state.getIn(['app', 'pornstars', 'pornstar'])),
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
             pageUrl: state.getIn(['router', 'location', 'pathname']),

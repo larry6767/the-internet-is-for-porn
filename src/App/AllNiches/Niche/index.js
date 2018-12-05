@@ -49,13 +49,14 @@ const
         videoList: List(),
     }),
 
-    Niche = ({pageUrl, search, niche, chooseSort, isSSR}) => <Page>
+    Niche = ({currentBreakpoint, pageUrl, search, niche, chooseSort, isSSR}) => <Page>
         { niche.get('isFailed')
             ? <ErrorContent/>
             : niche.get('isLoading')
             ? <CircularProgress/>
             : <Content>
                 <Lists
+                    currentBreakpoint={currentBreakpoint}
                     pageUrl={pageUrl}
                     tagList={niche.get('tagList')}
                     tagArchiveList={niche.get('tagArchiveList')}
@@ -119,6 +120,7 @@ const
 export default compose(
     connect(
         state => ({
+            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
             niche: NicheRecord(state.getIn(['app', 'niches', 'niche'])),
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
             pageUrl: state.getIn(['router', 'location', 'pathname']),
