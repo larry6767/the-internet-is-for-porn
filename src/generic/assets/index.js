@@ -7,6 +7,7 @@ export const Page = styled.section`
     align-items: center;
     padding: 20px 10px;
     margin: 0 auto;
+    width: 100%;
 
     ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}

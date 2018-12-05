@@ -56,7 +56,14 @@ const
                 {title}
             </Typography>
             <InfoBlockInner>
-                <Typography variant="body2">pornSharing</Typography>
+                <Typography
+                    variant="body2"
+                    classes={{
+                        root: classes.typographySource
+                    }}
+                >
+                    pornSharing
+                </Typography>
                 <Typography
                     variant="body2"
                     classes={{

@@ -8,17 +8,18 @@ export const Wrapper = styled.div`
 export const ControlButtons = styled.div`
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 12px;
 `
 
 export const ButtonsList = styled.div`
     display: flex;
-    margin-right: 10px;
+    flex-wrap: wrap;
+    margin-right: 15px;
 `
 
 export const SortWrapper = styled.div`
     display: flex;
     align-items: center;
+    margin-bottom: 12px;
 `
 export const InlinedSelectionWrap = styled.div`
     display: block;

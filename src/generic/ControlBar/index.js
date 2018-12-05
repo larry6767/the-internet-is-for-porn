@@ -214,7 +214,7 @@ const
                 return <Link
                     key={idx + 1}
                     to={link}
-                    className={classes.link}
+                    className={classes.paginationLink}
                 >
                     <Button
                         classes={{

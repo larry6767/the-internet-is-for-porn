@@ -5,13 +5,21 @@ export const muiStyles = {
     paginationButtonRoot: {
         padding: 8,
         minWidth: 36,
-        marginRight: 5
+        marginBottom: 12,
+    },
+    paginationLink: {
+        textDecoration: 'none',
+        marginRight: 5,
+        '&:last-child': {
+            marginRight: 0,
+        }
     },
     buttonsList: {
         marginRight: 15
     },
     buttonRoot: {
-        marginRight: 15
+        marginRight: 15,
+        marginBottom: 12,
     },
     typographyRoot: {
         marginRight: 15

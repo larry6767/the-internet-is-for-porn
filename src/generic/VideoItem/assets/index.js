@@ -11,6 +11,8 @@ export const Wrapper = styled.div`
 
     ${({theme}) => theme.media.sm`width: calc((100% - 10px) / 3)`}
     ${({theme}) => theme.media.xs`width: calc((100% - 5px) / 2)`}
+    ${({theme}) => theme.media.xxs`width: 100%;`}
+    ${({theme}) => theme.media.xxs`margin-right: 0;`}
 
     &:nth-of-type(4n) {
         ${({theme}) => theme.media.xl`margin-right: 0;`}
@@ -41,7 +43,9 @@ export const VideoPreview = styled.div`
     align-items: flex-end;
     width: 100%;
     border: 1px solid #000;
-    background: ${({thumb}) => `url(${thumb})`};
+    background-image: ${({thumb}) => `url(${thumb})`};
+    background-size: cover;
+    background-repeat: no-repeat;
     border-radius: 1px;
     overflow: hidden;
 
