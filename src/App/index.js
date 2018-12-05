@@ -48,7 +48,7 @@ export default compose(
         }),
         dispatch => ({
             resizeAction: event => dispatch(actions.resize(
-                typeof event === "number" ? event : event.srcElement.innerWidth
+                typeof event === "number" ? event : event.srcElement.outerWidth
             ))
         })
     ),
