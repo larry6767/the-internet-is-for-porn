@@ -8,6 +8,7 @@ import {
     getTagList,
     getModelsList,
     getSortList,
+    getOrderedVideoList,
 } from './helpers/requests'
 import {backendUrl} from '../config'
 
@@ -32,17 +33,7 @@ const
 
     getAllMoviesMap = x => {
         const
-            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID),
-            // Just on `Niche` page it's `Array` but on archive page it's `Object`.
-            idsOrdering =
-                Array.isArray(x.page.GALS_INFO.ids)
-                ? x.page.GALS_INFO.ids
-                : _(x.page.GALS_INFO.ids).toPairs().sortBy(0).map(([k, v]) => Number(v)).value(),
-
-            orderedVideoList = sortBy(
-                x.page.GALS_INFO.items,
-                ({id}) => idsOrdering.indexOf(Number(id))
-            )
+            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID)
 
         return {
             currentPage: x.page.TAG_URL_NAME,
@@ -90,7 +81,7 @@ const
                 } : undefined,
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: map(
-                orderedVideoList,
+                getOrderedVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
                 ({id, thumb_url, title, id_sponsor, tags, url_regular, thumb_top, length}) => ({
                     // It's supposed to be a number (not a string, as returned by backend),
                     // because `x.page.GALS_INFO.ids` contains these ids as numbers.
@@ -118,17 +109,7 @@ const
 
     getNicheMap = x => {
         const
-            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID),
-            // Just on `Niche` page it's `Array` but on archive page it's `Object`.
-            idsOrdering =
-                Array.isArray(x.page.GALS_INFO.ids)
-                ? x.page.GALS_INFO.ids
-                : _(x.page.GALS_INFO.ids).toPairs().sortBy(0).map(([k, v]) => Number(v)).value(),
-
-            orderedVideoList = sortBy(
-                x.page.GALS_INFO.items,
-                ({id}) => idsOrdering.indexOf(Number(id))
-            )
+            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID)
 
         return {
             currentPage: 'all-niches',
@@ -177,7 +158,7 @@ const
                 } : undefined,
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: map(
-                orderedVideoList,
+                getOrderedVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
                 ({id, thumb_url, title, id_sponsor, tags, url_regular, thumb_top, length}) => ({
                     // It's supposed to be a number (not a string, as returned by backend),
                     // because `x.page.GALS_INFO.ids` contains these ids as numbers.
@@ -205,17 +186,7 @@ const
 
     getPornstarMap = x => {
         const
-            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID),
-            // Just on `Niche` page it's `Array` but on archive page it's `Object`.
-            idsOrdering =
-                Array.isArray(x.page.GALS_INFO.ids)
-                ? x.page.GALS_INFO.ids
-                : _(x.page.GALS_INFO.ids).toPairs().sortBy(0).map(([k, v]) => Number(v)).value(),
-
-            orderedVideoList = sortBy(
-                x.page.GALS_INFO.items,
-                ({id}) => idsOrdering.indexOf(Number(id))
-            )
+            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID)
 
         return {
             currentPage: 'all-niches',
@@ -264,7 +235,7 @@ const
                 } : undefined,
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: map(
-                orderedVideoList,
+                getOrderedVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
                 ({id, thumb_url, title, id_sponsor, tags, url_regular, thumb_top, length}) => ({
                     // It's supposed to be a number (not a string, as returned by backend),
                     // because `x.page.GALS_INFO.ids` contains these ids as numbers.
