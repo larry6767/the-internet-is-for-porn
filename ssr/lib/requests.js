@@ -5,9 +5,9 @@ import _, {
 } from 'lodash'
 import rp from 'request-promise-native'
 import {
-    getLocalText,
     getTagList,
     getModelsList,
+    getSortList,
 } from './helpers/requests'
 import {backendUrl} from '../config'
 
@@ -32,21 +32,7 @@ const
 
     getAllMoviesMap = x => {
         const
-            sortList = map(
-                pick(
-                    x.page.ACTIVE_NAV_TABS,
-                    ['sort_LATEST', 'sort_LONGEST', 'sort_POPULAR']
-                ),
-                ({ACTIVE}, key) => {
-                    key = key.slice(key.indexOf('_') + 1).toLowerCase()
-                    return {
-                        active: ACTIVE,
-                        value: key,
-                        localText: getLocalText(x.page.LANG_ID, key),
-                    }
-                }
-            ),
-
+            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID),
             // Just on `Niche` page it's `Array` but on archive page it's `Object`.
             idsOrdering =
                 Array.isArray(x.page.GALS_INFO.ids)
@@ -132,21 +118,7 @@ const
 
     getNicheMap = x => {
         const
-            sortList = map(
-                pick(
-                    x.page.ACTIVE_NAV_TABS,
-                    ['sort_LATEST', 'sort_LONGEST', 'sort_POPULAR']
-                ),
-                ({ACTIVE}, key) => {
-                    key = key.slice(key.indexOf('_') + 1).toLowerCase()
-                    return {
-                        active: ACTIVE,
-                        value: key,
-                        localText: getLocalText(x.page.LANG_ID, key),
-                    }
-                }
-            ),
-
+            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID),
             // Just on `Niche` page it's `Array` but on archive page it's `Object`.
             idsOrdering =
                 Array.isArray(x.page.GALS_INFO.ids)
@@ -233,21 +205,7 @@ const
 
     getPornstarMap = x => {
         const
-            sortList = map(
-                pick(
-                    x.page.ACTIVE_NAV_TABS,
-                    ['sort_LATEST', 'sort_LONGEST', 'sort_POPULAR']
-                ),
-                ({ACTIVE}, key) => {
-                    key = key.slice(key.indexOf('_') + 1).toLowerCase()
-                    return {
-                        active: ACTIVE,
-                        value: key,
-                        localText: getLocalText(x.page.LANG_ID, key),
-                    }
-                }
-            ),
-
+            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID),
             // Just on `Niche` page it's `Array` but on archive page it's `Object`.
             idsOrdering =
                 Array.isArray(x.page.GALS_INFO.ids)
