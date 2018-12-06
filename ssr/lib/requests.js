@@ -1,7 +1,5 @@
-import _, {
-    map,
+import {
     pick,
-    sortBy,
 } from 'lodash'
 import rp from 'request-promise-native'
 import {
@@ -11,6 +9,7 @@ import {
     getFilteredVideoList,
     getPageText,
     getTagArchiveList,
+    getArchiveFilms,
 } from './helpers/requests'
 import {backendUrl} from '../config'
 
@@ -54,15 +53,7 @@ const
             ),
             sortList: sortList,
             currentSort: sortList.length ? sortList.find(x => x.active).value : '',
-            archiveFilms: x.page.ACTIVE_NAV_TABS.tag_archive_gals
-                ? {
-                    current: x.page.ACTIVE_NAV_TABS.tag_archive_gals.ACTIVE,
-                    monthForLink: x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL
-                        .slice(
-                            x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL.lastIndexOf('/') + 1,
-                            x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL.lastIndexOf('-archive.html')
-                        )
-                } : undefined,
+            archiveFilms: getArchiveFilms(x.page.ACTIVE_NAV_TABS.tag_archive_gals),
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }
@@ -90,15 +81,7 @@ const
             ),
             sortList: sortList,
             currentSort: sortList.length ? sortList.find(x => x.active).value : '',
-            archiveFilms: x.page.ACTIVE_NAV_TABS.tag_archive_gals
-                ? {
-                    current: x.page.ACTIVE_NAV_TABS.tag_archive_gals.ACTIVE,
-                    monthForLink: x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL
-                        .slice(
-                            x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL.lastIndexOf('/') + 1,
-                            x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL.lastIndexOf('-archive.html')
-                        )
-                } : undefined,
+            archiveFilms: getArchiveFilms(x.page.ACTIVE_NAV_TABS.tag_archive_gals),
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }
@@ -126,15 +109,7 @@ const
             ),
             sortList: sortList,
             currentSort: sortList.length ? sortList.find(x => x.active).value : '',
-            archiveFilms: x.page.ACTIVE_NAV_TABS.tag_archive_gals
-                ? {
-                    current: x.page.ACTIVE_NAV_TABS.tag_archive_gals.ACTIVE,
-                    monthForLink: x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL
-                        .slice(
-                            x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL.lastIndexOf('/') + 1,
-                            x.page.ACTIVE_NAV_TABS.tag_archive_gals.URL.lastIndexOf('-archive.html')
-                        )
-                } : undefined,
+            archiveFilms: getArchiveFilms(x.page.ACTIVE_NAV_TABS.tag_archive_gals),
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }
