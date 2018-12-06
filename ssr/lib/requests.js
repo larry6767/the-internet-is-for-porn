@@ -8,8 +8,8 @@ import {
     getTagList,
     getModelsList,
     getSortList,
-    getOrderedVideoList,
     getFilteredVideoList,
+    getPageText,
 } from './helpers/requests'
 import {backendUrl} from '../config'
 
@@ -39,15 +39,7 @@ const
         return {
             currentPage: x.page.TAG_URL_NAME,
             pageNumber: x.page.PAGE_NUMBER,
-            pageText: {
-                description: x.page.PAGE_TEXT.DESCRIPTION,
-                headerDescription: x.page.PAGE_TEXT['HEADER-DESCRIPTION'],
-                headerTitle: x.page.PAGE_TEXT['HEADER-TITLE'],
-                keywords: x.page.PAGE_TEXT.KEYWORDS,
-                listHeader: x.page.PAGE_TEXT['LIST-HEADER'],
-                listHeaderEmpty: x.page.PAGE_TEXT['LIST-HEADER-EMPTY'],
-                title: x.page.PAGE_TEXT.TITLE,
-            },
+            pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
             tagList: getTagList(x.page.TAGS_BY_LETTERS.letters),
             tagArchiveList: map(
@@ -93,15 +85,7 @@ const
             currentPage: 'all-niches',
             currentSubPage: x.page.TAG_URL_NAME,
             pageNumber: x.page.PAGE_NUMBER,
-            pageText: {
-                description: x.page.PAGE_TEXT.DESCRIPTION,
-                headerDescription: x.page.PAGE_TEXT['HEADER-DESCRIPTION'],
-                headerTitle: x.page.PAGE_TEXT['HEADER-TITLE'],
-                keywords: x.page.PAGE_TEXT.KEYWORDS,
-                listHeader: x.page.PAGE_TEXT['LIST-HEADER'],
-                listHeaderEmpty: x.page.PAGE_TEXT['LIST-HEADER-EMPTY'],
-                title: x.page.PAGE_TEXT.TITLE,
-            },
+            pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
             tagList: getTagList(x.page.TAGS_BY_LETTERS.letters),
             tagArchiveList: map(
@@ -147,15 +131,7 @@ const
             currentPage: 'all-niches',
             currentSubPage: x.page.TAG_URL_NAME,
             pageNumber: x.page.PAGE_NUMBER,
-            pageText: {
-                description: x.page.PAGE_TEXT.DESCRIPTION,
-                headerDescription: x.page.PAGE_TEXT['HEADER-DESCRIPTION'],
-                headerTitle: x.page.PAGE_TEXT['HEADER-TITLE'],
-                keywords: x.page.PAGE_TEXT.KEYWORDS,
-                listHeader: x.page.PAGE_TEXT['LIST-HEADER'],
-                listHeaderEmpty: x.page.PAGE_TEXT['LIST-HEADER-EMPTY'],
-                title: x.page.PAGE_TEXT.TITLE,
-            },
+            pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
             tagList: getTagList(x.page.TAGS_BY_LETTERS.letters),
             tagArchiveList: map(
