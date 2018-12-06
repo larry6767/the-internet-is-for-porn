@@ -9,6 +9,7 @@ import {
     getModelsList,
     getSortList,
     getOrderedVideoList,
+    getFilteredVideoList,
 } from './helpers/requests'
 import {backendUrl} from '../config'
 
@@ -80,30 +81,7 @@ const
                         )
                 } : undefined,
             itemsCount: x.page.ITEMS_PER_PAGE,
-            videoList: map(
-                getOrderedVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
-                ({id, thumb_url, title, id_sponsor, tags, url_regular, thumb_top, length}) => ({
-                    // It's supposed to be a number (not a string, as returned by backend),
-                    // because `x.page.GALS_INFO.ids` contains these ids as numbers.
-                    id: Number(id),
-
-                    thumb: thumb_url,
-                    title,
-                    sponsorId: id_sponsor,
-                    tags,
-
-                    // This is for very small string under a video preview,
-                    // it's usually only one single tag.
-                    tagsShort: tags.reduce((acc, tag) => {
-                        const newAcc = acc === '' ? tag : `${acc}, ${tag}`
-                        return newAcc.length <= 22 ? newAcc : acc
-                    }, ''),
-
-                    urlRegular: url_regular,
-                    favorite: thumb_top,
-                    duration: length,
-                })
-            )
+            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }
     },
 
@@ -157,30 +135,7 @@ const
                         )
                 } : undefined,
             itemsCount: x.page.ITEMS_PER_PAGE,
-            videoList: map(
-                getOrderedVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
-                ({id, thumb_url, title, id_sponsor, tags, url_regular, thumb_top, length}) => ({
-                    // It's supposed to be a number (not a string, as returned by backend),
-                    // because `x.page.GALS_INFO.ids` contains these ids as numbers.
-                    id: Number(id),
-
-                    thumb: thumb_url,
-                    title,
-                    sponsorId: id_sponsor,
-                    tags,
-
-                    // This is for very small string under a video preview,
-                    // it's usually only one single tag.
-                    tagsShort: tags.reduce((acc, tag) => {
-                        const newAcc = acc === '' ? tag : `${acc}, ${tag}`
-                        return newAcc.length <= 22 ? newAcc : acc
-                    }, ''),
-
-                    urlRegular: url_regular,
-                    favorite: thumb_top,
-                    duration: length,
-                })
-            )
+            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }
     },
 
@@ -234,30 +189,7 @@ const
                         )
                 } : undefined,
             itemsCount: x.page.ITEMS_PER_PAGE,
-            videoList: map(
-                getOrderedVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
-                ({id, thumb_url, title, id_sponsor, tags, url_regular, thumb_top, length}) => ({
-                    // It's supposed to be a number (not a string, as returned by backend),
-                    // because `x.page.GALS_INFO.ids` contains these ids as numbers.
-                    id: Number(id),
-
-                    thumb: thumb_url,
-                    title,
-                    sponsorId: id_sponsor,
-                    tags,
-
-                    // This is for very small string under a video preview,
-                    // it's usually only one single tag.
-                    tagsShort: tags.reduce((acc, tag) => {
-                        const newAcc = acc === '' ? tag : `${acc}, ${tag}`
-                        return newAcc.length <= 22 ? newAcc : acc
-                    }, ''),
-
-                    urlRegular: url_regular,
-                    favorite: thumb_top,
-                    duration: length,
-                })
-            )
+            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }
     },
 

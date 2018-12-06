@@ -8,11 +8,10 @@ export default (ids, items) => {
         idsOrdering =
             Array.isArray(ids)
             ? ids
-            : _(ids).toPairs().sortBy(0).map(([k, v]) => Number(v)).value(),
+            : _(ids).toPairs().sortBy(0).map(([k, v]) => Number(v)).value()
 
-        orderedVideoList = sortBy(
-            items,
-            ({id}) => idsOrdering.indexOf(Number(id))
-        )
-    return orderedVideoList
+    return sortBy(
+        items,
+        ({id}) => idsOrdering.indexOf(Number(id))
+    )
 }
