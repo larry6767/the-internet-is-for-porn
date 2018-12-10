@@ -10,6 +10,7 @@ const
             {videoList.map(x =>
                 <VideoItem
                     key={x.get('id')}
+                    id={x.get('id')}
                     thumb={x.get('thumb')}
                     title={x.get('title')}
                     sponsorId={x.get('sponsorId')}

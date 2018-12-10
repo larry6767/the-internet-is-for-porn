@@ -17,6 +17,7 @@ import {muiStyles} from './assets/muiStyles'
 
 const
     VideoItem = ({
+        id,
         classes,
         thumb,
         title,
@@ -62,7 +63,7 @@ const
                         root: classes.typographySource
                     }}
                 >
-                    pornSharing
+                    {id}
                 </Typography>
                 <Typography
                     variant="body2"

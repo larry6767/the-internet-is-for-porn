@@ -8,7 +8,7 @@ export default (ids, items) => {
         idsOrdering =
             Array.isArray(ids)
             ? ids
-            : _(ids).toPairs().sortBy(0).map(([k, v]) => Number(v)).value()
+            : _(ids).toPairs().sortBy(o => o.id).map(([k, v]) => Number(v)).value()
 
     return sortBy(
         items,
