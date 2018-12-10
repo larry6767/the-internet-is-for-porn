@@ -92,26 +92,15 @@ const
             sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID)
 
         return {
-            currentPage: 'all-niches',
             currentSubPage: x.page.TAG_URL_NAME,
             pageNumber: x.page.PAGE_NUMBER,
             pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
-            tagList: getTagList(x.page.TAGS_BY_LETTERS.letters),
-            tagArchiveList: getTagArchiveList(x.page.TAG_ARCHIVE_LIST_FULL, x.page.MONTHS_NAMES),
-            tagArchiveListOlder: pick(
-                x.page.TAG_ARCHIVE_OLDER,
-                ['month', 'year']
-            ),
-            tagArchiveListNewer: pick(
-                x.page.TAG_ARCHIVE_NEWER,
-                ['month', 'year']
-            ),
             sortList: sortList,
             currentSort: sortList.length ? sortList.find(x => x.active).value : '',
-            archiveFilms: getArchiveFilms(x.page.ACTIVE_NAV_TABS.tag_archive_gals),
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
+            modelsList: getModelsList(x.page.MODELS_BY_LETTERS.letters, x.page.MODELS_BY_LETTERS_MODELS_INFO.items),
         }
     },
 
@@ -140,7 +129,10 @@ export const getPageData = async ({headers, pageCode, subPageCode}) => {
             : pageCode === pornstarsPageCode
             ? [{url: `/${pageCode}.html`}, getPornstarsMap]
             : pageCode === pornstarPageCode
-            ? [{url: `/${subPageCode}.html`, options: {blocks: {allTagsBlock: 1}}}, getPornstarMap]
+            ? [{url: `/${pageCode}/${subPageCode}.html`, options: {blocks: {
+                modelsABCBlockText: 1,
+                modelsABCBlockThumbs: 1,
+            }}}, getPornstarMap]
             : null
 
     if (params === null)

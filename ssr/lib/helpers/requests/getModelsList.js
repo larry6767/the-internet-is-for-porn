@@ -7,7 +7,7 @@ import {
 
 export default (letters, items) => reduce(
     letters,
-    (acc, letter) => {
+    (acc, letter, key) => {
         const letterItems = sortBy(
             map(letter, ({id, name, sub_url, items_count}) => ({
                 id,
@@ -18,7 +18,8 @@ export default (letters, items) => reduce(
                 sort: items[id].url_galleries.indexOf('latest')
                     ? '?sort=latest'
                     : items[id].url_galleries.indexOf('longest')
-                    ? '?sort=longest' : ''
+                    ? '?sort=longest' : '',
+                letter: key,
             })),
             o => o.name
         )

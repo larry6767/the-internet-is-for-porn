@@ -30,26 +30,19 @@ const
         isLoaded: false,
         isFailed: false,
 
-        currentPage: '',
         currentSubPage: '',
         lastSubPageForRequest: '',
-
         pageNumber: 1,
         pageText: Map(),
         pagesCount: 1,
-
-        tagList: List(),
-        tagArchiveList: List(),
         sortList: List(),
         currentSort: '',
-        archiveFilms: Map(),
-        tagArchiveListOlder: fromJS(),
-        tagArchiveListNewer: fromJS(),
         itemsCount: 0,
         videoList: List(),
+        modelsList: List(),
     }),
 
-    Pornstar = ({currentBreakpoint, pageUrl, search, pornstar, chooseSort, isSSR}) => <Page>
+    Pornstar = ({currentBreakpoint, pageUrl, search, pornstar, chooseSort, isSSR}) => (console.log(pornstar), <Page>
         { pornstar.get('isFailed')
             ? <ErrorContent/>
             : pornstar.get('isLoading')
@@ -58,8 +51,7 @@ const
                 <Lists
                     currentBreakpoint={currentBreakpoint}
                     pageUrl={pageUrl}
-                    tagList={pornstar.get('tagList')}
-                    tagArchiveList={pornstar.get('tagArchiveList')}
+                    modelsList={(console.log('modelsList: ', pornstar.get('modelsList')), pornstar.get('modelsList'))}
                 />
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
@@ -70,16 +62,15 @@ const
                         search={search}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        page={pornstar.get('currentPage')}
                         subPage={pornstar.get('currentSubPage')}
                         pagesCount={pornstar.get('pagesCount')}
                         pageNumber={pornstar.get('pageNumber')}
                         itemsCount={pornstar.get('itemsCount')}
                         sortList={pornstar.get('sortList')}
                         currentSort={pornstar.get('currentSort')}
-                        archiveFilms={pornstar.get('archiveFilms')}
-                        tagArchiveListOlder={pornstar.get('tagArchiveListOlder')}
-                        tagArchiveListNewer={pornstar.get('tagArchiveListNewer')}
+                        archiveFilms={null}
+                        tagArchiveListOlder={null}
+                        tagArchiveListNewer={null}
                     />
                     <VideoList
                         videoList={pornstar.get('videoList')}
@@ -87,7 +78,7 @@ const
                 </PageWrapper>
             </Content>
         }
-    </Page>,
+    </Page>),
 
     loadPageFlow = ({search, match, pornstar, loadPage}) => {
         const

@@ -16,8 +16,10 @@ import {muiStyles} from './assets/muiStyles'
 
 const
     // Generic list item component generator
-    renderListItem = (idKey, titleKey, countKey, subPage, year, monthNumber) => (x, classes, pageUrl) => <Link
-        to={x.get(subPage)
+    renderListItem = (idKey, titleKey, countKey, subPage, year, monthNumber) => (x, classes, pageUrl, type = null) => <Link
+        to={type === 'isModels' ?
+            `/porn-star/${x.get(subPage)}${x.get('sort')}`
+            : x.get(subPage)
             ? `/all-niches/${x.get(subPage)}`
             : `${pageUrl}/${year && monthNumber ? `archive/${x.get(year)}-${x.get(monthNumber)}` : ''}`
         }
@@ -49,6 +51,7 @@ const
 
     NichesListItem = renderListItem('id', 'name', 'itemsCount', 'subPage'),
     ArchiveYearListItem = renderListItem('archiveDate', 'month', 'itemsCount', 'subPage', 'year', 'monthNumber'),
+    ModelsLetterListItem = renderListItem('id', 'name', 'itemsCount', 'subPage', 'letter'),
 
     ArchiveList = ({classes, tagArchiveList, pageUrl}) => {
         const
@@ -76,27 +79,60 @@ const
         </ListComponent>
     },
 
-    Lists = ({classes, currentBreakpoint, pageUrl, tagList, tagArchiveList}) => currentBreakpoint === 'md'
+    ModelsList = ({classes, modelsList, pageUrl}) => {
+        const
+            letters = modelsList
+                .groupBy(x => x.get('letter'))
+                .sortBy((v, year) => year, (a, b) => a < b ? 1 : -1)
+                .reverse()
+                .map(x => x.sortBy(y => y.get('name')))
+
+        return <ListComponent component="nav" subheader={<li/>}>
+            {letters.map((listByYear, letter) =>
+                <li
+                    key={`section-${letter}`}
+                    className={classes.listSection}
+                >
+                    <ul className={classes.ul}>
+                        <ListSubheader classes={{
+                            root: classes.listSubheader
+                        }}>
+                            {`${letter}`}
+                        </ListSubheader>
+                        {listByYear.map(x => ModelsLetterListItem(x, classes, pageUrl, 'isModels'))}
+                    </ul>
+                </li>
+            ).toList()}
+        </ListComponent>
+    },
+
+    Lists = ({classes, currentBreakpoint, pageUrl, tagList, tagArchiveList, modelsList}) => currentBreakpoint === 'md'
         || currentBreakpoint === 'lg'
         || currentBreakpoint === 'XL'
             ? <ListsInner>
-            <ListComponent
-                component="nav"
-                subheader={
-                    <ListSubheader classes={{
-                        root: classes.listSubheader
-                    }}>
-                        All straight films
-                    </ListSubheader>
-                }
-            >
-                {tagList.map(x => NichesListItem(x, classes))}
-            </ListComponent>
-            <ArchiveList
-                classes={classes}
-                tagArchiveList={tagArchiveList}
-                pageUrl={pageUrl}
-            />
-        </ListsInner> : null
+                { tagList ? <ListComponent
+                    component="nav"
+                    subheader={
+                        <ListSubheader classes={{
+                            root: classes.listSubheader
+                        }}>
+                            All straight films
+                        </ListSubheader>
+                    }
+                >
+                    {tagList.map(x => NichesListItem(x, classes))}
+                </ListComponent> : null }
+
+                { tagArchiveList ? <ArchiveList
+                    classes={classes}
+                    tagArchiveList={tagArchiveList}
+                    pageUrl={pageUrl}
+                /> : null }
+                { modelsList ? <ModelsList
+                    classes={classes}
+                    modelsList={modelsList}
+                    pageUrl={pageUrl}
+                /> : null }
+            </ListsInner> : null
 
 export default withStyles(muiStyles)(Lists)

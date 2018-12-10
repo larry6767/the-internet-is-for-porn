@@ -8,68 +8,52 @@ export default
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            currentPage: '',
             currentSubPage: '',
             lastSubPageForRequest: payload,
             pageNumber: 1,
             pageText: Map(),
             pagesCount: 1,
-            tagList: List(),
-            tagArchiveList: List(),
             sortList: List(),
             currentSort: '',
-            archiveFilms: fromJS(),
-            tagArchiveListOlder: fromJS(),
-            tagArchiveListNewer: fromJS(),
             itemsCount: 0,
             videoList: List(),
+            modelsList: List(),
         }),
         [actions.loadPageSuccess]: (state, {payload: {data, subPageForRequest}}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            currentPage: data.currentPage,
             currentSubPage: data.currentSubPage,
             lastSubPageForRequest: subPageForRequest,
             pageNumber: data.pageNumber,
             pageText: Map(fromJS(data.pageText)),
             pagesCount: data.pagesCount,
-            tagList: List(fromJS(data.tagList)),
-            tagArchiveList: List(fromJS(data.tagArchiveList)),
             sortList: List(fromJS(data.sortList)),
             currentSort: data.currentSort,
-            archiveFilms: fromJS(data.archiveFilms),
-            tagArchiveListOlder: fromJS(data.tagArchiveListOlder),
-            tagArchiveListNewer: fromJS(data.tagArchiveListNewer),
             itemsCount: data.itemsCount,
             videoList: List(fromJS(data.videoList)),
+            modelsList: List(fromJS(data.modelsList)),
         }),
         [actions.loadPageFailure]: state => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
-            currentPage: '',
             currentSubPage: '',
             lastSubPageForRequest: '',
             pageNumber: 1,
             pageText: OrderedMap(),
             pagesCount: 1,
-            tagList: List(),
-            tagArchiveList: List(),
             sortList: List(),
             currentSort: '',
-            archiveFilms: fromJS(),
-            tagArchiveListOlder: fromJS(),
-            tagArchiveListNewer: fromJS(),
             itemsCount: 0,
             videoList: List(),
+            modelsList: List(),
         }),
         [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        currentPage: '',
         currentSubPage: '',
         lastSubPageForRequest: '',
         pageNumber: 1,
@@ -85,28 +69,6 @@ export default
             */
         },
         pagesCount: 1,
-        tagList: [
-            /*
-            {
-                id: 0,
-                name: '',
-                subPage: '',
-                itemsCount: 0,
-            }
-            */
-        ],
-        tagArchiveList: [
-            /*
-            {
-                archiveDate: 0,
-                year: 0,
-                month: '',
-                monthNumber: 0,
-                itemsCount: 0,
-                url: '',
-            }
-            */
-        ],
         sortList: [
             /*
             {
@@ -117,30 +79,6 @@ export default
             */
         ],
         currentSort: '',
-        archiveFilms: {
-            /*
-            {
-                active: false,
-                url: '',
-            }
-            */
-        },
-        tagArchiveListOlder: {
-            /*
-            {
-                month: '',
-                year: '',
-            }
-            */
-        },
-        tagArchiveListNewer: {
-            /*
-            {
-                month: '',
-                year: '',
-            }
-            */
-        },
         itemsCount: 0,
         videoList: [
             /*
@@ -155,6 +93,16 @@ export default
                 favorite: 0,
                 duration: 0,
 
+            }
+            */
+        ],
+        modelsList: [
+            /*
+            {
+                id: 0,
+                name: '',
+                subPage: '',
+                itemsCount: 0,
             }
             */
         ],
