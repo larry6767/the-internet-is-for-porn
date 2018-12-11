@@ -25,5 +25,8 @@ export const muiStyles = theme => ({
         textTransform: 'none',
         padding: '4px 16px',
         minHeight: 26,
+    },
+    tableCellRoot: {
+        width: '30%',
     }
 })

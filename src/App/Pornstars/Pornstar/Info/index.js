@@ -20,7 +20,19 @@ import {
 import {muiStyles} from './assets/muiStyles'
 
 const
-    Info = ({classes, modelInfo, modelThumb, modelInfoHandler, modelInfoIsOpen}) => <InfoWrapper>
+    renderTableRow = (x, idx, classes) => <TableRow key={x.get('key')}>
+        <TableCell
+            component="td"
+            classes={{
+                root: classes.tableCellRoot
+            }}
+        >
+            {x.get('key')}
+        </TableCell>
+        <TableCell component="td">{x.get('value')}</TableCell>
+    </TableRow>,
+
+    Info = ({classes, modelInfo, modelThumb, modelInfoHandler, modelInfoIsOpen, currentBreakpoint}) => <InfoWrapper>
         <ThumbWrapper>
             <Thumb thumb={modelThumb}/>
             <InfoBar>
@@ -41,23 +53,21 @@ const
                 </Button>
             </InfoBar>
         </ThumbWrapper>
-        <DataWrapper>
-            <Paper className={classes.root}>
-                <div className={classes.tableWrapper}>
-                <Table className={classes.table}>
+        <DataWrapper
+            modelInfoIsOpen={modelInfoIsOpen}
+        >
+            <Paper>
+                <Table>
                     <TableBody>
                         {modelInfo.map((x, idx) =>
-                            !modelInfoIsOpen && idx > 3
-                                ? null
-                                : x.get('value')
-                                ? <TableRow key={x.get('key')}>
-                                    <TableCell component="td">{x.get('key')}</TableCell>
-                                    <TableCell component="td">{x.get('value')}</TableCell>
-                                </TableRow> : null
+                            x.get('value') && modelInfoIsOpen
+                                ? renderTableRow(x, idx, classes)
+                                : idx < 4 && !(currentBreakpoint === 'xxs' || currentBreakpoint === 'xs')
+                                ? renderTableRow(x, idx, classes)
+                                : null
                         )}
                     </TableBody>
                 </Table>
-                </div>
             </Paper>
         </DataWrapper>
     </InfoWrapper>

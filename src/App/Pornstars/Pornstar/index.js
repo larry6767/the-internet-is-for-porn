@@ -68,6 +68,7 @@ const
                         modelInfo={pornstar.get('modelInfo')}
                         modelInfoHandler={modelInfoHandler}
                         modelInfoIsOpen={modelInfoIsOpen}
+                        currentBreakpoint={currentBreakpoint}
                     />
                     <ControlBar
                         pageUrl={pageUrl}
@@ -136,7 +137,7 @@ export default compose(
                 newSortValue: newSortValue,
                 stringifiedQS: stringifiedQS
             })),
-            modelInfoHandler: state => dispatch(actions.toggleModelInfo(state))
+            modelInfoHandler: state => dispatch(actions.toggleModelInfo(state)),
         })
     ),
     lifecycle({

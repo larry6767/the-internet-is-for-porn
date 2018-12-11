@@ -3,7 +3,12 @@ import styled from 'styled-components'
 export const InfoWrapper = styled.section`
     display: flex;
     margin-bottom: 15px;
+    flex-shrink: 0;
+
+    ${({theme}) => theme.media.xs`flex-direction: column;`}
+    ${({theme}) => theme.media.xxs`flex-direction: column;`}
 `
+
 export const ThumbWrapper = styled.div`
     width: 130px;
     display: flex;
@@ -14,6 +19,10 @@ export const ThumbWrapper = styled.div`
 export const DataWrapper = styled.div`
     display: flex;
     flex-direction: column;
+    flex-grow: 1;
+
+    ${({theme, modelInfoIsOpen}) => modelInfoIsOpen ? theme.media.xs`margin-top: 20px;` : ''}
+    ${({theme, modelInfoIsOpen}) => modelInfoIsOpen ? theme.media.xxs`margin-top: 20px;` : ''}
 `
 
 export const Thumb = styled.div`
