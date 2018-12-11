@@ -29,6 +29,7 @@ const
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+        modelInfoIsOpen: Boolean,
 
         currentSubPage: '',
         lastSubPageForRequest: '',
@@ -44,7 +45,10 @@ const
         modelThumb: '',
     }),
 
-    Pornstar = ({currentBreakpoint, pageUrl, search, pornstar, chooseSort, isSSR}) => <Page>
+    Pornstar = ({
+        currentBreakpoint, pageUrl, search, pornstar, chooseSort,
+        isSSR, modelInfoHandler, modelInfoIsOpen
+    }) => <Page>
         { pornstar.get('isFailed')
             ? <ErrorContent/>
             : pornstar.get('isLoading')
@@ -62,6 +66,8 @@ const
                     <Info
                         modelThumb={pornstar.get('modelThumb')}
                         modelInfo={pornstar.get('modelInfo')}
+                        modelInfoHandler={modelInfoHandler}
+                        modelInfoIsOpen={modelInfoIsOpen}
                     />
                     <ControlBar
                         pageUrl={pageUrl}
@@ -122,13 +128,15 @@ export default compose(
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
             pageUrl: state.getIn(['router', 'location', 'pathname']),
             search: state.getIn(['router', 'location', 'search']),
+            modelInfoIsOpen: state.getIn(['app', 'pornstars', 'pornstar', 'modelInfoIsOpen']),
         }),
         dispatch => ({
             loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
             chooseSort: (newSortValue, stringifiedQS) => dispatch(actions.setNewSort({
                 newSortValue: newSortValue,
                 stringifiedQS: stringifiedQS
-            }))
+            })),
+            modelInfoHandler: state => dispatch(actions.toggleModelInfo(state))
         })
     ),
     lifecycle({

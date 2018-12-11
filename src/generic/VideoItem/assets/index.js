@@ -7,7 +7,6 @@ export const Wrapper = styled.div`
     margin-right: 5px;
     margin-bottom: 5px;
     cursor: pointer;
-    flex-grow: 1;
 
     ${({theme}) => theme.media.sm`width: calc((100% - 10px) / 3)`}
     ${({theme}) => theme.media.xs`width: calc((100% - 5px) / 2)`}

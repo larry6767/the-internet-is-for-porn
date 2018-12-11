@@ -8,6 +8,7 @@ export default
             isLoading: true,
             isLoaded: false,
             isFailed: false,
+            modelInfoIsOpen: false,
             currentSubPage: '',
             lastSubPageForRequest: payload,
             pageNumber: 1,
@@ -25,6 +26,7 @@ export default
             isLoading: false,
             isLoaded: true,
             isFailed: false,
+            modelInfoIsOpen: false,
             currentSubPage: data.currentSubPage,
             lastSubPageForRequest: subPageForRequest,
             pageNumber: data.pageNumber,
@@ -42,6 +44,7 @@ export default
             isLoading: false,
             isLoaded: false,
             isFailed: true,
+            modelInfoIsOpen: false,
             currentSubPage: '',
             lastSubPageForRequest: '',
             pageNumber: 1,
@@ -56,10 +59,13 @@ export default
             modelThumb: '',
         }),
         [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
+        [actions.toggleModelInfo]: state =>
+             state.set('modelInfoIsOpen', !state.get('modelInfoIsOpen'))
     }, fromJS({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+        modelInfoIsOpen: false,
         currentSubPage: '',
         lastSubPageForRequest: '',
         pageNumber: 1,

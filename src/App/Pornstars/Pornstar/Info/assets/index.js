@@ -19,7 +19,7 @@ export const DataWrapper = styled.div`
 export const Thumb = styled.div`
     width: 100%;
     height: auto;
-    border: 1px solid #000;
+    border: 1px solid ${({theme}) => theme.colors.additionalColor};
     background: ${({thumb}) => `url(${thumb})`};
     background-size: cover;
     border-radius: 1px;
@@ -28,7 +28,7 @@ export const Thumb = styled.div`
     &::after {
         content: '';
         display: block;
-        padding-top: 122.7%;
+        padding-top: 122%;
     }
 `
 

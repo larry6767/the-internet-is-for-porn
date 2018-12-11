@@ -20,7 +20,7 @@ import {
 import {muiStyles} from './assets/muiStyles'
 
 const
-    Info = ({classes, modelInfo, modelThumb}) => <InfoWrapper>
+    Info = ({classes, modelInfo, modelThumb, modelInfoHandler, modelInfoIsOpen}) => <InfoWrapper>
         <ThumbWrapper>
             <Thumb thumb={modelThumb}/>
             <InfoBar>
@@ -33,8 +33,11 @@ const
                     classes={{
                         root: classes.buttonMore
                     }}
+                    onClick={modelInfoHandler}
                 >
-                    show bio
+                    {modelInfoIsOpen
+                        ? 'hide info'
+                        : 'show info'}
                 </Button>
             </InfoBar>
         </ThumbWrapper>
@@ -43,13 +46,15 @@ const
                 <div className={classes.tableWrapper}>
                 <Table className={classes.table}>
                     <TableBody>
-                        {modelInfo.map(x => {
-                            if (x.get('value'))
-                            return <TableRow key={x[0]}>
-                                <TableCell component="td">{x.get('key')}</TableCell>
-                                <TableCell component="td">{x.get('value')}</TableCell>
-                            </TableRow>
-                        })}
+                        {modelInfo.map((x, idx) =>
+                            !modelInfoIsOpen && idx > 3
+                                ? null
+                                : x.get('value')
+                                ? <TableRow key={x.get('key')}>
+                                    <TableCell component="td">{x.get('key')}</TableCell>
+                                    <TableCell component="td">{x.get('value')}</TableCell>
+                                </TableRow> : null
+                        )}
                     </TableBody>
                 </Table>
                 </div>
