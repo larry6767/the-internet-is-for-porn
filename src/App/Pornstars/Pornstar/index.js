@@ -69,6 +69,7 @@ const
                         modelInfoHandler={modelInfoHandler}
                         modelInfoIsOpen={modelInfoIsOpen}
                         currentBreakpoint={currentBreakpoint}
+                        isSSR={isSSR}
                     />
                     <ControlBar
                         pageUrl={pageUrl}

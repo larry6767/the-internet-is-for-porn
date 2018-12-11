@@ -32,14 +32,14 @@ const
         <TableCell component="td">{x.get('value')}</TableCell>
     </TableRow>,
 
-    Info = ({classes, modelInfo, modelThumb, modelInfoHandler, modelInfoIsOpen, currentBreakpoint}) => <InfoWrapper>
+    Info = ({classes, modelInfo, modelThumb, modelInfoHandler, modelInfoIsOpen, currentBreakpoint, isSSR}) => <InfoWrapper>
         <ThumbWrapper>
             <Thumb thumb={modelThumb}/>
             <InfoBar>
                 <Like>
                     <Favorite classes={{root: classes.favoriteIcon}}/>
                 </Like>
-                <Button
+                {!isSSR ? <Button
                     variant="outlined"
                     color="primary"
                     classes={{
@@ -50,7 +50,7 @@ const
                     {modelInfoIsOpen
                         ? 'hide info'
                         : 'show info'}
-                </Button>
+                </Button> : null}
             </InfoBar>
         </ThumbWrapper>
         <DataWrapper
@@ -60,7 +60,9 @@ const
                 <Table>
                     <TableBody>
                         {modelInfo.map((x, idx) =>
-                            x.get('value') && modelInfoIsOpen
+                            isSSR
+                                ? renderTableRow(x, idx, classes)
+                                : x.get('value') && modelInfoIsOpen
                                 ? renderTableRow(x, idx, classes)
                                 : idx < 4 && !(currentBreakpoint === 'xxs' || currentBreakpoint === 'xs')
                                 ? renderTableRow(x, idx, classes)
