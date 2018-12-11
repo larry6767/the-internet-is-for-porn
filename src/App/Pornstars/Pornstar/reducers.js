@@ -18,6 +18,8 @@ export default
             itemsCount: 0,
             videoList: List(),
             modelsList: List(),
+            modelInfo: List(),
+            modelThumb: '',
         }),
         [actions.loadPageSuccess]: (state, {payload: {data, subPageForRequest}}) => state.merge({
             isLoading: false,
@@ -33,6 +35,8 @@ export default
             itemsCount: data.itemsCount,
             videoList: List(fromJS(data.videoList)),
             modelsList: List(fromJS(data.modelsList)),
+            modelInfo: List(fromJS(data.modelInfo)),
+            modelThumb: data.modelThumb,
         }),
         [actions.loadPageFailure]: state => state.merge({
             isLoading: false,
@@ -48,6 +52,8 @@ export default
             itemsCount: 0,
             videoList: List(),
             modelsList: List(),
+            modelInfo: List(),
+            modelThumb: '',
         }),
         [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
     }, fromJS({
@@ -106,4 +112,6 @@ export default
             }
             */
         ],
+        modelInfo: [],
+        modelThumb: '',
     }))

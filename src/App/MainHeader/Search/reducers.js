@@ -9,7 +9,6 @@ export default combineReducers({
 
     input: handleActions({
         [suggestionsFetchRequest]: (state, action) => {
-            console.log('---payload: ', action.payload)
             return state.set('suggestions', getSuggestions(action.payload.value))
         },
         [suggestionsClearRequest]: state => state.set('suggestions', []),

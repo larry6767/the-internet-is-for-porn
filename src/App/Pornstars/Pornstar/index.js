@@ -10,17 +10,17 @@ import {
     Record,
     Map,
     List,
-    fromJS,
 } from 'immutable'
 import getSubPage from '../../../shared-src/routes/niche/getSubPage'
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
+import Info from './Info'
 import {
     Page,
     Content,
-    PageWrapper,
+    PageWrapper
 } from './assets'
 import actions from './actions'
 
@@ -40,9 +40,11 @@ const
         itemsCount: 0,
         videoList: List(),
         modelsList: List(),
+        modelInfo: List(),
+        modelThumb: '',
     }),
 
-    Pornstar = ({currentBreakpoint, pageUrl, search, pornstar, chooseSort, isSSR}) => (console.log(pornstar), <Page>
+    Pornstar = ({currentBreakpoint, pageUrl, search, pornstar, chooseSort, isSSR}) => <Page>
         { pornstar.get('isFailed')
             ? <ErrorContent/>
             : pornstar.get('isLoading')
@@ -51,12 +53,16 @@ const
                 <Lists
                     currentBreakpoint={currentBreakpoint}
                     pageUrl={pageUrl}
-                    modelsList={(console.log('modelsList: ', pornstar.get('modelsList')), pornstar.get('modelsList'))}
+                    modelsList={pornstar.get('modelsList')}
                 />
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
                         {pornstar.getIn(['pageText', 'listHeader'])}
                     </Typography>
+                    <Info
+                        modelThumb={pornstar.get('modelThumb')}
+                        modelInfo={pornstar.get('modelInfo')}
+                    />
                     <ControlBar
                         pageUrl={pageUrl}
                         search={search}
@@ -78,7 +84,7 @@ const
                 </PageWrapper>
             </Content>
         }
-    </Page>),
+    </Page>,
 
     loadPageFlow = ({search, match, pornstar, loadPage}) => {
         const

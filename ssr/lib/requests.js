@@ -10,6 +10,7 @@ import {
     getPageText,
     getTagArchiveList,
     getArchiveFilms,
+    getModelInfo,
 } from './helpers/requests'
 import {backendUrl} from '../config'
 
@@ -101,6 +102,8 @@ const
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
             modelsList: getModelsList(x.page.MODELS_BY_LETTERS.letters, x.page.MODELS_BY_LETTERS_MODELS_INFO.items),
+            modelInfo: getModelInfo(x.page.MODEL_INFO),
+            modelThumb: x.page.MODEL_INFO.thumb_url,
         }
     },
 
