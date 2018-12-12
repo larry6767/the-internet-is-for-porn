@@ -5,12 +5,17 @@ import {getOrderedVideoList} from './index'
 
 export default (ids, items) => map(
     getOrderedVideoList(ids, items),
-    ({id, thumb_url, title, id_sponsor, tags, url_regular, thumb_top, length}) => ({
+    ({
+        id, thumb_url, thumb_url_mask, thumbs, title,
+        id_sponsor, tags, url_regular, thumb_top, length
+    }) => ({
         // It's supposed to be a number (not a string, as returned by backend),
         // because `x.page.GALS_INFO.ids` contains these ids as numbers.
         id: Number(id),
 
         thumb: thumb_url,
+        thumbMask: thumb_url_mask,
+        thumbs,
         title,
         sponsorId: id_sponsor,
         tags,

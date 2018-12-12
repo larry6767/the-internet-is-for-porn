@@ -33,15 +33,28 @@ export const VideoPreviewBar = styled.div`
     align-items: center;
     width: 100%;
     height: 31px;
-    transform: translateY(31px);
+    transform: translateY(35px);
     transition: transform 0.2s;
 `
 
+export const LoadingProgress = styled.div`
+    opacity: 0;
+    position: absolute;
+    height: 2px;
+    top: 0;
+    right: 0;
+    left: 0;
+    background-color: ${({theme}) => theme.colors.mainColor2};
+    transform: translateX(-100%);
+    transition: transform 1s;
+`
+
 export const VideoPreview = styled.div`
+    position: relative;
     display: flex;
     align-items: flex-end;
     width: 100%;
-    border: 1px solid #000;
+    background-color: ${({theme}) => theme.colors.mainColor2};
     background-image: ${({thumb}) => `url(${thumb})`};
     background-size: cover;
     background-repeat: no-repeat;
@@ -57,6 +70,23 @@ export const VideoPreview = styled.div`
     &:hover ${VideoPreviewBar} {
         transform: translateY(0px);
     }
+
+    &:hover ${LoadingProgress} {
+        transform: translateX(0);
+        opacity: 1;
+    }
+`
+
+export const VideoPreviewThumbs = styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: ${({showed}) => showed ? 1 : 0};
+    background-image: ${({thumb}) => `url(${thumb})`};
+    background-size: cover;
+    background-repeat: no-repeat;
 `
 
 export const InfoBlock = styled.div`
@@ -73,12 +103,18 @@ export const InfoBlockInner = styled.div`
 
 export const Like = styled.div`
     display: flex;
-    margin-left: 5px;
+    justify-content: center;
+    align-items: center;
+    background-color: ${({theme}) => theme.colors.opacityMainColor2};
+    border-radius: 1px;
+    min-height: 35px;
+    min-width: 40px;
 `
 
 export const Duration = styled.div`
     display: flex;
     padding: 5px;
-    background-color: ${({theme}) => theme.colors.mainColor2};
+    background-color: ${({theme}) => theme.colors.opacityMainColor2};
     border-radius: 1px;
+    min-height: 35px;
 `

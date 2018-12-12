@@ -33,12 +33,15 @@ const breakPoints = {
 
 const theme = {
     colors: {
-        mainColor: '#292d39',
-        mainColor2: '#3c404c',
+        mainColor: 'rgb(41, 45, 57);',
+        mainColor2: 'rgb(60, 64, 76);',
+        mainOppositeColor: 'rgb(255, 255, 255);',
+        additionalColor: 'rgb(161, 167, 171);',
 
-        mainOppositeColor: '#ffffff',
-
-        additionalColor: '#a1a7b1'
+        opacityMainColor: 'rgba(41, 45, 57, 0.6);',
+        opacityMainColor2: 'rgba(60, 64, 76, 0.6);',
+        opacityMainOppositeColor: 'rgba(255, 255, 255, 0.6);',
+        opacityAdditionalColor: 'rgba(161, 167, 171, 0.6);',
     },
     media: Object.keys(breakPoints).reduce((acc, current) => {
         acc[current] = (...args) => css`
