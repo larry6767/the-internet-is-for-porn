@@ -43,6 +43,9 @@ export const muiStyles = (theme, {home, currentBreakpoint}) => {
         },
         routerLink: {
             textDecoration: 'none'
+        },
+        nicheTitleTypography: {
+            marginLeft: 3,
         }
     }
 }

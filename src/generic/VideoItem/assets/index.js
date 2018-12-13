@@ -27,6 +27,7 @@ export const Wrapper = styled.div`
         ${({theme}) => theme.media.xs`margin-right: 0;`}
     }
 `
+
 export const VideoPreviewBar = styled.div`
     display: flex;
     justify-content: space-between;

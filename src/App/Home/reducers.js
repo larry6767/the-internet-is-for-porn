@@ -9,21 +9,21 @@ export default
             isLoaded: false,
             isFailed: false,
             nichesList: List(),
-            pornstarsList: List()
+            pornstarsList: List(),
         }),
         [actions.loadPageSuccess]: (state, {payload: {data}}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            nichesList: fromJS(data.nichesList),
-            pornstarsList: fromJS(data.pornstarsList)
+            nichesList: List(fromJS(data.nichesList)),
+            pornstarsList: List(fromJS(data.pornstarsList)),
         }),
         [actions.loadPageFailure]: (state) => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
             nichesList: List(),
-            pornstarsList: List()
+            pornstarsList: List(),
         }),
     }, fromJS({
         isLoading: false,

@@ -26,7 +26,7 @@ class PreviewThumbs extends Component {
 
     mouseEnter = () => {
         const
-            imageArray = new Array,
+            imageArray = [],
             {thumbsLinks} = this.props
 
         thumbsLinks.forEach(x => {

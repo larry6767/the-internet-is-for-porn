@@ -4,6 +4,7 @@ import {
 import rp from 'request-promise-native'
 import {
     getTagList,
+    getTagListByLetters,
     getModelsList,
     getSortList,
     getFilteredVideoList,
@@ -16,7 +17,7 @@ import {backendUrl} from '../config'
 
 const
     getHomeMap = x => ({
-        nicheslist: getTagList(x.page.TAGS_BY_LETTERS.letters),
+        nichesList: getTagList(x.page.TAGS_INFO.items),
         pornstarsList: getModelsList(x.page.MODELS_BY_LETTERS.letters, x.page.MODELS_BY_LETTERS_MODELS_INFO.items),
     }),
 
@@ -24,7 +25,7 @@ const
     // because on production we have some additional tags(i don't know yet where i should get it)
     // if we'll leave this implementation we need some additional logic,
     // because it's same data for AllNiches and Niche (we don't need to get twice from API)
-    getAllNichesMap = x => getTagList(x.page.TAGS_BY_LETTERS.letters),
+    getAllNichesMap = x => getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
     // sortBy(
     //     map(
     //         x.page.TAGS_INFO.items,
@@ -47,7 +48,7 @@ const
             pageNumber: x.page.PAGE_NUMBER,
             pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
-            tagList: getTagList(x.page.TAGS_BY_LETTERS.letters),
+            tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
             tagArchiveList: getTagArchiveList(x.page.TAG_ARCHIVE_LIST_FULL, x.page.MONTHS_NAMES),
             tagArchiveListOlder: pick(
                 x.page.TAG_ARCHIVE_OLDER,
@@ -75,7 +76,7 @@ const
             pageNumber: x.page.PAGE_NUMBER,
             pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
-            tagList: getTagList(x.page.TAGS_BY_LETTERS.letters),
+            tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
             tagArchiveList: getTagArchiveList(x.page.TAG_ARCHIVE_LIST_FULL, x.page.MONTHS_NAMES),
             tagArchiveListOlder: pick(
                 x.page.TAG_ARCHIVE_OLDER,

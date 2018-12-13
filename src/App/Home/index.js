@@ -23,6 +23,10 @@ import {
     Content,
     PageWrapper,
     LetterIcon,
+    NichesList,
+    Niche,
+    NicheImage,
+    NicheTitle,
 } from './assets'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
@@ -42,7 +46,7 @@ const
         pornstarsList: List(),
     }),
 
-    renderListItemLink = (x, idx, arr, classes) => <Link to={`/porn-star/${x.get('subPage')}`}
+    renderListItemLink = (x, idx, arr, classes) => <Link to={`/porn-star/${x.get('subPage')}${x.get('sort')}`}
         key={x.get('id')}
         className={classes.routerLink}
     >
@@ -77,10 +81,26 @@ const
             ? <CircularProgress/>
             : <Content>
                 <PageWrapper>
-                    <Typography variant="h4" gutterBottom>Home</Typography>
-                    {/* {
-                        home.get('nichesList')
-                    } */}
+                    <Typography variant="h4" gutterBottom>Top Rated Straight Niches</Typography>
+                    <NichesList>
+                        {home.get('nichesList').map(x => <Niche>
+                            <Link
+                                key={x.get('id')}
+                                to={`/all-niches/${x.get('subPage')}`}
+                                key={x.get('id')}
+                                className={classes.routerLink}
+                            >
+                                <NicheImage thumb={x.get('thumb')}/>
+                                <Typography
+                                    variant="body1"
+                                    gutterBottom
+                                    classes={{
+                                        root: classes.nicheTitleTypography
+                                    }}
+                                >{x.get('name')}</Typography>
+                            </Link>
+                        </Niche>)}
+                    </NichesList>
                     <Typography variant="h4" gutterBottom>Top Rated Straight Pornstars</Typography>
                     <ListComponent
                         component="div"
