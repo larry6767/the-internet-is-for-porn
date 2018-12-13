@@ -83,6 +83,9 @@ const
                 },
             })
 
+        else if (req.body.pageCode === 'home')
+            requestHandler(req, res, requests.homePageCode)
+
         else if (req.body.pageCode === 'all-niches')
             requestHandler(req, res, requests.allNichesPageCode)
 

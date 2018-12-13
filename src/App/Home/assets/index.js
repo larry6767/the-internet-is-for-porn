@@ -1,8 +1,14 @@
 import styled from 'styled-components'
+import {PageWrapper} from '../../../generic/assets'
 
-export const Page = styled.div`
-    min-height: calc(100vh - 373px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+export {
+    Page,
+    Content,
+} from '../../../generic/assets'
+
+export const HomePageWrapper = styled(PageWrapper)`
+    width: calc(100% - 230px);
+    ${({theme}) => theme.media.sm`width: 100%`}
+    ${({theme}) => theme.media.xs`width: 100%`}
+    ${({theme}) => theme.media.xxs`width: 100%`}
 `

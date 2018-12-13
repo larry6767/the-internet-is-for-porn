@@ -7,6 +7,7 @@ import * as requests from './requests'
 import {logRequestError} from './helpers'
 
 import Home from '../../src/App/Home'
+import homeActions from '../../src/App/Home/actions'
 import AllNiches from '../../src/App/AllNiches'
 import allNichesActions from '../../src/App/AllNiches/actions'
 import Niche from '../../src/App/AllNiches/Niche'
@@ -42,6 +43,16 @@ const
             res.status(500)
         }
         return store
+    },
+
+    homeHandler = async (render, req, res, subPage) => {
+        const
+            store = await pageHandler(req, res, requests.homePageCode, subPage, homeActions)
+
+        return render(res, <Home/>, store, [
+            ['app', 'home'],
+            ['generic', 'errorMessage'],
+        ])
     },
 
     allNichesHandler = async (render, req, res, subPage) => {
@@ -110,7 +121,7 @@ export const routeMapping = render => [
                 ? res.redirect('/all-niches')
                 : next(),
 
-        (req, res) => render(res, <Home/>, newStore(initialStoreOnUrl(req.url))),
+        async (req, res) => await homeHandler(render, req, res),
     ])],
     ['/all-niches', mkHandler('get', async (req, res) =>
         await allNichesHandler(

@@ -15,6 +15,11 @@ import {
 import {backendUrl} from '../config'
 
 const
+    getHomeMap = x => ({
+        nicheslist: getTagList(x.page.TAGS_BY_LETTERS.letters),
+        pornstarsList: getModelsList(x.page.MODELS_BY_LETTERS.letters, x.page.MODELS_BY_LETTERS_MODELS_INFO.items),
+    }),
+
     // TODO FIXME: now i'm not shure about getting this data,
     // because on production we have some additional tags(i don't know yet where i should get it)
     // if we'll leave this implementation we need some additional logic,
@@ -114,6 +119,7 @@ const
 // sort of enum (to reduce human-factor mistakes).
 // required suffix: `PageCode`.
 export const
+    homePageCode = 'home',
     allNichesPageCode = 'all-niches',
     nichePageCode = 'niche',
     allMoviesPageCode = 'all-movies',
@@ -123,7 +129,13 @@ export const
 export const getPageData = async ({headers, pageCode, subPageCode}) => {
     const
         [params, mapFn] =
-            pageCode === allNichesPageCode
+            pageCode === homePageCode
+            ? [{url: '/', options: {blocks: {
+                allTagsBlock: 1,
+                modelsABCBlockText: 1,
+                modelsABCBlockThumbs: 1,
+            }}}, getHomeMap]
+            : pageCode === allNichesPageCode
             ? [{url: '/?categories', options: {blocks: {allTagsBlock: 1}}}, getAllNichesMap]
             : pageCode === nichePageCode
             ? [{url: `/${subPageCode}.html`, options: {blocks: {allTagsBlock: 1}}}, getNicheMap]
