@@ -1,21 +1,28 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
-import {withStyles} from '@material-ui/core'
+import {Link} from 'react-router-dom'
 import {
+    List as ListComponent,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
     CircularProgress,
-    Typography
+    Typography,
 } from '@material-ui/core'
+import PermIdentityIcon from '@material-ui/icons/PermIdentity'
 import {
     Record,
     Map,
     List,
 } from 'immutable'
 import ErrorContent from '../../generic/ErrorContent'
+import {withStylesProps} from '../helpers'
 import {
     Page,
     Content,
-    HomePageWrapper,
+    PageWrapper,
+    LetterIcon,
 } from './assets'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
@@ -35,15 +42,56 @@ const
         pornstarsList: List(),
     }),
 
+    renderListItemLink = (x, idx, arr, classes) => <Link to={`/porn-star/${x.get('subPage')}`}
+        key={x.get('id')}
+        className={classes.routerLink}
+    >
+        <ListItem
+            button
+            classes={{
+                gutters: classes.itemGutters
+            }}
+        >
+            <ListItemIcon>
+                {idx !== 0 && x.get('letter') === arr.getIn([(idx - 1), 'letter'])
+                    ? <PermIdentityIcon></PermIdentityIcon>
+                    : <LetterIcon>{x.get('letter')}</LetterIcon>}
+
+            </ListItemIcon>
+            <ListItemText
+                classes={{
+                    root: classes.listItemTextRoot,
+                    primary: classes.primaryTypography,
+                    secondary: classes.secondaryTypography
+                }}
+                primary={x.get('name')}
+                secondary={x.get('itemsCount')}
+            />
+        </ListItem>
+    </Link>,
+
     Home = ({classes, currentBreakpoint, pageUrl, search, home, chooseSort, isSSR}) => <Page>
         { home.get('isFailed')
             ? <ErrorContent/>
             : home.get('isLoading')
             ? <CircularProgress/>
             : <Content>
-                <HomePageWrapper>
-                    <Typography classes={{root: classes.typographyTitle}}>Home</Typography>
-                </HomePageWrapper>
+                <PageWrapper>
+                    <Typography variant="h4" gutterBottom>Home</Typography>
+                    {/* {
+                        home.get('nichesList')
+                    } */}
+                    <Typography variant="h4" gutterBottom>Top Rated Straight Pornstars</Typography>
+                    <ListComponent
+                        component="div"
+                        classes={{
+                            root: classes.root
+                        }}
+                    >
+                        {home.get('pornstarsList').map((x, idx, arr) =>
+                            renderListItemLink(x, idx, arr, classes))}
+                    </ListComponent>
+                </PageWrapper>
             </Content>
         }
     </Page>
@@ -65,5 +113,5 @@ export default compose(
             }
         }
     }),
-    withStyles(muiStyles)
+    withStylesProps(muiStyles)
 )(Home)

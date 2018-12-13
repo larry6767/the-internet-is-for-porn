@@ -1,14 +1,16 @@
 import styled from 'styled-components'
-import {PageWrapper} from '../../../generic/assets'
 
 export {
     Page,
     Content,
+    PageWrapper,
 } from '../../../generic/assets'
 
-export const HomePageWrapper = styled(PageWrapper)`
-    width: calc(100% - 230px);
-    ${({theme}) => theme.media.sm`width: 100%`}
-    ${({theme}) => theme.media.xs`width: 100%`}
-    ${({theme}) => theme.media.xxs`width: 100%`}
+export const LetterIcon = styled.div`
+    width: 24px;
+    display: flex;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: ${({theme}) => theme.colors.mainColor};
 `

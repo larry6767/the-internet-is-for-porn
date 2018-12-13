@@ -15,8 +15,8 @@ export default
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            nichesList: fromJS(data),
-            pornstarsList: fromJS(data)
+            nichesList: fromJS(data.nichesList),
+            pornstarsList: fromJS(data.pornstarsList)
         }),
         [actions.loadPageFailure]: (state) => state.merge({
             isLoading: false,
