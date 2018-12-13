@@ -115,7 +115,11 @@ const
 
     getPornstarsMap = x => {
         return getModelsList(x.page.MODELS_BY_LETTERS.letters, x.page.MODELS_BY_LETTERS_MODELS_INFO.items)
-    }
+    },
+
+    getFavoriteMap = x => ({}),
+
+    getFavoritePornstarsMap = x => ({})
 
 // sort of enum (to reduce human-factor mistakes).
 // required suffix: `PageCode`.
@@ -125,7 +129,9 @@ export const
     nichePageCode = 'niche',
     allMoviesPageCode = 'all-movies',
     pornstarsPageCode = 'porn-stars',
-    pornstarPageCode = 'porn-star'
+    pornstarPageCode = 'porn-star',
+    favoritePageCode = 'favorite',
+    favoritePornstarsPageCode = 'favorite-porn-stars'
 
 export const getPageData = async ({headers, pageCode, subPageCode}) => {
     const
@@ -149,6 +155,10 @@ export const getPageData = async ({headers, pageCode, subPageCode}) => {
                 modelsABCBlockText: 1,
                 modelsABCBlockThumbs: 1,
             }}}, getPornstarMap]
+            : pageCode === favoritePageCode
+            ? [{url: `/your-${pageCode}.html`}, getFavoriteMap]
+            : pageCode === favoritePornstarsPageCode
+            ? [{url: `/your-${pageCode}.html`}, getFavoritePornstarsMap]
             : null
 
     if (params === null)

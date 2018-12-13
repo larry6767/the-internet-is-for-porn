@@ -8,6 +8,7 @@ import mainHeaderReducer from './MainHeader/reducers'
 import allMoviesReducer from './AllMovies/reducers'
 import nichesReducer from './AllNiches/reducers'
 import pornstarsReducer from './Pornstars/reducers'
+import favoriteReducer from './Favorite/reducers'
 
 const
     defaultSSR = fromJS({isSSR: false})
@@ -18,6 +19,7 @@ export default combineReducers({
     niches: nichesReducer,
     allMovies: allMoviesReducer,
     pornstars: pornstarsReducer,
+    favorite: favoriteReducer,
 
     ui: handleActions({
         [actions.resize]: (state, action) =>

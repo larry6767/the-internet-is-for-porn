@@ -26,7 +26,6 @@ import {
     NichesList,
     Niche,
     NicheImage,
-    NicheTitle,
 } from './assets'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'

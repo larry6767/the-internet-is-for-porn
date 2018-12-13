@@ -55,14 +55,14 @@ const
         }).end()
     },
 
-    requestHandler = (req, res, pageCode, subPageCode) => {
+    requestHandler = (req, res, pageCode, withSubPageCode) => {
         const
             params = {
                 headers: proxiedHeaders(req),
                 pageCode
             }
 
-        if (subPageCode)
+        if (withSubPageCode === 'withSubPageCode')
         params.subPageCode = req.body.subPageCode
 
         requests.getPageData(params)
@@ -90,16 +90,22 @@ const
             requestHandler(req, res, requests.allNichesPageCode)
 
         else if (req.body.pageCode === 'niche')
-            requestHandler(req, res, requests.nichePageCode, true)
+            requestHandler(req, res, requests.nichePageCode, 'withSubPageCode')
 
         else if (req.body.pageCode === 'all-movies')
-            requestHandler(req, res, requests.allMoviesPageCode, true)
+            requestHandler(req, res, requests.allMoviesPageCode, 'withSubPageCode')
 
         else if (req.body.pageCode === 'porn-stars')
             requestHandler(req, res, requests.pornstarsPageCode)
 
         else if (req.body.pageCode === 'porn-star')
-            requestHandler(req, res, requests.pornstarPageCode, true)
+            requestHandler(req, res, requests.pornstarPageCode, 'withSubPageCode')
+
+        else if (req.body.pageCode === 'favorite')
+            requestHandler(req, res, requests.favoritePageCode)
+
+        else if (req.body.pageCode === 'favorite-porn-stars')
+            requestHandler(req, res, requests.favoritePornstarsPageCode)
 
         else
             jsonThrow400(req, res)('Unexpected/unknown "pageCode" value in request body', {

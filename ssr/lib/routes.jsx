@@ -18,6 +18,8 @@ import Pornstars from '../../src/App/Pornstars'
 import pornstarsActions from '../../src/App/Pornstars/actions'
 import Pornstar from '../../src/App/Pornstars/Pornstar'
 import pornstarActions from '../../src/App/Pornstars/Pornstar/actions'
+import Favorite from '../../src/App/Favorite'
+import favoriteActions from '../../src/App/Favorite/actions'
 import NotFound from '../../src/App/NotFound'
 import errorActions from '../../src/generic/ErrorMessage/actions'
 import getSubPage from '../../shared-src/routes/niche/getSubPage'
@@ -103,6 +105,24 @@ const
             ['app', 'pornstars', 'pornstar'],
             ['generic', 'errorMessage'],
         ])
+    },
+
+    favoritePageHandler = async (render, req, res, subPage, isPornstars) => {
+        const
+            store = await pageHandler(
+                req,
+                res,
+                isPornstars === 'isPornstars'
+                    ? requests.favoritePornstarsPageCode
+                    : requests.favoritePageCode,
+                subPage,
+                favoriteActions
+            )
+
+        return render(res, <Favorite/>, store, [
+            ['app', 'favorite'],
+            ['generic', 'errorMessage'],
+        ])
     }
 
 // WARNING! keep this up to date with front-end routing!
@@ -175,6 +195,19 @@ export const routeMapping = render => [
         await pornstarPageHandler(
             render, req, res,
             getSubPage(req.params.child, req.query.sort, req.query.page)
+        ))],
+
+
+    ['/your-favorite.html', mkHandler('get', (req, res) => res.redirect('/favorite'))],
+    ['/favorite', mkHandler('get', async (req, res) =>
+        await favoritePageHandler(
+            render, req, res
+        ))],
+
+    ['/your-favorite-porn-stars.html', mkHandler('get', (req, res) => res.redirect('/favorite-porn-stars'))],
+    ['/favorite-porn-stars', mkHandler('get', async (req, res) =>
+        await favoritePageHandler(
+            render, req, res, null, 'isPornstars'
         ))],
 
     ['*', mkHandler('get', (req, res) => {
