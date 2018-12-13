@@ -83,9 +83,8 @@ const
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>Top Rated Straight Niches</Typography>
                     <NichesList>
-                        {home.get('nichesList').map(x => <Niche>
+                        {home.get('nichesList').map(x => <Niche key={x.get('id')}>
                             <Link
-                                key={x.get('id')}
                                 to={`/all-niches/${x.get('subPage')}`}
                                 key={x.get('id')}
                                 className={classes.routerLink}
