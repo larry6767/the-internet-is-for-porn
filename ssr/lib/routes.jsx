@@ -197,17 +197,17 @@ export const routeMapping = render => [
             getSubPage(req.params.child, req.query.sort, req.query.page)
         ))],
 
-
     ['/your-favorite.html', mkHandler('get', (req, res) => res.redirect('/favorite'))],
     ['/favorite', mkHandler('get', async (req, res) =>
         await favoritePageHandler(
             render, req, res
         ))],
 
-    ['/your-favorite-porn-stars.html', mkHandler('get', (req, res) => res.redirect('/favorite-porn-stars'))],
+    ['/your-favorite-porn-stars.html', mkHandler('get', (req, res) =>
+        res.redirect('/favorite-porn-stars'))],
     ['/favorite-porn-stars', mkHandler('get', async (req, res) =>
         await favoritePageHandler(
-            render, req, res, null, 'isPornstars'
+            render, req, res, undefined, 'isPornstars'
         ))],
 
     ['*', mkHandler('get', (req, res) => {

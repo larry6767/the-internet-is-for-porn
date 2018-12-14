@@ -183,6 +183,25 @@ const
         />
     </Fragment>,
 
+    FavoriteControlBar = ({classes, buttonsElements, favoriteButtons}) => <Fragment>
+        {buttonsElements.length
+            ? <ButtonsList>
+            {buttonsElements}
+        </ButtonsList> : null}
+
+        <WrappedButton
+            classes={classes}
+            link={'/favorite'}
+            text={'Films'}
+        />
+
+        <WrappedButton
+            classes={classes}
+            link={'/favorite-porn-stars'}
+            text={'Pornstars'}
+        />
+    </Fragment>,
+
     ShowedElements = ({itemsCount, pageNumber}) => <Typography variant="body1" gutterBottom>
         {`Showing ${itemsCount * pageNumber - (itemsCount - 1)} - ${itemsCount * pageNumber}`}
     </Typography>,
@@ -203,6 +222,7 @@ const
         archiveFilms,
         tagArchiveListOlder,
         tagArchiveListNewer,
+        favoriteButtons,
     }) => {
         const
             array = Array.from(Array(pagesCount).keys()),
@@ -237,6 +257,11 @@ const
                         buttonsElements={buttonsElements}
                         tagArchiveListOlder={tagArchiveListOlder}
                         tagArchiveListNewer={tagArchiveListNewer}
+                    />
+                    : favoriteButtons
+                    ? <FavoriteControlBar
+                        classes={classes}
+                        buttonsElements={buttonsElements}
                     />
                     : <NicheControlBar
                         classes={classes}

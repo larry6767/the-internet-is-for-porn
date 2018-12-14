@@ -16,6 +16,7 @@ export const Page = styled.section`
 export const Content = styled.div`
     display: flex;
     width: 100%;
+    align-self: flex-start;
 `
 
 export const PageWrapper = styled.div`

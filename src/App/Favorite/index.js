@@ -16,7 +16,6 @@ import {
 import getSubPage from '../../shared-src/routes/niche/getSubPage'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
-import Lists from '../../generic/Lists'
 import VideoList from '../../generic/VideoList'
 import {
     Page,
@@ -39,8 +38,6 @@ const
         pageText: Map(),
         pagesCount: 1,
 
-        tagList: List(),
-        tagArchiveList: List(),
         sortList: List(),
         currentSort: '',
         archiveFilms: Map(),
@@ -52,18 +49,15 @@ const
         lastSubPage: '',
     }),
 
-    Favorite = ({classes, currentBreakpoint, pageUrl, search, favorite, chooseSort, isSSR}) => <Page>
+    Favorite = ({
+        classes, currentBreakpoint, pageUrl,
+        search, favorite, chooseSort, isSSR
+    }) => <Page>
         { favorite.get('isFailed')
             ? <ErrorContent/>
             : favorite.get('isLoading')
             ? <CircularProgress/>
             : <Content>
-                <Lists
-                    currentBreakpoint={currentBreakpoint}
-                    pageUrl={pageUrl}
-                    tagList={favorite.get('tagList')}
-                    tagArchiveList={favorite.get('tagArchiveList')}
-                />
                 <FavoritePageWrapper>
                     <Typography
                         variant="h4"
@@ -72,7 +66,11 @@ const
                             root: classes.typographyTitle
                         }}
                     >
-                        {favorite.getIn(['pageText', 'listHeader'])}
+                        {favorite.get('videoList').size
+                            ? `${favorite.getIn(['pageText', 'listHeader'])}${
+                                favorite.get('videoList').size}`
+                            : favorite.getIn(['pageText', 'listHeaderEmpty'])
+                        }
                     </Typography>
                     <ControlBar
                         pageUrl={pageUrl}
@@ -88,6 +86,7 @@ const
                         archiveFilms={favorite.get('archiveFilms')}
                         tagArchiveListOlder={favorite.get('tagArchiveListOlder')}
                         tagArchiveListNewer={favorite.get('tagArchiveListNewer')}
+                        favoriteButtons={true}
                     />
                     <VideoList
                         videoList={favorite.get('videoList')}
@@ -95,35 +94,7 @@ const
                 </FavoritePageWrapper>
             </Content>
         }
-    </Page>,
-
-    loadPageFlow = ({search, match, favorite, loadPage}) => {
-        const
-            {sort, page} = queryString.parse(search),
-
-            subPageForRequest =
-                match.params[0] && match.params[1]
-                ? getSubPage(null, sort, page, [match.params[0], match.params[1]])
-                : getSubPage(null, sort, page)
-
-        if (typeof subPageForRequest !== 'string')
-            throw new Error(
-                `Something went wront, unexpected "subPageForRequest" type: "${
-                    typeof subPageForRequest}"` +
-                ' (this is supposed to be provided by router via props to the component)'
-            )
-
-        // "unless" condition.
-        // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
-        if (!(
-            favorite.get('isLoading') ||
-            (
-                (favorite.get('isLoaded') || favorite.get('isFailed')) &&
-                subPageForRequest === favorite.get('lastSubPageForRequest')
-            )
-        ))
-            loadPage(subPageForRequest)
-    }
+    </Page>
 
 export default compose(
     connect(
@@ -135,21 +106,21 @@ export default compose(
             search: state.getIn(['router', 'location', 'search']),
         }),
         dispatch => ({
-            loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
-            chooseSort: (newSortValue, stringifiedQS) => dispatch(actions.setNewSort({
-                newSortValue: newSortValue,
-                stringifiedQS: stringifiedQS
-            }))
+            loadPage: (pageUrl) => dispatch(actions.loadPageRequest(pageUrl))
         })
     ),
     lifecycle({
         componentDidMount() {
-            loadPageFlow(this.props)
-        },
-
-        componentWillReceiveProps(nextProps) {
-            loadPageFlow(nextProps)
-        },
+            if (!this.props.favorite.get('isLoading') && !this.props.favorite.get('isLoaded')) {
+                this.props.loadPage(
+                    ~this.props.pageUrl.indexOf('favorite-porn-stars')
+                        ? 'favorite-porn-stars'
+                        : ~this.props.pageUrl.indexOf('favorite')
+                        ? 'favorite'
+                        : null
+                )
+            }
+        }
     }),
     withStyles(muiStyles)
 )(Favorite)

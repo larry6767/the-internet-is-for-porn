@@ -7,6 +7,10 @@ export default (languageId, key) => {
                 ? 'Duration'
                 : key === 'popular'
                 ? 'Popularity'
+                : key === 'galleries'
+                ? 'Films'
+                : key === 'models'
+                ? 'Pornstars'
                 : undefined
     }
 }
