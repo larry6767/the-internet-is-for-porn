@@ -30,4 +30,6 @@ export const initialStoreOnUrl = reqUrl =>
 
 
 const reducersPatch = reducers => set(reducers, 'router', x => x)
-export const newStore = initialStore => createStore(createRootReducer(reducersPatch), initialStore)
+
+export const newStore = reqUrl =>
+    createStore(createRootReducer(reducersPatch), initialStoreOnUrl(reqUrl))
