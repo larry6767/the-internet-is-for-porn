@@ -1,5 +1,4 @@
 import React from 'react'
-import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
 import {withStyles} from '@material-ui/core'
@@ -13,7 +12,6 @@ import {
     List,
     fromJS,
 } from 'immutable'
-import getSubPage from '../../shared-src/routes/niche/getSubPage'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
