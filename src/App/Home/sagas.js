@@ -11,16 +11,10 @@ export function* loadHomeFlow(action, ssrContext) {
         const reqData = {pageCode: homePageCode}
         let data
 
-        if (yield select(x => x.getIn(['app', 'ssr', 'isSSR']))) {
+        if (yield select(x => x.getIn(['app', 'ssr', 'isSSR'])))
             data = yield ssrContext.getPageData(reqData)
-        } else {
-            const response = yield getPageData(reqData)
-
-            if (response.status !== 200)
-                throw new Error(`Response status is ${response.status} (not 200)`)
-
-            data = yield response.json()
-        }
+        else
+            data = yield getPageData(reqData)
 
         yield put(actions.loadPageSuccess({data}))
     } catch (err) {

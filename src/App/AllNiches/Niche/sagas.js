@@ -8,20 +8,14 @@ import errorActions from '../../../generic/ErrorMessage/actions'
 import actions from './actions'
 
 export function* loadNichePageFlow({payload: subPageForRequest}, ssrContext) {
-    const reqData = {pageCode: nichePageCode, subPageCode: subPageForRequest}
-    let data
-
     try {
-        if (yield select(x => x.getIn(['app', 'ssr', 'isSSR']))) {
+        const reqData = {pageCode: nichePageCode, subPageCode: subPageForRequest}
+        let data
+
+        if (yield select(x => x.getIn(['app', 'ssr', 'isSSR'])))
             data = yield ssrContext.getPageData(reqData)
-        } else {
-            const response = yield getPageData(reqData)
-
-            if (response.status !== 200)
-                throw new Error(`Response status is ${response.status} (not 200)`)
-
-            data = yield response.json()
-        }
+        else
+            data = yield getPageData(reqData)
 
         yield put(actions.loadPageSuccess({subPageForRequest, data}))
     } catch (err) {
