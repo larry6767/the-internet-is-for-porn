@@ -47,9 +47,8 @@ export default
                 })
             }
 
-            if (staticRouterContext.statusCodeResolver) {
+            if (staticRouterContext.statusCodeResolver)
                 res.status(staticRouterContext.statusCodeResolver(store.getState()))
-            }
 
             if (staticRouterContext.url) {
                 res.writeHead(302, {'Location': staticRouterContext.url})
