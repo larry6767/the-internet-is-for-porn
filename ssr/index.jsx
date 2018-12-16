@@ -66,7 +66,7 @@ if (isProduction) app.use('/static/js', express.static(join(publicDir, 'static',
 
 app.use('/backend-proxy/:operation', json(), backendProxyHandler)
 
-app.use((req, res) => render(res, req.url, newStore(req.url)))
+app.use((req, res) => render(req, res, newStore(req.url)))
 
 app.listen(port, host, () => {
     if (isProduction) console.info('Running in production mode...')

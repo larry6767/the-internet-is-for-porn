@@ -8,18 +8,55 @@ import {SheetsRegistry} from 'jss'
 import JssProvider from 'react-jss/lib/JssProvider'
 import {createGenerateClassName} from '@material-ui/core/styles'
 
+import {getPageData as requestPageData} from './requests'
+import {proxiedHeaders} from './backend-proxy'
 import RouterBuilder from '../router-builder'
-import {App} from '../../src/App'
+import {App} from '../App'
 
+const getPageData = req => etc => requestPageData({headers: proxiedHeaders(req), ...etc})
 
 // renders a page and makes a proper response for express.js
 export default
     ({pre, post}) => // <- pre-bound layout template object
-    async (res, reqUrl, store) => {
+    async (req, res, store) => {
         try {
             const
-                context = {},
-                location = store.getState().getIn(['router', 'location']),
+                staticRouterContext = {isPreRouting: true},
+                state = store.getState(),
+                location = state.getIn(['router', 'location'])
+
+            // just filling `staticRouterContext` with meta info,
+            // not really rendering anything.
+            renderToString(
+                <StaticRouter location={req.url} context={staticRouterContext}>
+                    <RouterBuilder location={location}/>
+                </StaticRouter>
+            )
+
+            if (staticRouterContext.saga) {
+                await new Promise((resolve, reject) => {
+                    try {
+                        store.runSaga(function* () {
+                            try {
+                                const ssrContext = {getPageData: getPageData(req)}
+                                yield [staticRouterContext.saga(ssrContext)]
+                                resolve()
+                            } catch (e) {reject(e)}
+                        })
+                    } catch (e) {reject(e)}
+                })
+            }
+
+            if (staticRouterContext.statusCodeResolver) {
+                res.status(staticRouterContext.statusCodeResolver(store.getState()))
+            }
+
+            if (staticRouterContext.url) {
+                res.writeHead(302, {'Location': staticRouterContext.url})
+                return res.end()
+            }
+
+            const
                 serverStyleSheet = new ServerStyleSheet(),
                 jssSheetsRegistry = new SheetsRegistry(),
                 generateClassName = createGenerateClassName(),
@@ -28,7 +65,7 @@ export default
                 html = renderToString(serverStyleSheet.collectStyles(
                     <JssProvider registry={jssSheetsRegistry} generateClassName={generateClassName}>
                         <Provider store={store}>
-                            <StaticRouter location={reqUrl} context={context}>
+                            <StaticRouter location={req.url} context={{}}>
                                 <App sheetsManager={sheetsManager} location={location}>
                                     {RouterBuilder}
                                 </App>
@@ -36,13 +73,6 @@ export default
                         </Provider>
                     </JssProvider>
                 ))
-
-            if (context.status === 404) {
-                res.status(404);
-            } else if (context.url) {
-                res.writeHead(302, {'Location': context.url})
-                return res.end()
-            }
 
             const
                 styledComponentsStyles = serverStyleSheet.getStyleTags(),

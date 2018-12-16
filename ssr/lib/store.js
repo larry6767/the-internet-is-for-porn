@@ -1,9 +1,10 @@
 import url from 'url'
 import {set} from 'lodash'
 import {fromJS} from 'immutable'
-import {createStore} from 'redux'
+import {createStore, applyMiddleware} from 'redux'
+import createSagaMiddleware from 'redux-saga'
 
-import createRootReducer from '../../src/reducers'
+import createRootReducer from '../reducers'
 
 
 export const initialStore = fromJS({
@@ -31,5 +32,12 @@ export const initialStoreOnUrl = reqUrl =>
 
 const reducersPatch = reducers => set(reducers, 'router', x => x)
 
-export const newStore = reqUrl =>
-    createStore(createRootReducer(reducersPatch), initialStoreOnUrl(reqUrl))
+export const newStore = reqUrl => {
+    const
+        sagaMiddleware = createSagaMiddleware(),
+        enhancer = applyMiddleware(sagaMiddleware),
+        store = createStore(createRootReducer(reducersPatch), initialStoreOnUrl(reqUrl), enhancer)
+
+    store.runSaga = sagaMiddleware.run
+    return store
+}
