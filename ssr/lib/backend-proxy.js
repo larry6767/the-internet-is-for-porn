@@ -93,22 +93,22 @@ const
                 },
             })
 
-        else if (req.body.pageCode === 'home')
+        else if (req.body.pageCode === homePageCode)
             requestHandler(req, res, homePageCode)
 
-        else if (req.body.pageCode === 'all-niches')
+        else if (req.body.pageCode === allNichesPageCode)
             requestHandler(req, res, allNichesPageCode)
 
-        else if (req.body.pageCode === 'niche')
+        else if (req.body.pageCode === nichePageCode)
             requestHandler(req, res, nichePageCode, true)
 
-        else if (req.body.pageCode === 'all-movies')
+        else if (req.body.pageCode === allMoviesPageCode)
             requestHandler(req, res, allMoviesPageCode, true)
 
-        else if (req.body.pageCode === 'porn-stars')
+        else if (req.body.pageCode === pornstarsPageCode)
             requestHandler(req, res, pornstarsPageCode)
 
-        else if (req.body.pageCode === 'porn-star')
+        else if (req.body.pageCode === pornstarPageCode)
             requestHandler(req, res, pornstarPageCode, true)
 
         else
