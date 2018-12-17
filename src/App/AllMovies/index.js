@@ -13,7 +13,7 @@ import {
     List,
     fromJS,
 } from 'immutable'
-import getSubPage from '../../shared-src/routes/niche/getSubPage'
+import {getSubPage} from '../helpers'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import Lists from '../../generic/Lists'

@@ -1,8 +1,23 @@
 import {
     pick,
-    map,
+    map
 } from 'lodash'
 import rp from 'request-promise-native'
+
+import {backendUrl} from '../config'
+
+import {
+    homePageCode,
+    allNichesPageCode,
+    nichePageCode,
+    allMoviesPageCode,
+    pornstarsPageCode,
+    pornstarPageCode,
+    favoritePageCode,
+    favoritePornstarsPageCode,
+
+} from '../api-page-codes'
+
 import {
     getTagList,
     getTagListByLetters,
@@ -14,7 +29,6 @@ import {
     getArchiveFilms,
     getModelInfo,
 } from './helpers/requests'
-import {backendUrl} from '../config'
 
 const
     getHomeMap = x => ({
@@ -160,18 +174,6 @@ const
             )
         }
     }
-
-// sort of enum (to reduce human-factor mistakes).
-// required suffix: `PageCode`.
-export const
-    homePageCode = 'home',
-    allNichesPageCode = 'all-niches',
-    nichePageCode = 'niche',
-    allMoviesPageCode = 'all-movies',
-    pornstarsPageCode = 'porn-stars',
-    pornstarPageCode = 'porn-star',
-    favoritePageCode = 'favorite',
-    favoritePornstarsPageCode = 'favorite-porn-stars'
 
 export const getPageData = async ({headers, pageCode, subPageCode}) => {
     const

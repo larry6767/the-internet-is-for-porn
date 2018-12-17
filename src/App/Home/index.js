@@ -11,13 +11,11 @@ import {
     Typography,
 } from '@material-ui/core'
 import PermIdentityIcon from '@material-ui/icons/PermIdentity'
-import {
-    Record,
-    Map,
-    List,
-} from 'immutable'
+import {Record, Map, List} from 'immutable'
+
 import ErrorContent from '../../generic/ErrorContent'
 import {withStylesProps} from '../helpers'
+
 import {
     Page,
     Content,
@@ -27,8 +25,8 @@ import {
     Niche,
     NicheImage,
 } from './assets'
-import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
+import actions from './actions'
 
 const
     HomeRecord = Record({

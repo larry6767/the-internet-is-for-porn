@@ -1,26 +1,23 @@
-import {put, takeEvery} from 'redux-saga/effects'
+import {put, takeEvery, select} from 'redux-saga/effects'
 
-import {BACKEND_URL} from '../../config'
+import {allNichesPageCode} from '../../api-page-codes'
+import {getPageData} from '../helpers'
 import errorActions from '../../generic/ErrorMessage/actions'
 
 import nicheSaga from './Niche/sagas'
 import actions from './actions'
 
-function* loadAllNichesPageFlow() {
+export function* loadAllNichesPageFlow(action, ssrContext) {
     try {
-        const response = yield fetch(`${BACKEND_URL}/get-page-data`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({pageCode: 'all-niches'}),
-        })
+        const reqData = {pageCode: allNichesPageCode}
+        let data
 
-        if (response.status !== 200)
-            throw new Error(`Response status is ${response.status} (not 200)`)
+        if (yield select(x => x.getIn(['app', 'ssr', 'isSSR'])))
+            data = yield ssrContext.getPageData(reqData)
+        else
+            data = yield getPageData(reqData)
 
-        yield put(actions.loadPageSuccess({data: yield response.json()}))
+        yield put(actions.loadPageSuccess({data}))
     } catch (err) {
         console.error('loadAllNichesPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())

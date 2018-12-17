@@ -12,16 +12,14 @@ import {
     List,
     fromJS,
 } from 'immutable'
-import getSubPage from '../../../shared-src/routes/niche/getSubPage'
+
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
-import {
-    Page,
-    Content,
-    PageWrapper,
-} from './assets'
+import {getSubPage} from '../../helpers'
+
+import {Page, Content, PageWrapper} from './assets'
 import actions from './actions'
 
 const

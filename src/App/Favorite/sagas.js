@@ -5,7 +5,7 @@ import errorActions from '../../generic/ErrorMessage/actions'
 
 import actions from './actions'
 
-function* loadFavoritePageFlow({payload: pageCode}) {
+export function* loadFavoritePageFlow({payload: pageCode}) {
     try {
         const response = yield fetch(`${BACKEND_URL}/get-page-data`, {
             method: 'POST',

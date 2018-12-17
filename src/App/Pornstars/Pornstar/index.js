@@ -2,26 +2,17 @@ import React from 'react'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
-import {
-    CircularProgress,
-    Typography
-} from '@material-ui/core'
-import {
-    Record,
-    Map,
-    List,
-} from 'immutable'
-import getSubPage from '../../../shared-src/routes/niche/getSubPage'
+import {CircularProgress, Typography} from '@material-ui/core'
+import {Record, Map, List} from 'immutable'
+
+import {getSubPage} from '../../helpers'
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
+
 import Info from './Info'
-import {
-    Page,
-    Content,
-    PageWrapper
-} from './assets'
+import {Page, Content, PageWrapper} from './assets'
 import actions from './actions'
 
 const

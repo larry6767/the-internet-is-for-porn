@@ -1,14 +1,20 @@
+// node.js built-in libs
 import {join} from 'path'
 import {readFileSync} from 'fs'
 
-import React from 'react'
+// npm node.js libs
 import yargs from 'yargs'
 import express from 'express'
 import favicon from 'serve-favicon'
 import {json} from 'body-parser'
 
-import {renderComponent} from './lib/render'
-import {routeMapping} from './lib/routes'
+// react and jsx stuff
+import React from 'react'
+import Router from 'react-router'
+
+// local libs
+import renderPage from './lib/render'
+import {newStore} from './lib/store'
 import backendProxyHandler from './lib/backend-proxy'
 
 
@@ -39,7 +45,7 @@ const
     robotsTxtFilePath =
         join(__dirname, '..', 'robots', (isRC ? 'rc' : 'production'), 'robots.txt'),
 
-    render = renderComponent((result => ({
+    render = renderPage((result => ({
         pre: `${result[0]}<div id="root">`,
         post: `</div>${result[1]}`,
     }))(
@@ -49,7 +55,6 @@ const
             .split('<div id="root"></div>')
     )),
 
-    routes = routeMapping(render),
     app = express()
 
 // it's recommended to serve these files by nginx as static files
@@ -61,18 +66,7 @@ if (isProduction) app.use('/static/js', express.static(join(publicDir, 'static',
 
 app.use('/backend-proxy/:operation', json(), backendProxyHandler)
 
-// boilerplate to add express.js handlers by iterating `routeMapping`
-for (const [route, x] of routes) {
-    if (Array.isArray(x)) {
-        for (const {method, handler} of x)
-            app[method](route, handler)
-    } else if (x !== null && typeof x === 'object') {
-        app[x.method](route, x.handler)
-    } else {
-        throw new Error(
-            `Unexpected mapped route ("${route}") handler type: ${typeof x}`)
-    }
-}
+app.use((req, res) => render(req, res, newStore(req.url)))
 
 app.listen(port, host, () => {
     if (isProduction) console.info('Running in production mode...')

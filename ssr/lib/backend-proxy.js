@@ -1,8 +1,20 @@
 import {cloneDeep} from 'lodash'
 
 import {backendHost} from '../config'
+
+import {
+    homePageCode,
+    allNichesPageCode,
+    nichePageCode,
+    allMoviesPageCode,
+    pornstarsPageCode,
+    pornstarPageCode,
+    favoritePageCode,
+    favoritePornstarsPageCode,
+} from '../api-page-codes'
+
 import {logRequestError} from './helpers'
-import * as requests from './requests'
+import {getPageData as requestPageData} from './requests'
 
 export const proxiedHeaders = (req) => {
     const
@@ -65,7 +77,7 @@ const
         if (withSubPageCode === 'withSubPageCode')
         params.subPageCode = req.body.subPageCode
 
-        requests.getPageData(params)
+        requestPageData(params)
         .then(x => res.json(x).end())
         .catch(jsonThrow500(req, res))
     },
@@ -83,29 +95,29 @@ const
                 },
             })
 
-        else if (req.body.pageCode === 'home')
-            requestHandler(req, res, requests.homePageCode)
+        else if (req.body.pageCode === homePageCode)
+            requestHandler(req, res, homePageCode)
 
-        else if (req.body.pageCode === 'all-niches')
-            requestHandler(req, res, requests.allNichesPageCode)
+        else if (req.body.pageCode === allNichesPageCode)
+            requestHandler(req, res, allNichesPageCode)
 
-        else if (req.body.pageCode === 'niche')
-            requestHandler(req, res, requests.nichePageCode, 'withSubPageCode')
+        else if (req.body.pageCode === nichePageCode)
+            requestHandler(req, res, nichePageCode, 'withSubPageCode')
 
-        else if (req.body.pageCode === 'all-movies')
-            requestHandler(req, res, requests.allMoviesPageCode, 'withSubPageCode')
+        else if (req.body.pageCode === allMoviesPageCode)
+            requestHandler(req, res, allMoviesPageCode, 'withSubPageCode')
 
-        else if (req.body.pageCode === 'porn-stars')
-            requestHandler(req, res, requests.pornstarsPageCode)
+        else if (req.body.pageCode === pornstarsPageCode)
+            requestHandler(req, res, pornstarsPageCode)
 
-        else if (req.body.pageCode === 'porn-star')
-            requestHandler(req, res, requests.pornstarPageCode, 'withSubPageCode')
+        else if (req.body.pageCode === pornstarPageCode)
+            requestHandler(req, res, pornstarPageCode, 'withSubPageCode')
 
-        else if (req.body.pageCode === 'favorite')
-            requestHandler(req, res, requests.favoritePageCode)
+        else if (req.body.pageCode === favoritePageCode)
+            requestHandler(req, res, favoritePageCode)
 
-        else if (req.body.pageCode === 'favorite-porn-stars')
-            requestHandler(req, res, requests.favoritePornstarsPageCode)
+        else if (req.body.pageCode === favoritePornstarsPageCode)
+            requestHandler(req, res, favoritePornstarsPageCode)
 
         else
             jsonThrow400(req, res)('Unexpected/unknown "pageCode" value in request body', {
