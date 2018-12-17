@@ -17,6 +17,7 @@ import {
     LoadingProgress,
 } from './assets'
 import {muiStyles} from './assets/muiStyles'
+import {setCookie} from '../../App/helpers'
 
 class PreviewThumbs extends Component {
     state = {
@@ -77,6 +78,7 @@ class PreviewThumbs extends Component {
 const
     VideoItem = ({
         classes,
+        id,
         thumb,
         thumbMask,
         thumbs,
@@ -100,7 +102,7 @@ const
                     thumbsLinks={thumbsLinks}
                 />
                 <VideoPreviewBar>
-                    <Like>
+                    <Like onClick={setCookie('mcj_fav', `F${id}F`, 3600)}>
                         <Favorite classes={{root: classes.favoriteIcon}}/>
                     </Like>
                     <Duration>

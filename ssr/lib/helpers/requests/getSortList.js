@@ -12,7 +12,7 @@ export default (activeNavTabs, langId) => map(
     ({ACTIVE}, key) => {
         key = key.slice(key.indexOf('_') + 1).toLowerCase()
 
-        return item = {
+        return {
             active: ACTIVE,
             value: key,
             localText: getLocalText(langId, key),
