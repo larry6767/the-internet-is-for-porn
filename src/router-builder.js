@@ -3,6 +3,11 @@ import {Route, Switch, Redirect} from 'react-router-dom'
 import {get} from 'lodash'
 import queryString from 'query-string'
 
+import {
+    favoritePageCode,
+    favoritePornstarsPageCode,
+} from './api-page-codes'
+
 import status500 from './App/helpers/status500BranchResolver'
 import {getSubPage} from './App/helpers'
 
@@ -144,7 +149,10 @@ export default ({location}) => <Switch>
     <Route exact path="/favorite" render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const {staticContext: x} = props
-            x.saga = loadFavoritePageFlow.bind(null, null)
+            x.saga = loadFavoritePageFlow.bind(
+                null,
+                favoriteActions.loadPageRequest(favoritePageCode)
+            )
             x.statusCodeResolver = status500(['app', 'favorite'])
             return null
         } else
@@ -156,7 +164,10 @@ export default ({location}) => <Switch>
     <Route path="/favorite-porn-stars" render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const {staticContext: x} = props
-            x.saga = loadFavoritePageFlow.bind(null, null)
+            x.saga = loadFavoritePageFlow.bind(
+                null,
+                favoriteActions.loadPageRequest(favoritePornstarsPageCode)
+            )
             x.statusCodeResolver = status500(['app', 'favorite'])
             return null
         } else
