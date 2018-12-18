@@ -1,10 +1,13 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {compose} from 'recompose'
 import {replace} from 'lodash'
 import {withStyles} from '@material-ui/core/styles'
 import {
     Typography
 } from '@material-ui/core'
-import Favorite from '@material-ui/icons/FavoriteBorder'
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
+import Favorite from '@material-ui/icons/Favorite'
 import {
     Wrapper,
     VideoPreview,
@@ -17,7 +20,7 @@ import {
     LoadingProgress,
 } from './assets'
 import {muiStyles} from './assets/muiStyles'
-import {setCookie} from '../../App/helpers'
+import actions from '../../App/actions'
 
 class PreviewThumbs extends Component {
     state = {
@@ -78,32 +81,34 @@ class PreviewThumbs extends Component {
 const
     VideoItem = ({
         classes,
-        id,
-        thumb,
-        thumbMask,
-        thumbs,
-        title,
-        sponsorId,
-        tags,
-        tagsShort,
-        urlRegular,
-        favorite,
-        duration,
+        x,
+        addVideoToFavoriteHandler,
+        removeVideoFromFavoriteHandler,
+        favoriteVideoList,
     }) => {
         const
-            thumbsLinks = thumbs.map(x => replace(thumbMask, '{num}', x))
+            thumbsLinks = x.get('thumbs').map(thumb => replace(x.get('thumbMask'), '{num}', thumb))
 
         return <Wrapper>
             <VideoPreview
-                thumb={thumb}
+                thumb={x.get('thumb')}
             >
                 <LoadingProgress/>
                 <PreviewThumbs
                     thumbsLinks={thumbsLinks}
                 />
                 <VideoPreviewBar>
-                    <Like onClick={setCookie('mcj_fav', `F${id}F`, 3600)}>
-                        <Favorite classes={{root: classes.favoriteIcon}}/>
+                    <Like>
+                        {favoriteVideoList.find(id => id === x.get('id'))
+                            ? <Favorite
+                                classes={{root: classes.favoriteIcon}}
+                                onClick={() => removeVideoFromFavoriteHandler(x.get('id'))}
+                            />
+                            : <FavoriteBorder
+                                classes={{root: classes.favoriteBorderIcon}}
+                                onClick={() => addVideoToFavoriteHandler(x)}
+                            />
+                        }
                     </Like>
                     <Duration>
                         <Typography
@@ -112,8 +117,10 @@ const
                                 root: classes.typography
                             }}
                         >
-                            {`${Math.floor(duration / 60)}:${
-                                duration % 60 < 10 ? '0' + duration % 60 : duration % 60}`}
+                            {`${Math.floor(x.get('duration') / 60)}:${
+                                x.get('duration') % 60 < 10
+                                    ? '0' + x.get('duration') % 60
+                                    : x.get('duration') % 60}`}
                         </Typography>
                     </Duration>
                 </VideoPreviewBar>
@@ -124,9 +131,9 @@ const
                     classes={{
                         root: classes.typographyTitle
                     }}
-                    title={title}
+                    title={x.get('title')}
                 >
-                    {title}
+                    {x.get('title')}
                 </Typography>
                 <InfoBlockInner>
                     <Typography
@@ -135,20 +142,31 @@ const
                             root: classes.typographySource
                         }}
                     >
-                        {sponsorId}
+                        {x.get('sponsorId')}
                     </Typography>
                     <Typography
                         variant="body2"
                         classes={{
                             root: classes.typographyTags
                         }}
-                        title={tags.join(', ')}
+                        title={x.get('tags').join(', ')}
                     >
-                        {tagsShort}
+                        {x.get('tagsShort')}
                     </Typography>
                 </InfoBlockInner>
             </InfoBlock>
         </Wrapper>
     }
 
-export default withStyles(muiStyles)(VideoItem)
+export default compose(
+    connect(
+        state => ({
+            favoriteVideoList: state.getIn(['app', 'ui', 'favoriteVideoList'])
+        }),
+        dispatch => ({
+            addVideoToFavoriteHandler: video => dispatch(actions.addVideoToFavorite(video)),
+            removeVideoFromFavoriteHandler: id => dispatch(actions.removeVideoFromFavorite(id))
+        })
+    ),
+    withStyles(muiStyles)
+)(VideoItem)

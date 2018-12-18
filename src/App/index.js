@@ -49,7 +49,8 @@ export default compose(
         dispatch => ({
             resizeAction: event => dispatch(actions.resize(
                 typeof event === "number" ? event : event.srcElement.outerWidth
-            ))
+            )),
+            getFavoriteVideoListAction: () => dispatch(actions.getFavoriteVideoList())
         })
     ),
 
@@ -58,6 +59,7 @@ export default compose(
             this.listener = throttle(this.props.resizeAction, 200)
             window.addEventListener('resize', this.listener)
             this.props.resizeAction(document.documentElement.clientWidth)
+            this.props.getFavoriteVideoListAction()
         },
 
         componentWillUnmount() {

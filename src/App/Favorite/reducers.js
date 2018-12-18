@@ -62,6 +62,29 @@ export default
             videoList: List(),
         }),
         [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
+        [actions.addVideo]: (state, {payload: video}) => {
+            const
+                currentState = state.get('videoList')
+
+            if (!currentState.size)
+            return currentState
+
+            return state.set('videoList', currentState.push(video))
+        },
+        [actions.removeVideo]: (state, {payload: id}) => {
+            const
+                currentState = state.get('videoList')
+
+            if (!currentState.size)
+            return currentState
+
+            const
+                targetPosition = currentState.findIndex(x => x.get('id') === id)
+
+            return targetPosition !== -1
+                ? state.set('videoList', currentState.delete(targetPosition))
+                : state.set('videoList', currentState)
+        },
     }, fromJS({
         isLoading: false,
         isLoaded: false,

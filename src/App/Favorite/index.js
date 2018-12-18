@@ -12,6 +12,10 @@ import {
     List,
     fromJS,
 } from 'immutable'
+import {
+    favoritePageCode,
+    favoritePornstarsPageCode,
+} from '../../api-page-codes'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
@@ -111,10 +115,10 @@ export default compose(
         componentDidMount() {
             if (!this.props.favorite.get('isLoading') && !this.props.favorite.get('isLoaded')) {
                 this.props.loadPage(
-                    ~this.props.pageUrl.indexOf('favorite-porn-stars')
-                        ? 'favorite-porn-stars'
-                        : ~this.props.pageUrl.indexOf('favorite')
-                        ? 'favorite'
+                    ~this.props.pageUrl.indexOf(favoritePornstarsPageCode)
+                        ? favoritePornstarsPageCode
+                        : ~this.props.pageUrl.indexOf(favoritePageCode)
+                        ? favoritePageCode
                         : null
                 )
             }

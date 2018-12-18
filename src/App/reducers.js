@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux-immutable'
 import {handleActions} from 'redux-actions'
 import actions from './actions'
-import {fromJS} from 'immutable'
+import {fromJS, List} from 'immutable'
 import {getCurrentBreakpoint} from './helpers'
 import homeReducer from './Home/reducers'
 import mainHeaderReducer from './MainHeader/reducers'
@@ -23,8 +23,29 @@ export default combineReducers({
 
     ui: handleActions({
         [actions.resize]: (state, action) =>
-            state.set('currentBreakpoint', getCurrentBreakpoint(action.payload))
-    }, fromJS({currentBreakpoint: getCurrentBreakpoint()})),
+            state.set('currentBreakpoint', getCurrentBreakpoint(action.payload)),
+        [actions.setFavoriteVideoList]: (state, {payload: favoriteVideoList}) =>
+            state.set('favoriteVideoList', List(favoriteVideoList)),
+        [actions.addToFavoriteVideoList]: (state, {payload: id}) => {
+            const
+                currentState = state.get('favoriteVideoList'),
+                nextState = currentState.push(id)
+
+            return state.set('favoriteVideoList', nextState)
+        },
+        [actions.removeFromFavoriteVideoList]: (state, {payload: id}) => {
+            const
+                currentState = state.get('favoriteVideoList'),
+                targetPosition = currentState.indexOf(id)
+
+            return targetPosition !== -1
+                ? state.set('favoriteVideoList', currentState.delete(targetPosition))
+                : state.set('favoriteVideoList', currentState)
+        },
+    }, fromJS({
+        currentBreakpoint: getCurrentBreakpoint(),
+        favoriteVideoList: List(),
+    })),
 
     // static flag to detect if the app is running inside Server-Side Rendering
     ssr: (state = defaultSSR) => state,
