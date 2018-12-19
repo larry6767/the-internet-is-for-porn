@@ -64,26 +64,26 @@ export default
         [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
         [actions.addVideo]: (state, {payload: video}) => {
             const
-                currentState = state.get('videoList')
+                currentVideoList = state.get('videoList')
 
-            if (!currentState.size)
-            return currentState
+            if (!currentVideoList.size)
+                return state.set('isLoaded', false)
 
-            return state.set('videoList', currentState.push(video))
+            return state.set('videoList', currentVideoList.push(video))
         },
         [actions.removeVideo]: (state, {payload: id}) => {
             const
-                currentState = state.get('videoList')
+                currentVideoList = state.get('videoList')
 
-            if (!currentState.size)
-            return currentState
+            if (!currentVideoList.size)
+            return state
 
             const
-                targetPosition = currentState.findIndex(x => x.get('id') === id)
+                targetPosition = currentVideoList.findIndex(x => x.get('id') === id)
 
             return targetPosition !== -1
-                ? state.set('videoList', currentState.delete(targetPosition))
-                : state.set('videoList', currentState)
+                ? state.set('videoList', currentVideoList.delete(targetPosition))
+                : state.set('videoList', currentVideoList)
         },
     }, fromJS({
         isLoading: false,

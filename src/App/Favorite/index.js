@@ -69,8 +69,8 @@ const
                         }}
                     >
                         {favorite.get('videoList').size
-                            ? `${favorite.getIn(['pageText', 'listHeader'])}${
-                                favorite.get('videoList').size}`
+                            ? `${favorite.getIn(['pageText', 'listHeader'])
+                                .replace(/[0-9]/g, '')}${favorite.get('videoList').size}`
                             : favorite.getIn(['pageText', 'listHeaderEmpty'])
                         }
                     </Typography>
