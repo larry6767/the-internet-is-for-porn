@@ -36,6 +36,10 @@ import Favorite from './App/Favorite'
 import favoriteActions from './App/Favorite/actions'
 import {loadFavoritePageFlow} from './App/Favorite/sagas'
 
+import FavoritePornstars from './App/FavoritePornstars'
+import favoritePornstarsActions from './App/FavoritePornstars/actions'
+import {loadFavoritePornstarsPageFlow} from './App/FavoritePornstars/sagas'
+
 import NotFound from './App/NotFound'
 
 // `staticContext` is for only for Server-Side Rendering here.
@@ -164,14 +168,14 @@ export default ({location}) => <Switch>
     <Route path="/favorite-porn-stars" render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const {staticContext: x} = props
-            x.saga = loadFavoritePageFlow.bind(
+            x.saga = loadFavoritePornstarsPageFlow.bind(
                 null,
-                favoriteActions.loadPageRequest(favoritePornstarsPageCode)
+                favoritePornstarsActions.loadPageRequest(favoritePornstarsPageCode)
             )
             x.statusCodeResolver = status500(['app', 'favorite'])
             return null
         } else
-            return <Favorite {...props}/>
+            return <FavoritePornstars {...props}/>
     }}/>
 
     <Route render={props => {

@@ -86,9 +86,7 @@ const
                         tagArchiveListNewer={favorite.get('tagArchiveListNewer')}
                         favoriteButtons={true}
                     />
-                    <VideoList
-                        videoList={favorite.get('videoList')}
-                    />
+                    pornstars
                 </FavoritePageWrapper>
             </Content>
         }

@@ -11,6 +11,7 @@ import allMoviesSaga from './AllMovies/sagas'
 import allNichesSaga from './AllNiches/sagas'
 import pornstarsSaga from './Pornstars/sagas'
 import favoriteSaga from './Favorite/sagas'
+import favoritePornstarsSaga from './FavoritePornstars/sagas'
 import {
     getCookie,
     deleteCookie,
@@ -67,5 +68,6 @@ export default function* saga() {
         allMoviesSaga(),
         pornstarsSaga(),
         favoriteSaga(),
+        favoritePornstarsSaga(),
     ]
 }
