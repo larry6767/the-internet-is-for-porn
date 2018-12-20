@@ -157,12 +157,15 @@ const
             pagesCount: x.page.PAGES_COUNT,
             itemsCount: x.page.ITEMS_PER_PAGE,
             pornstarList: map(
-                x.page.MODELS_INFO.items,
-                ({id, name, sub_url}) => ({
-                    id,
+                pick(
+                    x.page.MODELS_BY_LETTERS_TAGS_INFO,
+                    (Object.keys(x.page.MODELS_INFO.items))
+                ),
+                ({id, name, sub_url, items_count}) => ({
+                    id: Number(id),
                     name,
                     subPage: sub_url,
-                    itemsCount: x.page.MODELS_BY_LETTERS_TAGS_INFO[id].items_count,
+                    itemsCount: items_count,
                     thumb: x.page.MODELS_BY_LETTERS_MODELS_INFO.items[id].thumb_url,
                     sort: x.page.MODELS_BY_LETTERS_MODELS_INFO.items[id].url_galleries.indexOf('latest')
                         ? '?sort=latest'

@@ -28,28 +28,16 @@ const
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-
-        currentPage: '',
-        lastSubPageForRequest: '',
-
         pageNumber: 1,
         pageText: Map(),
         pagesCount: 1,
-
-        sortList: List(),
-        currentSort: '',
-        archiveFilms: Map(),
-        tagArchiveListOlder: fromJS(),
-        tagArchiveListNewer: fromJS(),
         itemsCount: 0,
         videoList: List(),
-
-        lastSubPage: '',
     }),
 
     Favorite = ({
-        classes, currentBreakpoint, pageUrl,
-        search, favorite, chooseSort, isSSR
+        classes, pageUrl, search,
+        favorite, isSSR,
     }) => <Page>
         { favorite.get('isFailed')
             ? <ErrorContent/>
@@ -73,17 +61,10 @@ const
                     <ControlBar
                         pageUrl={pageUrl}
                         search={search}
-                        chooseSort={chooseSort}
                         isSSR={isSSR}
-                        page={favorite.get('currentPage')}
                         pagesCount={favorite.get('pagesCount')}
                         pageNumber={favorite.get('pageNumber')}
                         itemsCount={favorite.get('itemsCount')}
-                        sortList={favorite.get('sortList')}
-                        currentSort={favorite.get('currentSort')}
-                        archiveFilms={favorite.get('archiveFilms')}
-                        tagArchiveListOlder={favorite.get('tagArchiveListOlder')}
-                        tagArchiveListNewer={favorite.get('tagArchiveListNewer')}
                         favoriteButtons={true}
                     />
                     <VideoList
@@ -97,7 +78,6 @@ const
 export default compose(
     connect(
         state => ({
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
             favorite: FavoriteRecord(state.getIn(['app', 'favorite'])),
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
             pageUrl: state.getIn(['router', 'location', 'pathname']),

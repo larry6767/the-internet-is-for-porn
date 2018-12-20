@@ -65,22 +65,22 @@ export function* addPornstarToFavorite({payload: pornstar}) {
 
     setCookie('mcj_fav_model', nextCookie, 3600 * 24 * 365 * 20)
 
-    yield put(actions.addToFavoritePornstarList(Number(pornstar.get('id'))))
+    yield put(actions.addToFavoritePornstarList(pornstar.get('id')))
     yield put(favoritePornstarsActions.addPornstar(pornstar))
 }
 
 export function* removePornstarFromFavorite({payload: id}) {
     const
         currentCookie = getCookie('mcj_fav_model'),
-        nextCookie = replace(currentCookie, `${Number(id)}F`, '')
+        nextCookie = replace(currentCookie, `${id}F`, '')
 
     if (nextCookie === 'F')
         deleteCookie('mcj_fav_model')
     else
         setCookie('mcj_fav_model', nextCookie, 3600 * 24 * 365 * 20)
 
-    yield put(actions.removeFromFavoritePornstarList(Number(id)))
-    yield put(favoritePornstarsActions.removePornstar(Number(id)))
+    yield put(actions.removeFromFavoritePornstarList(id))
+    yield put(favoritePornstarsActions.removePornstar(id))
 }
 
 export function* getFavoritePornstarList(action, ssrContext) {
