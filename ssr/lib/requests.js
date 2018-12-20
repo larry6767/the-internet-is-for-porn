@@ -156,19 +156,18 @@ const
             pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
             itemsCount: x.page.ITEMS_PER_PAGE,
-            modelsList: map(
+            pornstarList: map(
                 x.page.MODELS_INFO.items,
-                ({id, name, sub_url, items_count}) => ({
+                ({id, name, sub_url}) => ({
                     id,
                     name,
                     subPage: sub_url,
-                    itemsCount: items_count,
-                    thumb: items[id].thumb_url,
-                    sort: items[id].url_galleries.indexOf('latest')
+                    itemsCount: x.page.MODELS_BY_LETTERS_TAGS_INFO[id].items_count,
+                    thumb: x.page.MODELS_BY_LETTERS_MODELS_INFO.items[id].thumb_url,
+                    sort: x.page.MODELS_BY_LETTERS_MODELS_INFO.items[id].url_galleries.indexOf('latest')
                         ? '?sort=latest'
-                        : items[id].url_galleries.indexOf('longest')
+                        : x.page.MODELS_BY_LETTERS_MODELS_INFO.items[id].url_galleries.indexOf('longest')
                         ? '?sort=longest' : '',
-                    letter: key,
                 })
             )
         }
@@ -209,7 +208,9 @@ export const getPageData = async ({headers, pageCode, subPageCode}) => {
             ? [{url: `/your-${pageCode}.html`}, getFavoriteMap]
 
             : pageCode === favoritePornstarsPageCode
-            ? [{url: `/your-${pageCode}.html`}, getFavoritePornstarsMap]
+            ? [{url: `/your-${pageCode}.html`, options: {blocks: {
+                modelsABCBlockThumbs: 1,
+            }}}, getFavoritePornstarsMap]
             : null
 
     if (params === null)

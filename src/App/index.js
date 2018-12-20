@@ -50,7 +50,8 @@ export default compose(
             resizeAction: event => dispatch(actions.resize(
                 typeof event === "number" ? event : event.srcElement.outerWidth
             )),
-            getFavoriteVideoListAction: () => dispatch(actions.getFavoriteVideoList())
+            getFavoriteVideoListAction: () => dispatch(actions.getFavoriteVideoList()),
+            getFavoritePornstarListAction: () => dispatch(actions.getFavoritePornstarList())
         })
     ),
 
@@ -60,6 +61,7 @@ export default compose(
             window.addEventListener('resize', this.listener)
             this.props.resizeAction(document.documentElement.clientWidth)
             this.props.getFavoriteVideoListAction()
+            this.props.getFavoritePornstarListAction()
         },
 
         componentWillUnmount() {

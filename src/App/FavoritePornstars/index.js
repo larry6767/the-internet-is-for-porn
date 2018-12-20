@@ -14,7 +14,7 @@ import {
 } from 'immutable'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
-import VideoList from '../../generic/VideoList'
+import PornstarList from '../../generic/PornstarList'
 import {
     Page,
     Content,
@@ -42,12 +42,12 @@ const
         tagArchiveListOlder: fromJS(),
         tagArchiveListNewer: fromJS(),
         itemsCount: 0,
-        videoList: List(),
+        pornstarList: List(),
 
         lastSubPage: '',
     }),
 
-    Favorite = ({
+    FavoritePornstars = ({
         classes, currentBreakpoint, pageUrl,
         search, favorite, chooseSort, isSSR
     }) => <Page>
@@ -64,9 +64,9 @@ const
                             root: classes.typographyTitle
                         }}
                     >
-                        {favorite.get('videoList').size
+                        {favorite.get('pornstarList').size
                             ? `${favorite.getIn(['pageText', 'listHeader'])
-                                .replace(/[0-9]/g, '')}${favorite.get('videoList').size}`
+                                .replace(/[0-9]/g, '')}${favorite.get('pornstarList').size}`
                             : favorite.getIn(['pageText', 'listHeaderEmpty'])
                         }
                     </Typography>
@@ -86,7 +86,9 @@ const
                         tagArchiveListNewer={favorite.get('tagArchiveListNewer')}
                         favoriteButtons={true}
                     />
-                    pornstars
+                    <PornstarList
+                        pornstarList={favorite.get('pornstarList')}
+                    />
                 </FavoritePageWrapper>
             </Content>
         }
@@ -96,7 +98,7 @@ export default compose(
     connect(
         state => ({
             currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            favorite: FavoriteRecord(state.getIn(['app', 'favorite'])),
+            favorite: FavoriteRecord(state.getIn(['app', 'favoritePornstars'])),
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
             pageUrl: state.getIn(['router', 'location', 'pathname']),
             search: state.getIn(['router', 'location', 'search']),
@@ -113,4 +115,4 @@ export default compose(
         }
     }),
     withStyles(muiStyles)
-)(Favorite)
+)(FavoritePornstars)

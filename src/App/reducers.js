@@ -44,9 +44,28 @@ export default combineReducers({
                 ? state.set('favoriteVideoList', currentState.delete(targetPosition))
                 : state.set('favoriteVideoList', currentState)
         },
+        [actions.setFavoritePornstarList]: (state, {payload: favoritePornstarList}) =>
+            state.set('favoritePornstarList', List(favoritePornstarList)),
+        [actions.addToFavoritePornstarList]: (state, {payload: id}) => {
+            const
+                currentState = state.get('favoritePornstarList'),
+                nextState = currentState.push(id)
+
+            return state.set('favoritePornstarList', nextState)
+        },
+        [actions.removeFromFavoritePornstarList]: (state, {payload: id}) => {
+            const
+                currentState = state.get('favoritePornstarList'),
+                targetPosition = currentState.indexOf(id)
+
+            return targetPosition !== -1
+                ? state.set('favoritePornstarList', currentState.delete(targetPosition))
+                : state.set('favoritePornstarList', currentState)
+        },
     }, fromJS({
         currentBreakpoint: getCurrentBreakpoint(),
         favoriteVideoList: List(),
+        favoritePornstarList: List(),
     })),
 
     // static flag to detect if the app is running inside Server-Side Rendering

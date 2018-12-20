@@ -21,7 +21,7 @@ export default
             tagArchiveListOlder: fromJS(),
             tagArchiveListNewer: fromJS(),
             itemsCount: 0,
-            videoList: List(),
+            pornstarList: List(),
         }),
         [actions.loadPageSuccess]: (state, {payload: {data, subPageForRequest}}) => state.merge({
             isLoading: false,
@@ -40,7 +40,7 @@ export default
             tagArchiveListOlder: fromJS(data.tagArchiveListOlder),
             tagArchiveListNewer: fromJS(data.tagArchiveListNewer),
             itemsCount: data.itemsCount,
-            videoList: List(fromJS(data.videoList)),
+            pornstarList: List(fromJS(data.pornstarList)),
         }),
         [actions.loadPageFailure]: state => state.merge({
             isLoading: false,
@@ -59,31 +59,31 @@ export default
             tagArchiveListOlder: fromJS(),
             tagArchiveListNewer: fromJS(),
             itemsCount: 0,
-            videoList: List(),
+            pornstarList: List(),
         }),
         [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
-        [actions.addVideo]: (state, {payload: video}) => {
+        [actions.addPornstar]: (state, {payload: video}) => {
             const
-                currentVideoList = state.get('videoList')
+                currentPornstarList = state.get('pornstarList')
 
-            if (!currentVideoList.size)
+            if (!currentPornstarList.size)
                 return state.set('isLoaded', false)
 
-            return state.set('videoList', currentVideoList.push(video))
+            return state.set('pornstarList', currentPornstarList.push(video))
         },
-        [actions.removeVideo]: (state, {payload: id}) => {
+        [actions.removePornstar]: (state, {payload: id}) => {
             const
-                currentVideoList = state.get('videoList')
+                currentPornstarList = state.get('pornstarList')
 
-            if (!currentVideoList.size)
+            if (!currentPornstarList.size)
             return state
 
             const
-                targetPosition = currentVideoList.findIndex(x => x.get('id') === id)
+                targetPosition = currentPornstarList.findIndex(x => Number(x.get('id')) === id)
 
             return targetPosition !== -1
-                ? state.set('videoList', currentVideoList.delete(targetPosition))
-                : state.set('videoList', currentVideoList)
+                ? state.set('pornstarList', currentPornstarList.delete(targetPosition))
+                : state.set('pornstarList', currentPornstarList)
         },
     }, fromJS({
         isLoading: false,
@@ -162,7 +162,7 @@ export default
             */
         },
         itemsCount: 0,
-        videoList: [
+        pornstarList: [
             /*
             {
                 id: 0,

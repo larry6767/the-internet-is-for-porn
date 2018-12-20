@@ -12,25 +12,25 @@ export default combineReducers({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            pornstarsList: List(),
+            pornstarList: List(),
         }),
         [actions.loadPageSuccess]: (state, {payload: {data}}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            pornstarsList: fromJS(data),
+            pornstarList: fromJS(data),
         }),
         [actions.loadPageFailure]: (state) => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
-            pornstarsList: List(),
+            pornstarList: List(),
         }),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        pornstarsList: [
+        pornstarList: [
             /*
             {
                 id: 0,
