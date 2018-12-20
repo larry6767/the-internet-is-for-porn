@@ -1,5 +1,6 @@
 import {handleActions} from 'redux-actions'
 import {fromJS, List, OrderedMap, Map} from 'immutable'
+import {addToList, removeFromList} from '../helpers'
 import actions from './actions'
 
 export default
@@ -34,30 +35,8 @@ export default
             itemsCount: 0,
             videoList: List(),
         }),
-        [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
-        [actions.addVideo]: (state, {payload: video}) => {
-            const
-                currentVideoList = state.get('videoList')
-
-            if (!currentVideoList.size)
-                return state.set('isLoaded', false)
-
-            return state.set('videoList', currentVideoList.push(video))
-        },
-        [actions.removeVideo]: (state, {payload: id}) => {
-            const
-                currentVideoList = state.get('videoList')
-
-            if (!currentVideoList.size)
-            return state
-
-            const
-                targetPosition = currentVideoList.findIndex(x => x.get('id') === id)
-
-            return targetPosition !== -1
-                ? state.set('videoList', currentVideoList.delete(targetPosition))
-                : state.set('videoList', currentVideoList)
-        },
+        [actions.addVideo]: (state, {payload: item}) => addToList(state, 'videoList', item),
+        [actions.removeVideo]: (state, {payload: id}) => removeFromList(state, 'videoList', id),
     }, fromJS({
         isLoading: false,
         isLoaded: false,

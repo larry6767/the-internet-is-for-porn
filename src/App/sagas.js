@@ -21,15 +21,15 @@ import actions from './actions'
 import favoriteActions from './Favorite/actions'
 import favoritePornstarsActions from './FavoritePornstars/actions'
 
-export function* addVideoToFavorite({payload: video}) {
+export function* addVideoToFavorite({payload: item}) {
     const
         currentCookie = getCookie('mcj_fav'),
-        nextCookie = `${currentCookie ? currentCookie : 'F'}${video.get('id')}F`
+        nextCookie = `${currentCookie ? currentCookie : 'F'}${item.get('id')}F`
 
     setCookie('mcj_fav', nextCookie, 3600 * 24 * 365 * 20)
 
-    yield put(actions.addToFavoriteVideoList(video.get('id')))
-    yield put(favoriteActions.addVideo(video))
+    yield put(actions.addToFavoriteVideoList(item.get('id')))
+    yield put(favoriteActions.addVideo(item))
 }
 
 export function* removeVideoFromFavorite({payload: id}) {
@@ -58,15 +58,15 @@ export function* getFavoriteVideoList(action, ssrContext) {
     yield put(actions.setFavoriteVideoList(favoriteVideoList))
 }
 
-export function* addPornstarToFavorite({payload: pornstar}) {
+export function* addPornstarToFavorite({payload: item}) {
     const
         currentCookie = getCookie('mcj_fav_model'),
-        nextCookie = `${currentCookie ? currentCookie : 'F'}${pornstar.get('id')}F`
+        nextCookie = `${currentCookie ? currentCookie : 'F'}${item.get('id')}F`
 
     setCookie('mcj_fav_model', nextCookie, 3600 * 24 * 365 * 20)
 
-    yield put(actions.addToFavoritePornstarList(pornstar.get('id')))
-    yield put(favoritePornstarsActions.addPornstar(pornstar))
+    yield put(actions.addToFavoritePornstarList(item.get('id')))
+    yield put(favoritePornstarsActions.addPornstar(item))
 }
 
 export function* removePornstarFromFavorite({payload: id}) {

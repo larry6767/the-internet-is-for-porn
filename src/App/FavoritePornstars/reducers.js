@@ -1,5 +1,6 @@
 import {handleActions} from 'redux-actions'
 import {fromJS, List, OrderedMap, Map} from 'immutable'
+import {addToList, removeFromList} from '../helpers'
 import actions from './actions'
 
 export default
@@ -34,30 +35,8 @@ export default
             itemsCount: 0,
             pornstarList: List(),
         }),
-        [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
-        [actions.addPornstar]: (state, {payload: video}) => {
-            const
-                currentPornstarList = state.get('pornstarList')
-
-            if (!currentPornstarList.size)
-                return state.set('isLoaded', false)
-
-            return state.set('pornstarList', currentPornstarList.push(video))
-        },
-        [actions.removePornstar]: (state, {payload: id}) => {
-            const
-                currentPornstarList = state.get('pornstarList')
-
-            if (!currentPornstarList.size)
-            return state
-
-            const
-                targetPosition = currentPornstarList.findIndex(x => x.get('id') === id)
-
-            return targetPosition !== -1
-                ? state.set('pornstarList', currentPornstarList.delete(targetPosition))
-                : state.set('pornstarList', currentPornstarList)
-        },
+        [actions.addPornstar]: (state, {payload: item}) => addToList(state, 'pornstarList', item),
+        [actions.removePornstar]: (state, {payload: id}) => removeFromList(state, 'pornstarList', id),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
