@@ -47,8 +47,6 @@ export function* removeVideoFromFavorite({payload: id}) {
 }
 
 export function* getFavoriteVideoList(action, ssrContext) {
-    deleteCookie('mcj_fav')
-    deleteCookie('mcj_fav_model')
     const
         favoriteVideoList = getCookie('mcj_fav')
             ? map(
@@ -61,7 +59,6 @@ export function* getFavoriteVideoList(action, ssrContext) {
 }
 
 export function* addPornstarToFavorite({payload: pornstar}) {
-    console.log(pornstar)
     const
         currentCookie = getCookie('mcj_fav_model'),
         nextCookie = `${currentCookie ? currentCookie : 'F'}${pornstar.get('id')}F`
