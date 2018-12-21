@@ -20,3 +20,6 @@ export {default as getSubPage} from './getSubPage'
 
 export {default as addToList} from './favoritePages/addToList'
 export {default as removeFromList} from './favoritePages/removeFromList'
+export {default as getIdsForInitialFavoriteList} from './favoritePages/getIdsForInitialFavoriteList'
+export {default as removeIdFromFavoriteList} from './favoritePages/removeIdFromFavoriteList'
+export {default as addIdToFavoriteList} from './favoritePages/addIdToFavoriteList'

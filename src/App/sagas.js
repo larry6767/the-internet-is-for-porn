@@ -1,9 +1,5 @@
 import {takeEvery, put} from 'redux-saga/effects'
-import {
-    compact,
-    replace,
-    map,
-} from 'lodash'
+import {replace} from 'lodash'
 
 import homeSaga from './Home/sagas'
 import mainHeaderSaga from './MainHeader/sagas'
@@ -15,7 +11,8 @@ import favoritePornstarsSaga from './FavoritePornstars/sagas'
 import {
     getCookie,
     deleteCookie,
-    setCookie
+    setCookie,
+    getIdsForInitialFavoriteList,
 } from './helpers'
 import actions from './actions'
 import favoriteActions from './Favorite/actions'
@@ -29,7 +26,7 @@ export function* addVideoToFavorite({payload: item}) {
     setCookie('mcj_fav', nextCookie, 3600 * 24 * 365 * 20)
 
     yield put(actions.addToFavoriteVideoList(item.get('id')))
-    yield put(favoriteActions.addVideo(item))
+    yield put(favoriteActions.addToList(item))
 }
 
 export function* removeVideoFromFavorite({payload: id}) {
@@ -43,19 +40,11 @@ export function* removeVideoFromFavorite({payload: id}) {
         setCookie('mcj_fav', nextCookie, 3600 * 24 * 365 * 20)
 
     yield put(actions.removeFromFavoriteVideoList(id))
-    yield put(favoriteActions.removeVideo(id))
+    yield put(favoriteActions.removeFromList(id))
 }
 
 export function* getFavoriteVideoList(action, ssrContext) {
-    const
-        favoriteVideoList = getCookie('mcj_fav')
-            ? map(
-                compact(getCookie('mcj_fav').split('F')),
-                x => Number(x)
-            )
-            : []
-
-    yield put(actions.setFavoriteVideoList(favoriteVideoList))
+    yield put(actions.setFavoriteVideoList(getIdsForInitialFavoriteList('mcj_fav')))
 }
 
 export function* addPornstarToFavorite({payload: item}) {
@@ -66,7 +55,7 @@ export function* addPornstarToFavorite({payload: item}) {
     setCookie('mcj_fav_model', nextCookie, 3600 * 24 * 365 * 20)
 
     yield put(actions.addToFavoritePornstarList(item.get('id')))
-    yield put(favoritePornstarsActions.addPornstar(item))
+    yield put(favoritePornstarsActions.addToList(item))
 }
 
 export function* removePornstarFromFavorite({payload: id}) {
@@ -80,19 +69,11 @@ export function* removePornstarFromFavorite({payload: id}) {
         setCookie('mcj_fav_model', nextCookie, 3600 * 24 * 365 * 20)
 
     yield put(actions.removeFromFavoritePornstarList(id))
-    yield put(favoritePornstarsActions.removePornstar(id))
+    yield put(favoritePornstarsActions.removeFromList(id))
 }
 
 export function* getFavoritePornstarList(action, ssrContext) {
-    const
-        favoritePornstarList = getCookie('mcj_fav_model')
-            ? map(
-                compact(getCookie('mcj_fav_model').split('F')),
-                x => Number(x)
-            )
-            : []
-
-    yield put(actions.setFavoritePornstarList(favoritePornstarList))
+    yield put(actions.setFavoritePornstarList(getIdsForInitialFavoriteList('mcj_fav_model')))
 }
 
 export default function* saga() {

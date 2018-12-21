@@ -35,8 +35,8 @@ export default
             itemsCount: 0,
             videoList: List(),
         }),
-        [actions.addVideo]: (state, {payload: item}) => addToList(state, 'videoList', item),
-        [actions.removeVideo]: (state, {payload: id}) => removeFromList(state, 'videoList', id),
+        [actions.addToList]: (state, {payload: item}) => addToList(state, 'videoList', item),
+        [actions.removeFromList]: (state, {payload: id}) => removeFromList(state, 'videoList', id),
     }, fromJS({
         isLoading: false,
         isLoaded: false,

@@ -2,7 +2,11 @@ import {combineReducers} from 'redux-immutable'
 import {handleActions} from 'redux-actions'
 import actions from './actions'
 import {fromJS, List} from 'immutable'
-import {getCurrentBreakpoint} from './helpers'
+import {
+    getCurrentBreakpoint,
+    addIdToFavoriteList,
+    removeIdFromFavoriteList,
+} from './helpers'
 import homeReducer from './Home/reducers'
 import mainHeaderReducer from './MainHeader/reducers'
 import allMoviesReducer from './AllMovies/reducers'
@@ -26,42 +30,20 @@ export default combineReducers({
     ui: handleActions({
         [actions.resize]: (state, action) =>
             state.set('currentBreakpoint', getCurrentBreakpoint(action.payload)),
+
         [actions.setFavoriteVideoList]: (state, {payload: favoriteVideoList}) =>
             state.set('favoriteVideoList', List(favoriteVideoList)),
-        [actions.addToFavoriteVideoList]: (state, {payload: id}) => {
-            const
-                currentState = state.get('favoriteVideoList'),
-                nextState = currentState.push(id)
+        [actions.addToFavoriteVideoList]: (state, {payload: id}) =>
+            addIdToFavoriteList(state, 'favoriteVideoList', id),
+        [actions.removeFromFavoriteVideoList]: (state, {payload: id}) =>
+            removeIdFromFavoriteList(state, 'favoriteVideoList', id),
 
-            return state.set('favoriteVideoList', nextState)
-        },
-        [actions.removeFromFavoriteVideoList]: (state, {payload: id}) => {
-            const
-                currentState = state.get('favoriteVideoList'),
-                targetPosition = currentState.indexOf(id)
-
-            return targetPosition !== -1
-                ? state.set('favoriteVideoList', currentState.delete(targetPosition))
-                : state.set('favoriteVideoList', currentState)
-        },
         [actions.setFavoritePornstarList]: (state, {payload: favoritePornstarList}) =>
             state.set('favoritePornstarList', List(favoritePornstarList)),
-        [actions.addToFavoritePornstarList]: (state, {payload: id}) => {
-            const
-                currentState = state.get('favoritePornstarList'),
-                nextState = currentState.push(id)
-
-            return state.set('favoritePornstarList', nextState)
-        },
-        [actions.removeFromFavoritePornstarList]: (state, {payload: id}) => {
-            const
-                currentState = state.get('favoritePornstarList'),
-                targetPosition = currentState.indexOf(id)
-
-            return targetPosition !== -1
-                ? state.set('favoritePornstarList', currentState.delete(targetPosition))
-                : state.set('favoritePornstarList', currentState)
-        },
+        [actions.addToFavoritePornstarList]: (state, {payload: id}) =>
+            addIdToFavoriteList(state, 'favoritePornstarList', id),
+        [actions.removeFromFavoritePornstarList]: (state, {payload: id}) =>
+            removeIdFromFavoriteList(state, 'favoritePornstarList', id),
     }, fromJS({
         currentBreakpoint: getCurrentBreakpoint(),
         favoriteVideoList: List(),

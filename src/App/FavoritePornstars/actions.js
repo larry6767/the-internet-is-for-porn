@@ -4,8 +4,8 @@ const actions = createActions('FAVORITE_PORNSTARS', [
     'LOAD_PAGE_REQUEST',
     'LOAD_PAGE_SUCCESS',
     'LOAD_PAGE_FAILURE',
-    'ADD_PORNSTAR',
-    'REMOVE_PORNSTAR',
+    'ADD_TO_LIST',
+    'REMOVE_FROM_LIST',
 ])
 
 export default actions

@@ -35,8 +35,8 @@ export default
             itemsCount: 0,
             pornstarList: List(),
         }),
-        [actions.addPornstar]: (state, {payload: item}) => addToList(state, 'pornstarList', item),
-        [actions.removePornstar]: (state, {payload: id}) => removeFromList(state, 'pornstarList', id),
+        [actions.addToList]: (state, {payload: item}) => addToList(state, 'pornstarList', item),
+        [actions.removeFromList]: (state, {payload: id}) => removeFromList(state, 'pornstarList', id),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
