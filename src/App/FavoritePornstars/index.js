@@ -17,7 +17,7 @@ import PornstarList from '../../generic/PornstarList'
 import {
     Page,
     Content,
-    FavoritePageWrapper,
+    PageWrapper,
 } from './assets'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
@@ -43,7 +43,7 @@ const
             : favorite.get('isLoading')
             ? <CircularProgress/>
             : <Content>
-                <FavoritePageWrapper>
+                <PageWrapper>
                     <Typography
                         variant="h4"
                         gutterBottom
@@ -69,7 +69,7 @@ const
                     <PornstarList
                         pornstarList={favorite.get('pornstarList')}
                     />
-                </FavoritePageWrapper>
+                </PageWrapper>
             </Content>
         }
     </Page>

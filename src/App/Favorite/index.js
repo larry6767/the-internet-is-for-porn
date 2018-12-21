@@ -10,7 +10,6 @@ import {
     Record,
     Map,
     List,
-    fromJS,
 } from 'immutable'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
@@ -18,7 +17,7 @@ import VideoList from '../../generic/VideoList'
 import {
     Page,
     Content,
-    FavoritePageWrapper,
+    PageWrapper,
 } from './assets'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
@@ -44,7 +43,7 @@ const
             : favorite.get('isLoading')
             ? <CircularProgress/>
             : <Content>
-                <FavoritePageWrapper>
+                <PageWrapper>
                     <Typography
                         variant="h4"
                         gutterBottom
@@ -70,7 +69,7 @@ const
                     <VideoList
                         videoList={favorite.get('videoList')}
                     />
-                </FavoritePageWrapper>
+                </PageWrapper>
             </Content>
         }
     </Page>
