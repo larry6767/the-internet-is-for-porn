@@ -33,16 +33,16 @@ export default combineReducers({
 
         [actions.setFavoriteVideoList]: (state, {payload: favoriteVideoList}) =>
             state.set('favoriteVideoList', List(favoriteVideoList)),
-        [actions.addToFavoriteVideoList]: (state, {payload: id}) =>
+        [actions.addVideoIdToFavorite]: (state, {payload: id}) =>
             addIdToFavoriteList(state, 'favoriteVideoList', id),
-        [actions.removeFromFavoriteVideoList]: (state, {payload: id}) =>
+        [actions.removeVideoIdFromFavorite]: (state, {payload: id}) =>
             removeIdFromFavoriteList(state, 'favoriteVideoList', id),
 
         [actions.setFavoritePornstarList]: (state, {payload: favoritePornstarList}) =>
             state.set('favoritePornstarList', List(favoritePornstarList)),
-        [actions.addToFavoritePornstarList]: (state, {payload: id}) =>
+        [actions.addPornstarIdToFavorite]: (state, {payload: id}) =>
             addIdToFavoriteList(state, 'favoritePornstarList', id),
-        [actions.removeFromFavoritePornstarList]: (state, {payload: id}) =>
+        [actions.removePornstarIdFromFavorite]: (state, {payload: id}) =>
             removeIdFromFavoriteList(state, 'favoritePornstarList', id),
     }, fromJS({
         currentBreakpoint: getCurrentBreakpoint(),
