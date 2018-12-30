@@ -11,6 +11,7 @@ import {
     pornstarPageCode,
     favoritePageCode,
     favoritePornstarsPageCode,
+    videoPageCode,
 } from '../api-page-codes'
 
 import {logRequestError} from './helpers'
@@ -118,6 +119,9 @@ const
 
         else if (req.body.pageCode === favoritePornstarsPageCode)
             requestHandler(req, res, favoritePornstarsPageCode)
+
+        else if (req.body.pageCode === videoPageCode)
+            requestHandler(req, res, videoPageCode, 'withSubPageCode')
 
         else
             jsonThrow400(req, res)('Unexpected/unknown "pageCode" value in request body', {

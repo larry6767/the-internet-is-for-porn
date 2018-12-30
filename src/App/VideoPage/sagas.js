@@ -5,9 +5,9 @@ import errorActions from '../../generic/ErrorMessage/actions'
 
 import actions from './actions'
 
-export function* loadVideoPageFlow(action, ssrContext) {
+export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
     try {
-        const reqData = {pageCode: videoPageCode}
+        const reqData = {pageCode: videoPageCode, subPageCode: subPageForRequest}
         let data
 
         if (yield select(x => x.getIn(['app', 'ssr', 'isSSR'])))
@@ -15,7 +15,7 @@ export function* loadVideoPageFlow(action, ssrContext) {
         else
             data = yield getPageData(reqData)
 
-        yield put(actions.loadPageSuccess({data}))
+        yield put(actions.loadPageSuccess({subPageForRequest, data}))
     } catch (err) {
         console.error('loadAllMoviesPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())

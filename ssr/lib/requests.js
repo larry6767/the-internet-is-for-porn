@@ -15,6 +15,7 @@ import {
     pornstarPageCode,
     favoritePageCode,
     favoritePornstarsPageCode,
+    videoPageCode,
 } from '../api-page-codes'
 
 import {
@@ -174,6 +175,13 @@ const
                 })
             )
         }
+    },
+
+    getVideoPageMap = x => {
+        return {
+            pageText: getPageText(x.page.PAGE_TEXT),
+            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
+        }
     }
 
 export const getPageData = async ({headers, pageCode, subPageCode}) => {
@@ -214,6 +222,9 @@ export const getPageData = async ({headers, pageCode, subPageCode}) => {
             ? [{url: `/your-${pageCode}.html`, options: {blocks: {
                 modelsABCBlockThumbs: 1,
             }}}, getFavoritePornstarsMap]
+
+            : pageCode === videoPageCode
+            ? [{url: `/${pageCode}-${subPageCode}.htm`}, getVideoPageMap]
             : null
 
     if (params === null)

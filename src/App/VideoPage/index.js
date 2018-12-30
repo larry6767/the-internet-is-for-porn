@@ -13,6 +13,7 @@ import {
 } from 'immutable'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
+import {getSubPage} from '../helpers'
 import {
     Page,
     Content,
@@ -26,6 +27,8 @@ const
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+
+        lastSubPageForRequest: '',
 
         pageText: Map(),
         videoList: List(),
@@ -47,29 +50,58 @@ const
                     >
                         {data.getIn(['pageText', 'listHeader'])}
                     </Typography>
-                    <VideoList
-                        data={allMovies.get('videoList')}
-                    />
+                    {/* <VideoList
+                        data={data.get('videoList')}
+                    /> */}
                 </PageWrapper>
             </Content>
         }
-    </Page>
+    </Page>,
+
+    loadPageFlow = ({match, data, loadPage}) => {
+        const
+            subPageForRequest = getSubPage(`${match.params.child}/${match.params.name}`)
+
+        console.log('data: ', data)
+
+        if (typeof subPageForRequest !== 'string')
+            throw new Error(
+                `Something went wront, unexpected "subPageForRequest" type: "${
+                    typeof subPageForRequest}"` +
+                ' (this is supposed to be provided by router via props to the component)'
+            )
+
+        // "unless" condition.
+        // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
+        if (!(
+            data.get('isLoading') ||
+            (
+                (data.get('isLoaded') || data.get('isFailed')) &&
+                subPageForRequest === data.get('lastSubPageForRequest')
+            )
+        ))
+            loadPage(subPageForRequest)
+    }
 
 export default compose(
     connect(
         state => ({
-            data: VideoPageRecord(state.getIn(['app', 'niches', 'all'])),
+            data: VideoPageRecord(state.getIn(['app', 'videoPage'])),
+            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
+            pageUrl: state.getIn(['router', 'location', 'pathname']),
         }),
         dispatch => ({
-            loadPage: (event, value) => dispatch(actions.loadPageRequest())
+            loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest))
         })
     ),
     lifecycle({
         componentDidMount() {
-            if (!this.props.data.get('isLoading') && !this.props.data.get('isLoaded')) {
-                this.props.loadPage()
-            }
-        }
+            loadPageFlow(this.props)
+        },
+
+        componentWillReceiveProps(nextProps) {
+            loadPageFlow(nextProps)
+        },
     }),
     withStyles(muiStyles)
 )(VideoPage)

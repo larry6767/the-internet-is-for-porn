@@ -8,13 +8,15 @@ export default
             isLoading: true,
             isLoaded: false,
             isFailed: false,
+            lastSubPageForRequest: payload,
             pageText: Map(),
             videoList: List(),
         }),
-        [actions.loadPageSuccess]: (state, {payload: {data}}) => state.merge({
+        [actions.loadPageSuccess]: (state, {payload: {data, subPageForRequest}}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
+            lastSubPageForRequest: subPageForRequest,
             pageText: Map(fromJS(data.pageText)),
             videoList: List(fromJS(data.videoList)),
         }),
@@ -22,6 +24,7 @@ export default
             isLoading: false,
             isLoaded: false,
             isFailed: true,
+            lastSubPageForRequest: '',
             pageText: Map(),
             videoList: List(),
         }),
@@ -29,6 +32,7 @@ export default
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+        lastSubPageForRequest: '',
         pageText: {
             /*
             description: '',
