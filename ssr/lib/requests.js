@@ -179,6 +179,7 @@ const
 
     getVideoPageMap = x => {
         return {
+            gallery: x.page.GALLERY,
             pageText: getPageText(x.page.PAGE_TEXT),
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }

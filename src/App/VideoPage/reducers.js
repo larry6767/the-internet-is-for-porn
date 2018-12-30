@@ -10,6 +10,7 @@ export default
             isFailed: false,
             lastSubPageForRequest: payload,
             pageText: Map(),
+            gallery: Map(),
             videoList: List(),
         }),
         [actions.loadPageSuccess]: (state, {payload: {data, subPageForRequest}}) => state.merge({
@@ -18,6 +19,7 @@ export default
             isFailed: false,
             lastSubPageForRequest: subPageForRequest,
             pageText: Map(fromJS(data.pageText)),
+            gallery: Map(fromJS(data.gallery)),
             videoList: List(fromJS(data.videoList)),
         }),
         [actions.loadPageFailure]: state => state.merge({
@@ -26,6 +28,7 @@ export default
             isFailed: true,
             lastSubPageForRequest: '',
             pageText: Map(),
+            gallery: Map(),
             videoList: List(),
         }),
     }, fromJS({
@@ -43,6 +46,9 @@ export default
             listHeaderEmpty: '',
             title: '',
             */
+        },
+        gallery: {
+
         },
         videoList: [
             /*

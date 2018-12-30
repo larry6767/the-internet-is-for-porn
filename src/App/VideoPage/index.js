@@ -31,6 +31,7 @@ const
         lastSubPageForRequest: '',
 
         pageText: Map(),
+        gallery: Map(),
         videoList: List(),
     }),
 
@@ -48,11 +49,12 @@ const
                             root: classes.typographyTitle
                         }}
                     >
-                        {data.getIn(['pageText', 'listHeader'])}
+                        {`${data.getIn(['gallery', 'title'])} ${
+                            data.getIn(['pageText', 'galleryTitle'])}`}
                     </Typography>
-                    {/* <VideoList
-                        data={data.get('videoList')}
-                    /> */}
+                    <VideoList
+                        videoList={data.get('videoList')}
+                    />
                 </PageWrapper>
             </Content>
         }

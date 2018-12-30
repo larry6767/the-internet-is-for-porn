@@ -6,4 +6,5 @@ export default (pageText) => ({
     listHeader: pageText['LIST-HEADER'],
     listHeaderEmpty: pageText['LIST-HEADER-EMPTY'],
     title: pageText.TITLE,
+    galleryTitle: pageText['GALLERY-TITLE'],
 })
