@@ -7,6 +7,7 @@ import allNichesSaga from './AllNiches/sagas'
 import pornstarsSaga from './Pornstars/sagas'
 import favoriteSaga from './Favorite/sagas'
 import favoritePornstarsSaga from './FavoritePornstars/sagas'
+import videoPageSaga from './VideoPage/sagas'
 import {
     getIdsForInitialFavoriteList,
     addIdToCookie,
@@ -63,5 +64,6 @@ export default function* saga() {
         pornstarsSaga(),
         favoriteSaga(),
         favoritePornstarsSaga(),
+        videoPageSaga(),
     ]
 }

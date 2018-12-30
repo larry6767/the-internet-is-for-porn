@@ -8,4 +8,5 @@ export const
     pornstarsPageCode = 'porn-stars',
     pornstarPageCode = 'porn-star',
     favoritePageCode = 'favorite',
-    favoritePornstarsPageCode = 'favorite-porn-stars'
+    favoritePornstarsPageCode = 'favorite-porn-stars',
+    videoPageCode = 'vid'
