@@ -28,6 +28,7 @@ import {
     getTagArchiveList,
     getArchiveFilms,
     getModelInfo,
+    getGallery,
 } from './helpers/requests'
 
 const
@@ -179,17 +180,7 @@ const
 
     getVideoPageMap = x => {
         return {
-            gallery: map(
-                pick(
-                    x.page.GALLERY,
-                    ['title', 'embed_code', 'id_sponsor']
-                ),
-                ({title, embed_code, id_sponsor}) => ({
-                    title,
-                    // urlForIframe: embed_code.match(/src="([\S]+)"/)[1],
-                    sponsorId: id_sponsor,
-                })
-            ),
+            gallery: getGallery(x.page.GALLERY),
             pageText: getPageText(x.page.PAGE_TEXT),
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }

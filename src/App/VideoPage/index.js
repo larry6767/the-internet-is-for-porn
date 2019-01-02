@@ -20,6 +20,12 @@ import {
     PageWrapper,
     VideoPlayer,
     Video,
+    Advertisement,
+    RelatedVideos,
+    BottomAdvertisement,
+    InlineAdvertisementWrapper,
+    InlineAdvertisement,
+    CloseAdvertisement,
 } from './assets'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
@@ -30,6 +36,7 @@ const
         isLoaded: false,
         isFailed: false,
 
+        inlineAdvertisementIsShowed: true,
         lastSubPageForRequest: '',
 
         pageText: Map(),
@@ -37,31 +44,84 @@ const
         videoList: List(),
     }),
 
-    VideoPage = ({classes, data}) => <Page>
+    VideoPage = ({classes, data, closeAdvertisementHandler}) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
             : data.get('isLoading')
             ? <CircularProgress/>
             : <Content>
                 <PageWrapper>
-                    <Typography
-                        variant="h4"
-                        gutterBottom
-                        classes={{
-                            root: classes.typographyTitle
-                        }}
-                    >
-                        {`${data.getIn(['gallery', 'title'])} ${
-                            data.getIn(['pageText', 'galleryTitle'])}`}
-                    </Typography>
-                    <VideoPlayer>
-                        <Video>
-
-                        </Video>
-                    </VideoPlayer>
-                    <VideoList
-                        videoList={data.get('videoList')}
-                    />
+                    <section>
+                        <Typography
+                            variant="h4"
+                            gutterBottom
+                            classes={{
+                                root: classes.typographyTitle
+                            }}
+                        >
+                            {`${data.getIn(['gallery', 'title'])} ${
+                                data.getIn(['pageText', 'galleryTitle'])}`}
+                        </Typography>
+                        <VideoPlayer>
+                            <Video>
+                                {data.get('inlineAdvertisementIsShowed')
+                                    ? <InlineAdvertisementWrapper>
+                                        <InlineAdvertisement>
+                                            <CloseAdvertisement
+                                                onClick={closeAdvertisementHandler}
+                                            />
+                                            <iframe
+                                                src="https://videosection.com/_ad#str-eng-1545--invideo"
+                                                frameBorder="0"
+                                            ></iframe>
+                                        </InlineAdvertisement>
+                                    </InlineAdvertisementWrapper>
+                                    : null}
+                                <iframe
+                                    src={data.getIn(['gallery', 'urlForIframe'])}
+                                    frameBorder="0"
+                                />
+                            </Video>
+                            <Advertisement>
+                                <iframe
+                                    src="https://videosection.com/_ad#str-eng-1545--sidebar1"
+                                    frameBorder="0"
+                                ></iframe>
+                                <iframe
+                                    src="https://videosection.com/_ad#str-eng-1545--sidebar2"
+                                    frameBorder="0"
+                                ></iframe>
+                            </Advertisement>
+                        </VideoPlayer>
+                    </section>
+                    <RelatedVideos>
+                        <Typography
+                            variant="h4"
+                            gutterBottom
+                            classes={{
+                                root: classes.typographyTitle
+                            }}
+                        >
+                            {'Click On Each Of These Related Films'}
+                        </Typography>
+                        <VideoList
+                            videoList={data.get('videoList')}
+                        />
+                    </RelatedVideos>
+                    <BottomAdvertisement>
+                        <iframe
+                            src="https://videosection.com/_ad#str-eng-1545--bottom1"
+                            frameBorder="0"
+                        ></iframe>
+                        <iframe
+                            src="https://videosection.com/_ad#str-eng-1545--bottom2"
+                            frameBorder="0"
+                        ></iframe>
+                        <iframe
+                            src="https://videosection.com/_ad#str-eng-1545--bottom3"
+                            frameBorder="0"
+                        ></iframe>
+                    </BottomAdvertisement>
                 </PageWrapper>
             </Content>
         }
@@ -70,8 +130,6 @@ const
     loadPageFlow = ({match, data, loadPage}) => {
         const
             subPageForRequest = getSubPage(`${match.params.child}/${match.params.name}`)
-
-        console.log('data: ', data)
 
         if (typeof subPageForRequest !== 'string')
             throw new Error(
@@ -100,7 +158,8 @@ export default compose(
             pageUrl: state.getIn(['router', 'location', 'pathname']),
         }),
         dispatch => ({
-            loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest))
+            loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
+            closeAdvertisementHandler: () => dispatch(actions.closeAdvertisement()),
         })
     ),
     lifecycle({
