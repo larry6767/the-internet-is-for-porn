@@ -1,4 +1,7 @@
 export const muiStyles = theme => ({
+    routerLink: {
+        textDecoration: 'none',
+    },
     typography: {
         color: theme.palette.primary.contrastText,
     },

@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {compose} from 'recompose'
 import {replace} from 'lodash'
@@ -90,41 +91,52 @@ const
             thumbsLinks = x.get('thumbs').map(thumb => replace(x.get('thumbMask'), '{num}', thumb))
 
         return <Wrapper>
-            <VideoPreview
-                thumb={x.get('thumb')}
+            <Link
+                to={x.get('url')}
+                className={classes.routerLink}
             >
-                <LoadingProgress/>
-                <PreviewThumbs
-                    thumbsLinks={thumbsLinks}
-                />
-                <VideoPreviewBar>
-                    <Like>
-                        {favoriteVideoList.find(id => id === x.get('id'))
-                            ? <Favorite
-                                classes={{root: classes.favoriteIcon}}
-                                onClick={() => removeVideoFromFavoriteHandler(x.get('id'))}
-                            />
-                            : <FavoriteBorder
-                                classes={{root: classes.favoriteBorderIcon}}
-                                onClick={() => addVideoToFavoriteHandler(x)}
-                            />
-                        }
-                    </Like>
-                    <Duration>
-                        <Typography
-                            variant="body2"
-                            classes={{
-                                root: classes.typography
-                            }}
-                        >
-                            {`${Math.floor(x.get('duration') / 60)}:${
-                                x.get('duration') % 60 < 10
-                                    ? '0' + x.get('duration') % 60
-                                    : x.get('duration') % 60}`}
-                        </Typography>
-                    </Duration>
-                </VideoPreviewBar>
-            </VideoPreview>
+                <VideoPreview
+                    thumb={x.get('thumb')}
+                >
+                    <LoadingProgress/>
+                    <PreviewThumbs
+                        thumbsLinks={thumbsLinks}
+                    />
+                    <VideoPreviewBar>
+                        <Like>
+                            {favoriteVideoList.find(id => id === x.get('id'))
+                                ? <Favorite
+                                    classes={{root: classes.favoriteIcon}}
+                                    onClick={(event) => {
+                                        event.preventDefault()
+                                        removeVideoFromFavoriteHandler(x.get('id'))
+                                    }}
+                                />
+                                : <FavoriteBorder
+                                    classes={{root: classes.favoriteBorderIcon}}
+                                    onClick={(event) => {
+                                        event.preventDefault()
+                                        addVideoToFavoriteHandler(x)
+                                    }}
+                                />
+                            }
+                        </Like>
+                        <Duration>
+                            <Typography
+                                variant="body2"
+                                classes={{
+                                    root: classes.typography
+                                }}
+                            >
+                                {`${Math.floor(x.get('duration') / 60)}:${
+                                    x.get('duration') % 60 < 10
+                                        ? '0' + x.get('duration') % 60
+                                        : x.get('duration') % 60}`}
+                            </Typography>
+                        </Duration>
+                    </VideoPreviewBar>
+                </VideoPreview>
+            </Link>
             <InfoBlock>
                 <Typography
                     variant="body1"

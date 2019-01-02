@@ -53,6 +53,7 @@ export const InlineAdvertisement = styled.div`
     left: calc(50% - 150px);
     width: 300px;
     height: 254px;
+    background-color: ${({theme}) => theme.colors.mainColor2};
 
     & iframe {
         width: 100%;
