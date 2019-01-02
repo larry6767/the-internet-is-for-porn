@@ -18,6 +18,8 @@ import {
     Page,
     Content,
     PageWrapper,
+    VideoPlayer,
+    Video,
 } from './assets'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
@@ -52,6 +54,11 @@ const
                         {`${data.getIn(['gallery', 'title'])} ${
                             data.getIn(['pageText', 'galleryTitle'])}`}
                     </Typography>
+                    <VideoPlayer>
+                        <Video>
+
+                        </Video>
+                    </VideoPlayer>
                     <VideoList
                         videoList={data.get('videoList')}
                     />

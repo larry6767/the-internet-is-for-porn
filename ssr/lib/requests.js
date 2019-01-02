@@ -179,7 +179,17 @@ const
 
     getVideoPageMap = x => {
         return {
-            gallery: x.page.GALLERY,
+            gallery: map(
+                pick(
+                    x.page.GALLERY,
+                    ['title', 'embed_code', 'id_sponsor']
+                ),
+                ({title, embed_code, id_sponsor}) => ({
+                    title,
+                    // urlForIframe: embed_code.match(/src="([\S]+)"/)[1],
+                    sponsorId: id_sponsor,
+                })
+            ),
             pageText: getPageText(x.page.PAGE_TEXT),
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }
