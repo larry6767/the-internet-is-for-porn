@@ -38,10 +38,21 @@ export const Video = styled.div`
         position: absolute;
         z-index: 1;
         width: 100%;
-        height: 100%;
+        height: calc(100% - 47px);
         flex-grow: 1;
         border-radius: 2px;
     }
+`
+
+export const ControlPanel = styled.div`
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    height: 47px;
 `
 
 export const InlineAdvertisementWrapper = styled.div`
@@ -50,7 +61,7 @@ export const InlineAdvertisementWrapper = styled.div`
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 47px;
     background-color: ${({theme}) => theme.colors.opacityMainColor2};
     cursor: not-allowed;
 `

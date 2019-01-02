@@ -4,8 +4,11 @@ import {compose, lifecycle} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {
     CircularProgress,
-    Typography
+    Typography,
+    Button,
 } from '@material-ui/core'
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
+import Favorite from '@material-ui/icons/Favorite'
 import {
     Record,
     Map,
@@ -20,6 +23,7 @@ import {
     PageWrapper,
     VideoPlayer,
     Video,
+    ControlPanel,
     Advertisement,
     RelatedVideos,
     BottomAdvertisement,
@@ -28,6 +32,7 @@ import {
     CloseAdvertisement,
 } from './assets'
 import actions from './actions'
+import appActions from '../actions'
 import {muiStyles} from './assets/muiStyles'
 
 const
@@ -44,7 +49,47 @@ const
         videoList: List(),
     }),
 
-    VideoPage = ({classes, data, closeAdvertisementHandler}) => <Page>
+    FavoriteButton = ({
+        classes, data, favoriteVideoList,
+        addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
+    }) => favoriteVideoList.find(id => id === data.getIn(['gallery', 'id']))
+        ? <Button
+            variant="contained"
+            color="primary"
+            classes={{
+                root: classes.buttonRoot
+            }}
+            onClick={(event) => {
+                event.preventDefault()
+                removeVideoFromFavoriteHandler(data.getIn(['gallery', 'id']))
+            }}
+        >
+            <Favorite
+                classes={{root: classes.favoriteIcon}}
+            />
+            {'Remove from favorites'}
+        </Button>
+        : <Button
+            variant="contained"
+            color="primary"
+            classes={{
+                root: classes.buttonRoot
+            }}
+            onClick={(event) => {
+                event.preventDefault()
+                addVideoToFavoriteHandler(data.get('gallery'))
+            }}
+        >
+            <FavoriteBorder
+                classes={{root: classes.favoriteBorderIcon}}
+            />
+            {'Add to favorites'}
+        </Button>,
+
+    VideoPage = ({
+        classes, data, favoriteVideoList, closeAdvertisementHandler,
+        addVideoToFavoriteHandler, removeVideoFromFavoriteHandler
+    }) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
             : data.get('isLoading')
@@ -81,6 +126,33 @@ const
                                     src={data.getIn(['gallery', 'urlForIframe'])}
                                     frameBorder="0"
                                 />
+                                <ControlPanel>
+                                    <FavoriteButton
+                                        data={data}
+                                        classes={classes}
+                                        favoriteVideoList={favoriteVideoList}
+                                        addVideoToFavoriteHandler={addVideoToFavoriteHandler}
+                                        removeVideoFromFavoriteHandler={removeVideoFromFavoriteHandler}
+                                    />
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        classes={{
+                                            root: classes.buttonRoot
+                                        }}
+                                    >
+                                        {'Back to main page'}
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        classes={{
+                                            root: classes.buttonRoot
+                                        }}
+                                    >
+                                        {'Report'}
+                                    </Button>
+                                </ControlPanel>
                             </Video>
                             <Advertisement>
                                 <iframe
@@ -156,10 +228,13 @@ export default compose(
             data: VideoPageRecord(state.getIn(['app', 'videoPage'])),
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
             pageUrl: state.getIn(['router', 'location', 'pathname']),
+            favoriteVideoList: state.getIn(['app', 'ui', 'favoriteVideoList']),
         }),
         dispatch => ({
             loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
             closeAdvertisementHandler: () => dispatch(actions.closeAdvertisement()),
+            addVideoToFavoriteHandler: video => dispatch(appActions.addVideoToFavorite(video)),
+            removeVideoFromFavoriteHandler: id => dispatch(appActions.removeVideoFromFavorite(id)),
         })
     ),
     lifecycle({
