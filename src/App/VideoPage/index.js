@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
 import {withStyles} from '@material-ui/core'
@@ -134,15 +135,17 @@ const
                                             addVideoToFavoriteHandler={addVideoToFavoriteHandler}
                                             removeVideoFromFavoriteHandler={removeVideoFromFavoriteHandler}
                                         />
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            classes={{
-                                                root: classes.buttonRoot
-                                            }}
-                                        >
-                                            {'Back to main page'}
-                                        </Button>
+                                        <Link to="/" className={classes.routerLink}>
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                classes={{
+                                                    root: classes.buttonRoot
+                                                }}
+                                            >
+                                                {'Back to main page'}
+                                            </Button>
+                                        </Link>
                                     </ControlPanelBlock>
                                     <ControlPanelBlock>
                                         <Button

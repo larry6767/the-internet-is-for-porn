@@ -47,6 +47,14 @@ class PreviewThumbs extends Component {
     }
 
     mouseLeave = () => {
+        this.stopProgress()
+    }
+
+    componentWillUnmount() {
+        this.stopProgress()
+    }
+
+    stopProgress = () => {
         clearInterval(this.timeoutTimer)
         clearInterval(this.intervalTimer)
         this.setState({

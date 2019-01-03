@@ -3,5 +3,5 @@ export const navigation = {
     '/all-niches': 'All Niches',
     '/all-movies': 'All Movies',
     '/porn-stars': 'Pornstars',
-    '/favorite': 'Favorite'
+    '/favorite': 'Favorite',
 }

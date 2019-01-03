@@ -1,4 +1,7 @@
 export const muiStyles = theme => ({
+    routerLink: {
+        textDecoration: 'none',
+    },
     typographyTitle: {
         maxWidth: '100%',
     },
