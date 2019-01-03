@@ -80,63 +80,75 @@ class PreviewThumbs extends Component {
 }
 
 const
+    renderVideoPreview = (
+        classes, x, addVideoToFavoriteHandler,
+        removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
+    ) => <VideoPreview
+        thumb={x.get('thumb')}
+    >
+        <LoadingProgress/>
+        <PreviewThumbs
+            thumbsLinks={thumbsLinks}
+        />
+        <VideoPreviewBar>
+            <Like>
+                {favoriteVideoList.find(id => id === x.get('id'))
+                    ? <Favorite
+                        classes={{root: classes.favoriteIcon}}
+                        onClick={removeVideoFromFavoriteHandler.bind(this, x.get('id'))}
+                    />
+                    : <FavoriteBorder
+                        classes={{root: classes.favoriteBorderIcon}}
+                        onClick={addVideoToFavoriteHandler.bind(this, x)}
+                    />
+                }
+            </Like>
+            <Duration>
+                <Typography
+                    variant="body2"
+                    classes={{
+                        root: classes.typography
+                    }}
+                >
+                    {`${Math.floor(x.get('duration') / 60)}:${
+                        x.get('duration') % 60 < 10
+                            ? '0' + x.get('duration') % 60
+                            : x.get('duration') % 60}`}
+                </Typography>
+            </Duration>
+        </VideoPreviewBar>
+    </VideoPreview>,
+
     VideoItem = ({
-        classes,
-        x,
-        addVideoToFavoriteHandler,
-        removeVideoFromFavoriteHandler,
-        favoriteVideoList,
+        classes, x, addVideoToFavoriteHandler,
+        removeVideoFromFavoriteHandler, favoriteVideoList,
     }) => {
         const
             thumbsLinks = x.get('thumbs').map(thumb => replace(x.get('thumbMask'), '{num}', thumb))
 
         return <Wrapper>
-            <Link
-                to={x.get('url')}
-                className={classes.routerLink}
-            >
-                <VideoPreview
-                    thumb={x.get('thumb')}
+            {~x.get('url').indexOf('http')
+                ? <a
+                    href={x.get('url')}
+                    target="_blank"
+                    rel="nofollow noopener"
+                    className={classes.routerLink}
                 >
-                    <LoadingProgress/>
-                    <PreviewThumbs
-                        thumbsLinks={thumbsLinks}
-                    />
-                    <VideoPreviewBar>
-                        <Like>
-                            {favoriteVideoList.find(id => id === x.get('id'))
-                                ? <Favorite
-                                    classes={{root: classes.favoriteIcon}}
-                                    onClick={(event) => {
-                                        event.preventDefault()
-                                        removeVideoFromFavoriteHandler(x.get('id'))
-                                    }}
-                                />
-                                : <FavoriteBorder
-                                    classes={{root: classes.favoriteBorderIcon}}
-                                    onClick={(event) => {
-                                        event.preventDefault()
-                                        addVideoToFavoriteHandler(x)
-                                    }}
-                                />
-                            }
-                        </Like>
-                        <Duration>
-                            <Typography
-                                variant="body2"
-                                classes={{
-                                    root: classes.typography
-                                }}
-                            >
-                                {`${Math.floor(x.get('duration') / 60)}:${
-                                    x.get('duration') % 60 < 10
-                                        ? '0' + x.get('duration') % 60
-                                        : x.get('duration') % 60}`}
-                            </Typography>
-                        </Duration>
-                    </VideoPreviewBar>
-                </VideoPreview>
-            </Link>
+                    {renderVideoPreview(
+                        classes, x, addVideoToFavoriteHandler,
+                        removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
+                    )}
+                </a>
+                : <Link
+                    to={x.get('url')}
+                    className={classes.routerLink}
+                >
+                    {renderVideoPreview(
+                        classes, x, addVideoToFavoriteHandler,
+                        removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
+                    )}
+                </Link>}
+
             <InfoBlock>
                 <Typography
                     variant="body1"
@@ -176,8 +188,14 @@ export default compose(
             favoriteVideoList: state.getIn(['app', 'ui', 'favoriteVideoList'])
         }),
         dispatch => ({
-            addVideoToFavoriteHandler: video => dispatch(actions.addVideoToFavorite(video)),
-            removeVideoFromFavoriteHandler: id => dispatch(actions.removeVideoFromFavorite(id))
+            addVideoToFavoriteHandler: (video, e) => {
+                e.preventDefault()
+                dispatch(actions.addVideoToFavorite(video))
+            },
+            removeVideoFromFavoriteHandler: (id, e) => {
+                e.preventDefault()
+                dispatch(actions.removeVideoFromFavorite(id))
+            }
         })
     ),
     withStyles(muiStyles)

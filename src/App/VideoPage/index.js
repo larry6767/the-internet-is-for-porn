@@ -59,10 +59,7 @@ const
             classes={{
                 root: classes.buttonRoot
             }}
-            onClick={(event) => {
-                event.preventDefault()
-                removeVideoFromFavoriteHandler(data.getIn(['gallery', 'id']))
-            }}
+            onClick={removeVideoFromFavoriteHandler.bind(this, data.getIn(['gallery', 'id']))}
         >
             <Favorite
                 classes={{root: classes.favoriteIcon}}
@@ -75,10 +72,7 @@ const
             classes={{
                 root: classes.buttonRoot
             }}
-            onClick={(event) => {
-                event.preventDefault()
-                addVideoToFavoriteHandler(data.get('gallery'))
-            }}
+            onClick={addVideoToFavoriteHandler.bind(this, data.get('gallery'))}
         >
             <FavoriteBorder
                 classes={{root: classes.favoriteBorderIcon}}
@@ -233,8 +227,14 @@ export default compose(
         dispatch => ({
             loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
             closeAdvertisementHandler: () => dispatch(actions.closeAdvertisement()),
-            addVideoToFavoriteHandler: video => dispatch(appActions.addVideoToFavorite(video)),
-            removeVideoFromFavoriteHandler: id => dispatch(appActions.removeVideoFromFavorite(id)),
+            addVideoToFavoriteHandler: (video, e) => {
+                e.preventDefault()
+                dispatch(appActions.addVideoToFavorite(video))
+            },
+            removeVideoFromFavoriteHandler: (id, e) => {
+                e.preventDefault()
+                dispatch(appActions.removeVideoFromFavorite(id))
+            },
         })
     ),
     lifecycle({
