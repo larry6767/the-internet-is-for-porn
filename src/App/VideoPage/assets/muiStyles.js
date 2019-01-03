@@ -3,7 +3,11 @@ export const muiStyles = theme => ({
         maxWidth: '100%',
     },
     buttonRoot: {
-        marginRight: 10,
+        marginBottom: 10,
+
+        '&:not(:last-child)': {
+            marginRight: 10
+        }
     },
     favoriteBorderIcon: {
         color: theme.palette.primary.contrastText,

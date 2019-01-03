@@ -6,53 +6,68 @@ export {
     PageWrapper,
 } from '../../../generic/assets'
 
+export const PlayerSection = styled.div`
+    margin-bottom: 60px;
+`
+
 export const VideoPlayer = styled.div`
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 60px;
     border-radius: 2px;
     overflow: hidden;
     background-color: ${({theme}) => theme.colors.mainColor2};
 
     ${({theme}) => theme.media.sm`flex-direction: column;`}
-    ${({theme}) => theme.media.mobile`flex-direction: column;`}
+    ${({theme}) => theme.media.mobile`flex-direction: column; background: none;`}
+`
+
+export const VideoWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: auto;
+    flex-grow: 1;
+    padding: 10px 10px 0;
+
+    ${({theme}) => theme.media.mobile`padding: 0;`}
 `
 
 export const Video = styled.div`
     position: relative;
     display: flex;
-    width: auto;
-    flex-grow: 1;
-    margin: 10px;
+    margin-bottom: 10px;
 
     &::before {
         display: block;
         content: '';
-        padding-top: 60%;
+        padding-top: 468px;
 
-        ${({theme}) => theme.media.mobile`padding-top: 100%;`}
+        ${({theme}) => theme.media.mobile`padding-top: 80%;`}
     }
 
     & iframe {
         position: absolute;
         z-index: 1;
         width: 100%;
-        height: calc(100% - 47px);
+        height: 100%;
         flex-grow: 1;
         border-radius: 2px;
     }
 `
 
 export const ControlPanel = styled.div`
-    position: absolute;
-    z-index: 1;
-    left: 0;
-    bottom: 0;
     display: flex;
+    justify-content: space-between;
     align-items: flex-end;
     width: 100%;
-    height: 47px;
+
+    ${({theme}) => theme.media.mobile`flex-wrap: wrap;`}
+`
+
+export const ControlPanelBlock = styled.div`
+    display: flex;
+
+    ${({theme}) => theme.media.mobile`flex-wrap: wrap;`}
 `
 
 export const InlineAdvertisementWrapper = styled.div`
@@ -61,7 +76,7 @@ export const InlineAdvertisementWrapper = styled.div`
     top: 0;
     left: 0;
     right: 0;
-    bottom: 47px;
+    bottom: 0;
     background-color: ${({theme}) => theme.colors.opacityMainColor2};
     cursor: not-allowed;
 `
@@ -115,6 +130,7 @@ export const Advertisement = styled.div`
         flex-wrap: wrap;
         flex-direction: row;
         justify-content: space-around;
+        padding: 0;
     `}
 
     & iframe {
@@ -143,7 +159,11 @@ export const BottomAdvertisement = styled.section`
     border-radius: 2px;
 
     ${({theme}) => theme.media.sm`flex-wrap: wrap; justify-content: space-around;`}
-    ${({theme}) => theme.media.mobile`flex-wrap: wrap; justify-content: space-around;`}
+    ${({theme}) => theme.media.mobile`
+        flex-wrap: wrap;
+        justify-content: space-around;
+        background: none;
+    `}
 
     & iframe {
         width: 300px;

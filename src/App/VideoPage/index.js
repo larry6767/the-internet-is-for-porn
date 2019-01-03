@@ -21,9 +21,12 @@ import {
     Page,
     Content,
     PageWrapper,
+    PlayerSection,
     VideoPlayer,
+    VideoWrapper,
     Video,
     ControlPanel,
+    ControlPanelBlock,
     Advertisement,
     RelatedVideos,
     BottomAdvertisement,
@@ -90,7 +93,7 @@ const
             ? <CircularProgress/>
             : <Content>
                 <PageWrapper>
-                    <section>
+                    <PlayerSection>
                         <Typography
                             variant="h4"
                             gutterBottom
@@ -102,52 +105,58 @@ const
                                 data.getIn(['pageText', 'galleryTitle'])}`}
                         </Typography>
                         <VideoPlayer>
-                            <Video>
-                                {data.get('inlineAdvertisementIsShowed')
-                                    ? <InlineAdvertisementWrapper>
-                                        <InlineAdvertisement>
-                                            <CloseAdvertisement
-                                                onClick={closeAdvertisementHandler}
-                                            />
-                                            <iframe
-                                                src="https://videosection.com/_ad#str-eng-1545--invideo"
-                                                frameBorder="0"
-                                            ></iframe>
-                                        </InlineAdvertisement>
-                                    </InlineAdvertisementWrapper>
-                                    : null}
-                                <iframe
-                                    src={data.getIn(['gallery', 'urlForIframe'])}
-                                    frameBorder="0"
-                                />
-                                <ControlPanel>
-                                    <FavoriteButton
-                                        data={data}
-                                        classes={classes}
-                                        favoriteVideoList={favoriteVideoList}
-                                        addVideoToFavoriteHandler={addVideoToFavoriteHandler}
-                                        removeVideoFromFavoriteHandler={removeVideoFromFavoriteHandler}
+                            <VideoWrapper>
+                                <Video>
+                                    {data.get('inlineAdvertisementIsShowed')
+                                        ? <InlineAdvertisementWrapper>
+                                            <InlineAdvertisement>
+                                                <CloseAdvertisement
+                                                    onClick={closeAdvertisementHandler}
+                                                />
+                                                <iframe
+                                                    src="https://videosection.com/_ad#str-eng-1545--invideo"
+                                                    frameBorder="0"
+                                                ></iframe>
+                                            </InlineAdvertisement>
+                                        </InlineAdvertisementWrapper>
+                                        : null}
+                                    <iframe
+                                        src={data.getIn(['gallery', 'urlForIframe'])}
+                                        frameBorder="0"
                                     />
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        classes={{
-                                            root: classes.buttonRoot
-                                        }}
-                                    >
-                                        {'Back to main page'}
-                                    </Button>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        classes={{
-                                            root: classes.buttonRoot
-                                        }}
-                                    >
-                                        {'Report'}
-                                    </Button>
+                                </Video>
+                                <ControlPanel>
+                                    <ControlPanelBlock>
+                                        <FavoriteButton
+                                            data={data}
+                                            classes={classes}
+                                            favoriteVideoList={favoriteVideoList}
+                                            addVideoToFavoriteHandler={addVideoToFavoriteHandler}
+                                            removeVideoFromFavoriteHandler={removeVideoFromFavoriteHandler}
+                                        />
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            classes={{
+                                                root: classes.buttonRoot
+                                            }}
+                                        >
+                                            {'Back to main page'}
+                                        </Button>
+                                    </ControlPanelBlock>
+                                    <ControlPanelBlock>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            classes={{
+                                                root: classes.buttonRoot
+                                            }}
+                                        >
+                                            {'Report'}
+                                        </Button>
+                                    </ControlPanelBlock>
                                 </ControlPanel>
-                            </Video>
+                            </VideoWrapper>
                             <Advertisement>
                                 <iframe
                                     src="https://videosection.com/_ad#str-eng-1545--sidebar1"
@@ -159,7 +168,7 @@ const
                                 ></iframe>
                             </Advertisement>
                         </VideoPlayer>
-                    </section>
+                    </PlayerSection>
                     <RelatedVideos>
                         <Typography
                             variant="h4"
