@@ -180,7 +180,7 @@ const
 
     getVideoPageMap = x => {
         return {
-            gallery: getGallery(x.page.GALLERY),
+            gallery: getGallery(x.page.GALLERY, x.page.PAGE_URL),
             pageText: getPageText(x.page.PAGE_TEXT),
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }
