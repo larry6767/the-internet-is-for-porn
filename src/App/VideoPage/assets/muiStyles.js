@@ -25,5 +25,5 @@ export const muiStyles = theme => ({
         marginRight: 10,
         width: '0.8em',
         height: '0.8em',
-    }
+    },
 })
