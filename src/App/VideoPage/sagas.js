@@ -1,4 +1,5 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
+import {BACKEND_URL} from '../../config'
 import {videoPageCode} from '../../api-page-codes'
 import {getPageData} from '../helpers'
 import errorActions from '../../generic/ErrorMessage/actions'
@@ -23,6 +24,32 @@ export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
     }
 }
 
+export function* sendReportFlow({payload: reqBody}) {
+    try {
+        const
+            data = yield fetch(`${BACKEND_URL}/send-report`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify(reqBody),
+            }).then(response => {
+                if (response.status !== 200)
+                    throw new Error(`Response status is ${response.status} (not 200)`)
+
+                return response.json()
+            })
+        if (data && data.success === true)
+        yield put(actions.sendReportSuccess())
+    } catch (err) {
+        console.error('sendReportFlow is failed with exception:', err)
+        yield put(actions.sendReportFailure())
+        yield put(errorActions.openErrorMessage())
+    }
+}
+
 export default function* saga() {
     yield takeEvery(actions.loadPageRequest, loadVideoPageFlow)
+    yield takeEvery(actions.sendReportRequest, sendReportFlow)
 }

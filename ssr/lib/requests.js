@@ -4,7 +4,7 @@ import {
 } from 'lodash'
 import rp from 'request-promise-native'
 
-import {backendUrl} from '../config'
+import {backendUrl, backendUrlForReport} from '../config'
 
 import {
     homePageCode,
@@ -240,3 +240,11 @@ export const getPageData = async ({headers, pageCode, subPageCode}) => {
         body: {operation: 'getPageDataByUrl', params},
     }))
 }
+
+export const sendReport = async ({headers, body}) => await rp({
+    uri: backendUrlForReport,
+    method: 'POST',
+    headers,
+    json: true,
+    formData: body,
+})

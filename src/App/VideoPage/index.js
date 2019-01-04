@@ -7,6 +7,11 @@ import {
     CircularProgress,
     Typography,
     Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    DialogContentText,
 } from '@material-ui/core'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
@@ -45,9 +50,9 @@ const
         isLoaded: false,
         isFailed: false,
 
-        inlineAdvertisementIsShowed: true,
         lastSubPageForRequest: '',
-
+        inlineAdvertisementIsShowed: true,
+        reportDialogIsOpen: false,
         pageText: Map(),
         gallery: Map(),
         videoList: List(),
@@ -86,7 +91,8 @@ const
 
     VideoPage = ({
         classes, data, favoriteVideoList, closeAdvertisementHandler,
-        addVideoToFavoriteHandler, removeVideoFromFavoriteHandler
+        addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
+        toggleReportDialogHandler, sendReportHandler,
     }) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
@@ -154,6 +160,7 @@ const
                                             classes={{
                                                 root: classes.buttonRoot
                                             }}
+                                            onClick={toggleReportDialogHandler}
                                         >
                                             {'Report'}
                                         </Button>
@@ -201,6 +208,37 @@ const
                         ></iframe>
                     </BottomAdvertisement>
                 </PageWrapper>
+                <Dialog
+                    open={data.get('reportDialogIsOpen')}
+                    onClose={toggleReportDialogHandler}
+                    scroll="body"
+                    aria-labelledby="report-dialog"
+                >
+                    <DialogTitle id="report-dialog">
+                        {'Have you found a problem on the site? \
+                        Please use this form to help us to fix it, or contact us directly'}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            {'Take Note of: Our website is a completely automatic adult search \
+                            engine focused on videos clips. We do not possess, produce, distribute \
+                            or host any movies. All linked clips are automatically gathered and \
+                            added into our system by our spider script. Thumbnails are \
+                            auto-generated from the outside video contributors. All of the video \
+                            content performed on our site are hosted and created by other websites \
+                            that are not under our control. By your request we can remove \
+                            thumbnail and link to the video, but not the original video file.'}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={toggleReportDialogHandler} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={sendReportHandler} color="primary">
+                            Report
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Content>
         }
     </Page>,
@@ -239,6 +277,16 @@ export default compose(
         dispatch => ({
             loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
             closeAdvertisementHandler: () => dispatch(actions.closeAdvertisement()),
+            toggleReportDialogHandler: () => dispatch(actions.toggleReportDialog()),
+            sendReportHandler: () => dispatch(actions.sendReportRequest({
+                'op': 'abuse_report',
+                '_cid': '1',
+                '_gid': '12199222',
+                '_url': 'https://videosection.com/vid-12200767/18y-Teen-fucked-by-5-Old-Men.htm',
+                'report-reason': 'reason_nothing',
+                'report-reason': 'reason_other',
+                'report-comment': 'test',
+            })),
             addVideoToFavoriteHandler: (video, e) => {
                 e.preventDefault()
                 dispatch(appActions.addVideoToFavorite(video))

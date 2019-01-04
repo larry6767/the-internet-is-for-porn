@@ -15,7 +15,10 @@ import {
 } from '../api-page-codes'
 
 import {logRequestError} from './helpers'
-import {getPageData as requestPageData} from './requests'
+import {
+    getPageData as requestPageData,
+    sendReport as sendReportRequest
+} from './requests'
 
 export const proxiedHeaders = (req) => {
     const
@@ -133,6 +136,30 @@ const
             })
     })({
         validTopLevelKeys: ['pageCode', 'subPageCode'],
+    }),
+
+    sendReport = (({validTopLevelKeys}) => (req, res) => {
+        const
+            invalidKeys = Object.keys(req.body).filter(x => !~validTopLevelKeys.indexOf(x))
+
+        if (invalidKeys.length !== 0)
+            jsonThrow400(req, res)('Found unexpected/unknown top-level keys in request body', {
+                request: {
+                    method: req.method,
+                    operation: req.params.operation,
+                    invalidTopLevelKeys: invalidKeys,
+                },
+            })
+
+        else
+            sendReportRequest({
+                headers: proxiedHeaders(req),
+                body: req.body,
+            })
+            .then(x => res.json(x).end())
+            .catch(jsonThrow500(req, res))
+    })({
+        validTopLevelKeys: ['op', '_cid', '_gid', '_url', 'report-reason', 'report-comment'],
     })
 
 export default (req, res) => {
@@ -155,6 +182,8 @@ export default (req, res) => {
         )
     else if (req.method === 'POST' && req.params.operation === 'get-page-data')
         getPageData(req, res)
+    else if (req.method === 'POST' && req.params.operation === 'send-report')
+        sendReport(req, res)
     else
         jsonThrow400(req, res)('Unexpected request, check method and operation', {
             request: {
