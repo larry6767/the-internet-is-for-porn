@@ -9,6 +9,7 @@ const actions = createActions('VIDEO_PAGE', [
     'SEND_REPORT_REQUEST',
     'SEND_REPORT_SUCCESS',
     'SEND_REPORT_FAILURE',
+    'SET_TIME_AND_HREF_FOR_REPORT',
 ])
 
 export default actions

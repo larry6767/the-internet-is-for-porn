@@ -30,6 +30,8 @@ export default (ids, items) => map(
         url: url.slice(0, url.indexOf('.htm')),
         urlRegular: url_regular,
         favorite: thumb_top,
-        duration: length,
+        duration: `${Math.floor(length / 60)}:${length % 60 < 10
+            ? '0' + length % 60
+            : length % 60}`,
     })
 )

@@ -52,6 +52,8 @@ const
         pageText: Map(),
         gallery: Map(),
         videoList: List(),
+        currentHref: '',
+        currentTime: '',
     }),
 
     FavoriteButton = ({
@@ -88,7 +90,7 @@ const
     VideoPage = ({
         classes, data, favoriteVideoList, closeAdvertisementHandler,
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
-        toggleReportDialogHandler, sendReportHandler,
+        toggleReportDialogHandler, sendReportHandler, pageUrl
     }) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
@@ -116,10 +118,10 @@ const
                                                 <CloseAdvertisement
                                                     onClick={closeAdvertisementHandler}
                                                 />
-                                                <iframe
+                                                {/* <iframe
                                                     src="https://videosection.com/_ad#str-eng-1545--invideo"
                                                     frameBorder="0"
-                                                ></iframe>
+                                                ></iframe> */}
                                             </InlineAdvertisement>
                                         </InlineAdvertisementWrapper>
                                         : null}
@@ -164,14 +166,14 @@ const
                                 </ControlPanel>
                             </VideoWrapper>
                             <Advertisement>
-                                <iframe
+                                {/* <iframe
                                     src="https://videosection.com/_ad#str-eng-1545--sidebar1"
                                     frameBorder="0"
                                 ></iframe>
                                 <iframe
                                     src="https://videosection.com/_ad#str-eng-1545--sidebar2"
                                     frameBorder="0"
-                                ></iframe>
+                                ></iframe> */}
                             </Advertisement>
                         </VideoPlayer>
                     </PlayerSection>
@@ -190,7 +192,7 @@ const
                         />
                     </RelatedVideos>
                     <BottomAdvertisement>
-                        <iframe
+                        {/* <iframe
                             src="https://videosection.com/_ad#str-eng-1545--bottom1"
                             frameBorder="0"
                         ></iframe>
@@ -201,13 +203,14 @@ const
                         <iframe
                             src="https://videosection.com/_ad#str-eng-1545--bottom3"
                             frameBorder="0"
-                        ></iframe>
+                        ></iframe> */}
                     </BottomAdvertisement>
                 </PageWrapper>
                 <ReportDialog
                     sendReportHandler={sendReportHandler}
-                    isOpen={data.get('reportDialogIsOpen')}
+                    data={data}
                     toggleReportDialogHandler={toggleReportDialogHandler}
+                    pageUrl={pageUrl}
                 />
             </Content>
         }

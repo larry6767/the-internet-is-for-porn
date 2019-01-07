@@ -8,7 +8,17 @@ import actions from './actions'
 
 export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
     try {
-        const reqData = {pageCode: videoPageCode, subPageCode: subPageForRequest}
+        const
+            reqData = {pageCode: videoPageCode, subPageCode: subPageForRequest},
+            href = window.location.href,
+            time = new Date().toLocaleString("en-US", {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+            })
+
         let data
 
         if (yield select(x => x.getIn(['app', 'ssr', 'isSSR'])))
@@ -17,6 +27,7 @@ export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
             data = yield getPageData(reqData)
 
         yield put(actions.loadPageSuccess({subPageForRequest, data}))
+        yield put(actions.setTimeAndHrefForReport({href, time}))
     } catch (err) {
         console.error('loadAllMoviesPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())
@@ -40,8 +51,14 @@ export function* sendReportFlow({payload: reqBody}) {
 
                 return response.json()
             })
-        if (data && data.success === true)
-        yield put(actions.sendReportSuccess())
+
+        if (data && data.success === true) {
+            yield put(actions.sendReportSuccess())
+        } else {
+            console.error('the report was not sent, try again')
+            yield put(actions.sendReportFailure())
+            yield put(errorActions.openErrorMessage())
+        }
     } catch (err) {
         console.error('sendReportFlow is failed with exception:', err)
         yield put(actions.sendReportFailure())

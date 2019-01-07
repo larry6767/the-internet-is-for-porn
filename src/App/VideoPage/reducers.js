@@ -55,6 +55,11 @@ export default
         [actions.closeAdvertisement]: state => state.set('inlineAdvertisementIsShowed', false),
         [actions.toggleReportDialog]: state =>
             state.set('reportDialogIsOpen', !state.get('reportDialogIsOpen')),
+        [actions.setTimeAndHrefForReport]: (state, {payload: {href, time}}) =>
+            state.merge({
+                currentHref: href,
+                currentTime: time,
+            }),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
@@ -77,8 +82,24 @@ export default
             */
         },
         gallery: {
-
+            /*
+            id: 0,
+            title: '',
+            urlForIframe: '',
+            sponsorId: 0,
+            sponsorUrl: '',
+            published: 0,
+            thumb: '',
+            thumbMask: '',
+            thumbs: [],
+            tags: [],
+            tagsShort: '',
+            url: '',
+            duration: '',
+            */
         },
+        currentHref: '',
+        currentTime: '',
         videoList: [
             /*
             {

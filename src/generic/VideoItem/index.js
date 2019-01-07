@@ -118,10 +118,7 @@ const
                         root: classes.typography
                     }}
                 >
-                    {`${Math.floor(x.get('duration') / 60)}:${
-                        x.get('duration') % 60 < 10
-                            ? '0' + x.get('duration') % 60
-                            : x.get('duration') % 60}`}
+                    {x.get('duration')}
                 </Typography>
             </Duration>
         </VideoPreviewBar>
@@ -139,7 +136,7 @@ const
                 ? <a
                     href={x.get('url')}
                     target="_blank"
-                    rel="nofollow noopener"
+                    rel="noopener noreferrer"
                     className={classes.routerLink}
                 >
                     {renderVideoPreview(
