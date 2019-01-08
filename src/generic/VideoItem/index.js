@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
 import {compose} from 'recompose'
@@ -89,28 +89,36 @@ class PreviewThumbs extends Component {
 
 const
     renderVideoPreview = (
-        classes, x, addVideoToFavoriteHandler,
+        classes, x, isSSR, addVideoToFavoriteHandler,
         removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
     ) => <VideoPreview
         thumb={x.get('thumb')}
     >
-        <LoadingProgress/>
-        <PreviewThumbs
-            thumbsLinks={thumbsLinks}
-        />
+        {!isSSR
+            ? <Fragment>
+                <LoadingProgress/>
+                <PreviewThumbs
+                    thumbsLinks={thumbsLinks}
+                />
+            </Fragment>
+            : null}
+
         <VideoPreviewBar>
-            <Like>
-                {favoriteVideoList.find(id => id === x.get('id'))
-                    ? <Favorite
-                        classes={{root: classes.favoriteIcon}}
-                        onClick={removeVideoFromFavoriteHandler.bind(this, x.get('id'))}
-                    />
-                    : <FavoriteBorder
-                        classes={{root: classes.favoriteBorderIcon}}
-                        onClick={addVideoToFavoriteHandler.bind(this, x)}
-                    />
-                }
-            </Like>
+            {!isSSR
+                ? <Like>
+                    {favoriteVideoList.find(id => id === x.get('id'))
+                        ? <Favorite
+                            classes={{root: classes.favoriteIcon}}
+                            onClick={removeVideoFromFavoriteHandler.bind(this, x.get('id'))}
+                        />
+                        : <FavoriteBorder
+                            classes={{root: classes.favoriteBorderIcon}}
+                            onClick={addVideoToFavoriteHandler.bind(this, x)}
+                        />
+                    }
+                </Like>
+                : null}
+
             <Duration>
                 <Typography
                     variant="body2"
@@ -125,7 +133,7 @@ const
     </VideoPreview>,
 
     VideoItem = ({
-        classes, x, addVideoToFavoriteHandler,
+        classes, x, isSSR, addVideoToFavoriteHandler,
         removeVideoFromFavoriteHandler, favoriteVideoList,
     }) => {
         const
@@ -140,7 +148,7 @@ const
                     className={classes.routerLink}
                 >
                     {renderVideoPreview(
-                        classes, x, addVideoToFavoriteHandler,
+                        classes, x, isSSR, addVideoToFavoriteHandler,
                         removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
                     )}
                 </a>
@@ -149,7 +157,7 @@ const
                     className={classes.routerLink}
                 >
                     {renderVideoPreview(
-                        classes, x, addVideoToFavoriteHandler,
+                        classes, x, isSSR, addVideoToFavoriteHandler,
                         removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
                     )}
                 </Link>}
@@ -190,7 +198,8 @@ const
 export default compose(
     connect(
         state => ({
-            favoriteVideoList: state.getIn(['app', 'ui', 'favoriteVideoList'])
+            favoriteVideoList: state.getIn(['app', 'ui', 'favoriteVideoList']),
+            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
         }),
         dispatch => ({
             addVideoToFavoriteHandler: (video, e) => {

@@ -246,5 +246,5 @@ export const sendReport = async ({headers, formData}) => await rp({
     method: 'POST',
     headers,
     json: true,
-    formData: formData,
+    formData,
 })

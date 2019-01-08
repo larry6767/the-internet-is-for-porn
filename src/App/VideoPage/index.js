@@ -42,7 +42,7 @@ import appActions from '../actions'
 import {muiStyles} from './assets/muiStyles'
 
 const
-    fieldNamesArray = ['op', '_cid', '_gid', '_url'],
+    fieldNamesArray = ['op', '_cid', '_gid', '_url'], // hidden field names for report request
     VideoPageRecord = Record({
         isLoading: false,
         isLoaded: false,
@@ -90,7 +90,7 @@ const
         </Button>,
 
     VideoPage = ({
-        classes, data, favoriteVideoList, closeAdvertisementHandler,
+        classes, isSSR, data, favoriteVideoList, closeAdvertisementHandler,
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
         toggleReportDialogHandler, pageUrl,
         handleSubmit, pristine, submitting, reset,
@@ -121,10 +121,10 @@ const
                                                 <CloseAdvertisement
                                                     onClick={closeAdvertisementHandler}
                                                 />
-                                                {/* <iframe
+                                                <iframe
                                                     src="https://videosection.com/_ad#str-eng-1545--invideo"
                                                     frameBorder="0"
-                                                ></iframe> */}
+                                                ></iframe>
                                             </InlineAdvertisement>
                                         </InlineAdvertisementWrapper>
                                         : null}
@@ -135,13 +135,15 @@ const
                                 </Video>
                                 <ControlPanel>
                                     <ControlPanelBlock>
-                                        <FavoriteButton
-                                            data={data}
-                                            classes={classes}
-                                            favoriteVideoList={favoriteVideoList}
-                                            addVideoToFavoriteHandler={addVideoToFavoriteHandler}
-                                            removeVideoFromFavoriteHandler={removeVideoFromFavoriteHandler}
-                                        />
+                                        {!isSSR
+                                            ? <FavoriteButton
+                                                data={data}
+                                                classes={classes}
+                                                favoriteVideoList={favoriteVideoList}
+                                                addVideoToFavoriteHandler={addVideoToFavoriteHandler}
+                                                removeVideoFromFavoriteHandler={removeVideoFromFavoriteHandler}
+                                            />
+                                            : null}
                                         <Link to="/" className={classes.routerLink}>
                                             <Button
                                                 variant="contained"
@@ -155,28 +157,41 @@ const
                                         </Link>
                                     </ControlPanelBlock>
                                     <ControlPanelBlock>
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            classes={{
-                                                root: classes.buttonRoot
-                                            }}
-                                            onClick={toggleReportDialogHandler}
-                                        >
-                                            {'Report'}
-                                        </Button>
+                                        {isSSR
+                                            ? <Link to={`${pageUrl}/report`}>
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    classes={{
+                                                        root: classes.buttonRoot
+                                                    }}
+                                                >
+                                                    {'Report'}
+                                                </Button>
+                                            </Link>
+                                            : <Button
+                                                variant="contained"
+                                                color="primary"
+                                                classes={{
+                                                    root: classes.buttonRoot
+                                                }}
+                                                onClick={toggleReportDialogHandler}
+                                            >
+                                                {'Report'}
+                                            </Button>
+                                        }
                                     </ControlPanelBlock>
                                 </ControlPanel>
                             </VideoWrapper>
                             <Advertisement>
-                                {/* <iframe
+                                <iframe
                                     src="https://videosection.com/_ad#str-eng-1545--sidebar1"
                                     frameBorder="0"
                                 ></iframe>
                                 <iframe
                                     src="https://videosection.com/_ad#str-eng-1545--sidebar2"
                                     frameBorder="0"
-                                ></iframe> */}
+                                ></iframe>
                             </Advertisement>
                         </VideoPlayer>
                     </PlayerSection>
@@ -195,7 +210,7 @@ const
                         />
                     </RelatedVideos>
                     <BottomAdvertisement>
-                        {/* <iframe
+                        <iframe
                             src="https://videosection.com/_ad#str-eng-1545--bottom1"
                             frameBorder="0"
                         ></iframe>
@@ -206,7 +221,7 @@ const
                         <iframe
                             src="https://videosection.com/_ad#str-eng-1545--bottom3"
                             frameBorder="0"
-                        ></iframe> */}
+                        ></iframe>
                     </BottomAdvertisement>
                 </PageWrapper>
                 <ReportDialog
