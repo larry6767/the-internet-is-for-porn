@@ -44,6 +44,7 @@ export default (data, pageUrl, publishedTemplate) => {
 
     return {
         id: Number(data.id),
+        classId: Number(data.id_class),
         title: data.title,
         urlForIframe: data.embed_code.match(/src="([\S]+)"/)[1],
         sponsorId: data.id_sponsor,

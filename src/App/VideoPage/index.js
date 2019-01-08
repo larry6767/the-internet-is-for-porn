@@ -1,7 +1,8 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
+import {connect} from 'react-redux'
+import {reduxForm, reset as resetForm} from 'redux-form/immutable'
 import {withStyles} from '@material-ui/core'
 import {
     CircularProgress,
@@ -41,6 +42,7 @@ import appActions from '../actions'
 import {muiStyles} from './assets/muiStyles'
 
 const
+    fieldNamesArray = ['op', '_cid', '_gid', '_url'],
     VideoPageRecord = Record({
         isLoading: false,
         isLoaded: false,
@@ -90,7 +92,8 @@ const
     VideoPage = ({
         classes, data, favoriteVideoList, closeAdvertisementHandler,
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
-        toggleReportDialogHandler, sendReportHandler, pageUrl
+        toggleReportDialogHandler, pageUrl,
+        handleSubmit, pristine, submitting, reset,
     }) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
@@ -207,10 +210,14 @@ const
                     </BottomAdvertisement>
                 </PageWrapper>
                 <ReportDialog
-                    sendReportHandler={sendReportHandler}
                     data={data}
                     toggleReportDialogHandler={toggleReportDialogHandler}
                     pageUrl={pageUrl}
+                    fieldNamesArray={fieldNamesArray}
+                    handleSubmit={handleSubmit}
+                    pristine={pristine}
+                    submitting={submitting}
+                    reset={reset}
                 />
             </Content>
         }
@@ -246,20 +253,17 @@ export default compose(
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
             pageUrl: state.getIn(['router', 'location', 'pathname']),
             favoriteVideoList: state.getIn(['app', 'ui', 'favoriteVideoList']),
+            initialValues: { // Set default form values. Redux form create keys in store for this
+                [fieldNamesArray[0]]: 'abuse_report',
+                [fieldNamesArray[1]]: state.getIn(['app', 'videoPage', 'gallery', 'classId']),
+                [fieldNamesArray[2]]: state.getIn(['app', 'videoPage', 'gallery', 'id']),
+                [fieldNamesArray[3]]: state.getIn(['app', 'videoPage', 'currentHref']),
+            },
         }),
         dispatch => ({
             loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
             closeAdvertisementHandler: () => dispatch(actions.closeAdvertisement()),
             toggleReportDialogHandler: () => dispatch(actions.toggleReportDialog()),
-            sendReportHandler: () => dispatch(actions.sendReportRequest({
-                'op': 'abuse_report',
-                '_cid': '1',
-                '_gid': '12199222',
-                '_url': 'https://videosection.com/vid-12200767/18y-Teen-fucked-by-5-Old-Men.htm',
-                'report-reason': 'reason_nothing',
-                'report-reason': 'reason_other',
-                'report-comment': 'test',
-            })),
             addVideoToFavoriteHandler: (video, e) => {
                 e.preventDefault()
                 dispatch(appActions.addVideoToFavorite(video))
@@ -270,6 +274,12 @@ export default compose(
             },
         })
     ),
+    reduxForm({
+        form: 'reportForm',
+        enableReinitialize: true,
+        onSubmit: (values, dispatch) => dispatch(actions.sendReportRequest(values)),
+		onSubmitSuccess: (values, dispatch) => dispatch(resetForm('reportForm')),
+	}),
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)

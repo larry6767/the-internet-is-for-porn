@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const VideoBlock = styled.section`
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 60px;
+    margin-bottom: 20px;
 `
 
 export const Thumb = styled.div`
