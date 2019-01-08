@@ -9,25 +9,27 @@ import actions from './actions'
 export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
     try {
         const
-            reqData = {pageCode: videoPageCode, subPageCode: subPageForRequest},
-            href = window.location.href,
-            time = new Date().toLocaleString("en-US", {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric',
-            })
+            reqData = {pageCode: videoPageCode, subPageCode: subPageForRequest}
 
         let data
 
         if (yield select(x => x.getIn(['app', 'ssr', 'isSSR'])))
             data = yield ssrContext.getPageData(reqData)
-        else
-            data = yield getPageData(reqData)
+        else {
+            const
+                href = window.location.href,
+                time = new Date().toLocaleString("en-US", {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                })
 
+            data = yield getPageData(reqData)
+            yield put(actions.setTimeAndHrefForReport({href, time}))
+        }
         yield put(actions.loadPageSuccess({subPageForRequest, data}))
-        yield put(actions.setTimeAndHrefForReport({href, time}))
     } catch (err) {
         console.error('loadAllMoviesPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())
@@ -35,7 +37,7 @@ export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
     }
 }
 
-export function* sendReportFlow({payload: reqBody}) {
+export function* sendReportFlow({payload: formData}) {
     try {
         const
             data = yield fetch(`${BACKEND_URL}/send-report`, {
@@ -44,7 +46,7 @@ export function* sendReportFlow({payload: reqBody}) {
                     'Content-Type': 'application/json; charset=utf-8',
                     'Accept': 'application/json',
                 },
-                body: JSON.stringify(reqBody),
+                body: JSON.stringify(formData),
             }).then(response => {
                 if (response.status !== 200)
                     throw new Error(`Response status is ${response.status} (not 200)`)

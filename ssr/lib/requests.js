@@ -241,10 +241,10 @@ export const getPageData = async ({headers, pageCode, subPageCode}) => {
     }))
 }
 
-export const sendReport = async ({headers, body}) => await rp({
+export const sendReport = async ({headers, formData}) => await rp({
     uri: backendUrlForReport,
     method: 'POST',
     headers,
     json: true,
-    formData: body,
+    formData: formData,
 })

@@ -278,7 +278,7 @@ export default compose(
     reduxForm({
         form: 'reportForm',
         enableReinitialize: true,
-        onSubmit: (values, dispatch) => dispatch(actions.sendReportRequest(values)),
+        onSubmit: (formData, dispatch) => dispatch(actions.sendReportRequest(formData)),
 		onSubmitSuccess: (values, dispatch) => dispatch(resetForm('reportForm')),
 	}),
     lifecycle({

@@ -154,7 +154,7 @@ const
         else
             sendReportRequest({
                 headers: proxiedHeaders(req),
-                body: req.body,
+                formData: req.body,
             })
             .then(x => res.json(x).end())
             .catch(jsonThrow500(req, res))
