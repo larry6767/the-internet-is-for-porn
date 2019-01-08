@@ -258,6 +258,7 @@ export default compose(
                 [fieldNamesArray[1]]: state.getIn(['app', 'videoPage', 'gallery', 'classId']),
                 [fieldNamesArray[2]]: state.getIn(['app', 'videoPage', 'gallery', 'id']),
                 [fieldNamesArray[3]]: state.getIn(['app', 'videoPage', 'currentHref']),
+                'report-reason': 'reason_nothing',
             },
         }),
         dispatch => ({

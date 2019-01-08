@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react'
+import React, {Fragment} from 'react'
 import {Field} from 'redux-form/immutable'
 import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
