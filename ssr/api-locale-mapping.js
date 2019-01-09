@@ -1,8 +1,11 @@
 import {isEqual, difference} from 'lodash'
 
+// only particular helper, because some of all helpers depends on this module
+import deepFreeze from './lib/helpers/deepFreeze'
+
 const
     // Considering `null` here as TODO, will print warning instead of failing.
-    mapping = {
+    mapping = deepFreeze({
         eng: {
             pageCode: {
                 home: {code: 'home', url: '/'},
@@ -146,13 +149,13 @@ const
                 video: {code: null, url: null},
             },
         },
-    },
+    }),
 
-    allRootFields = [
+    allRootFields = Object.freeze([
         'pageCode',
-    ].sort(),
+    ].sort()),
 
-    allPageCodes = [
+    allPageCodes = Object.freeze([
         'home',
         'allNiches',
         'niche',
@@ -162,9 +165,9 @@ const
         'favorite',
         'favoritePornstars',
         'video',
-    ].sort(),
+    ].sort()),
 
-    allPageCodeFields = ['code', 'url'].sort(),
+    allPageCodeFields = Object.freeze(['code', 'url'].sort()),
 
     biSidedDiff = (a, b) => difference(a, b).concat(difference(b, a))
 
