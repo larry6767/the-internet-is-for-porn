@@ -44,13 +44,18 @@ export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
 export function* sendReportFlow({payload: formData}) {
     try {
         const
+            reqData = yield select(x => ({
+                localeCode: ig(x, 'app', 'locale', 'localeCode'),
+                ...formData
+            })),
+
             data = yield fetch(`${BACKEND_URL}/send-report`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     'Accept': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(reqData),
             }).then(response => {
                 if (response.status !== 200)
                     throw new Error(`Response status is ${response.status} (not 200)`)

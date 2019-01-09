@@ -13,6 +13,7 @@ import React from 'react'
 import Router from 'react-router'
 
 // local libs
+import {deepFreeze} from './lib/helpers'
 import renderPage from './lib/render'
 import {newStore} from './lib/store'
 import backendProxyHandler from './lib/backend-proxy'
@@ -42,8 +43,11 @@ const
 
 const initApp = async () => {
     const
-        {locales: siteLocales, defaultLocaleCode: defaultSiteLocaleCode} = await getSiteLocales(),
+        {locales: siteLocales, defaultLocaleCode: defaultSiteLocaleCode} = await getSiteLocales()
 
+    deepFreeze(siteLocales)
+
+    const
         publicDir = isProduction
             ? join(__dirname, '..', 'build')
             : join(__dirname, '..', 'public'),

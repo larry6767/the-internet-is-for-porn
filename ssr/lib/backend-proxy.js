@@ -1,6 +1,5 @@
-import {cloneDeep, find, includes} from 'lodash'
+import {cloneDeep, find, includes, unset} from 'lodash'
 
-import {backendHost} from '../config'
 import apiLocaleMapping from '../api-locale-mapping'
 import {plainProvedGet as g} from '../App/helpers'
 import {logRequestError, buildLocalePageCodes} from './helpers'
@@ -10,9 +9,8 @@ import {
     sendReport as sendReportRequest,
 } from './requests'
 
-export const proxiedHeaders = (req) => {
-    const
-        headers = cloneDeep(req.headers)
+export const proxiedHeaders = (siteLocales, localeCode) => req => {
+    const headers = cloneDeep(req.headers)
 
     delete headers['x-forwarded-proto']
     delete headers['x-forwarded-host']
@@ -22,7 +20,7 @@ export const proxiedHeaders = (req) => {
     delete headers['origin']
 
     headers['x-forwarded-for'] = headers['x-forwarded-for'] || req.connection.remoteAddress
-    headers['host'] = backendHost
+    headers['host'] = g(find(siteLocales, x => g(x, 'code') === localeCode), 'host')
 
     headers['accept'] = 'application/json'
     headers['content-type'] = 'application/json; charset=utf-8'
@@ -61,22 +59,24 @@ const
         }).end()
     },
 
-    requestHandler = (req, res, pageCode, withSubPageCode) => {
+    requestHandler = siteLocales => (req, res, pageCode, withSubPageCode) => {
         const
+            localeCode = g(req, 'body', 'localeCode'),
+
             params = {
-                headers: proxiedHeaders(req),
+                headers: proxiedHeaders(siteLocales, localeCode)(req),
                 pageCode,
             }
 
         if (withSubPageCode)
             params.subPageCode = req.body.subPageCode // `subPageCode` may be not set (optional)
 
-        requestPageData(g(req, 'body', 'localeCode'))(params)
+        requestPageData(siteLocales, localeCode)(params)
         .then(x => res.json(x).end())
         .catch(jsonThrow500(req, res))
     },
 
-    getPageData = (({validTopLevelKeys}) => (req, res) => {
+    getPageData = siteLocales => (({validTopLevelKeys}) => (req, res) => {
         const
             invalidKeys = Object.keys(req.body).filter(x => !includes(validTopLevelKeys, x))
 
@@ -134,7 +134,7 @@ const
                     code
                 )
 
-            requestHandler(req, res, code, withSubPageCode)
+            requestHandler(siteLocales)(req, res, code, withSubPageCode)
         } else
             jsonThrow400(req, res)('Unexpected/unknown "pageCode" value in request body', {
                 request: {
@@ -157,12 +157,12 @@ const
         }).end()
     },
 
-    sendReport = (({validTopLevelKeys}) => (req, res) => {
+    sendReport = siteLocales => (({validTopLevelKeys}) => (req, res) => {
         const
             invalidKeys = Object.keys(req.body).filter(x => !includes(validTopLevelKeys, x))
 
         if (invalidKeys.length !== 0)
-            jsonThrow400(req, res)(
+            return jsonThrow400(req, res)(
                 'Found unexpected/unknown top-level keys in request body',
                 {
                     request: {
@@ -172,15 +172,35 @@ const
                     },
                 }
             )
-        else
-            sendReportRequest({
-                headers: proxiedHeaders(req),
-                formData: req.body,
-            })
-            .then(x => res.json(x).end())
-            .catch(jsonThrow500(req, res))
+
+        if ( ! req.body.localeCode)
+            return jsonThrow400(req, res)(
+                'Some required field(s) is not provided in request body',
+                {
+                    request: {
+                        method: g(req, 'method'),
+                        operation: g(req, 'params', 'operation'),
+                        required: {
+                            localeCode: req.body.localeCode,
+                        },
+                    },
+                }
+            )
+
+        const localeCode = g(req, 'body', 'localeCode')
+        unset(g(req, 'body'), 'localeCode')
+        const formData = g(req, 'body')
+
+        sendReportRequest(siteLocales, localeCode)({
+            headers: proxiedHeaders(siteLocales, localeCode)(req),
+            formData,
+        })
+        .then(x => res.json(x).end())
+        .catch(jsonThrow500(req, res))
     })({
-        validTopLevelKeys: ['op', '_cid', '_gid', '_url', 'report-reason', 'report-comment'],
+        validTopLevelKeys: [
+            'localeCode', 'op', '_cid', '_gid', '_url', 'report-reason', 'report-comment',
+        ],
     })
 
 export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
@@ -204,9 +224,9 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-site-locale')
         getSiteLocale(siteLocales, defaultSiteLocaleCode)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-page-data')
-        getPageData(req, res)
+        getPageData(siteLocales)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'send-report')
-        sendReport(req, res)
+        sendReport(siteLocales)(req, res)
     else
         jsonThrow400(req, res)('Unexpected request, check method and operation', {
             request: {

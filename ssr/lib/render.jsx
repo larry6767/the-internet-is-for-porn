@@ -18,8 +18,11 @@ import {App} from '../App'
 import appActions from '../App/actions'
 
 const getPageData =
-    (req, localeCode) => etc =>
-        requestPageData(localeCode)({headers: proxiedHeaders(req), ...etc})
+    (req, siteLocales, localeCode) => etc =>
+        requestPageData(siteLocales, localeCode)({
+            headers: proxiedHeaders(siteLocales, localeCode)(req),
+            ...etc
+        })
 
 // renders a page and makes a proper response for express.js
 export default (
@@ -62,7 +65,10 @@ export default (
                 try {
                     store.runSaga(function* () {
                         try {
-                            const ssrContext = {getPageData: getPageData(req, localeCode)}
+                            const ssrContext = {
+                                getPageData: getPageData(req, siteLocales, localeCode),
+                            }
+
                             yield [staticRouterContext.saga(ssrContext)]
                             resolve()
                         } catch (e) {reject(e)}

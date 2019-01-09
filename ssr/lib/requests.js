@@ -1,9 +1,9 @@
 import {pick, map, find} from 'lodash'
 import rp from 'request-promise-native'
 
-import {backendUrl, backendUrlForReport} from '../config'
 import apiLocales from '../api-locale-mapping'
 import {plainProvedGet as g} from '../App/helpers'
+import {backendUrl, backendUrlForReport} from './helpers/backendUrl'
 
 import {
     getTagList,
@@ -176,7 +176,7 @@ const
 /*
     Generic helper to obtain data from backend for specific "page".
 */
-export const getPageData = localeCode => async ({headers, pageCode, subPageCode}) => {
+export const getPageData = (siteLocales, localeCode) => async ({headers, pageCode, subPageCode}) => {
     // To assign it in conditions, done it this way to reduce human-factor mistakes
     // (like you may accidentally write `locale.home.code` in condition
     // and `urlFunc(locale.niche.url)` for url
@@ -233,7 +233,7 @@ export const getPageData = localeCode => async ({headers, pageCode, subPageCode}
         throw new Error(`Unexpected page code: "${pageCode}"`)
 
     return mapFn(await rp({
-        uri: backendUrl,
+        uri: backendUrl(siteLocales, localeCode),
         method: 'POST',
         headers,
         json: true,
@@ -261,7 +261,7 @@ export const getPageData = localeCode => async ({headers, pageCode, subPageCode}
 export const getSiteLocales = async () => {
     const
         {page: {CUSTOM_DATA: {langSites}}} = await rp({
-            uri: backendUrl,
+            uri: backendUrl([{host: 'videosection.com', code: '--PLUG--'}], '--PLUG--'),
             method: 'POST',
             headers: {
                 'accept': 'application/json',
@@ -286,8 +286,8 @@ export const getSiteLocales = async () => {
     }
 }
 
-export const sendReport = ({headers, formData}) => rp({
-    uri: backendUrlForReport,
+export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => rp({
+    uri: backendUrlForReport(siteLocales, localeCode),
     method: 'POST',
     headers,
     json: true,
