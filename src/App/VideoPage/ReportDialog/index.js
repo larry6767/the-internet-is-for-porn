@@ -21,13 +21,16 @@ import {
     TableBody,
     TableRow,
     TableCell,
+    CircularProgress,
 } from '@material-ui/core'
 import {
     VideoBlock,
     Thumb,
     Description,
+    SubmitButtonWrapper,
 } from './assets'
 import {muiStyles} from './assets/muiStyles'
+import fixtures from './fixtures'
 
 const
     renderTableRow = (x, classes, tableData) => <TableRow key={x}>
@@ -89,7 +92,6 @@ const
         fieldNamesArray,
         handleSubmit,
         pristine,
-        submitting,
         reset,
     }) => {
         const
@@ -108,17 +110,7 @@ const
                 </Fragment>,
             },
 
-            radioButtons = {
-                reason_other: 'Other',
-                reason_deleted: 'Movie has been deleted',
-                reason_doesnt_play: 'Movie doesn\'t play',
-                reason_bad_thumb: 'Low quality of the thumbnail',
-                reason_young: 'Person on the thumbnail looks too young',
-                reason_incest: 'Incest',
-                reason_animals: 'Beastiality (sex with animals)',
-                reason_other_scat: 'Other inappropriate content (rape, blood, scat, etc...)',
-                reason_copyright: 'Copyright violation',
-            }
+            radioButtons = fixtures.radioButtons
 
         return <Dialog
             open={data.get('reportDialogIsOpen')}
@@ -126,20 +118,9 @@ const
             maxWidth={'md'}
             aria-labelledby="report-dialog"
         >
-            <form
-                name="report-form"
-                onSubmit={handleSubmit}
-            >
-                {fieldNamesArray.map(x => <Field
-                    key={x}
-                    name={x}
-                    component={renderHiddenField}
-                    type="hidden"
-                />)}
-
+            <form onSubmit={handleSubmit}>
                 <DialogTitle id="report-dialog">
-                    {'Have you found a problem on the site? \
-                    Please use this form to help us to fix it, or contact us directly'}
+                    {fixtures.dialogTitle}
                 </DialogTitle>
                 <DialogContent>
                     <VideoBlock>
@@ -164,29 +145,43 @@ const
                             </Paper>
                         </Description>
                     </VideoBlock>
-                    <Field
-                        name="report-reason"
-                        classes={classes}
-                        radioButtons={radioButtons}
-                        className={classes.group}
-                        component={renderRadioButtons}
-                    />
-                    <DialogContentText>
-                        {'Take Note of: Our website is a completely automatic adult search \
-                        engine focused on videos clips. We do not possess, produce, distribute \
-                        or host any movies. All linked clips are automatically gathered and \
-                        added into our system by our spider script. Thumbnails are \
-                        auto-generated from the outside video contributors. All of the video \
-                        content performed on our site are hosted and created by other websites \
-                        that are not under our control. By your request we can remove \
-                        thumbnail and link to the video, but not the original video file.'}
-                    </DialogContentText>
-                    <Field
-                        name="report-comment"
-                        label="Comment"
-                        type="text"
-                        component={renderTextField}
-                    />
+
+                    {!data.get('reportIsSent') &&
+                        <Field
+                            name="report-reason"
+                            classes={classes}
+                            radioButtons={radioButtons}
+                            className={classes.group}
+                            component={renderRadioButtons}
+                        />}
+
+                    {data.get('reportIsSent')
+                        ? <DialogContentText classes={{root: classes.dialogSuccesText}}>
+                            {fixtures.dialogSuccesText}
+                        </DialogContentText>
+                        : <DialogContentText>
+                            {fixtures.dialogText}
+                        </DialogContentText>}
+
+                    {!data.get('reportIsSent') &&
+                        <Field
+                            name="report-comment"
+                            label="Comment"
+                            type="text"
+                            component={renderTextField}
+                        />}
+
+                    {data.get('reportIsNotSent') &&
+                        <DialogContentText classes={{root: classes.dialogFailedText}}>
+                            {fixtures.dialogFailedText}
+                        </DialogContentText>}
+
+                    {fieldNamesArray.map(x => <Field
+                        key={x}
+                        name={x}
+                        component={renderHiddenField}
+                        type="hidden"
+                    />)}
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -194,17 +189,25 @@ const
                             reset()
                             toggleReportDialogHandler()}
                         }
-                        disabled={submitting}
+                        disabled={data.get('reportIsSending')}
                         color="primary"
                     >
                         Cancel
                     </Button>
-                    <Button
-                        disabled={pristine || submitting}
-                        type="submit"
-                        color="primary">
-                        Report
-                    </Button>
+
+                    {!data.get('reportIsSent') &&
+                        <SubmitButtonWrapper>
+                            <Button
+                                disabled={pristine || data.get('reportIsSending')}
+                                type="submit"
+                                color="primary"
+                            >
+                                Report
+                            </Button>
+                            {data.get('reportIsSending') &&
+                                <CircularProgress size={24} className={classes.buttonProgress}/>}
+                        </SubmitButtonWrapper>}
+
                 </DialogActions>
             </form>
         </Dialog>

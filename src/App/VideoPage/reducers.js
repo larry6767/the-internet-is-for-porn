@@ -25,6 +25,10 @@ export default
             pageText: Map(fromJS(data.pageText)),
             gallery: Map(fromJS(data.gallery)),
             videoList: List(fromJS(data.videoList)),
+            // clearing report state for new content
+            reportIsSending: false,
+            reportIsSent: false,
+            reportIsNotSent: false,
         }),
         [actions.loadPageFailure]: state => state.merge({
             isLoading: false,

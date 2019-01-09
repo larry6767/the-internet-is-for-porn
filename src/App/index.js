@@ -21,6 +21,7 @@ const
         typography: {
             useNextVariants: true,
         },
+        colors: {...theme.colors} // for using colors from our theme in muiStyles
     })
 
 export const App = ({sheetsManager, location, children}) => <MuiThemeProvider

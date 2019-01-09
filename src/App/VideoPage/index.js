@@ -48,6 +48,10 @@ const
         isLoaded: false,
         isFailed: false,
 
+        reportIsSending: false,
+        reportIsSent: false,
+        reportIsNotSent: false,
+
         lastSubPageForRequest: '',
         inlineAdvertisementIsShowed: true,
         reportDialogIsOpen: false,
@@ -93,7 +97,7 @@ const
         classes, isSSR, data, favoriteVideoList, closeAdvertisementHandler,
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
         toggleReportDialogHandler, pageUrl,
-        handleSubmit, pristine, submitting, reset,
+        handleSubmit, pristine, reset,
     }) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
@@ -115,7 +119,7 @@ const
                         <VideoPlayer>
                             <VideoWrapper>
                                 <Video>
-                                    {data.get('inlineAdvertisementIsShowed')
+                                    {data.get('inlineAdvertisementIsShowed') && !isSSR
                                         ? <InlineAdvertisementWrapper>
                                             <InlineAdvertisement>
                                                 <CloseAdvertisement
@@ -157,19 +161,8 @@ const
                                         </Link>
                                     </ControlPanelBlock>
                                     <ControlPanelBlock>
-                                        {isSSR
-                                            ? <Link to={`${pageUrl}/report`}>
-                                                <Button
-                                                    variant="contained"
-                                                    color="primary"
-                                                    classes={{
-                                                        root: classes.buttonRoot
-                                                    }}
-                                                >
-                                                    {'Report'}
-                                                </Button>
-                                            </Link>
-                                            : <Button
+                                        {!isSSR
+                                            ? <Button
                                                 variant="contained"
                                                 color="primary"
                                                 classes={{
@@ -179,7 +172,7 @@ const
                                             >
                                                 {'Report'}
                                             </Button>
-                                        }
+                                            : null}
                                     </ControlPanelBlock>
                                 </ControlPanel>
                             </VideoWrapper>
@@ -231,7 +224,6 @@ const
                     fieldNamesArray={fieldNamesArray}
                     handleSubmit={handleSubmit}
                     pristine={pristine}
-                    submitting={submitting}
                     reset={reset}
                 />
             </Content>
