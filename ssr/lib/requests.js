@@ -4,7 +4,7 @@ import {
 } from 'lodash'
 import rp from 'request-promise-native'
 
-import {backendUrl} from '../config'
+import {backendUrl, backendUrlForReport} from '../config'
 
 import {
     homePageCode,
@@ -15,6 +15,7 @@ import {
     pornstarPageCode,
     favoritePageCode,
     favoritePornstarsPageCode,
+    videoPageCode,
 } from '../api-page-codes'
 
 import {
@@ -27,6 +28,7 @@ import {
     getTagArchiveList,
     getArchiveFilms,
     getModelInfo,
+    getGallery,
 } from './helpers/requests'
 
 const
@@ -174,6 +176,14 @@ const
                 })
             )
         }
+    },
+
+    getVideoPageMap = x => {
+        return {
+            gallery: getGallery(x.page.GALLERY, x.page.PAGE_URL, x.page.TIME_AGO),
+            pageText: getPageText(x.page.PAGE_TEXT),
+            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
+        }
     }
 
 export const getPageData = async ({headers, pageCode, subPageCode}) => {
@@ -214,6 +224,9 @@ export const getPageData = async ({headers, pageCode, subPageCode}) => {
             ? [{url: `/your-${pageCode}.html`, options: {blocks: {
                 modelsABCBlockThumbs: 1,
             }}}, getFavoritePornstarsMap]
+
+            : pageCode === videoPageCode
+            ? [{url: `/${pageCode}-${subPageCode}.htm`}, getVideoPageMap]
             : null
 
     if (params === null)
@@ -227,3 +240,11 @@ export const getPageData = async ({headers, pageCode, subPageCode}) => {
         body: {operation: 'getPageDataByUrl', params},
     }))
 }
+
+export const sendReport = async ({headers, formData}) => await rp({
+    uri: backendUrlForReport,
+    method: 'POST',
+    headers,
+    json: true,
+    formData,
+})

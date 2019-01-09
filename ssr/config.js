@@ -1,3 +1,4 @@
 export const
     backendHost = 'videosection.com',
-    backendUrl = `http://${backendHost}/react`
+    backendUrl = `https://${backendHost}/react`,
+    backendUrlForReport = `https://${backendHost}/rot`

@@ -7,7 +7,7 @@ export default (ids, items) => map(
     getOrderedVideoList(ids, items),
     ({
         id, thumb_url, thumb_url_mask, thumbs, title,
-        id_sponsor, tags, url_regular, thumb_top, length
+        id_sponsor, tags, url_regular, thumb_top, length, url,
     }) => ({
         // It's supposed to be a number (not a string, as returned by backend),
         // because `x.page.GALS_INFO.ids` contains these ids as numbers.
@@ -27,8 +27,11 @@ export default (ids, items) => map(
             return newAcc.length <= 22 ? newAcc : acc
         }, ''),
 
+        url: url.slice(0, url.indexOf('.htm')),
         urlRegular: url_regular,
         favorite: thumb_top,
-        duration: length,
+        duration: `${Math.floor(length / 60)}:${length % 60 < 10
+            ? '0' + length % 60
+            : length % 60}`,
     })
 )
