@@ -16,6 +16,8 @@ import Router from 'react-router'
 import renderPage from './lib/render'
 import {newStore} from './lib/store'
 import backendProxyHandler from './lib/backend-proxy'
+import {getSiteLocales} from './lib/requests'
+import {validate} from './api-locale-mapping'
 
 
 const
@@ -36,40 +38,56 @@ const
             description: 'Running testing server (will use proper robots.txt file)',
             default: false,
         })
-        .argv,
+        .argv
 
-    publicDir = isProduction
-        ? join(__dirname, '..', 'build')
-        : join(__dirname, '..', 'public'),
+const initApp = async () => {
+    const
+        {locales: siteLocales, defaultLocaleCode: defaultSiteLocaleCode} = await getSiteLocales(),
 
-    robotsTxtFilePath =
-        join(__dirname, '..', 'robots', (isRC ? 'rc' : 'production'), 'robots.txt'),
+        publicDir = isProduction
+            ? join(__dirname, '..', 'build')
+            : join(__dirname, '..', 'public'),
 
-    render = renderPage((result => ({
-        pre: `${result[0]}<div id="root">`,
-        post: `</div>${result[1]}`,
-    }))(
-        readFileSync(join(publicDir, 'index.html'))
-            .toString()
-            .replace(/%PUBLIC_URL%/g, '')
-            .split('<div id="root"></div>')
-    )),
+        robotsTxtFilePath =
+            join(__dirname, '..', 'robots', (isRC ? 'rc' : 'production'), 'robots.txt'),
 
-    app = express()
+        render = renderPage(siteLocales, defaultSiteLocaleCode, (result => ({
+            pre: `${result[0]}<div id="root">`,
+            post: `</div>${result[1]}`,
+        }))(
+            readFileSync(join(publicDir, 'index.html'))
+                .toString()
+                .replace(/%PUBLIC_URL%/g, '')
+                .split('<div id="root"></div>')
+        )),
 
-// it's recommended to serve these files by nginx as static files
-app.use(favicon(join(publicDir, 'favicon.ico')))
-app.get('/robots.txt', (req, res) => res.sendFile(robotsTxtFilePath))
-app.get('/manifest.json', (req, res) => res.sendFile(join(publicDir, '/manifest.json')))
-app.use('/img', express.static(join(publicDir, 'img')))
-if (isProduction) app.use('/static/js', express.static(join(publicDir, 'static', 'js')))
+        app = express()
 
-app.use('/backend-proxy/:operation', json(), backendProxyHandler)
+    validate(siteLocales)
 
-app.use((req, res) => render(req, res, newStore(req.url)))
+    // it's recommended to serve these files by nginx as static files
+    app.use(favicon(join(publicDir, 'favicon.ico')))
+    app.get('/robots.txt', (req, res) => res.sendFile(robotsTxtFilePath))
+    app.get('/manifest.json', (req, res) => res.sendFile(join(publicDir, '/manifest.json')))
+    app.use('/img', express.static(join(publicDir, 'img')))
+    if (isProduction) app.use('/static/js', express.static(join(publicDir, 'static', 'js')))
 
-app.listen(port, host, () => {
-    if (isProduction) console.info('Running in production mode...')
-    if (isRC) console.info('Running Release Candidate server...')
-    console.debug(`Start listening HTTP-server on http://${host}:${port}...`)
+    app.use(
+        '/backend-proxy/:operation',
+        json(),
+        backendProxyHandler(siteLocales, defaultSiteLocaleCode)
+    )
+
+    app.use((req, res) => render(req, res, newStore(req.url)))
+
+    app.listen(port, host, () => {
+        if (isProduction) console.info('Running in production mode...')
+        if (isRC) console.info('Running Release Candidate server...')
+        console.debug(`Start listening HTTP-server on http://${host}:${port}...`)
+    })
+}
+
+initApp().catch(err => {
+    console.error('The app is failed with exception:', err)
+    process.exit(1)
 })

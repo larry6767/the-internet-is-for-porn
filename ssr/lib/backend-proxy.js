@@ -1,20 +1,10 @@
-import {cloneDeep} from 'lodash'
+import {cloneDeep, find, includes} from 'lodash'
 
 import {backendHost} from '../config'
-
-import {
-    homePageCode,
-    allNichesPageCode,
-    nichePageCode,
-    allMoviesPageCode,
-    pornstarsPageCode,
-    pornstarPageCode,
-    favoritePageCode,
-    favoritePornstarsPageCode,
-} from '../api-page-codes'
-
-import {logRequestError} from './helpers'
+import apiLocaleMapping from '../api-locale-mapping'
+import {logRequestError, buildLocalePageCodes} from './helpers'
 import {getPageData as requestPageData} from './requests'
+import {plainProvedGet as g} from '../App/helpers'
 
 export const proxiedHeaders = (req) => {
     const
@@ -71,67 +61,99 @@ const
         const
             params = {
                 headers: proxiedHeaders(req),
-                pageCode
+                pageCode,
             }
 
-        if (withSubPageCode === 'withSubPageCode')
-        params.subPageCode = req.body.subPageCode
+        if (withSubPageCode)
+            params.subPageCode = req.body.subPageCode // `subPageCode` may be not set (optional)
 
-        requestPageData(params)
+        requestPageData(g(req, 'body', 'localeCode'))(params)
         .then(x => res.json(x).end())
         .catch(jsonThrow500(req, res))
     },
 
     getPageData = (({validTopLevelKeys}) => (req, res) => {
         const
-            invalidKeys = Object.keys(req.body).filter(x => !~validTopLevelKeys.indexOf(x))
+            invalidKeys = Object.keys(req.body).filter(x => !includes(validTopLevelKeys, x))
 
         if (invalidKeys.length !== 0)
-            jsonThrow400(req, res)('Found unexpected/unknown top-level keys in request body', {
+            return jsonThrow400(req, res)(
+                'Found unexpected/unknown top-level keys in request body',
+                {
+                    request: {
+                        method: g(req, 'method'),
+                        operation: g(req, 'params', 'operation'),
+                        invalidTopLevelKeys: invalidKeys,
+                    },
+                }
+            )
+
+        if ( ! req.body.localeCode || ! req.body.pageCode)
+            return jsonThrow400(req, res)(
+                'Some required field(s) is not provided in request body',
+                {
+                    request: {
+                        method: g(req, 'method'),
+                        operation: g(req, 'params', 'operation'),
+                        required: {
+                            localeCode: req.body.localeCode,
+                            pageCode: req.body.pageCode,
+                        },
+                    },
+                }
+            )
+
+        if ( ! apiLocaleMapping.hasOwnProperty(g(req, 'body', 'localeCode')))
+            return jsonThrow400(req, res)('Unknown site locale code', {
                 request: {
-                    method: req.method,
-                    operation: req.params.operation,
-                    invalidTopLevelKeys: invalidKeys,
+                    method: g(req, 'method'),
+                    localeCode: g(req, 'body', 'localeCode'),
+                    operation: g(req, 'params', 'operation'),
                 },
             })
 
-        else if (req.body.pageCode === homePageCode)
-            requestHandler(req, res, homePageCode)
+        const
+            currentApiLocale = g(apiLocaleMapping, g(req, 'body', 'localeCode')),
 
-        else if (req.body.pageCode === allNichesPageCode)
-            requestHandler(req, res, allNichesPageCode)
+            matchedPageCode = find(
+                g(currentApiLocale, 'pageCode'),
+                x => g(x, 'code') === g(req, 'body', 'pageCode')
+            )
 
-        else if (req.body.pageCode === nichePageCode)
-            requestHandler(req, res, nichePageCode, 'withSubPageCode')
+        if (matchedPageCode) {
+            const
+                code = g(matchedPageCode, 'code'),
 
-        else if (req.body.pageCode === allMoviesPageCode)
-            requestHandler(req, res, allMoviesPageCode, 'withSubPageCode')
+                withSubPageCode = includes(
+                    ['niche', 'allMovies', 'pornstar']
+                        .map(x => g(currentApiLocale, 'pageCode', x, 'code')),
+                    code
+                )
 
-        else if (req.body.pageCode === pornstarsPageCode)
-            requestHandler(req, res, pornstarsPageCode)
-
-        else if (req.body.pageCode === pornstarPageCode)
-            requestHandler(req, res, pornstarPageCode, 'withSubPageCode')
-
-        else if (req.body.pageCode === favoritePageCode)
-            requestHandler(req, res, favoritePageCode)
-
-        else if (req.body.pageCode === favoritePornstarsPageCode)
-            requestHandler(req, res, favoritePornstarsPageCode)
-
-        else
+            requestHandler(req, res, code, withSubPageCode)
+        } else
             jsonThrow400(req, res)('Unexpected/unknown "pageCode" value in request body', {
                 request: {
-                    method: req.method,
-                    operation: req.params.operation,
-                    pageCode: req.body.pageCode,
+                    method: g(req, 'method'),
+                    operation: g(req, 'params', 'operation'),
+                    pageCode: g(req, 'body', 'pageCode'),
                 },
             })
     })({
-        validTopLevelKeys: ['pageCode', 'subPageCode'],
-    })
+        validTopLevelKeys: ['localeCode', 'pageCode', 'subPageCode'],
+    }),
 
-export default (req, res) => {
+    getSiteLocale = (siteLocales, defaultSiteLocaleCode) => (req, res) => {
+        const
+            localeCode = req.body.localeCode || defaultSiteLocaleCode
+
+        res.json({
+            localeCode,
+            pageCodes: buildLocalePageCodes(localeCode),
+        }).end()
+    }
+
+export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
     if (
         req.headers['accept'] !== 'application/json' ||
         req.headers['content-type'] !== 'application/json; charset=utf-8'
@@ -140,7 +162,7 @@ export default (req, res) => {
             'Only JSON API is supported, check "Accept" and "Content-Type" headers',
             {
                 request: {
-                    method: req.method,
+                    method: g(req, 'method'),
                     operation: req.params.operation,
                     headers: {
                         'Accept': req.headers['accept'],
@@ -149,12 +171,14 @@ export default (req, res) => {
                 },
             }
         )
-    else if (req.method === 'POST' && req.params.operation === 'get-page-data')
+    else if (g(req, 'method') === 'POST' && req.params.operation === 'get-site-locale')
+        getSiteLocale(siteLocales, defaultSiteLocaleCode)(req, res)
+    else if (g(req, 'method') === 'POST' && req.params.operation === 'get-page-data')
         getPageData(req, res)
     else
         jsonThrow400(req, res)('Unexpected request, check method and operation', {
             request: {
-                method: req.method,
+                method: g(req, 'method'),
                 operation: req.params.operation,
             },
         })
