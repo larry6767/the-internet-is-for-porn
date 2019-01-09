@@ -16,17 +16,17 @@ export const muiStyles = theme => ({
         gridAutoFlow: 'column',
         gridTemplateRows: 'repeat(5, 1fr)',
     },
-    dialogSuccesText: {
+    dialogSuccessText: {
         marginTop: 80,
         fontWeight: 'bold',
         textAlign: 'center',
-        color: theme.colors.succesColor,
+        color: theme.colors.successColor,
     },
-    dialogFailedText: {
+    dialogFailureText: {
         marginTop: 60,
         fontWeight: 'bold',
         textAlign: 'center',
-        color: theme.colors.failedColor,
+        color: theme.colors.failureColor,
     },
     buttonProgress: {
         position: 'absolute',

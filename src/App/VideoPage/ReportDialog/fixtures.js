@@ -1,18 +1,18 @@
-const dialogTitle = 'Have you found a problem on the site? \
-    Please use this form to help us to fix it, or contact us directly'
+const dialogTitle = `Have you found a problem on the site? \
+Please use this form to help us to fix it, or contact us directly`
 
-const dialogSuccesText = 'Thank you for your report. We will review it soon'
+const dialogSuccessText = 'Thank you for your report. We will review it soon'
 
-const dialogFailedText = 'Something went wrong. Try again later'
+const dialogFailureText = 'Something went wrong. Try again later'
 
-const dialogText = 'Take Note of: Our website is a completely automatic adult search \
-    engine focused on videos clips. We do not possess, produce, distribute \
-    or host any movies. All linked clips are automatically gathered and \
-    added into our system by our spider script. Thumbnails are \
-    auto-generated from the outside video contributors. All of the video \
-    content performed on our site are hosted and created by other websites \
-    that are not under our control. By your request we can remove \
-    thumbnail and link to the video, but not the original video file.'
+const dialogText = `Take Note of: Our website is a completely automatic adult search \
+engine focused on videos clips. We do not possess, produce, distribute \
+or host any movies. All linked clips are automatically gathered and \
+added into our system by our spider script. Thumbnails are \
+auto-generated from the outside video contributors. All of the video \
+content performed on our site are hosted and created by other websites \
+that are not under our control. By your request we can remove \
+thumbnail and link to the video, but not the original video file.`
 
 const radioButtons = {
     reason_other: 'Other',
@@ -28,8 +28,8 @@ const radioButtons = {
 
 export default {
     dialogTitle,
-    dialogSuccesText,
-    dialogFailedText,
+    dialogSuccessText,
+    dialogFailureText,
     dialogText,
     radioButtons,
 }

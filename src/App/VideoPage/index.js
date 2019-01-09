@@ -36,6 +36,7 @@ import {
     InlineAdvertisementWrapper,
     InlineAdvertisement,
     CloseAdvertisement,
+    AdGag,
 } from './assets'
 import actions from './actions'
 import appActions from '../actions'
@@ -62,10 +63,10 @@ const
         currentTime: '',
     }),
 
-    FavoriteButton = ({
+    renderFavoriteButton = (
         classes, data, favoriteVideoList,
-        addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
-    }) => favoriteVideoList.find(id => id === data.getIn(['gallery', 'id']))
+        addVideoToFavoriteHandler, removeVideoFromFavoriteHandler
+    ) => favoriteVideoList.find(id => id === data.getIn(['gallery', 'id']))
         ? <Button
             variant="contained"
             color="primary"
@@ -93,6 +94,15 @@ const
             {'Add to favorites'}
         </Button>,
 
+    renderIframe = (src, isAd) =>
+        ((!process.env.NODE_ENV === 'development' && isAd === 'isAd') || isAd !== 'isAd')
+            ? <iframe
+                title={src}
+                src={src}
+                frameBorder="0"
+            ></iframe>
+            : <AdGag/>,
+
     VideoPage = ({
         classes, isSSR, data, favoriteVideoList, closeAdvertisementHandler,
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
@@ -119,35 +129,28 @@ const
                         <VideoPlayer>
                             <VideoWrapper>
                                 <Video>
-                                    {data.get('inlineAdvertisementIsShowed') && !isSSR
-                                        ? <InlineAdvertisementWrapper>
+                                    {(data.get('inlineAdvertisementIsShowed') && !isSSR) &&
+                                        <InlineAdvertisementWrapper>
                                             <InlineAdvertisement>
                                                 <CloseAdvertisement
                                                     onClick={closeAdvertisementHandler}
                                                 />
-                                                <iframe
-                                                    src="https://videosection.com/_ad#str-eng-1545--invideo"
-                                                    frameBorder="0"
-                                                ></iframe>
+                                                {renderIframe(
+                                                    'https://videosection.com/_ad#str-eng-1545--invideo',
+                                                    'isAd'
+                                                )}
                                             </InlineAdvertisement>
-                                        </InlineAdvertisementWrapper>
-                                        : null}
-                                    <iframe
-                                        src={data.getIn(['gallery', 'urlForIframe'])}
-                                        frameBorder="0"
-                                    />
+                                        </InlineAdvertisementWrapper>}
+                                    {renderIframe(data.getIn(['gallery', 'urlForIframe']))}
                                 </Video>
                                 <ControlPanel>
                                     <ControlPanelBlock>
-                                        {!isSSR
-                                            ? <FavoriteButton
-                                                data={data}
-                                                classes={classes}
-                                                favoriteVideoList={favoriteVideoList}
-                                                addVideoToFavoriteHandler={addVideoToFavoriteHandler}
-                                                removeVideoFromFavoriteHandler={removeVideoFromFavoriteHandler}
-                                            />
-                                            : null}
+                                        {!isSSR &&
+                                            renderFavoriteButton(
+                                                classes, data, favoriteVideoList,
+                                                addVideoToFavoriteHandler,
+                                                removeVideoFromFavoriteHandler
+                                            )}
                                         <Link to="/" className={classes.routerLink}>
                                             <Button
                                                 variant="contained"
@@ -161,8 +164,8 @@ const
                                         </Link>
                                     </ControlPanelBlock>
                                     <ControlPanelBlock>
-                                        {!isSSR
-                                            ? <Button
+                                        {!isSSR &&
+                                            <Button
                                                 variant="contained"
                                                 color="primary"
                                                 classes={{
@@ -171,20 +174,19 @@ const
                                                 onClick={toggleReportDialogHandler}
                                             >
                                                 {'Report'}
-                                            </Button>
-                                            : null}
+                                            </Button>}
                                     </ControlPanelBlock>
                                 </ControlPanel>
                             </VideoWrapper>
                             <Advertisement>
-                                <iframe
-                                    src="https://videosection.com/_ad#str-eng-1545--sidebar1"
-                                    frameBorder="0"
-                                ></iframe>
-                                <iframe
-                                    src="https://videosection.com/_ad#str-eng-1545--sidebar2"
-                                    frameBorder="0"
-                                ></iframe>
+                                {renderIframe(
+                                    'https://videosection.com/_ad#str-eng-1545--sidebar1',
+                                    'isAd'
+                                )}
+                                {renderIframe(
+                                    'https://videosection.com/_ad#str-eng-1545--sidebar2',
+                                    'isAd'
+                                )}
                             </Advertisement>
                         </VideoPlayer>
                     </PlayerSection>
@@ -203,18 +205,9 @@ const
                         />
                     </RelatedVideos>
                     <BottomAdvertisement>
-                        <iframe
-                            src="https://videosection.com/_ad#str-eng-1545--bottom1"
-                            frameBorder="0"
-                        ></iframe>
-                        <iframe
-                            src="https://videosection.com/_ad#str-eng-1545--bottom2"
-                            frameBorder="0"
-                        ></iframe>
-                        <iframe
-                            src="https://videosection.com/_ad#str-eng-1545--bottom3"
-                            frameBorder="0"
-                        ></iframe>
+                        {renderIframe('https://videosection.com/_ad#str-eng-1545--bottom1', 'isAd')}
+                        {renderIframe('https://videosection.com/_ad#str-eng-1545--bottom2', 'isAd')}
+                        {renderIframe('https://videosection.com/_ad#str-eng-1545--bottom3', 'isAd')}
                     </BottomAdvertisement>
                 </PageWrapper>
                 <ReportDialog
@@ -260,7 +253,7 @@ export default compose(
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
             pageUrl: state.getIn(['router', 'location', 'pathname']),
             favoriteVideoList: state.getIn(['app', 'ui', 'favoriteVideoList']),
-            initialValues: { // Set default form values. Redux form create keys in store for this
+            initialValues: { // Setting default form values. Redux form create keys in store for this
                 [fieldNamesArray[0]]: 'abuse_report',
                 [fieldNamesArray[1]]: state.getIn(['app', 'videoPage', 'gallery', 'classId']),
                 [fieldNamesArray[2]]: state.getIn(['app', 'videoPage', 'gallery', 'id']),

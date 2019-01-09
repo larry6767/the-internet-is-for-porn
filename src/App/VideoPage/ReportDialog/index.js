@@ -156,8 +156,8 @@ const
                         />}
 
                     {data.get('reportIsSent')
-                        ? <DialogContentText classes={{root: classes.dialogSuccesText}}>
-                            {fixtures.dialogSuccesText}
+                        ? <DialogContentText classes={{root: classes.dialogSuccessText}}>
+                            {fixtures.dialogSuccessText}
                         </DialogContentText>
                         : <DialogContentText>
                             {fixtures.dialogText}
@@ -172,8 +172,8 @@ const
                         />}
 
                     {data.get('reportIsNotSent') &&
-                        <DialogContentText classes={{root: classes.dialogFailedText}}>
-                            {fixtures.dialogFailedText}
+                        <DialogContentText classes={{root: classes.dialogFailureText}}>
+                            {fixtures.dialogFailureText}
                         </DialogContentText>}
 
                     {fieldNamesArray.map(x => <Field

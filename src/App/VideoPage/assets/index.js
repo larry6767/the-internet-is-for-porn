@@ -81,6 +81,18 @@ export const InlineAdvertisementWrapper = styled.div`
     cursor: not-allowed;
 `
 
+export const AdGag = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: ${({theme}) => `${theme.colors.successColor}`};
+
+    &::before {
+        content: 'Gag for advertisement';
+        color: ${({theme}) => `${theme.colors.mainColor}`};
+    }
+`
+
 export const InlineAdvertisement = styled.div`
     position: absolute;
     top: calc(50% - 130px);
@@ -96,9 +108,26 @@ export const InlineAdvertisement = styled.div`
         height: 170px;
     `}
 
-    & iframe {
+    & iframe,
+    ${AdGag} {
+        border-radius: 2px;
         width: 100%;
         height: 100%;
+    }
+
+    ${AdGag} {
+        position: relative;
+
+        &::after {
+            position: absolute;
+            display: block;
+            content: '';
+            top: 0;
+            right: 0;
+            width: 17px;
+            height: 17px;
+            background: ${({theme}) => theme.colors.mainColor2};
+        }
     }
 `
 
@@ -133,16 +162,17 @@ export const Advertisement = styled.div`
         padding: 0;
     `}
 
-    & iframe {
+    & iframe,
+    ${AdGag} {
         width: 300px;
         height: 254px;
         border-radius: 2px;
-    }
 
-    & iframe:not(:last-child) {
-        margin-bottom: 10px;
+        &:not(:last-child) {
+            margin-bottom: 10px;
 
-        ${({theme}) => theme.media.sm`margin-bottom: 0;`}
+            ${({theme}) => theme.media.sm`margin-bottom: 0;`}
+        }
     }
 `
 
@@ -165,7 +195,8 @@ export const BottomAdvertisement = styled.section`
         background: none;
     `}
 
-    & iframe {
+    & iframe,
+    ${AdGag} {
         width: 300px;
         height: 254px;
         border-radius: 2px;

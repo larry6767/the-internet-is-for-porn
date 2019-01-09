@@ -37,15 +37,15 @@ const theme = {
         mainColor2: 'rgb(60, 64, 76);',
         mainOppositeColor: 'rgb(255, 255, 255);',
         additionalColor: 'rgb(161, 167, 171);',
-        succesColor: 'rgb(113, 163, 113);',
-        failedColor: 'rgb(255, 4, 0);',
+        successColor: 'rgb(113, 163, 113);',
+        failureColor: 'rgb(255, 4, 0);',
 
         opacityMainColor: 'rgba(41, 45, 57, 0.6);',
         opacityMainColor2: 'rgba(60, 64, 76, 0.6);',
         opacityMainOppositeColor: 'rgba(255, 255, 255, 0.6);',
         opacityAdditionalColor: 'rgba(161, 167, 171, 0.6);',
-        opacitySuccesColor: 'rgb(113, 163, 113, 0.6);',
-        opacityFailedColor: 'rgb(255, 4, 0, 0.6);',
+        opacitySuccessColor: 'rgb(113, 163, 113, 0.6);',
+        opacityFailureColor: 'rgb(255, 4, 0, 0.6);',
     },
     media: Object.keys(breakPoints).reduce((acc, current) => {
         acc[current] = (...args) => css`
