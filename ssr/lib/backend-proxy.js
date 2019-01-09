@@ -2,9 +2,13 @@ import {cloneDeep, find, includes} from 'lodash'
 
 import {backendHost} from '../config'
 import apiLocaleMapping from '../api-locale-mapping'
-import {logRequestError, buildLocalePageCodes} from './helpers'
-import {getPageData as requestPageData} from './requests'
 import {plainProvedGet as g} from '../App/helpers'
+import {logRequestError, buildLocalePageCodes} from './helpers'
+
+import {
+    getPageData as requestPageData,
+    sendReport as sendReportRequest,
+} from './requests'
 
 export const proxiedHeaders = (req) => {
     const
@@ -125,7 +129,7 @@ const
                 code = g(matchedPageCode, 'code'),
 
                 withSubPageCode = includes(
-                    ['niche', 'allMovies', 'pornstar']
+                    ['niche', 'allMovies', 'pornstar', 'video']
                         .map(x => g(currentApiLocale, 'pageCode', x, 'code')),
                     code
                 )
@@ -151,7 +155,33 @@ const
             localeCode,
             pageCodes: buildLocalePageCodes(localeCode),
         }).end()
-    }
+    },
+
+    sendReport = (({validTopLevelKeys}) => (req, res) => {
+        const
+            invalidKeys = Object.keys(req.body).filter(x => !includes(validTopLevelKeys, x))
+
+        if (invalidKeys.length !== 0)
+            jsonThrow400(req, res)(
+                'Found unexpected/unknown top-level keys in request body',
+                {
+                    request: {
+                        method: g(req, 'method'),
+                        operation: g(req, 'params', 'operation'),
+                        invalidTopLevelKeys: invalidKeys,
+                    },
+                }
+            )
+        else
+            sendReportRequest({
+                headers: proxiedHeaders(req),
+                formData: req.body,
+            })
+            .then(x => res.json(x).end())
+            .catch(jsonThrow500(req, res))
+    })({
+        validTopLevelKeys: ['op', '_cid', '_gid', '_url', 'report-reason', 'report-comment'],
+    })
 
 export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
     if (
@@ -175,6 +205,8 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
         getSiteLocale(siteLocales, defaultSiteLocaleCode)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-page-data')
         getPageData(req, res)
+    else if (g(req, 'method') === 'POST' && req.params.operation === 'send-report')
+        sendReport(req, res)
     else
         jsonThrow400(req, res)('Unexpected request, check method and operation', {
             request: {

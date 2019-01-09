@@ -6,4 +6,4 @@ export default (navigation, pathname) => Object.keys(navigation).find(x => x ===
         || pathname.indexOf(`${x}/`) === 0
         || (~x.indexOf('porn-star') && pathname.indexOf(`${x.slice(0, -1)}/`) === 0)
         || (~x.indexOf('favorite') && pathname.indexOf(`${x}-`) === 0)
-    )
+    ) || false

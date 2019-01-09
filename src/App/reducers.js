@@ -15,6 +15,7 @@ import nichesReducer from './AllNiches/reducers'
 import pornstarsReducer from './Pornstars/reducers'
 import favoriteReducer from './Favorite/reducers'
 import favoritePornstarsReducer from './FavoritePornstars/reducers'
+import videoPageReducer from './VideoPage/reducers'
 
 const
     defaultSSR = fromJS({isSSR: false})
@@ -27,6 +28,7 @@ export default combineReducers({
     pornstars: pornstarsReducer,
     favorite: favoriteReducer,
     favoritePornstars: favoritePornstarsReducer,
+    videoPage: videoPageReducer,
 
     ui: handleActions({
         [g(actions, 'resize')]: (state, action) =>

@@ -35,6 +35,10 @@ import FavoritePornstars from './App/FavoritePornstars'
 import favoritePornstarsActions from './App/FavoritePornstars/actions'
 import {loadFavoritePornstarsPageFlow} from './App/FavoritePornstars/sagas'
 
+import VideoPage from './App/VideoPage'
+import videoPageActions from './App/VideoPage/actions'
+import {loadVideoPageFlow} from './App/VideoPage/sagas'
+
 import NotFound from './App/NotFound'
 
 // `staticContext` is for only for Server-Side Rendering here.
@@ -152,7 +156,7 @@ export default ({location}) => <Switch>
                 null,
                 favoriteActions.loadPageRequest()
             )
-            x.statusCodeResolver = status500(['app', 'favorite'])
+            x.statusCodeResolver = status500(['app', 'favorite', 'isFailed'])
             return null
         } else
             return <Favorite {...props}/>
@@ -168,10 +172,26 @@ export default ({location}) => <Switch>
                 null,
                 favoritePornstarsActions.loadPageRequest()
             )
-            x.statusCodeResolver = status500(['app', 'favorite'])
+            x.statusCodeResolver = status500(['app', 'favorite', 'isFailed'])
             return null
         } else
             return <FavoritePornstars {...props}/>
+    }}/>
+
+    <Redirect from="/vid-:child/:name.htm" to="/vid-:child/:name"/>
+    <Route path="/vid-:child/:name" render={props => {
+        if (get(props, ['staticContext', 'isPreRouting'])) {
+            const
+                {match: {params}, staticContext: x} = props,
+                action = videoPageActions.loadPageRequest(
+                    getSubPage(`${params.child}/${params.name}`)
+                )
+
+            x.saga = loadVideoPageFlow.bind(null, action)
+            x.statusCodeResolver = status500(['app', 'videoPage', 'isFailed'])
+            return null
+        } else
+            return <VideoPage {...props}/>
     }}/>
 
     <Route render={props => {

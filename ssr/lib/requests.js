@@ -1,7 +1,7 @@
 import {pick, map, find} from 'lodash'
 import rp from 'request-promise-native'
 
-import {backendUrl} from '../config'
+import {backendUrl, backendUrlForReport} from '../config'
 import apiLocales from '../api-locale-mapping'
 import {plainProvedGet as g} from '../App/helpers'
 
@@ -15,6 +15,7 @@ import {
     getTagArchiveList,
     getArchiveFilms,
     getModelInfo,
+    getGallery,
 } from './helpers/requests'
 
 const
@@ -162,6 +163,14 @@ const
                 })
             )
         }
+    },
+
+    getVideoPageMap = x => {
+        return {
+            gallery: getGallery(x.page.GALLERY, x.page.PAGE_URL, x.page.TIME_AGO),
+            pageText: getPageText(x.page.PAGE_TEXT),
+            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
+        }
     }
 
 /*
@@ -214,6 +223,9 @@ export const getPageData = localeCode => async ({headers, pageCode, subPageCode}
             ? [{url: urlFunc(g(x, 'url')), options: {blocks: {
                 modelsABCBlockThumbs: 1,
             }}}, getFavoritePornstarsMap]
+
+            : pageCode === (x = localeBranch('video'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url'))}, getVideoPageMap]
 
             : null
 
@@ -273,3 +285,11 @@ export const getSiteLocales = async () => {
         locales: map(langSites, ({name, host}, code) => ({title: name, host, code})),
     }
 }
+
+export const sendReport = ({headers, formData}) => rp({
+    uri: backendUrlForReport,
+    method: 'POST',
+    headers,
+    json: true,
+    formData,
+})

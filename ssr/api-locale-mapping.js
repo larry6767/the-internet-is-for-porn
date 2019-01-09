@@ -13,6 +13,7 @@ const
                 pornstar: {code: 'porn-star', url: '/%PAGE_CODE%/%SUB_PAGE_CODE%.html'},
                 favorite: {code: 'favorite', url: '/your-%PAGE_CODE%.html'},
                 favoritePornstars: {code: 'favorite-porn-stars', url: '/your-%PAGE_CODE%.html'},
+                video: {code: 'vid', url: '/%PAGE_CODE%-%SUB_PAGE_CODE%.htm'},
             },
         },
         deu: {
@@ -25,6 +26,7 @@ const
                 pornstar: {code: null, url: null},
                 favorite: {code: null, url: null},
                 favoritePornstars: {code: null, url: null},
+                video: {code: null, url: null},
             },
         },
         ita: {
@@ -37,6 +39,7 @@ const
                 pornstar: {code: null, url: null},
                 favorite: {code: null, url: null},
                 favoritePornstars: {code: null, url: null},
+                video: {code: null, url: null},
             },
         },
         fra: {
@@ -49,6 +52,7 @@ const
                 pornstar: {code: null, url: null},
                 favorite: {code: null, url: null},
                 favoritePornstars: {code: null, url: null},
+                video: {code: null, url: null},
             },
         },
         spa: {
@@ -61,6 +65,7 @@ const
                 pornstar: {code: null, url: null},
                 favorite: {code: null, url: null},
                 favoritePornstars: {code: null, url: null},
+                video: {code: null, url: null},
             },
         },
         por: {
@@ -73,6 +78,7 @@ const
                 pornstar: {code: null, url: null},
                 favorite: {code: null, url: null},
                 favoritePornstars: {code: null, url: null},
+                video: {code: null, url: null},
             },
         },
         swe: {
@@ -85,6 +91,7 @@ const
                 pornstar: {code: null, url: null},
                 favorite: {code: null, url: null},
                 favoritePornstars: {code: null, url: null},
+                video: {code: null, url: null},
             },
         },
         nld: {
@@ -97,6 +104,7 @@ const
                 pornstar: {code: null, url: null},
                 favorite: {code: null, url: null},
                 favoritePornstars: {code: null, url: null},
+                video: {code: null, url: null},
             },
         },
         fin: {
@@ -109,6 +117,7 @@ const
                 pornstar: {code: null, url: null},
                 favorite: {code: null, url: null},
                 favoritePornstars: {code: null, url: null},
+                video: {code: null, url: null},
             },
         },
         rus: {
@@ -121,6 +130,7 @@ const
                 pornstar: {code: null, url: null},
                 favorite: {code: null, url: null},
                 favoritePornstars: {code: null, url: null},
+                video: {code: null, url: null},
             },
         },
         tur: {
@@ -133,6 +143,7 @@ const
                 pornstar: {code: null, url: null},
                 favorite: {code: null, url: null},
                 favoritePornstars: {code: null, url: null},
+                video: {code: null, url: null},
             },
         },
     },
@@ -150,6 +161,7 @@ const
         'pornstar',
         'favorite',
         'favoritePornstars',
+        'video',
     ].sort(),
 
     allPageCodeFields = ['code', 'url'].sort(),
