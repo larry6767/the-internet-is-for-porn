@@ -1,7 +1,11 @@
 import {createActions} from '../../helpers'
 
 const actions = createActions('LANGUAGE', [
-    'SET_NEW_LANGUAGE'
+    'LOAD_SITE_LOCALES_REQUEST',
+    'LOAD_SITE_LOCALES_SUCCESS',
+    'LOAD_SITE_LOCALES_FAILURE',
+
+    'SET_NEW_LANGUAGE',
 ])
 
 export default actions

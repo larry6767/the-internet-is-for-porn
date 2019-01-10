@@ -1,22 +1,10 @@
-import {
-    pick,
-    map
-} from 'lodash'
+import {pick, map, find} from 'lodash'
 import rp from 'request-promise-native'
 
-import {backendUrl, backendUrlForReport} from '../config'
-
-import {
-    homePageCode,
-    allNichesPageCode,
-    nichePageCode,
-    allMoviesPageCode,
-    pornstarsPageCode,
-    pornstarPageCode,
-    favoritePageCode,
-    favoritePornstarsPageCode,
-    videoPageCode,
-} from '../api-page-codes'
+import {defaultHostToFetchSiteLocalesFrom} from '../config'
+import apiLocales from '../api-locale-mapping'
+import {plainProvedGet as g} from '../App/helpers'
+import {backendUrl, backendUrlForReport} from './helpers/backendUrl'
 
 import {
     getTagList,
@@ -186,54 +174,67 @@ const
         }
     }
 
-export const getPageData = async ({headers, pageCode, subPageCode}) => {
+/*
+    Generic helper to obtain data from backend for specific "page".
+*/
+export const getPageData = (siteLocales, localeCode) => async ({headers, pageCode, subPageCode}) => {
+    // To assign it in conditions, done it this way to reduce human-factor mistakes
+    // (like you may accidentally write `locale.home.code` in condition
+    // and `urlFunc(locale.niche.url)` for url
+    // and with this variable you assign page code branch only once).
+    let x
+
     const
+        localeBranch = (...xs) => g(apiLocales, [localeCode, 'pageCode'].concat(xs)),
+
+        urlFunc = url => url
+            .replace(/%PAGE_CODE%/g, pageCode)
+            .replace(/%SUB_PAGE_CODE%/g, subPageCode),
+
         [params, mapFn] =
-            pageCode === homePageCode
-            ? [{url: '/', options: {blocks: {
+            pageCode === (x = localeBranch('home'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url')), options: {blocks: {
                 allTagsBlock: 1,
                 modelsABCBlockText: 1,
                 modelsABCBlockThumbs: 1,
             }}}, getHomeMap]
 
-            : pageCode === allNichesPageCode
-            ? [{url: '/?categories', options: {blocks: {allTagsBlock: 1}}}, getAllNichesMap]
+            : pageCode === (x = localeBranch('allNiches'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url')), options: {blocks: {allTagsBlock: 1}}}, getAllNichesMap]
 
-            : pageCode === nichePageCode
-            ? [{url: `/${subPageCode}.html`, options: {blocks: {allTagsBlock: 1}}}, getNicheMap]
+            : pageCode === (x = localeBranch('niche'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url')), options: {blocks: {allTagsBlock: 1}}}, getNicheMap]
 
-            : pageCode === allMoviesPageCode
-            ? [{
-                url: `/${pageCode}${subPageCode}.html`,
-                options: {blocks: {allTagsBlock: 1}}
-            }, getAllMoviesMap]
+            : pageCode === (x = localeBranch('allMovies'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url')), options: {blocks: {allTagsBlock: 1}}}, getAllMoviesMap]
 
-            : pageCode === pornstarsPageCode
-            ? [{url: `/${pageCode}.html`}, getPornstarsMap]
+            : pageCode === (x = localeBranch('pornstars'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url'))}, getPornstarsMap]
 
-            : pageCode === pornstarPageCode
-            ? [{url: `/${pageCode}/${subPageCode}.html`, options: {blocks: {
+            : pageCode === (x = localeBranch('pornstar'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url')), options: {blocks: {
                 modelsABCBlockText: 1,
                 modelsABCBlockThumbs: 1,
             }}}, getPornstarMap]
 
-            : pageCode === favoritePageCode
-            ? [{url: `/your-${pageCode}.html`}, getFavoriteMap]
+            : pageCode === (x = localeBranch('favorite'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url'))}, getFavoriteMap]
 
-            : pageCode === favoritePornstarsPageCode
-            ? [{url: `/your-${pageCode}.html`, options: {blocks: {
+            : pageCode === (x = localeBranch('favoritePornstars'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url')), options: {blocks: {
                 modelsABCBlockThumbs: 1,
             }}}, getFavoritePornstarsMap]
 
-            : pageCode === videoPageCode
-            ? [{url: `/${pageCode}-${subPageCode}.htm`}, getVideoPageMap]
+            : pageCode === (x = localeBranch('video'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url'))}, getVideoPageMap]
+
             : null
 
     if (params === null)
         throw new Error(`Unexpected page code: "${pageCode}"`)
 
     return mapFn(await rp({
-        uri: backendUrl,
+        uri: backendUrl(siteLocales, localeCode),
         method: 'POST',
         headers,
         json: true,
@@ -241,8 +242,56 @@ export const getPageData = async ({headers, pageCode, subPageCode}) => {
     }))
 }
 
-export const sendReport = async ({headers, formData}) => await rp({
-    uri: backendUrlForReport,
+/*
+    Requests a list of site locales which looks like this:
+        [
+            { title: 'English',  host: 'domain.com',    code: 'eng' },
+            { title: 'Deutsch',  host: 'de.domain.com', code: 'deu' },
+            { title: 'Italiano', host: 'it.domain.com', code: 'ita' },
+            ...
+        ]
+
+    Actual result consists of this structure:
+        {
+            defaultLocaleCode: 'eng',
+            locales: [
+                // That list of locales mentioned above...
+            ],
+        }
+*/
+export const getSiteLocales = async () => {
+    const
+        {page: {CUSTOM_DATA: {langSites}}} = await rp({
+            uri: backendUrl(
+                [{host: defaultHostToFetchSiteLocalesFrom, code: '--PLUG--'}],
+                '--PLUG--'
+            ),
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'content-type': 'application/json; charset=utf-8',
+            },
+            json: true,
+            body: {
+                operation: 'getPageDataByUrl',
+                params: {
+                    url: '',
+                    options: {blocks: {langSites: 1}},
+                },
+            },
+        }),
+
+        defaultLocaleCode =
+            find(map(langSites, ({active}, code) => ({code, active})), x => x.active).code
+
+    return {
+        defaultLocaleCode,
+        locales: map(langSites, ({name, host}, code) => ({title: name, host, code})),
+    }
+}
+
+export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => rp({
+    uri: backendUrlForReport(siteLocales, localeCode),
     method: 'POST',
     headers,
     json: true,

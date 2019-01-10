@@ -16,6 +16,9 @@ const actions = createActions('APP', [
     'REMOVE_PORNSTAR_FROM_FAVORITE',
     'ADD_PORNSTAR_ID_TO_FAVORITE',
     'REMOVE_PORNSTAR_ID_FROM_FAVORITE',
+
+    'SET_LOCALE_CODE',
+    'FILL_LOCALE_PAGE_CODES',
 ])
 
 export default actions
