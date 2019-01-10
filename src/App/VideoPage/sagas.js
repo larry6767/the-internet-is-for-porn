@@ -46,7 +46,7 @@ export function* sendReportFlow({payload: formData}) {
         const
             reqData = yield select(x => ({
                 localeCode: ig(x, 'app', 'locale', 'localeCode'),
-                ...formData
+                ...formData.toJS()
             })),
 
             data = yield fetch(`${BACKEND_URL}/send-report`, {
