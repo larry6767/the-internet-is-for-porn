@@ -40,7 +40,18 @@ export function* loadSiteLocalesFlow(action) {
     }
 }
 
+export function* setNewLanguageFlow({payload: localeCode}) {
+    const
+        siteLocales =
+            yield select(x => ig(x, 'app', 'mainHeader', 'language', 'siteLocales', 'list')),
+
+        host = ig(siteLocales.find(x => ig(x, 'code') === localeCode), 'host')
+
+    window.location = `//${host}`
+}
+
 export default function* saga() {
     yield takeEvery(g(actions, 'loadSiteLocalesRequest'), loadSiteLocalesFlow)
+    yield takeEvery(g(actions, 'setNewLanguage'), setNewLanguageFlow)
 }
 
