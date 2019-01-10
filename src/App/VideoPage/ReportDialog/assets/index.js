@@ -20,3 +20,7 @@ export const Description = styled.div`
     flex-grow: 1;
     max-width: calc(100% - 258px - 20px);
 `
+
+export const SubmitButtonWrapper = styled.div`
+    position: relative;
+`

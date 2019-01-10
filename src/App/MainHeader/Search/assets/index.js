@@ -13,7 +13,7 @@ export const Search = styled.div`
 //     align-items: center;
 //     border: none;
 //     border-radius: 4px;
-//     background-color: ${({theme}) => theme.colors.mainColor2};
+//     background-color: ${({theme}) => theme.palette.primary.dark};
 //     background-image: url('/img/search.svg');
 //     background-repeat: no-repeat;
 //     background-position: right 15px center;
@@ -25,12 +25,12 @@ export const Search = styled.div`
 //     ${({theme}) => theme.media.sm`padding: 12px 60px 12px 20px;`}
 
 //     &::placeholder {
-//         color: ${({theme}) => theme.colors.additionalColor};
+//         color: ${({theme}) => theme.palette.primary.light};
 //     }
 
 //     &:focus {
 //         outline: none;
-//         color: ${({theme}) => theme.colors.mainOppositeColor};
+//         color: ${({theme}) => theme.palette.primary.contrastText};
 //     }
 
 //     &:disabled {

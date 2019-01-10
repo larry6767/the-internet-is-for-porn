@@ -8,7 +8,7 @@ export const FooterInner = styled.div`
     display: flex;
     padding: 25px 20px 10px;
     margin: 0 auto;
-    border-top: 1px solid ${({theme}) => theme.colors.additionalColor};
+    border-top: 1px solid ${({theme}) => theme.palette.primary.light};
 
     ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}
@@ -42,7 +42,7 @@ export const LinkItem = styled.li`
 
 export const Link = styled.a`
     font-weight: bold;
-    color: ${({theme}) => theme.colors.mainColor};
+    color: ${({theme}) => theme.palette.primary.main};
     text-decoration: none;
 
     &:hover {

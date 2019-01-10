@@ -45,7 +45,7 @@ export const LoadingProgress = styled.div`
     top: 0;
     right: 0;
     left: 0;
-    background-color: ${({theme}) => theme.colors.mainColor2};
+    background-color: ${({theme}) => theme.palette.primary.light};
     transform: translateX(-100%);
     transition: transform 1s;
 `
@@ -55,7 +55,7 @@ export const VideoPreview = styled.div`
     display: flex;
     align-items: flex-end;
     width: 100%;
-    background-color: ${({theme}) => theme.colors.mainColor2};
+    background-color: ${({theme}) => theme.palette.primary.light};
     background-image: ${({thumb}) => `url(${thumb})`};
     background-size: cover;
     background-repeat: no-repeat;
@@ -106,7 +106,7 @@ export const Like = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: ${({theme}) => theme.colors.opacityMainColor2};
+    background-color: ${({theme}) => theme.palette.primary.lightOpacity};
     border-radius: 1px;
     min-height: 35px;
     min-width: 40px;
@@ -115,7 +115,7 @@ export const Like = styled.div`
 export const Duration = styled.div`
     display: flex;
     padding: 5px;
-    background-color: ${({theme}) => theme.colors.opacityMainColor2};
+    background-color: ${({theme}) => theme.palette.primary.lightOpacity};
     border-radius: 1px;
     min-height: 35px;
 `

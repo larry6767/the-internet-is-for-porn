@@ -28,7 +28,7 @@ export const DataWrapper = styled.div`
 export const Thumb = styled.div`
     width: 100%;
     height: auto;
-    border: 1px solid ${({theme}) => theme.colors.additionalColor};
+    border: 1px solid ${({theme}) => theme.palette.primary.light};
     background: ${({thumb}) => `url(${thumb})`};
     background-size: cover;
     border-radius: 1px;

@@ -21,9 +21,9 @@ export const NicheMobile = styled.nav`
 export const NicheMobileItem = styled.a`
     width: 33.33%;
     padding: 10px 0;
-    border: 2px solid ${({theme}) => theme.colors.mainColor2};
+    border: 2px solid ${({theme}) => theme.palette.primary.dark};
     text-align: center;
-    color: ${({theme}) => theme.colors.additionalColor};
+    color: ${({theme}) => theme.palette.primary.light};
     text-decoration: none;
 
     &:first-child {
@@ -38,7 +38,7 @@ export const NicheMobileItem = styled.a`
 `
 
 export const NicheMobileItemSelected = styled(NicheMobileItem)`
-    color: ${({theme}) => theme.colors.mainOppositeColor};
+    color: ${({theme}) => theme.palette.primary.contrastText};
 `
 
 export const TextIcon = styled.div`

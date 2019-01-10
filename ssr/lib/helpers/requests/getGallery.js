@@ -55,7 +55,7 @@ export default (data, pageUrl, publishedTemplate) => {
         thumb: data.thumb_url,
         thumbMask: data.thumb_url.replace(/-\d+.jpg/, '-{num}.jpg'),
         thumbs: data.thumbs,
-        tags: data.tags,
+        tags: data.tags || [],
         // This is for very small string under a video preview,
         // it's usually only one single tag.
         tagsShort: data.tags.reduce((acc, tag) => {

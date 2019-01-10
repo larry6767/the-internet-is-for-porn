@@ -25,13 +25,13 @@ export const muiStyles = theme => ({
         transition: 'width 0.2s, height 0.2s, top 0.2s, left 0.2s',
         marginRight: 2,
         '&:hover': {
-            color: 'red',
+            color: theme.palette.error.main,
             width: '1.1em',
             height: '1.1em',
         }
     },
     favoriteIcon: {
-        color: 'red',
+        color: theme.palette.error.main,
         transition: 'width 0.2s, height 0.2s, top 0.2s, left 0.2s',
         marginRight: 2,
         '&:hover': {
