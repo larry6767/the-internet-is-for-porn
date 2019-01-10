@@ -8,6 +8,7 @@ import {
     CircularProgress,
     Typography,
     Button,
+    Chip,
 } from '@material-ui/core'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
@@ -37,6 +38,8 @@ import {
     InlineAdvertisement,
     CloseAdvertisement,
     AdGag,
+    TagsWrapper,
+    SponsorLink,
 } from './assets'
 import actions from './actions'
 import appActions from '../actions'
@@ -107,7 +110,7 @@ const
         classes, isSSR, data, favoriteVideoList, closeAdvertisementHandler,
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
         toggleReportDialogHandler, pageUrl,
-        handleSubmit, pristine, reset,
+        handleSubmit, pristine, reset, currentBreakpoint,
     }) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
@@ -118,13 +121,27 @@ const
                     <PlayerSection>
                         <Typography
                             variant="h4"
-                            gutterBottom
                             classes={{
                                 root: classes.typographyTitle
                             }}
                         >
                             {`${data.getIn(['gallery', 'title'])} ${
                                 data.getIn(['pageText', 'galleryTitle'])}`}
+                        </Typography>
+                        <Typography
+                            variant="body1"
+                            classes={{
+                                root: classes.typographySponsor
+                            }}
+                        >
+                            {'provided by: '}
+                            <SponsorLink
+                                href={data.getIn(['gallery', 'sponsorUrl'])}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {data.getIn(['gallery', 'sponsorId'])}
+                            </SponsorLink>
                         </Typography>
                         <VideoPlayer>
                             <VideoWrapper>
@@ -188,6 +205,23 @@ const
                                     'isAd'
                                 )}
                             </Advertisement>
+                            <TagsWrapper>
+                                {data.getIn(['gallery', 'tags']) &&
+                                    data.getIn(['gallery', 'tags']).map(x => <Chip
+                                        key={x}
+                                        label={x}
+                                        className={classes.chip}
+                                        component="a"
+                                        href="#chip"
+                                        variant="outlined"
+                                        color={
+                                            currentBreakpoint === 'xxs' || currentBreakpoint === 'xs'
+                                                ? 'primary'
+                                                : 'secondary'
+                                        }
+                                        clickable
+                                    />)}
+                            </TagsWrapper>
                         </VideoPlayer>
                     </PlayerSection>
                     <RelatedVideos>
@@ -260,6 +294,7 @@ export default compose(
                 [fieldNamesArray[3]]: state.getIn(['app', 'videoPage', 'currentHref']),
                 'report-reason': 'reason_nothing',
             },
+            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
         }),
         dispatch => ({
             loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),

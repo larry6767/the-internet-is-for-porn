@@ -6,7 +6,7 @@ export const Header = styled.header`
 `
 
 export const Top = styled.div`
-    background-color: ${({theme}) => theme.colors.mainColor};
+    background-color: ${({theme}) => theme.palette.primary.main};
 `
 
 export const TopInner = styled.div`
@@ -75,7 +75,7 @@ export const Icon = styled.div`
 `
 
 export const BottomInner = styled.div`
-    border-bottom: 1px solid ${({theme}) => theme.colors.additionalColor};
+    border-bottom: 1px solid ${({theme}) => theme.palette.primary.light};
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;

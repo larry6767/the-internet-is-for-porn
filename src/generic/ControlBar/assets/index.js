@@ -36,10 +36,10 @@ export const InlinedSelectionItem = styled.a`
     display: inline-block;
     padding: 10px 10px;
     border: 2px solid
-        ${({theme, isActive}) => isActive ? theme.colors.mainColor : theme.colors.mainColor3};
+        ${({theme, isActive}) => isActive ? theme.palette.primary.main : theme.palette.primary.dark};
     color:
         ${({theme, isActive}) =>
-            isActive ? theme.colors.mainColor : theme.colors.additionalColor};
+            isActive ? theme.palette.primary.main : theme.palette.primary.light};
     text-align: center;
     white-space: nowrap;
     text-decoration: none;

@@ -13,10 +13,11 @@ export const PlayerSection = styled.div`
 export const VideoPlayer = styled.div`
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     width: 100%;
     border-radius: 2px;
     overflow: hidden;
-    background-color: ${({theme}) => theme.colors.mainColor2};
+    background-color: ${({theme}) => theme.palette.primary.light};
 
     ${({theme}) => theme.media.sm`flex-direction: column;`}
     ${({theme}) => theme.media.mobile`flex-direction: column; background: none;`}
@@ -66,6 +67,7 @@ export const ControlPanel = styled.div`
 
 export const ControlPanelBlock = styled.div`
     display: flex;
+    align-items: center;
 
     ${({theme}) => theme.media.mobile`flex-wrap: wrap;`}
 `
@@ -77,7 +79,7 @@ export const InlineAdvertisementWrapper = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: ${({theme}) => theme.colors.opacityMainColor2};
+    background-color: ${({theme}) => theme.palette.primary.lightOpacity};
     cursor: not-allowed;
 `
 
@@ -85,11 +87,11 @@ export const AdGag = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background: ${({theme}) => `${theme.colors.successColor}`};
+    background: ${({theme}) => `${theme.palette.secondary.main}`};
 
     &::before {
         content: 'Gag for advertisement';
-        color: ${({theme}) => `${theme.colors.mainColor}`};
+        color: ${({theme}) => `${theme.palette.primary.main}`};
     }
 `
 
@@ -99,7 +101,7 @@ export const InlineAdvertisement = styled.div`
     left: calc(50% - 150px);
     width: 300px;
     height: 254px;
-    background-color: ${({theme}) => theme.colors.mainColor2};
+    background-color: ${({theme}) => theme.palette.primary.light};
 
     ${({theme}) => theme.media.mobile`
         top: calc(50% - 85px);
@@ -126,7 +128,7 @@ export const InlineAdvertisement = styled.div`
             right: 0;
             width: 17px;
             height: 17px;
-            background: ${({theme}) => theme.colors.mainColor2};
+            background: ${({theme}) => theme.palette.primary.lightOpacity};
         }
     }
 `
@@ -152,6 +154,7 @@ export const Advertisement = styled.div`
         flex-wrap: wrap;
         flex-direction: row;
         justify-content: space-around;
+        order: 1;
     `}
 
     ${({theme}) => theme.media.mobile`
@@ -160,6 +163,7 @@ export const Advertisement = styled.div`
         flex-direction: row;
         justify-content: space-around;
         padding: 0;
+        order: 1;
     `}
 
     & iframe,
@@ -184,7 +188,7 @@ export const BottomAdvertisement = styled.section`
     display: flex;
     width: 100%;
     justify-content: space-between;
-    background-color: ${({theme}) => theme.colors.mainColor2};
+    background-color: ${({theme}) => theme.palette.primary.light};
     padding: 10px 10px 7px;
     border-radius: 2px;
 
@@ -206,4 +210,18 @@ export const BottomAdvertisement = styled.section`
             ${({theme}) => theme.media.mobile`margin-bottom: 10px;`}
         }
     }
+`
+
+export const TagsWrapper = styled.div`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 10px 10px 4px;
+
+    ${({theme}) => theme.media.mobile`padding: 0;`}
+`
+
+export const SponsorLink = styled.a`
+    color: ${({theme}) => theme.palette.primary.main};
 `

@@ -32,20 +32,39 @@ const breakPoints = {
 }
 
 const theme = {
-    colors: {
-        mainColor: 'rgb(41, 45, 57);',
-        mainColor2: 'rgb(60, 64, 76);',
-        mainOppositeColor: 'rgb(255, 255, 255);',
-        additionalColor: 'rgb(161, 167, 171);',
-        successColor: 'rgb(113, 163, 113);',
-        failureColor: 'rgb(255, 4, 0);',
-
-        opacityMainColor: 'rgba(41, 45, 57, 0.6);',
-        opacityMainColor2: 'rgba(60, 64, 76, 0.6);',
-        opacityMainOppositeColor: 'rgba(255, 255, 255, 0.6);',
-        opacityAdditionalColor: 'rgba(161, 167, 171, 0.6);',
-        opacitySuccessColor: 'rgb(113, 163, 113, 0.6);',
-        opacityFailureColor: 'rgb(255, 4, 0, 0.6);',
+    palette: {
+        primary: {
+            light: '#525663',
+            main: '#292d39',
+            dark: '#000213',
+            contrastText: '#fff',
+            lightOpacity: '#52566380',
+            mainOpacity: '#292d3980',
+            darkOpacity: '#00021380',
+            contrastTextOpacity: '#ffffff80',
+        },
+        secondary: {
+            light: '#ffd14a',
+            main: '#f8a004',
+            dark: '#bf7100',
+            contrastText: '#000',
+            lightOpacity: '#ffd14a80',
+            mainOpacity: '#f8a00480',
+            darkOpacity: '#bf710080',
+            contrastTextOpacity: '#00000080',
+        },
+        error: {
+            light: '#E57373',
+            main: '#F44336',
+            dark: '#D32F2F',
+            contrastText: '#ffffff',
+        },
+        success: {
+            light: '#8aff99',
+            main: '#52d869',
+            dark: '#00a53b',
+            contrastText: '#000000',
+        },
     },
     media: Object.keys(breakPoints).reduce((acc, current) => {
         acc[current] = (...args) => css`

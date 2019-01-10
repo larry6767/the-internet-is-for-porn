@@ -12,7 +12,7 @@ export const LetterIcon = styled.div`
     justify-content: center;
     font-size: 24px;
     font-weight: bold;
-    color: ${({theme}) => theme.colors.mainColor};
+    color: ${({theme}) => theme.palette.primary.main};
 `
 
 export const NichesList = styled.ul`
@@ -57,7 +57,7 @@ export const NicheImage = styled.div`
     display: flex;
     align-items: flex-end;
     width: 100%;
-    background-color: ${({theme}) => theme.colors.mainColor2};
+    background-color: ${({theme}) => theme.palette.primary.dark};
     background-image: ${({thumb}) => `url(${thumb})`};
     background-size: cover;
     background-repeat: no-repeat;

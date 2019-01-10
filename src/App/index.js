@@ -2,7 +2,6 @@ import React, {Fragment} from 'react'
 import MainHeader from './MainHeader'
 import MainFooter from './MainFooter'
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles'
-import {blueGrey, amber} from '@material-ui/core/colors/'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
 import {throttle} from 'lodash'
@@ -15,13 +14,14 @@ import {Normalize} from 'styled-normalize'
 const
     muiTheme = createMuiTheme({
         palette: {
-            primary: blueGrey,
-            secondary: amber,
+            primary: {...theme.palette.primary},
+            secondary: {...theme.palette.secondary},
+            error: {...theme.palette.error},
+            success: {...theme.palette.seccess},
         },
         typography: {
             useNextVariants: true,
         },
-        colors: {...theme.colors} // for using colors from our theme in muiStyles
     })
 
 export const App = ({sheetsManager, location, children}) => <MuiThemeProvider

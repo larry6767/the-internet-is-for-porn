@@ -20,13 +20,13 @@ export const muiStyles = theme => ({
         marginTop: 80,
         fontWeight: 'bold',
         textAlign: 'center',
-        color: theme.colors.successColor,
+        color: theme.palette.success.main,
     },
     dialogFailureText: {
         marginTop: 60,
         fontWeight: 'bold',
         textAlign: 'center',
-        color: theme.colors.failureColor,
+        color: theme.palette.error.main,
     },
     buttonProgress: {
         position: 'absolute',
