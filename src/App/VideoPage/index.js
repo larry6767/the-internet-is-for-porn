@@ -146,8 +146,8 @@ const
                         <VideoPlayer>
                             <VideoWrapper>
                                 <Video>
-                                    {(data.get('inlineAdvertisementIsShowed') && !isSSR) &&
-                                        <InlineAdvertisementWrapper>
+                                    {(data.get('inlineAdvertisementIsShowed') && !isSSR)
+                                        ? <InlineAdvertisementWrapper>
                                             <InlineAdvertisement>
                                                 <CloseAdvertisement
                                                     onClick={closeAdvertisementHandler}
@@ -157,17 +157,19 @@ const
                                                     'isAd'
                                                 )}
                                             </InlineAdvertisement>
-                                        </InlineAdvertisementWrapper>}
+                                        </InlineAdvertisementWrapper>
+                                        : null}
                                     {renderIframe(data.getIn(['gallery', 'urlForIframe']))}
                                 </Video>
                                 <ControlPanel>
                                     <ControlPanelBlock>
-                                        {!isSSR &&
-                                            renderFavoriteButton(
+                                        {!isSSR
+                                            ? renderFavoriteButton(
                                                 classes, data, favoriteVideoList,
                                                 addVideoToFavoriteHandler,
                                                 removeVideoFromFavoriteHandler
-                                            )}
+                                            )
+                                            : null}
                                         <Link to="/" className={classes.routerLink}>
                                             <Button
                                                 variant="contained"
@@ -181,8 +183,8 @@ const
                                         </Link>
                                     </ControlPanelBlock>
                                     <ControlPanelBlock>
-                                        {!isSSR &&
-                                            <Button
+                                        {!isSSR
+                                            ? <Button
                                                 variant="contained"
                                                 color="primary"
                                                 classes={{
@@ -191,7 +193,8 @@ const
                                                 onClick={toggleReportDialogHandler}
                                             >
                                                 {'Report'}
-                                            </Button>}
+                                            </Button>
+                                            : null}
                                     </ControlPanelBlock>
                                 </ControlPanel>
                             </VideoWrapper>
@@ -206,8 +209,8 @@ const
                                 )}
                             </Advertisement>
                             <TagsWrapper>
-                                {data.getIn(['gallery', 'tags']) &&
-                                    data.getIn(['gallery', 'tags']).map(x => <Chip
+                                {data.getIn(['gallery', 'tags'])
+                                    ? data.getIn(['gallery', 'tags']).map(x => <Chip
                                         key={x}
                                         label={x}
                                         className={classes.chip}
@@ -220,7 +223,8 @@ const
                                                 : 'secondary'
                                         }
                                         clickable
-                                    />)}
+                                    />)
+                                    : null}
                             </TagsWrapper>
                         </VideoPlayer>
                     </PlayerSection>

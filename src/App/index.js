@@ -17,7 +17,7 @@ const
             primary: {...theme.palette.primary},
             secondary: {...theme.palette.secondary},
             error: {...theme.palette.error},
-            success: {...theme.palette.seccess},
+            success: {...theme.palette.success},
         },
         typography: {
             useNextVariants: true,

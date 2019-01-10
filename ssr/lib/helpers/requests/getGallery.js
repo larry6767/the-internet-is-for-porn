@@ -42,8 +42,6 @@ export default (data, pageUrl, publishedTemplate) => {
 
             : publishedTemplate.s[0]
 
-    console.log(data)
-
     return {
         id: Number(data.id),
         classId: Number(data.id_class),

@@ -20,7 +20,7 @@ export const muiStyles = theme => ({
         marginTop: 80,
         fontWeight: 'bold',
         textAlign: 'center',
-        color: theme.palette.success.main,
+        color: theme.palette.success.dark,
     },
     dialogFailureText: {
         marginTop: 60,

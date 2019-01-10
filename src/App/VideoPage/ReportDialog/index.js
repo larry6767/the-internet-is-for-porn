@@ -146,14 +146,15 @@ const
                         </Description>
                     </VideoBlock>
 
-                    {!data.get('reportIsSent') &&
-                        <Field
+                    {!data.get('reportIsSent')
+                        ? <Field
                             name="report-reason"
                             classes={classes}
                             radioButtons={radioButtons}
                             className={classes.group}
                             component={renderRadioButtons}
-                        />}
+                        />
+                        : null}
 
                     {data.get('reportIsSent')
                         ? <DialogContentText classes={{root: classes.dialogSuccessText}}>
@@ -163,18 +164,20 @@ const
                             {fixtures.dialogText}
                         </DialogContentText>}
 
-                    {!data.get('reportIsSent') &&
-                        <Field
+                    {!data.get('reportIsSent')
+                        ? <Field
                             name="report-comment"
                             label="Comment"
                             type="text"
                             component={renderTextField}
-                        />}
+                        />
+                        : null}
 
-                    {data.get('reportIsNotSent') &&
-                        <DialogContentText classes={{root: classes.dialogFailureText}}>
+                    {data.get('reportIsNotSent') && pristine
+                        ? <DialogContentText classes={{root: classes.dialogFailureText}}>
                             {fixtures.dialogFailureText}
-                        </DialogContentText>}
+                        </DialogContentText>
+                        : null}
 
                     {fieldNamesArray.map(x => <Field
                         key={x}
@@ -195,8 +198,8 @@ const
                         Cancel
                     </Button>
 
-                    {!data.get('reportIsSent') &&
-                        <SubmitButtonWrapper>
+                    {!data.get('reportIsSent')
+                        ? <SubmitButtonWrapper>
                             <Button
                                 disabled={pristine || data.get('reportIsSending')}
                                 type="submit"
@@ -204,9 +207,11 @@ const
                             >
                                 Report
                             </Button>
-                            {data.get('reportIsSending') &&
-                                <CircularProgress size={24} className={classes.buttonProgress}/>}
-                        </SubmitButtonWrapper>}
+                            {data.get('reportIsSending')
+                                ? <CircularProgress size={24} className={classes.buttonProgress}/>
+                                : null}
+                        </SubmitButtonWrapper>
+                        : null}
 
                 </DialogActions>
             </form>
