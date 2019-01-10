@@ -3,7 +3,7 @@ import {render} from 'react-dom'
 import Root from './root'
 import store from './store'
 import saga from './sagas'
-import {plainProvedGet as g, immutableProvedGet as ig} from './App/helpers'
+import {plainProvedGet as g, immutableProvedGet as ig, getCookie} from './App/helpers'
 import appActions from './App/actions'
 import {BACKEND_URL} from './config'
 
@@ -12,6 +12,7 @@ store.runSaga(saga)
 const
     runFrontEnd = () => render(<Root />, document.getElementById('root'))
 
+// TODO also handle "test.*" domain to store locale in a cookie
 if (process.env.NODE_ENV === 'production')
     runFrontEnd()
 else {
@@ -27,7 +28,7 @@ else {
                 'Accept': 'application/json',
             },
             body: JSON.stringify({
-                localeCode: null,
+                localeCode: getCookie('development-locale-code') || null,
             }),
         }).then(response => {
             if (response.status !== 200)

@@ -1,7 +1,7 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 
 import {BACKEND_URL} from '../../../config'
-import {plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
+import {plainProvedGet as g, immutableProvedGet as ig, setCookie} from '../../helpers'
 import errorActions from '../../../generic/ErrorMessage/actions'
 import actions from './actions'
 
@@ -45,9 +45,16 @@ export function* setNewLanguageFlow({payload: localeCode}) {
         siteLocales =
             yield select(x => ig(x, 'app', 'mainHeader', 'language', 'siteLocales', 'list')),
 
-        host = ig(siteLocales.find(x => ig(x, 'code') === localeCode), 'host')
+        matchedLocale = siteLocales.find(x => ig(x, 'code') === localeCode)
 
-    window.location = `//${host}`
+    // TODO also handle "test.*" domain to store locale in a cookie
+    if (process.env.NODE_ENV === 'production') {
+        const host = ig(matchedLocale, 'host')
+        window.location = `//${host}`
+    } else {
+        setCookie('development-locale-code', ig(matchedLocale, 'code'), 3600)
+        window.location.reload()
+    }
 }
 
 export default function* saga() {
