@@ -1,3 +1,4 @@
+import {isArray} from 'lodash'
 import {isImmutable, getIn} from 'immutable'
 
 // Safe way to obtain value by path from an immutable Map/List/etc.
@@ -10,6 +11,8 @@ import {isImmutable, getIn} from 'immutable'
 export default (immutableObj, path, ...restPath) => {
     if (restPath.length > 0)
         path = [path].concat(restPath)
+    else if ( ! isArray(path))
+        path = [path]
 
     if ( ! isImmutable(immutableObj))
         throw new Error(

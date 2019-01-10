@@ -221,7 +221,9 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
                 },
             }
         )
-    else if (g(req, 'method') === 'POST' && req.params.operation === 'get-site-locale')
+    else if (g(req, 'method') === 'GET' && req.params.operation === 'get-site-locales')
+        res.json(siteLocales).end()
+    else if (g(req, 'method') === 'POST' && req.params.operation === 'get-site-locale-data')
         getSiteLocale(siteLocales, defaultSiteLocaleCode)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-page-data')
         getPageData(siteLocales)(req, res)

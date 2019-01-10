@@ -20,7 +20,7 @@ else {
     if (ig(store.getState(), 'app', 'locale', 'pageCode'))
         runFrontEnd()
     else
-        fetch(`${BACKEND_URL}/get-site-locale`, {
+        fetch(`${BACKEND_URL}/get-site-locale-data`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',

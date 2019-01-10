@@ -16,6 +16,7 @@ import {proxiedHeaders} from './backend-proxy'
 import RouterBuilder from '../router-builder'
 import {App} from '../App'
 import appActions from '../App/actions'
+import languageActions from '../App/MainHeader/Language/actions'
 
 const getPageData =
     (req, siteLocales, localeCode) => etc =>
@@ -46,6 +47,7 @@ export default (
 
         store.dispatch(appActions.setLocaleCode(localeCode))
         store.dispatch(appActions.fillLocalePageCodes(buildLocalePageCodes(localeCode)))
+        store.dispatch(languageActions.setNewLanguage(localeCode))
 
         const
             staticRouterContext = {isPreRouting: true},

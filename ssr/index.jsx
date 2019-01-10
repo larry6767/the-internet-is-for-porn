@@ -82,7 +82,7 @@ const initApp = async () => {
         backendProxyHandler(siteLocales, defaultSiteLocaleCode)
     )
 
-    app.use((req, res) => render(req, res, newStore(req.url)))
+    app.use((req, res) => render(req, res, newStore(siteLocales, req.url)))
 
     app.listen(port, host, () => {
         if (isProduction) console.info('Running in production mode...')
