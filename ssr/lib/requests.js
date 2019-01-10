@@ -1,6 +1,7 @@
 import {pick, map, find} from 'lodash'
 import rp from 'request-promise-native'
 
+import {defaultHostToFetchSiteLocalesFrom} from '../config'
 import apiLocales from '../api-locale-mapping'
 import {plainProvedGet as g} from '../App/helpers'
 import {backendUrl, backendUrlForReport} from './helpers/backendUrl'
@@ -261,7 +262,10 @@ export const getPageData = (siteLocales, localeCode) => async ({headers, pageCod
 export const getSiteLocales = async () => {
     const
         {page: {CUSTOM_DATA: {langSites}}} = await rp({
-            uri: backendUrl([{host: 'videosection.com', code: '--PLUG--'}], '--PLUG--'),
+            uri: backendUrl(
+                [{host: defaultHostToFetchSiteLocalesFrom, code: '--PLUG--'}],
+                '--PLUG--'
+            ),
             method: 'POST',
             headers: {
                 'accept': 'application/json',
