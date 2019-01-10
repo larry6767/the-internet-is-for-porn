@@ -1,7 +1,7 @@
+import {get} from 'lodash'
 import {put, takeEvery, select} from 'redux-saga/effects'
 import {BACKEND_URL} from '../../config'
-import {videoPageCode} from '../../api-page-codes'
-import {getPageData} from '../helpers'
+import {getPageData, immutableProvedGet as ig} from '../helpers'
 import errorActions from '../../generic/ErrorMessage/actions'
 
 import actions from './actions'
@@ -9,11 +9,15 @@ import actions from './actions'
 export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
     try {
         const
-            reqData = {pageCode: videoPageCode, subPageCode: subPageForRequest}
+            reqData = yield select(x => ({
+                localeCode: ig(x, 'app', 'locale', 'localeCode'),
+                pageCode: ig(x, 'app', 'locale', 'pageCode', 'video'),
+                subPageCode: subPageForRequest,
+            }))
 
         let data
 
-        if (yield select(x => x.getIn(['app', 'ssr', 'isSSR'])))
+        if (yield select(x => ig(x, 'app', 'ssr', 'isSSR')))
             data = yield ssrContext.getPageData(reqData)
         else {
             const
@@ -40,13 +44,18 @@ export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
 export function* sendReportFlow({payload: formData}) {
     try {
         const
+            reqData = yield select(x => ({
+                localeCode: ig(x, 'app', 'locale', 'localeCode'),
+                ...formData.toJS()
+            })),
+
             data = yield fetch(`${BACKEND_URL}/send-report`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json; charset=utf-8',
                     'Accept': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(reqData),
             }).then(response => {
                 if (response.status !== 200)
                     throw new Error(`Response status is ${response.status} (not 200)`)
@@ -54,7 +63,7 @@ export function* sendReportFlow({payload: formData}) {
                 return response.json()
             })
 
-        if (data && data.success === true) {
+        if (get(data, 'success') === true) {
             yield put(actions.sendReportSuccess())
         } else {
             console.error('the report was not sent, try again')

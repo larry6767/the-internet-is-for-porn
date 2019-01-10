@@ -1,3 +1,4 @@
+import {find, includes} from 'lodash'
 import React from 'react'
 import {Provider} from 'react-redux'
 import {StaticRouter} from 'react-router'
@@ -8,92 +9,123 @@ import {SheetsRegistry} from 'jss'
 import JssProvider from 'react-jss/lib/JssProvider'
 import {createGenerateClassName} from '@material-ui/core/styles'
 
+import {plainProvedGet as g, immutableProvedGet as ig} from '../App/helpers'
+import {buildLocalePageCodes} from './helpers'
 import {getPageData as requestPageData} from './requests'
 import {proxiedHeaders} from './backend-proxy'
 import RouterBuilder from '../router-builder'
 import {App} from '../App'
+import appActions from '../App/actions'
+import languageActions from '../App/MainHeader/Language/actions'
 
-const getPageData = req => etc => requestPageData({headers: proxiedHeaders(req), ...etc})
+const getPageData =
+    (req, siteLocales, localeCode) => etc =>
+        requestPageData(siteLocales, localeCode)({
+            headers: proxiedHeaders(siteLocales, localeCode)(req),
+            ...etc
+        })
 
 // renders a page and makes a proper response for express.js
-export default
-    ({pre, post}) => // <- pre-bound layout template object
-    async (req, res, store) => {
-        try {
-            const
-                staticRouterContext = {isPreRouting: true},
-                state = store.getState(),
-                location = state.getIn(['router', 'location'])
+export default (
+    siteLocales,
+    defaultSiteLocaleCode,
+    {pre, post} // <- pre-bound layout template object
+) => async (req, res, store) => {
+    try {
+        const
+            domain = req.get('host').replace(/:[0-9]+$/, ''),
+            isLocalhost = includes(['localhost', '127.0.0.1'], domain),
 
-            // just filling `staticRouterContext` with meta info,
-            // not really rendering anything.
-            renderToString(
-                <StaticRouter location={req.url} context={staticRouterContext}>
-                    <RouterBuilder location={location}/>
-                </StaticRouter>
-            )
+            locale = isLocalhost
+                ? find(siteLocales, x => g(x, 'code') === defaultSiteLocaleCode)
+                : find(siteLocales, x => g(x, 'host') === domain),
 
-            if (staticRouterContext.saga) {
-                await new Promise((resolve, reject) => {
-                    try {
-                        store.runSaga(function* () {
-                            try {
-                                const ssrContext = {getPageData: getPageData(req)}
-                                yield [staticRouterContext.saga(ssrContext)]
-                                resolve()
-                            } catch (e) {reject(e)}
-                        })
-                    } catch (e) {reject(e)}
-                })
-            }
+            localeCode = g(locale, 'code')
 
-            if (staticRouterContext.statusCodeResolver)
-                res.status(staticRouterContext.statusCodeResolver(store.getState()))
+        if ( ! locale)
+            throw new Error(`Site locale not found for this host: ${req.get('host')}`)
 
-            if (staticRouterContext.url) {
-                res.writeHead(302, {'Location': staticRouterContext.url})
-                return res.end()
-            }
+        store.dispatch(appActions.setLocaleCode(localeCode))
+        store.dispatch(appActions.fillLocalePageCodes(buildLocalePageCodes(localeCode)))
+        store.dispatch(languageActions.setNewLanguage(localeCode))
 
-            const
-                serverStyleSheet = new ServerStyleSheet(),
-                jssSheetsRegistry = new SheetsRegistry(),
-                generateClassName = createGenerateClassName(),
-                sheetsManager = new Map(), // is needed to fix styles not rendered after page reload
+        const
+            staticRouterContext = {isPreRouting: true},
+            state = store.getState(),
+            location = ig(state, 'router', 'location')
 
-                html = renderToString(serverStyleSheet.collectStyles(
-                    <JssProvider registry={jssSheetsRegistry} generateClassName={generateClassName}>
-                        <Provider store={store}>
-                            <StaticRouter location={req.url} context={{}}>
-                                <App sheetsManager={sheetsManager} location={location}>
-                                    {RouterBuilder}
-                                </App>
-                            </StaticRouter>
-                        </Provider>
-                    </JssProvider>
-                ))
+        // just filling `staticRouterContext` with meta info,
+        // not really rendering anything.
+        renderToString(
+            <StaticRouter location={req.url} context={staticRouterContext}>
+                <RouterBuilder location={location}/>
+            </StaticRouter>
+        )
 
-            const
-                styledComponentsStyles = serverStyleSheet.getStyleTags(),
+        if (staticRouterContext.saga) {
+            await new Promise((resolve, reject) => {
+                try {
+                    store.runSaga(function* () {
+                        try {
+                            const ssrContext = {
+                                getPageData: getPageData(req, siteLocales, localeCode),
+                            }
 
-                jssStyles = `<style id="jss-server-side">
-                    ${jssSheetsRegistry.registry.filter(x => x.attached).join('\n')}
-                </style>`,
-
-                storePresetHtml = `<script>
-                    window.storePreset = ${JSON.stringify(
-                        store.getState().setIn(['app', 'ssr', 'isSSR'], false).toJS()
-                    )}
-                </script>`
-
-            return res.end(`${pre}
-                ${html}
-                ${styledComponentsStyles}
-                ${jssStyles}
-                ${storePresetHtml}
-            ${post}`)
-        } catch (e) {
-            res.status(500).end('Internal Server Error')
-            throw e
+                            yield [staticRouterContext.saga(ssrContext)]
+                            resolve()
+                        } catch (e) {reject(e)}
+                    })
+                } catch (e) {reject(e)}
+            })
         }
+
+        if (staticRouterContext.statusCodeResolver)
+            res.status(staticRouterContext.statusCodeResolver(store.getState()))
+
+        if (staticRouterContext.url) {
+            res.writeHead(302, {'Location': staticRouterContext.url})
+            return res.end()
+        }
+
+        const
+            serverStyleSheet = new ServerStyleSheet(),
+            jssSheetsRegistry = new SheetsRegistry(),
+            generateClassName = createGenerateClassName(),
+            sheetsManager = new Map(), // is needed to fix styles not rendered after page reload
+
+            html = renderToString(serverStyleSheet.collectStyles(
+                <JssProvider registry={jssSheetsRegistry} generateClassName={generateClassName}>
+                    <Provider store={store}>
+                        <StaticRouter location={req.url} context={{}}>
+                            <App sheetsManager={sheetsManager} location={location}>
+                                {RouterBuilder}
+                            </App>
+                        </StaticRouter>
+                    </Provider>
+                </JssProvider>
+            ))
+
+        const
+            styledComponentsStyles = serverStyleSheet.getStyleTags(),
+
+            jssStyles = `<style id="jss-server-side">
+                ${jssSheetsRegistry.registry.filter(x => x.attached).join('\n')}
+            </style>`,
+
+            storePresetHtml = `<script>
+                window.storePreset = ${JSON.stringify(
+                    store.getState().setIn(['app', 'ssr', 'isSSR'], false).toJS()
+                )}
+            </script>`
+
+        return res.end(`${pre}
+            ${html}
+            ${styledComponentsStyles}
+            ${jssStyles}
+            ${storePresetHtml}
+        ${post}`)
+    } catch (e) {
+        res.status(500).end('Internal Server Error')
+        throw e
     }
+}

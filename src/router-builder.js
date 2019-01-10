@@ -163,7 +163,8 @@ export default ({location}) => <Switch>
     }}/>
 
     <Route path="/your-favorite-porn-stars.html" render={() =>
-        <Redirect to="/favorite-porn-stars"/>}/>
+        <Redirect to="/favorite-porn-stars"/>
+    }/>
     <Route path="/favorite-porn-stars" render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const {staticContext: x} = props

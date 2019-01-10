@@ -9,6 +9,8 @@ export {
     compareCurrentBreakpoint,
 } from './getCurrentBreakpoint'
 
+export {default as immutableProvedGet} from './immutable/provedGet'
+export {default as plainProvedGet} from './plain/provedGet'
 export {default as withStylesProps} from './withStylesProps'
 export {default as createActions} from './createActions'
 export {default as getValueForNavigation} from './getValueForNavigation'

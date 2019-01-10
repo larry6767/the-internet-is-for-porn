@@ -6,6 +6,7 @@ import {
     getCurrentBreakpoint,
     addIdToFavoriteList,
     removeIdFromFavoriteList,
+    plainProvedGet as g,
 } from './helpers'
 import homeReducer from './Home/reducers'
 import mainHeaderReducer from './MainHeader/reducers'
@@ -30,21 +31,21 @@ export default combineReducers({
     videoPage: videoPageReducer,
 
     ui: handleActions({
-        [actions.resize]: (state, action) =>
+        [g(actions, 'resize')]: (state, action) =>
             state.set('currentBreakpoint', getCurrentBreakpoint(action.payload)),
 
-        [actions.setFavoriteVideoList]: (state, {payload: favoriteVideoList}) =>
+        [g(actions, 'setFavoriteVideoList')]: (state, {payload: favoriteVideoList}) =>
             state.set('favoriteVideoList', List(favoriteVideoList)),
-        [actions.addVideoIdToFavorite]: (state, {payload: id}) =>
+        [g(actions, 'addVideoIdToFavorite')]: (state, {payload: id}) =>
             addIdToFavoriteList(state, 'favoriteVideoList', id),
-        [actions.removeVideoIdFromFavorite]: (state, {payload: id}) =>
+        [g(actions, 'removeVideoIdFromFavorite')]: (state, {payload: id}) =>
             removeIdFromFavoriteList(state, 'favoriteVideoList', id),
 
-        [actions.setFavoritePornstarList]: (state, {payload: favoritePornstarList}) =>
+        [g(actions, 'setFavoritePornstarList')]: (state, {payload: favoritePornstarList}) =>
             state.set('favoritePornstarList', List(favoritePornstarList)),
-        [actions.addPornstarIdToFavorite]: (state, {payload: id}) =>
+        [g(actions, 'addPornstarIdToFavorite')]: (state, {payload: id}) =>
             addIdToFavoriteList(state, 'favoritePornstarList', id),
-        [actions.removePornstarIdFromFavorite]: (state, {payload: id}) =>
+        [g(actions, 'removePornstarIdFromFavorite')]: (state, {payload: id}) =>
             removeIdFromFavoriteList(state, 'favoritePornstarList', id),
     }, fromJS({
         currentBreakpoint: getCurrentBreakpoint(),
@@ -54,4 +55,24 @@ export default combineReducers({
 
     // static flag to detect if the app is running inside Server-Side Rendering
     ssr: (state = defaultSSR) => state,
+
+    locale: combineReducers({
+        localeCode: handleActions({
+            [g(actions, 'setLocaleCode')]: (state, {payload}) => payload,
+        }, null), // string
+
+        /*
+            This supposed to be filled at initialization step (depending on current locale).
+            Example:
+                { home:      'home'
+                , allNiches: 'all-niches'
+                , niche:     'niche'
+                , ...
+                }
+        */
+        pageCode: handleActions({
+            [g(actions, 'fillLocalePageCodes')]: (state, {payload}) =>
+                fromJS(payload),
+        }, null),
+    }),
 })

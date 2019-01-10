@@ -19,6 +19,14 @@ export const initialStore = fromJS({
         ssr: {
             isSSR: true,
         },
+        mainHeader: {
+            language: {
+                siteLocales: {
+                    list: [],
+                    isLoaded: false,
+                },
+            },
+        },
     },
 })
 
@@ -32,11 +40,22 @@ export const initialStoreOnUrl = reqUrl =>
 
 const reducersPatch = reducers => set(reducers, 'router', x => x)
 
-export const newStore = reqUrl => {
+export const newStore = (siteLocales, reqUrl) => {
     const
         sagaMiddleware = createSagaMiddleware(),
         enhancer = applyMiddleware(sagaMiddleware),
-        store = createStore(createRootReducer(reducersPatch), initialStoreOnUrl(reqUrl), enhancer)
+
+        store = createStore(
+            createRootReducer(reducersPatch),
+
+            initialStoreOnUrl(reqUrl)
+                .mergeIn(['app', 'mainHeader', 'language', 'siteLocales'], fromJS({
+                    list: siteLocales,
+                    isLoaded: true,
+                })),
+
+            enhancer
+        )
 
     store.runSaga = sagaMiddleware.run
     return store

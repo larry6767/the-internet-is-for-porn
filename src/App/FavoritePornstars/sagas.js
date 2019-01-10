@@ -1,18 +1,19 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 
-import {favoritePornstarsPageCode} from '../../api-page-codes'
-
-import {getPageData} from '../helpers'
+import {getPageData, immutableProvedGet as ig} from '../helpers'
 import errorActions from '../../generic/ErrorMessage/actions'
 
 import actions from './actions'
 
 export function* loadFavoritePornstarsPageFlow(action, ssrContext) {
     try {
-        const reqData = {pageCode: favoritePornstarsPageCode}
-        let data
+        const reqData = yield select(x => ({
+            localeCode: ig(x, 'app', 'locale', 'localeCode'),
+            pageCode: ig(x, 'app', 'locale', 'pageCode', 'favoritePornstars'),
+        }))
 
-        if (yield select(x => x.getIn(['app', 'ssr', 'isSSR'])))
+        let data
+        if (yield select(x => ig(x, 'app', 'ssr', 'isSSR')))
             data = yield ssrContext.getPageData(reqData)
         else
             data = yield getPageData(reqData)
