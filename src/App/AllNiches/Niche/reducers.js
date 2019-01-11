@@ -151,10 +151,8 @@ export default
                 sponsorId: 0,
                 tags: '',
                 tagsShort: '',
-                urlRegular: '',
                 favorite: 0,
                 duration: 0,
-
             }
             */
         ],

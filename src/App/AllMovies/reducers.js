@@ -143,15 +143,13 @@ export default
             /*
             {
                 id: 0,
-                thumb,
+                thumb: 0,
                 title: '',
-                sponsorId: 0,
-                tags: '',
+                sponsorId: '0',
+                tags: [''],
                 tagsShort: '',
-                urlRegular: '',
                 favorite: 0,
-                duration: 0,
-
+                duration: '00:00',
             }
             */
         ],

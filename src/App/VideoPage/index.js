@@ -98,7 +98,7 @@ const
         </Button>,
 
     renderIframe = (src, isAd) =>
-        ((!process.env.NODE_ENV === 'development' && isAd === 'isAd') || isAd !== 'isAd')
+        ((!process.env.NODE_ENV !== 'production' && isAd === 'isAd') || isAd !== 'isAd')
             ? <iframe
                 title={src}
                 src={src}
