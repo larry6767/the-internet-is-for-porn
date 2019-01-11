@@ -44,7 +44,8 @@ const
         pornstarsList: List(),
     }),
 
-    renderListItemLink = (x, idx, arr, classes) => <Link to={`/porn-star/${ig(x, 'subPage')}${ig(x, 'sort')}`}
+    renderListItemLink = (x, idx, arr, classes) =><Link
+        to={`/porn-star/${ig(x, 'subPage')}${ig(x, 'sort')}`}
         key={ig(x, 'id')}
         className={classes.routerLink}
     >
