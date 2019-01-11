@@ -1,14 +1,16 @@
-/*
-This module is forked from https://github.com/ratehub/check-prop-types to make this checker for for
-production mode too.
+/**
+ * This module is forked from https://github.com/ratehub/check-prop-types
+ * to make it work for production mode too.
+ *
+ * Forked from this commit (v1.1.2):
+ *   https://github.com/ratehub/check-prop-types/commit/b257ae58664dae93d5be31753c1e954ee4440f90
+ *
+ * License:
+ *   MIT
+ *   https://github.com/ratehub/check-prop-types/blob/b257ae58664dae93d5be31753c1e954ee4440f90/LICENSE
+ */
 
-Forked from this commit (v1.1.2):
-    https://github.com/ratehub/check-prop-types/commit/b257ae58664dae93d5be31753c1e954ee4440f90
-
-License: MIT https://github.com/ratehub/check-prop-types/blob/master/LICENSE
-*/
-
-import ReactPropTypesSecret from 'prop-types/lib/ReactPropTypesSecret'
+import ReactPropTypesSecret from './_secret'
 
 export const
     checkPropTypes = (model, value, location, componentName, getStack) => {

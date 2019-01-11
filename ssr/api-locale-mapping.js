@@ -1,7 +1,6 @@
 import {set} from 'lodash'
-import PropsTypes from 'prop-types'
 import {plainProvedGet as g} from './App/helpers'
-import {assertPropTypes} from './App/helpers/propTypes/check'
+import {PropTypes, assertPropTypes} from './App/helpers'
 
 // only particular helper, because some of all helpers depends on this module
 import deepFreeze from './lib/helpers/deepFreeze'
@@ -153,13 +152,13 @@ const
         },
     }),
 
-    pageCodeBranchModel = PropsTypes.exact({
-        code: PropsTypes.string.isRequired,
-        url: PropsTypes.string.isRequired,
-    }).isRequired,
+    pageCodeBranchModel = PropTypes.exact({
+        code: PropTypes.string,
+        url: PropTypes.string,
+    }),
 
-    localeInnardsModel = PropsTypes.exact({
-        pageCode: PropsTypes.exact({
+    localeInnardsModel = PropTypes.exact({
+        pageCode: PropTypes.exact({
             home: pageCodeBranchModel,
             allNiches: pageCodeBranchModel,
             niche: pageCodeBranchModel,
@@ -169,8 +168,8 @@ const
             favorite: pageCodeBranchModel,
             favoritePornstars: pageCodeBranchModel,
             video: pageCodeBranchModel,
-        }).isRequired,
-    }).isRequired
+        }),
+    })
 
 /*
     A helper which could be used during application initialization to validate locales from server
@@ -178,9 +177,9 @@ const
 */
 export const validate = siteLocales => {
     // generating model of every language code received from backend
-    const mappingModel = PropsTypes.exact(
+    const mappingModel = PropTypes.exact(
         siteLocales.reduce((obj, x) => set(obj, g(x, 'code'), localeInnardsModel), {})
-    ).isRequired
+    )
 
     assertPropTypes(mappingModel, mapping)
 }
