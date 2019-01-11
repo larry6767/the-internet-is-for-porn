@@ -46,7 +46,6 @@ export default
             isFailed: true,
             modelInfoIsOpen: false,
             currentSubPage: '',
-            lastSubPageForRequest: '',
             pageNumber: 1,
             pageText: OrderedMap(),
             pagesCount: 1,
