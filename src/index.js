@@ -1,5 +1,6 @@
 import React from 'react'
 import {render} from 'react-dom'
+
 import Root from './root'
 import store from './store'
 import saga from './sagas'
@@ -10,9 +11,9 @@ import {BACKEND_URL} from './config'
 store.runSaga(saga)
 
 const
-    runFrontEnd = () => render(<Root />, document.getElementById('root'))
+    rootEl = document.getElementById('root'),
+    runFrontEnd = () => render(<Root />, rootEl)
 
-// TODO also handle "test.*" domain to store locale in a cookie
 if (process.env.NODE_ENV === 'production')
     runFrontEnd()
 else {
@@ -31,8 +32,8 @@ else {
                 localeCode: getCookie('development-locale-code') || null,
             }),
         }).then(response => {
-            if (response.status !== 200)
-                throw new Error(`Response status is ${response.status} (not 200)`)
+            if ( ! response.ok)
+                throw new Error(`Response is not OK (status code is ${response.status})`)
 
             return response.json()
         }).then(x => {
@@ -41,5 +42,9 @@ else {
             runFrontEnd()
         }).catch(err => {
             console.error('Application initialization is failed with exception:', err)
+            render(<div>
+                <h1>Error!</h1>
+                <p>Application initialization is failed!</p>
+            </div>, rootEl)
         })
 }

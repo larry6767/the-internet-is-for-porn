@@ -181,7 +181,7 @@ const
     fetchResponseExtractor = callStackGetter => response => {
         if ( ! response.ok)
             throw new Error(
-                `Response is failed (status code is ${response.status}), ` +
+                `Response is not OK (status code is ${response.status}), ` +
                 `call stack: ${callStackGetter()}`
             )
 

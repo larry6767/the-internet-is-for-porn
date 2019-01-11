@@ -19,8 +19,8 @@ export function* loadSiteLocalesFlow(action) {
                     'Accept': 'application/json',
                 },
             }).then(response => {
-                if (response.status !== 200)
-                    throw new Error(`Response status is ${response.status} (not 200)`)
+                if ( ! response.ok)
+                    throw new Error(`Response is not OK (status code is ${response.status})`)
 
                 return response.json()
             }),
