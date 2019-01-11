@@ -16,13 +16,14 @@
  *   https://github.com/facebook/prop-types/blob/11e45c433f439940a4a6fa280a4464ef449e8943/LICENSE
  */
 
-'use strict';
+/* eslint-disable */
+
+import ReactPropTypesSecret from './_secret'
 
 // var assign = require('object-assign');
 const assign = Object.assign.bind(Object)
 
 // var ReactPropTypesSecret = require('./lib/ReactPropTypesSecret');
-import ReactPropTypesSecret from './_secret'
 // var checkPropTypes = require('./checkPropTypes');
 
 var has = Function.call.bind(Object.prototype.hasOwnProperty);
