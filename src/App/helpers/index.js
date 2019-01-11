@@ -19,6 +19,7 @@ export {default as setCookie} from './cookie/setCookie'
 export {default as deleteCookie} from './cookie/deleteCookie'
 export {default as getPageData} from './getPageData'
 export {default as getSubPage} from './getSubPage'
+export {PropTypes, checkPropTypes, assertPropTypes} from './propTypes'
 
 export {default as addToList} from './favoritePages/addToList'
 export {default as removeFromList} from './favoritePages/removeFromList'
