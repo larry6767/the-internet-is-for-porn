@@ -147,6 +147,8 @@ const
         validTopLevelKeys: ['localeCode', 'pageCode', 'subPageCode'],
     }),
 
+    // TODO Detect `defaultSiteLocaleCode` by Host from `req`.
+    // TODO Also detect for test.* domains.
     getSiteLocale = (siteLocales, defaultSiteLocaleCode) => (req, res) => {
         const
             localeCode = req.body.localeCode || defaultSiteLocaleCode
