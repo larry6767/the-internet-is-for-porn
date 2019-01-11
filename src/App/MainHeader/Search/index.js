@@ -1,18 +1,20 @@
 import React from 'react'
+import {deburr} from 'lodash'
+import {compose} from 'recompose'
+import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
-import deburr from 'lodash/deburr'
 import Autosuggest from 'react-autosuggest'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
-import TextField from '@material-ui/core/TextField'
-import Paper from '@material-ui/core/Paper'
-import MenuItem from '@material-ui/core/MenuItem'
+
+import {TextField, Paper, MenuItem, Button} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 import {
     Search,
     SearchButton
 } from './assets'
 import {muiStyles} from './assets/muiStyles'
+import actions from './actions'
 
 const suggestions = [
   { label: 'Afghanistan' },
@@ -140,7 +142,7 @@ class IntegrationAutosuggest extends React.Component {
     }
 
     render() {
-        const {classes} = this.props
+        const {classes, suggestionsFetchRequestHandler} = this.props
 
         const autosuggestProps = {
             renderInputComponent,
@@ -173,6 +175,9 @@ class IntegrationAutosuggest extends React.Component {
             )}
             />
             <SearchButton/>
+            <Button variant="outlined" color="secondary" onClick={suggestionsFetchRequestHandler}>
+                get suggestions
+            </Button>
         </Search>
     }
 }
@@ -181,4 +186,17 @@ IntegrationAutosuggest.propTypes = {
     classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(muiStyles)(IntegrationAutosuggest)
+export default compose(
+    connect(
+        state => ({
+            input: state.getIn(['app', 'mainHeader', 'search', 'input'])
+        }),
+        dispatch => ({
+            suggestionsFetchRequestHandler: () => dispatch(actions.suggestionsFetchRequest({
+                c: '1',
+                t: 'as',
+            })),
+        })
+    ),
+    withStyles(muiStyles)
+)(IntegrationAutosuggest)

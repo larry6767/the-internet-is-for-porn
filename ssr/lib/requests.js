@@ -4,7 +4,7 @@ import rp from 'request-promise-native'
 import {defaultHostToFetchSiteLocalesFrom} from '../config'
 import apiLocales from '../api-locale-mapping'
 import {plainProvedGet as g} from '../App/helpers'
-import {backendUrl, backendUrlForReport} from './helpers/backendUrl'
+import {backendUrl, backendUrlForReport, backendUrlForSearch} from './helpers/backendUrl'
 
 import {
     getTagList,
@@ -296,4 +296,11 @@ export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => 
     headers,
     json: true,
     formData,
+})
+
+export const getSearchSuggestions = (siteLocales, localeCode) => ({headers, formData}) => rp({
+    uri: `${backendUrlForSearch(siteLocales, localeCode)}?c=${formData.c}&t=${formData.t}`,
+    method: 'GET',
+    headers,
+    json: true,
 })

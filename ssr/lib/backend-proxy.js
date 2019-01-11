@@ -7,6 +7,7 @@ import {logRequestError, buildLocalePageCodes} from './helpers'
 import {
     getPageData as requestPageData,
     sendReport as sendReportRequest,
+    getSearchSuggestions as searchSuggestionsRequest
 } from './requests'
 
 export const proxiedHeaders = (siteLocales, localeCode) => req => {
@@ -157,6 +158,52 @@ const
         }).end()
     },
 
+    getSearchSuggestions = siteLocales => (({validTopLevelKeys}) => (req, res) => {
+        const
+            invalidKeys = Object.keys(req.body).filter(x => !includes(validTopLevelKeys, x))
+
+        if (invalidKeys.length !== 0)
+            return jsonThrow400(req, res)(
+                'Found unexpected/unknown top-level keys in request body',
+                {
+                    request: {
+                        method: g(req, 'method'),
+                        operation: g(req, 'params', 'operation'),
+                        invalidTopLevelKeys: invalidKeys,
+                    },
+                }
+            )
+
+        if ( ! req.body.localeCode)
+            return jsonThrow400(req, res)(
+                'Some required field(s) is not provided in request body',
+                {
+                    request: {
+                        method: g(req, 'method'),
+                        operation: g(req, 'params', 'operation'),
+                        required: {
+                            localeCode: req.body.localeCode,
+                        },
+                    },
+                }
+            )
+
+        const localeCode = g(req, 'body', 'localeCode')
+        unset(g(req, 'body'), 'localeCode')
+        const formData = g(req, 'body')
+
+        searchSuggestionsRequest(siteLocales, localeCode)({
+            headers: proxiedHeaders(siteLocales, localeCode)(req),
+            formData,
+        })
+        .then(x => res.json(x).end())
+        .catch(jsonThrow500(req, res))
+    })({
+        validTopLevelKeys: [
+            'localeCode', 'c', 't',
+        ],
+    }),
+
     sendReport = siteLocales => (({validTopLevelKeys}) => (req, res) => {
         const
             invalidKeys = Object.keys(req.body).filter(x => !includes(validTopLevelKeys, x))
@@ -227,6 +274,8 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
         getSiteLocale(siteLocales, defaultSiteLocaleCode)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-page-data')
         getPageData(siteLocales)(req, res)
+    else if (g(req, 'method') === 'POST' && req.params.operation === 'get-search-suggestions')
+        getSearchSuggestions(siteLocales)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'send-report')
         sendReport(siteLocales)(req, res)
     else
