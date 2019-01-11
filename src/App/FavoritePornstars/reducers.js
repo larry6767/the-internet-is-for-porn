@@ -42,7 +42,6 @@ export default
         isLoaded: false,
         isFailed: false,
         currentPage: '',
-        lastSubPageForRequest: '',
         currentNiche: '',
         pageNumber: 1,
         pageText: {

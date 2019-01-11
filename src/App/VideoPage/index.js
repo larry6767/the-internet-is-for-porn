@@ -318,8 +318,8 @@ export default compose(
         form: 'reportForm',
         enableReinitialize: true,
         onSubmit: (formData, dispatch) => dispatch(actions.sendReportRequest(formData)),
-		onSubmitSuccess: (values, dispatch) => dispatch(resetForm('reportForm')),
-	}),
+        onSubmitSuccess: (values, dispatch) => dispatch(resetForm('reportForm')),
+    }),
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)

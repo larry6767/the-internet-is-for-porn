@@ -47,7 +47,6 @@ export default
             isLoaded: false,
             isFailed: true,
             currentPage: '',
-            lastSubPageForRequest: '',
             pageNumber: 1,
             pageText: OrderedMap(),
             pagesCount: 1,

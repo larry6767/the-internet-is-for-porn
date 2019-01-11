@@ -50,7 +50,6 @@ export default
             isFailed: true,
             currentPage: '',
             currentSubPage: '',
-            lastSubPageForRequest: '',
             pageNumber: 1,
             pageText: OrderedMap(),
             pagesCount: 1,
