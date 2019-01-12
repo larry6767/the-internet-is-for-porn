@@ -95,7 +95,7 @@ export default ({location}) => <Switch>
             return <Niche {...props}/>
     }}/>
 
-    <Route exact path="/all-movies.html" render={() => <Redirect to="/all-movies"/>}/>
+    <Redirect exact from="/all-movies.html" to="/all-movies"/>
     <Route exact path="/all-movies" render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
@@ -124,7 +124,7 @@ export default ({location}) => <Switch>
             return <AllMovies {...props}/>
     }}/>
 
-    <Route exact path="/porn-stars.html" render={() => <Redirect to="/porn-stars"/>}/>
+    <Redirect exact from="/porn-stars.html" to="/porn-stars"/>
     <Route exact path="/porn-stars" render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const {staticContext: x} = props
@@ -148,7 +148,7 @@ export default ({location}) => <Switch>
             return <Pornstar {...props}/>
     }}/>
 
-    <Route exact path="/your-favorite.html" render={() => <Redirect to="/favorite"/>}/>
+    <Redirect exact from="/your-favorite.html" to="/favorite"/>
     <Route exact path="/favorite" render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const {staticContext: x} = props
@@ -162,9 +162,7 @@ export default ({location}) => <Switch>
             return <Favorite {...props}/>
     }}/>
 
-    <Route path="/your-favorite-porn-stars.html" render={() =>
-        <Redirect to="/favorite-porn-stars"/>
-    }/>
+    <Redirect exact from="/your-favorite-porn-stars.html" to="/favorite-porn-stars"/>
     <Route path="/favorite-porn-stars" render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const {staticContext: x} = props
@@ -178,7 +176,7 @@ export default ({location}) => <Switch>
             return <FavoritePornstars {...props}/>
     }}/>
 
-    <Redirect from="/vid-:child/:name.htm" to="/video-:child/:name"/>
+    <Redirect exact from="/vid-:child/:name.htm" to="/video-:child/:name"/>
     <Route path="/video-:child/:name" render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
