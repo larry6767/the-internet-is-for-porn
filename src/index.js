@@ -39,6 +39,7 @@ else {
         }).then(x => {
             store.dispatch(appActions.setLocaleCode(g(x, 'localeCode')))
             store.dispatch(appActions.fillLocalePageCodes(g(x, 'pageCodes')))
+            store.dispatch(appActions.fillLocaleRouter(g(x, 'router')))
             runFrontEnd()
         }).catch(err => {
             console.error('Application initialization is failed with exception:', err)

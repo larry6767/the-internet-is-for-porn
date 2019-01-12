@@ -10,13 +10,14 @@ import JssProvider from 'react-jss/lib/JssProvider'
 import {createGenerateClassName} from '@material-ui/core/styles'
 
 import {plainProvedGet as g, immutableProvedGet as ig} from '../App/helpers'
-import {buildLocalePageCodes} from './helpers'
+import {buildLocalePageCodes, logRequestError} from './helpers'
 import {getPageData as requestPageData} from './requests'
 import {proxiedHeaders} from './backend-proxy'
 import RouterBuilder from '../router-builder'
 import {App} from '../App'
 import appActions from '../App/actions'
 import languageActions from '../App/MainHeader/Language/actions'
+import routerLocales from '../router-locale-mapping'
 
 const getPageData =
     (req, siteLocales, localeCode) => etc =>
@@ -47,18 +48,20 @@ export default (
 
         store.dispatch(appActions.setLocaleCode(localeCode))
         store.dispatch(appActions.fillLocalePageCodes(buildLocalePageCodes(localeCode)))
+        store.dispatch(appActions.fillLocaleRouter(g(routerLocales, localeCode)))
         store.dispatch(languageActions.setNewLanguage(localeCode))
 
         const
             staticRouterContext = {isPreRouting: true},
             state = store.getState(),
-            location = ig(state, 'router', 'location')
+            location = ig(state, 'router', 'location'),
+            router = ig(state, 'app', 'locale', 'router')
 
         // just filling `staticRouterContext` with meta info,
         // not really rendering anything.
         renderToString(
             <StaticRouter location={req.url} context={staticRouterContext}>
-                <RouterBuilder location={location}/>
+                <RouterBuilder location={location} router={router}/>
             </StaticRouter>
         )
 
@@ -97,7 +100,7 @@ export default (
                 <JssProvider registry={jssSheetsRegistry} generateClassName={generateClassName}>
                     <Provider store={store}>
                         <StaticRouter location={req.url} context={{}}>
-                            <App sheetsManager={sheetsManager} location={location}>
+                            <App sheetsManager={sheetsManager} location={location} router={router}>
                                 {RouterBuilder}
                             </App>
                         </StaticRouter>
@@ -126,6 +129,6 @@ export default (
         ${post}`)
     } catch (e) {
         res.status(500).end('Internal Server Error')
-        throw e
+        logRequestError(req)(e)
     }
 }

@@ -1,4 +1,5 @@
 import {set} from 'lodash'
+
 import {plainProvedGet as g} from './App/helpers'
 import {PropTypes, assertPropTypes} from './App/helpers'
 
@@ -181,7 +182,7 @@ export const validate = siteLocales => {
         siteLocales.reduce((obj, x) => set(obj, g(x, 'code'), localeInnardsModel), {})
     )
 
-    assertPropTypes(mappingModel, mapping)
+    assertPropTypes(mappingModel, mapping, 'api-locale-mapping', 'validate')
 }
 
 export default mapping

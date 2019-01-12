@@ -1,6 +1,7 @@
 import {cloneDeep, find, includes, unset} from 'lodash'
 
 import apiLocaleMapping from '../api-locale-mapping'
+import routerLocaleMapping from '../router-locale-mapping'
 import {plainProvedGet as g} from '../App/helpers'
 import {logRequestError, buildLocalePageCodes} from './helpers'
 
@@ -156,6 +157,7 @@ const
         res.json({
             localeCode,
             pageCodes: buildLocalePageCodes(localeCode),
+            router: g(routerLocaleMapping, localeCode),
         }).end()
     },
 
