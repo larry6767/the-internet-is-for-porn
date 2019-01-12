@@ -223,6 +223,24 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
                 },
             }
         )
+    else if (
+        req.body.localeCode &&
+        !find(siteLocales, x => g(x, 'code') === g(req, 'body', 'localeCode'))
+    )
+        jsonThrow400(req, res)(
+            'Provided locale code (`localeCode`) is unknown',
+            {
+                request: {
+                    method: g(req, 'method'),
+                    localeCode: g(req, 'body', 'localeCode'),
+                    operation: req.params.operation,
+                    headers: {
+                        'Accept': req.headers['accept'],
+                        'Content-Type': req.headers['content-type'],
+                    },
+                },
+            }
+        )
     else if (g(req, 'method') === 'GET' && req.params.operation === 'get-site-locales')
         res.json(siteLocales).end()
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-site-locale-data')
