@@ -1,13 +1,21 @@
 import React from 'react'
+import {compose, setPropTypes} from 'recompose'
+import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 import {Tabs, Tab} from '@material-ui/core'
-import {navigation} from './fixtures'
-import {compose} from 'recompose'
-import {connect} from 'react-redux'
-import actions from './actions'
-import {Nav} from './assets'
+
+import {
+    getValueForNavigation,
+    immutableProvedGet as ig,
+    plainProvedGet as g,
+    PropTypes,
+} from '../../helpers'
+
 import {muiStyles} from './assets/muiStyles'
-import {getValueForNavigation} from '../../helpers'
+import {Nav} from './assets'
+import actions from './actions'
+
+import {navigation} from './fixtures'
 
 const
     Navigation = ({classes, pathname, goToPath}) => {
@@ -28,10 +36,10 @@ const
                         key={index}
                         href={item}
                         value={item}
-                        label={navigation[`${item}`]}
+                        label={g(navigation, `${item}`)}
                         classes={{
-                            root: classes.labelRoot,
-                            label: classes.label
+                            root: g(classes, 'labelRoot'),
+                            label: g(classes, 'label'),
                         }}
                     />
                 )}
@@ -42,7 +50,7 @@ const
 export default compose(
     connect(
         state => ({
-            pathname: state.getIn(['router', 'location', 'pathname'])
+            pathname: ig(state, 'router', 'location', 'pathname'),
         }),
         dispatch => ({
             goToPath: (event, value) => {
@@ -51,5 +59,10 @@ export default compose(
             }
         })
     ),
-    withStyles(muiStyles)
+    withStyles(muiStyles),
+    setPropTypes({
+        classes: PropTypes.object,
+        pathname: PropTypes.string,
+        goToPath: PropTypes.func,
+    })
 )(Navigation)
