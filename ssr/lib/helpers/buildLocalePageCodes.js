@@ -1,7 +1,7 @@
 import {reduce, set} from 'lodash'
 
 import {plainProvedGet as g} from '../../App/helpers'
-import apiLocales from '../../api-locale-mapping'
+import apiLocales from '../../locale-mapping/backend-api'
 
 export default localeCode => reduce(
     g(apiLocales, localeCode, 'pageCode'),

@@ -19,8 +19,8 @@ import renderPage from './lib/render'
 import {newStore} from './lib/store'
 import backendProxyHandler from './lib/backend-proxy'
 import {getSiteLocales} from './lib/requests'
-import {validate as apiLocaleMappingValidate} from './api-locale-mapping'
-import {validate as routerLocaleMappingValidate} from './router-locale-mapping'
+import {validate as apiLocaleMappingValidate} from './locale-mapping/backend-api'
+import {validate as routerLocaleMappingValidate} from './locale-mapping/router'
 
 const
     {port, host, production: isProduction, rc: isRC} = yargs

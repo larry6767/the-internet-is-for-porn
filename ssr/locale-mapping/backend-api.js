@@ -1,10 +1,10 @@
 import {set} from 'lodash'
 
-import {plainProvedGet as g} from './App/helpers'
-import {PropTypes, assertPropTypes} from './App/helpers'
+import {plainProvedGet as g} from '../App/helpers'
+import {PropTypes, assertPropTypes} from '../App/helpers'
 
 // only particular helper, because some of all helpers depends on this module
-import deepFreeze from './lib/helpers/deepFreeze'
+import deepFreeze from '../lib/helpers/deepFreeze'
 
 const
     mapping = deepFreeze({

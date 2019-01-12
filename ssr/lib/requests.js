@@ -4,7 +4,7 @@ import FormData from 'form-data'
 import {Agent} from 'https' // TODO FIXME for hacky-wacky stuff (blind trust to SSL cert)
 
 import {defaultHostToFetchSiteLocalesFrom} from '../config'
-import apiLocales from '../api-locale-mapping'
+import apiLocales from '../locale-mapping/backend-api'
 import {plainProvedGet as g} from '../App/helpers'
 import {backendUrl, backendUrlForReport} from './helpers/backendUrl'
 

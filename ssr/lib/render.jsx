@@ -17,7 +17,7 @@ import RouterBuilder from '../router-builder'
 import {App} from '../App'
 import appActions from '../App/actions'
 import languageActions from '../App/MainHeader/Language/actions'
-import routerLocales from '../router-locale-mapping'
+import routerLocales from '../locale-mapping/router'
 
 const getPageData =
     (req, siteLocales, localeCode) => etc =>

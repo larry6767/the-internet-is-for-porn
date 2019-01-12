@@ -1,7 +1,7 @@
 import {cloneDeep, find, includes, unset} from 'lodash'
 
-import apiLocaleMapping from '../api-locale-mapping'
-import routerLocaleMapping from '../router-locale-mapping'
+import apiLocaleMapping from '../locale-mapping/backend-api'
+import routerLocaleMapping from '../locale-mapping/router'
 import {plainProvedGet as g} from '../App/helpers'
 import {logRequestError, buildLocalePageCodes} from './helpers'
 

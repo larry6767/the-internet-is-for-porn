@@ -114,10 +114,10 @@ export const
             redirectFrom: r =>
                 `/${ig(r, 'redirects', 'video', 'fromPfx')
                 }:child/:name${ig(r, 'redirects', 'video', 'fromExt')}`,
-            path: r => `/${ig(r, 'routes', 'video', 'sectionPfx')}:child/:name`,
+            path: r =>
+                `/${ig(r, 'routes', 'video', 'sectionPfx')}:child/:name`,
             link: (r, videoId, title) =>
-                `/${ig(r, 'routes', 'video', 'sectionPfx')
-                }${videoId}/${title.replace(/ /g, '-')}`,
+                `/${ig(r, 'routes', 'video', 'sectionPfx')}${videoId}/${title.replace(/ /g, '-')}`,
         }),
     })
 
