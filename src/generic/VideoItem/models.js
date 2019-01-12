@@ -19,7 +19,24 @@ const
 
         duration: PropTypes.string,
 
-        url: PropTypes.string, // TODO FIXME refactor this
+        videoPageRef: PropTypes.oneOfType([
+            // Either an internal video id
+            PropTypes.number,
+
+            // or a link (URL) to an external resource
+            (props, propName, componentName) => {
+                if (typeof props[propName] !== 'string')
+                    return new Error(
+                        `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                        `(it's not a string but ${typeof props[propName]}). Validation failed.`
+                    )
+                if (!/^http/.test(props[propName]))
+                    return new Error(
+                        `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                        `(link to an external resource must start with "http"). Validation failed.`
+                    )
+            },
+        ])
     }),
 
     // {foo: 'foo', bar: 'bar'}

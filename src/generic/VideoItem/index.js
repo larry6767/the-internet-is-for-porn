@@ -137,9 +137,9 @@ const
             thumbsLinks = ig(x, 'thumbs').map(thumb => replace(ig(x, 'thumbMask'), '{num}', thumb))
 
         return <Wrapper>
-            {~ig(x, 'url').indexOf('http')
+            {typeof ig(x, 'videoPageRef') === 'string'
                 ? <a
-                    href={ig(x, 'url')}
+                    href={ig(x, 'videoPageRef')}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={g(classes, 'routerLink')}
@@ -150,7 +150,7 @@ const
                     )}
                 </a>
                 : <Link
-                    to={ig(x, 'url')}
+                    to={`/vid-${ig(x, 'videoPageRef')}/${ig(x, 'title').replace(/ /g, '-')}`}
                     className={g(classes, 'routerLink')}
                 >
                     {renderVideoPreview(
