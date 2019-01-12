@@ -20,6 +20,8 @@ export {default as deleteCookie} from './cookie/deleteCookie'
 export {default as getPageData} from './getPageData'
 export {default as getSubPage} from './getSubPage'
 export {PropTypes, checkPropTypes, assertPropTypes} from './propTypes'
+export {ImmutablePropTypes} from './propTypes/immutable'
+export {default as provedHandleActions} from './provedHandleActions'
 
 export {default as addToList} from './favoritePages/addToList'
 export {default as removeFromList} from './favoritePages/removeFromList'

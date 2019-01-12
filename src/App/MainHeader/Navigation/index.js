@@ -19,7 +19,7 @@ const
                 onChange={goToPath}
                 indicatorColor="primary"
                 textColor="primary"
-                scrollable
+                variant="scrollable"
                 scrollButtons="off"
             >
                 {Object.keys(navigation).map((item, index) =>

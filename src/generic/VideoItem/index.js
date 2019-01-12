@@ -1,14 +1,24 @@
 import React, {Component, Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {compose} from 'recompose'
-import {replace} from 'lodash'
+import {compose, setPropTypes} from 'recompose'
+import {replace, set} from 'lodash'
 import {withStyles} from '@material-ui/core/styles'
-import {
-    Typography
-} from '@material-ui/core'
+import {Typography} from '@material-ui/core'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
+
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    ImmutablePropTypes,
+    PropTypes,
+} from '../../App/helpers'
+
+import actions from '../../App/actions'
+import {muiStyles} from './assets/muiStyles'
+import {immutableVideoItemModel} from './models'
+
 import {
     Wrapper,
     VideoPreview,
@@ -20,8 +30,6 @@ import {
     VideoPreviewThumbs,
     LoadingProgress,
 } from './assets'
-import {muiStyles} from './assets/muiStyles'
-import actions from '../../App/actions'
 
 class PreviewThumbs extends Component {
     state = {
@@ -30,18 +38,15 @@ class PreviewThumbs extends Component {
     }
 
     mouseEnter = () => {
-        const
-            imageArray = [],
-            {thumbsLinks} = this.props
+        // preloading images
+        this.props.thumbsLinks.map(x => set(new Image(), 'src', x)).toArray()
 
-        thumbsLinks.forEach(x => {
-            const image = new Image()
-            image.src = x
-            imageArray.push(image)
-        })
+        // reset old timers in case they for some reason exists
+        clearInterval(this.timeoutTimer)
+        clearInterval(this.intervalTimer)
 
         this.timeoutTimer = setTimeout(() => {
-            this.intervalTimer = setInterval(this.progress, 500)
+            this.intervalTimer = setInterval(g(this, 'progress'), 500)
             this.setState({showed: true})
         }, 1000)
     }
@@ -57,6 +62,7 @@ class PreviewThumbs extends Component {
     stopProgress = () => {
         clearInterval(this.timeoutTimer)
         clearInterval(this.intervalTimer)
+
         this.setState({
             currentThumb: 0,
             showed: false,
@@ -65,24 +71,23 @@ class PreviewThumbs extends Component {
 
     progress = () => {
         const
-            {currentThumb} = this.state,
-            {thumbsLinks} = this.props
+            currentThumb = g(this, 'state', 'currentThumb'),
+            thumbsLinks = g(this, 'props', 'thumbsLinks')
 
-        this.setState({currentThumb: thumbsLinks.size - 1 > currentThumb
-            ? currentThumb + 1
-            : 0
+        this.setState({
+            currentThumb: g(thumbsLinks, 'size') - 1 > currentThumb ? currentThumb + 1 : 0
         })
     }
 
     render() {
         const
-            {thumbsLinks} = this.props
+            thumbsLinks = g(this, 'props', 'thumbsLinks')
 
         return <VideoPreviewThumbs
-            onMouseEnter={this.mouseEnter}
-            onMouseLeave={this.mouseLeave}
-            thumb={thumbsLinks.get(this.state.currentThumb)}
-            showed={this.state.showed}
+            onMouseEnter={g(this, 'mouseEnter')}
+            onMouseLeave={g(this, 'mouseLeave')}
+            thumb={ig(thumbsLinks, g(this, 'state', 'currentThumb'))}
+            showed={g(this, 'state', 'showed')}
         />
     }
 }
@@ -91,42 +96,34 @@ const
     renderVideoPreview = (
         classes, x, isSSR, addVideoToFavoriteHandler,
         removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
-    ) => <VideoPreview
-        thumb={x.get('thumb')}
-    >
-        {!isSSR
-            ? <Fragment>
-                <LoadingProgress/>
-                <PreviewThumbs
-                    thumbsLinks={thumbsLinks}
-                />
-            </Fragment>
-            : null}
+    ) => <VideoPreview thumb={ig(x, 'thumb')}>
+        {isSSR ? null : <Fragment>
+            <LoadingProgress/>
+            <PreviewThumbs thumbsLinks={thumbsLinks} />
+        </Fragment>}
 
         <VideoPreviewBar>
-            {!isSSR
-                ? <Like>
-                    {favoriteVideoList.find(id => id === x.get('id'))
-                        ? <Favorite
-                            classes={{root: classes.favoriteIcon}}
-                            onClick={removeVideoFromFavoriteHandler.bind(this, x.get('id'))}
-                        />
-                        : <FavoriteBorder
-                            classes={{root: classes.favoriteBorderIcon}}
-                            onClick={addVideoToFavoriteHandler.bind(this, x)}
-                        />
-                    }
-                </Like>
-                : null}
+            {isSSR ? null : <Like>
+                {favoriteVideoList.find(id => id === ig(x, 'id'))
+                    ? <Favorite
+                        classes={{root: g(classes, 'favoriteIcon')}}
+                        onClick={removeVideoFromFavoriteHandler(ig(x, 'id'))}
+                    />
+                    : <FavoriteBorder
+                        classes={{root: g(classes, 'favoriteBorderIcon')}}
+                        onClick={addVideoToFavoriteHandler(x)}
+                    />
+                }
+            </Like>}
 
             <Duration>
                 <Typography
                     variant="body2"
                     classes={{
-                        root: classes.typography
+                        root: g(classes, 'typography')
                     }}
                 >
-                    {x.get('duration')}
+                    {ig(x, 'duration')}
                 </Typography>
             </Duration>
         </VideoPreviewBar>
@@ -137,15 +134,15 @@ const
         removeVideoFromFavoriteHandler, favoriteVideoList,
     }) => {
         const
-            thumbsLinks = x.get('thumbs').map(thumb => replace(x.get('thumbMask'), '{num}', thumb))
+            thumbsLinks = ig(x, 'thumbs').map(thumb => replace(ig(x, 'thumbMask'), '{num}', thumb))
 
         return <Wrapper>
-            {~x.get('url').indexOf('http')
+            {~ig(x, 'url').indexOf('http')
                 ? <a
-                    href={x.get('url')}
+                    href={ig(x, 'url')}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={classes.routerLink}
+                    className={g(classes, 'routerLink')}
                 >
                     {renderVideoPreview(
                         classes, x, isSSR, addVideoToFavoriteHandler,
@@ -153,8 +150,8 @@ const
                     )}
                 </a>
                 : <Link
-                    to={x.get('url')}
-                    className={classes.routerLink}
+                    to={ig(x, 'url')}
+                    className={g(classes, 'routerLink')}
                 >
                     {renderVideoPreview(
                         classes, x, isSSR, addVideoToFavoriteHandler,
@@ -166,29 +163,29 @@ const
                 <Typography
                     variant="body1"
                     classes={{
-                        root: classes.typographyTitle
+                        root: g(classes, 'typographyTitle')
                     }}
-                    title={x.get('title')}
+                    title={ig(x, 'title')}
                 >
-                    {x.get('title')}
+                    {ig(x, 'title')}
                 </Typography>
                 <InfoBlockInner>
                     <Typography
                         variant="body2"
                         classes={{
-                            root: classes.typographySource
+                            root: g(classes, 'typographySource')
                         }}
                     >
-                        {x.get('sponsorId')}
+                        {ig(x, 'sponsorId')}
                     </Typography>
                     <Typography
                         variant="body2"
                         classes={{
-                            root: classes.typographyTags
+                            root: g(classes, 'typographyTags')
                         }}
-                        title={x.get('tags').join(', ')}
+                        title={ig(x, 'tags').join(', ')}
                     >
-                        {x.get('tagsShort')}
+                        {ig(x, 'tagsShort')}
                     </Typography>
                 </InfoBlockInner>
             </InfoBlock>
@@ -198,19 +195,27 @@ const
 export default compose(
     connect(
         state => ({
-            favoriteVideoList: state.getIn(['app', 'ui', 'favoriteVideoList']),
-            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
+            favoriteVideoList: ig(state, 'app', 'ui', 'favoriteVideoList'),
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
         }),
         dispatch => ({
-            addVideoToFavoriteHandler: (video, e) => {
+            addVideoToFavoriteHandler: video => e => {
                 e.preventDefault()
                 dispatch(actions.addVideoToFavorite(video))
             },
-            removeVideoFromFavoriteHandler: (id, e) => {
+            removeVideoFromFavoriteHandler: id => e => {
                 e.preventDefault()
                 dispatch(actions.removeVideoFromFavorite(id))
             }
         })
     ),
-    withStyles(muiStyles)
+    withStyles(muiStyles),
+    setPropTypes({
+        classes: PropTypes.object,
+        isSSR: PropTypes.bool,
+        x: immutableVideoItemModel,
+        addVideoToFavoriteHandler: PropTypes.func,
+        removeVideoFromFavoriteHandler: PropTypes.func,
+        favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),
+    })
 )(VideoItem)

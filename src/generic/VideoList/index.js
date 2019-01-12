@@ -1,19 +1,12 @@
 import React from 'react'
+
+import {immutableProvedGet as ig} from '../../App/helpers'
 import VideoItem from '../VideoItem'
-import {
-    List,
-} from './assets'
+import {List} from './assets'
 
 const
-    VideoList = ({videoList}) => {
-        return <List>
-            {videoList.map(x =>
-                <VideoItem
-                    key={x.get('id')}
-                    x={x}
-                />
-            )}
-        </List>
-    }
+    VideoList = ({videoList}) => <List>
+        {videoList.map(x => <VideoItem key={ig(x, 'id')} x={x}/>)}
+    </List>
 
 export default VideoList

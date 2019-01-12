@@ -10,10 +10,10 @@ export default (letters) => reduce(
     (acc, letter) => {
         const letterItems = sortBy(
             map(letter, ({id, name, sub_url, items_count, thumb_url}) => ({
-                id,
+                id: Number(id),
                 name,
                 subPage: sub_url,
-                itemsCount: items_count,
+                itemsCount: Number(items_count),
             })),
             o => o.name
         )

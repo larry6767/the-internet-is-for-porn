@@ -8,8 +8,8 @@ export default (list, monthsNames) => map(
         archiveDate: archive_date,
         itemsCount: items_count,
         month: monthsNames[Number(month) < 10 ? month.slice(1) : month],
-        monthNumber: month,
+        monthNumber: Number(month),
+        year: Number(year),
         url,
-        year,
     })
 )
