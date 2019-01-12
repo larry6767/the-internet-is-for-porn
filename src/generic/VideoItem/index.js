@@ -1,16 +1,23 @@
 import React, {Component, Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {compose} from 'recompose'
+import {compose, setPropTypes} from 'recompose'
 import {replace, set} from 'lodash'
 import {withStyles} from '@material-ui/core/styles'
 import {Typography} from '@material-ui/core'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
 
-import {plainProvedGet as g, immutableProvedGet as ig} from '../../App/helpers'
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    ImmutablePropTypes,
+    PropTypes,
+} from '../../App/helpers'
+
 import actions from '../../App/actions'
 import {muiStyles} from './assets/muiStyles'
+import {immutableVideoItemModel} from './models'
 
 import {
     Wrapper,
@@ -202,5 +209,13 @@ export default compose(
             }
         })
     ),
-    withStyles(muiStyles)
+    withStyles(muiStyles),
+    setPropTypes({
+        classes: PropTypes.object,
+        isSSR: PropTypes.bool,
+        x: immutableVideoItemModel,
+        addVideoToFavoriteHandler: PropTypes.func,
+        removeVideoFromFavoriteHandler: PropTypes.func,
+        favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),
+    })
 )(VideoItem)
