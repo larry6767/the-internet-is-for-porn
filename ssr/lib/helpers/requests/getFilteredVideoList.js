@@ -38,7 +38,7 @@ const
     }),
 
     // {foo: 'foo', bar: 'bar'}
-    incomingModelPropsKeys = mapValues(incomingModelProps, (x, k) => k),
+    incomingModelPropsKeys = Object.freeze(mapValues(incomingModelProps, (x, k) => k)),
 
     // get incoming property by verified key (which must be presented in the model)
     getProp = (src, propKey) => g(src, g(incomingModelPropsKeys, propKey)),
