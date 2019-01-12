@@ -178,8 +178,8 @@ export default ({location}) => <Switch>
             return <FavoritePornstars {...props}/>
     }}/>
 
-    <Redirect from="/vid-:child/:name.htm" to="/vid-:child/:name"/>
-    <Route path="/vid-:child/:name" render={props => {
+    <Redirect from="/vid-:child/:name.htm" to="/video-:child/:name"/>
+    <Route path="/video-:child/:name" render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
                 {match: {params}, staticContext: x} = props,

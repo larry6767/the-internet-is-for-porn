@@ -150,7 +150,7 @@ const
                     )}
                 </a>
                 : <Link
-                    to={`/vid-${ig(x, 'videoPageRef')}/${ig(x, 'title').replace(/ /g, '-')}`}
+                    to={`/video-${ig(x, 'videoPageRef')}/${ig(x, 'title').replace(/ /g, '-')}`}
                     className={g(classes, 'routerLink')}
                 >
                     {renderVideoPreview(
