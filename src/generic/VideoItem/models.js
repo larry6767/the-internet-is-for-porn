@@ -23,7 +23,7 @@ const
     }),
 
     // {foo: 'foo', bar: 'bar'}
-    videoItemModelPropsKeys = mapValues(videoItemModelProps, (x, k) => k)
+    videoItemModelPropsKeys = Object.freeze(mapValues(videoItemModelProps, (x, k) => k))
 
 export const
     videoItemModel = PropTypes.exact(videoItemModelProps),

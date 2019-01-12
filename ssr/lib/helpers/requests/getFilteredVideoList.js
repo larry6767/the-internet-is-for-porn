@@ -1,6 +1,7 @@
 import {map, mapValues} from 'lodash'
 
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
+import {videoItemModel} from '../../../generic/VideoItem/models'
 import {getOrderedVideoList} from './index'
 
 const
@@ -43,27 +44,7 @@ const
     getProp = (src, propKey) => g(src, g(incomingModelPropsKeys, propKey)),
 
     // `shape` instead of `exact` because we may just ignore some of the fields
-    incomingModel = PropTypes.shape(incomingModelProps),
-
-    outcomingModel = PropTypes.exact({
-        id: PropTypes.number,
-
-        thumb: PropTypes.string, // an URL
-        thumbMask: PropTypes.string, // an URL with "{num}" placeholder
-        thumbs: PropTypes.arrayOf(PropTypes.number),
-        favorite: PropTypes.number,
-
-        title: PropTypes.string,
-        sponsorId: PropTypes.string,
-        tags: PropTypes.arrayOf(PropTypes.string),
-
-        // This is for very small string under a video preview, it's usually only one single tag.
-        tagsShort: PropTypes.string,
-
-        duration: PropTypes.string,
-
-        url: PropTypes.string, // TODO FIXME refactor this
-    })
+    incomingModel = PropTypes.shape(incomingModelProps)
 
 export default (ids, items) => map(getOrderedVideoList(ids, items), x => {
     if (process.env.NODE_ENV !== 'production')
@@ -100,7 +81,7 @@ export default (ids, items) => map(getOrderedVideoList(ids, items), x => {
         }
 
     if (process.env.NODE_ENV !== 'production')
-        assertPropTypes(outcomingModel, result)
+        assertPropTypes(videoItemModel, result)
 
     return result
 })
