@@ -1,7 +1,6 @@
 import {set} from 'lodash'
 
-import {plainProvedGet as g} from '../App/helpers'
-import {PropTypes, assertPropTypes} from '../App/helpers'
+import {PropTypes, assertPropTypes, plainProvedGet as g} from '../App/helpers'
 import {localeRouterModel} from '../App/models'
 import deepFreeze from '../lib/helpers/deepFreeze'
 

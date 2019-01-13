@@ -20,6 +20,7 @@ const actions = createActions('APP', [
     'SET_LOCALE_CODE',
     'FILL_LOCALE_PAGE_CODES',
     'FILL_LOCALE_ROUTER',
+    'FILL_LOCALE_I18N',
 ])
 
 export default actions

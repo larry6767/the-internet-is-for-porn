@@ -37,9 +37,11 @@ else {
 
             return response.json()
         }).then(x => {
+            // WARNING! see also `ssr/lib/render` to keep this up to date
             store.dispatch(appActions.setLocaleCode(g(x, 'localeCode')))
             store.dispatch(appActions.fillLocalePageCodes(g(x, 'pageCodes')))
             store.dispatch(appActions.fillLocaleRouter(g(x, 'router')))
+            store.dispatch(appActions.fillLocaleI18n(g(x, 'i18n')))
             runFrontEnd()
         }).catch(err => {
             console.error('Application initialization is failed with exception:', err)

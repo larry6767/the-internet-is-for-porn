@@ -15,6 +15,5 @@ const
     })
 
 export default provedHandleActions(stateModel, {
-    [g(actions, 'setNewPath')]: (state, {payload}) =>
-        state.set('currentPath', payload),
+    [g(actions, 'setNewPath')]: (state, {payload}) => state.set('currentPath', payload),
 }, fromJS({currentPath: '/'}))

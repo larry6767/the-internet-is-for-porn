@@ -18,6 +18,7 @@ import {App} from '../App'
 import appActions from '../App/actions'
 import languageActions from '../App/MainHeader/Language/actions'
 import routerLocales from '../locale-mapping/router'
+import i18n from '../locale-mapping/i18n'
 
 const getPageData =
     (req, siteLocales, localeCode) => etc =>
@@ -46,9 +47,11 @@ export default (
         if ( ! locale)
             throw new Error(`Site locale not found for this host: ${req.get('host')}`)
 
+        // WARNING! see also `src/index` to keep this up to date
         store.dispatch(appActions.setLocaleCode(localeCode))
         store.dispatch(appActions.fillLocalePageCodes(buildLocalePageCodes(localeCode)))
         store.dispatch(appActions.fillLocaleRouter(g(routerLocales, localeCode)))
+        store.dispatch(appActions.fillLocaleI18n(g(i18n, localeCode)))
         store.dispatch(languageActions.setNewLanguage(localeCode))
 
         const

@@ -21,7 +21,7 @@ import favoriteReducer from './Favorite/reducers'
 import favoritePornstarsReducer from './FavoritePornstars/reducers'
 import videoPageReducer from './VideoPage/reducers'
 import actions from './actions'
-import {immutableLocaleRouterModel} from './models'
+import {immutableLocaleRouterModel, immutableI18nModel} from './models'
 
 const
     defaultSSR = fromJS({isSSR: false}),
@@ -87,6 +87,11 @@ export default combineReducers({
         // This supposed to be filled at initialization step (depending on current locale).
         router: provedHandleActions(immutableLocaleRouterModel.isOptional, {
             [g(actions, 'fillLocaleRouter')]: (state, {payload}) => Map(fromJS(payload)),
+        }, null),
+
+        // This supposed to be filled at initialization step (depending on current locale).
+        i18n: provedHandleActions(immutableI18nModel.isOptional, {
+            [g(actions, 'fillLocaleI18n')]: (state, {payload}) => Map(fromJS(payload)),
         }, null),
     }),
 })

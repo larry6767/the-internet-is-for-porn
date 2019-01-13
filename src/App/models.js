@@ -32,11 +32,42 @@ const
                 }),
             }),
         })
+    },
+
+    i18nNavigationModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
+            navigationItem = exact({title: PropTypes.string})
+
+        return exact({
+            home: navigationItem,
+            allNiches: navigationItem,
+            allMovies: navigationItem,
+            pornstars: navigationItem,
+            favorite: navigationItem,
+        })
+    },
+
+    i18nNavigationModel = i18nNavigationModelBuilder(false),
+    immutableI18nNavigationModel = i18nNavigationModelBuilder(true),
+
+    i18nModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            navigation: isImmutable ? immutableI18nNavigationModel : i18nNavigationModel,
+        })
     }
+
+export {i18nNavigationModel, immutableI18nNavigationModel}
 
 export const
     localeRouterModel = localeRouterModelBuilder(false),
     immutableLocaleRouterModel = localeRouterModelBuilder(true),
+
+    i18nModel = i18nModelBuilder(false),
+    immutableI18nModel = i18nModelBuilder(true),
 
     routerLocationModel = ImmutablePropTypes.exact({
         hash: PropTypes.string,

@@ -2,6 +2,7 @@ import {cloneDeep, find, includes, unset} from 'lodash'
 
 import apiLocaleMapping from '../locale-mapping/backend-api'
 import routerLocaleMapping from '../locale-mapping/router'
+import i18n from '../locale-mapping/i18n'
 import {plainProvedGet as g} from '../App/helpers'
 import {logRequestError, buildLocalePageCodes} from './helpers'
 
@@ -158,6 +159,7 @@ const
             localeCode,
             pageCodes: buildLocalePageCodes(localeCode),
             router: g(routerLocaleMapping, localeCode),
+            i18n: g(i18n, localeCode),
         }).end()
     },
 

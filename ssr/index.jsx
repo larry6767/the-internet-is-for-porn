@@ -21,6 +21,7 @@ import backendProxyHandler from './lib/backend-proxy'
 import {getSiteLocales} from './lib/requests'
 import {validate as apiLocaleMappingValidate} from './locale-mapping/backend-api'
 import {validate as routerLocaleMappingValidate} from './locale-mapping/router'
+import {validate as i18nLocaleMappingValidate} from './locale-mapping/i18n'
 
 const
     {port, host, production: isProduction, rc: isRC} = yargs
@@ -70,6 +71,7 @@ const initApp = async () => {
 
     apiLocaleMappingValidate(siteLocales)
     routerLocaleMappingValidate(siteLocales)
+    i18nLocaleMappingValidate(siteLocales)
 
     // it's recommended to serve these files by nginx as static files
     app.use(favicon(join(publicDir, 'favicon.ico')))
