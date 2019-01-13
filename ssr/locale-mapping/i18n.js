@@ -16,6 +16,9 @@ const
                 pornstars: {title: 'Pornstars'},
                 favorite: {title: 'Favorite'},
             },
+            allNiches: {
+                pageHeader: 'All Niches',
+            },
         },
         deu: {
             navigation: {
@@ -24,6 +27,9 @@ const
                 allMovies: {title: 'Alle Vids'},
                 pornstars: {title: 'Models'},
                 favorite: {title: 'Favorisierten'},
+            },
+            allNiches: {
+                pageHeader: 'Alle Gruppen',
             },
         },
         ita: {
@@ -34,6 +40,9 @@ const
                 pornstars: {title: 'Pornostar '},
                 favorite: {title: 'Preferiti'},
             },
+            allNiches: {
+                pageHeader: 'Tutte le Categorie',
+            },
         },
         fra: { // TODO
             navigation: {
@@ -42,6 +51,9 @@ const
                 allMovies: {title: ''},
                 pornstars: {title: ''},
                 favorite: {title: ''},
+            },
+            allNiches: {
+                pageHeader: '',
             },
         },
         spa: { // TODO
@@ -52,6 +64,9 @@ const
                 pornstars: {title: ''},
                 favorite: {title: ''},
             },
+            allNiches: {
+                pageHeader: '',
+            },
         },
         por: { // TODO
             navigation: {
@@ -60,6 +75,9 @@ const
                 allMovies: {title: ''},
                 pornstars: {title: ''},
                 favorite: {title: ''},
+            },
+            allNiches: {
+                pageHeader: '',
             },
         },
         swe: { // TODO
@@ -70,6 +88,9 @@ const
                 pornstars: {title: ''},
                 favorite: {title: ''},
             },
+            allNiches: {
+                pageHeader: '',
+            },
         },
         nld: { // TODO
             navigation: {
@@ -78,6 +99,9 @@ const
                 allMovies: {title: ''},
                 pornstars: {title: ''},
                 favorite: {title: ''},
+            },
+            allNiches: {
+                pageHeader: '',
             },
         },
         fin: { // TODO
@@ -88,6 +112,9 @@ const
                 pornstars: {title: ''},
                 favorite: {title: ''},
             },
+            allNiches: {
+                pageHeader: '',
+            },
         },
         rus: { // TODO
             navigation: {
@@ -97,6 +124,9 @@ const
                 pornstars: {title: ''},
                 favorite: {title: ''},
             },
+            allNiches: {
+                pageHeader: '',
+            },
         },
         tur: { // TODO
             navigation: {
@@ -105,6 +135,9 @@ const
                 allMovies: {title: ''},
                 pornstars: {title: ''},
                 favorite: {title: ''},
+            },
+            allNiches: {
+                pageHeader: '',
             },
         },
     })

@@ -57,6 +57,9 @@ const
 
         return exact({
             navigation: isImmutable ? immutableI18nNavigationModel : i18nNavigationModel,
+            allNiches: exact({
+                pageHeader: PropTypes.string,
+            }),
         })
     }
 

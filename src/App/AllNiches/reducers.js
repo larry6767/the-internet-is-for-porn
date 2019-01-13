@@ -1,24 +1,40 @@
 import {combineReducers} from 'redux-immutable'
-import {handleActions} from 'redux-actions'
 import {fromJS, List} from 'immutable'
+
+import {
+    ImmutablePropTypes,
+    PropTypes,
+    provedHandleActions,
+    plainProvedGet as g,
+} from '../helpers'
+
+import {nicheItemModel} from './models'
 import actions from './actions'
 import nicheReducer from './Niche/reducers'
+
+const
+    allStateModel = ImmutablePropTypes.exact({
+        isLoading: PropTypes.bool,
+        isLoaded: PropTypes.bool,
+        isFailed: PropTypes.bool,
+        nichesList: ImmutablePropTypes.listOf(nicheItemModel),
+    })
 
 export default combineReducers({
     niche: nicheReducer,
 
-    all: handleActions({
+    all: provedHandleActions(allStateModel, {
         [actions.loadPageRequest]: (state) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
             nichesList: List(),
         }),
-        [actions.loadPageSuccess]: (state, {payload: {data}}) => state.merge({
+        [actions.loadPageSuccess]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            nichesList: fromJS(data),
+            nichesList: fromJS(g(payload, 'data')),
         }),
         [actions.loadPageFailure]: (state) => state.merge({
             isLoading: false,
@@ -30,15 +46,6 @@ export default combineReducers({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        nichesList: [
-            /*
-            {
-                id: 0,
-                name: '',
-                subPage: '',
-                itemsCount: 0,
-            }
-            */
-        ]
+        nichesList: [],
     }))
 })
