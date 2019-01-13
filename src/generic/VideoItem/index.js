@@ -15,6 +15,8 @@ import {
     PropTypes,
 } from '../../App/helpers'
 
+import {routerGetters} from '../../router-builder'
+import {immutableLocaleRouterModel} from '../../App/models'
 import actions from '../../App/actions'
 import {muiStyles} from './assets/muiStyles'
 import {immutableVideoItemModel} from './models'
@@ -130,14 +132,14 @@ const
     </VideoPreview>,
 
     VideoItem = ({
-        classes, x, isSSR, addVideoToFavoriteHandler,
+        classes, x, isSSR, router, addVideoToFavoriteHandler,
         removeVideoFromFavoriteHandler, favoriteVideoList,
     }) => {
         const
             thumbsLinks = ig(x, 'thumbs').map(thumb => replace(ig(x, 'thumbMask'), '{num}', thumb))
 
         return <Wrapper>
-            {typeof ig(x, 'videoPageRef') === 'string'
+            {typeof ig(x, 'videoPageRef') === 'string' // external resource
                 ? <a
                     href={ig(x, 'videoPageRef')}
                     target="_blank"
@@ -150,7 +152,7 @@ const
                     )}
                 </a>
                 : <Link
-                    to={`/video-${ig(x, 'videoPageRef')}/${ig(x, 'title').replace(/ /g, '-')}`}
+                    to={routerGetters.video.link(router, ig(x, 'videoPageRef'), ig(x, 'title'))}
                     className={g(classes, 'routerLink')}
                 >
                     {renderVideoPreview(
@@ -197,6 +199,7 @@ export default compose(
         state => ({
             favoriteVideoList: ig(state, 'app', 'ui', 'favoriteVideoList'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            router: ig(state, 'app', 'locale', 'router'),
         }),
         dispatch => ({
             addVideoToFavoriteHandler: video => e => {
@@ -213,6 +216,7 @@ export default compose(
     setPropTypes({
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
+        router: immutableLocaleRouterModel,
         x: immutableVideoItemModel,
         addVideoToFavoriteHandler: PropTypes.func,
         removeVideoFromFavoriteHandler: PropTypes.func,
