@@ -3,10 +3,24 @@ import fetch from 'node-fetch'
 import FormData from 'form-data'
 import {Agent} from 'https' // TODO FIXME for hacky-wacky stuff (blind trust to SSL cert)
 
+import {
+    plainProvedGet as g,
+    PropTypes,
+    assertPropTypes,
+} from '../App/helpers'
+
 import {defaultHostToFetchSiteLocalesFrom} from '../config'
 import apiLocales from '../locale-mapping/backend-api'
-import {plainProvedGet as g} from '../App/helpers'
 import {backendUrl, backendUrlForReport} from './helpers/backendUrl'
+import {videoItemModel} from '../generic/VideoItem/models'
+import {incomingPageTextModel, pageTextModel} from './helpers/requests/getPageText'
+import {incomingVideoItemModel} from './helpers/requests/getFilteredVideoList'
+
+import {
+    incomingGalleryModel,
+    publishedTemplateModel,
+    galleryModel,
+} from './helpers/requests/getGallery'
 
 import {
     getTagList,
@@ -169,12 +183,54 @@ const
         }
     },
 
+    videoPageModel = PropTypes.shape({
+        page: PropTypes.shape({
+            GALLERY: incomingGalleryModel,
+            PAGE_URL: PropTypes.string,
+            TIME_AGO: publishedTemplateModel,
+            PAGE_TEXT: incomingPageTextModel,
+            GALS_INFO: PropTypes.shape({
+                ids: PropTypes.arrayOf(PropTypes.number),
+                items: PropTypes.objectOf(incomingVideoItemModel),
+            }),
+        }),
+    }),
+
+    mappedVideoPageModel = PropTypes.shape({
+        gallery: galleryModel,
+        pageText: pageTextModel,
+        videoList: PropTypes.arrayOf(videoItemModel),
+    }),
+
     getVideoPageMap = x => {
-        return {
-            gallery: getGallery(x.page.GALLERY, x.page.PAGE_URL, x.page.TIME_AGO),
-            pageText: getPageText(x.page.PAGE_TEXT),
-            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
-        }
+        if (process.env.NODE_ENV !== 'production')
+            assertPropTypes(videoPageModel, x, 'getVideoPageMap', 'video page source from backend')
+
+        const
+            result = {
+                gallery: getGallery(
+                    g(x, 'page', 'GALLERY'),
+                    g(x, 'page', 'PAGE_URL'),
+                    g(x, 'page', 'TIME_AGO')
+                ),
+
+                pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
+
+                videoList: getFilteredVideoList(
+                    g(x, 'page', 'GALS_INFO', 'ids'),
+                    g(x, 'page', 'GALS_INFO', 'items')
+                ),
+            }
+
+        if (process.env.NODE_ENV !== 'production')
+            assertPropTypes(
+                mappedVideoPageModel,
+                result,
+                'getVideoPageMap',
+                'mapped video page data'
+            )
+
+        return result
     },
 
     // `callStackGetter` supposed to be (() => new Error().stack) in place where it's called,

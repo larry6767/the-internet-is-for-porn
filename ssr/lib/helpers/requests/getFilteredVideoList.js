@@ -67,6 +67,8 @@ const
     // `shape` instead of `exact` because we may just ignore some of the fields
     incomingModel = PropTypes.shape(incomingModelProps)
 
+export {incomingModel as incomingVideoItemModel}
+
 export default (ids, items) => map(getOrderedVideoList(ids, items), x => {
     if (process.env.NODE_ENV !== 'production')
         assertPropTypes(incomingModel, x, 'getFilteredVideoList', 'original source video item')
