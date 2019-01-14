@@ -31,6 +31,12 @@ const
                     fromExt: PropTypes.string,
                 }),
             }),
+            ordering: exact({
+                qsKey: PropTypes.string,
+                byDate: exact({qsValue: PropTypes.string}),
+                byDuration: exact({qsValue: PropTypes.string}),
+                byPopularity: exact({qsValue: PropTypes.string}),
+            }),
         })
     },
 
@@ -70,6 +76,12 @@ const
         return exact({
             navigation: isImmutable ? immutableI18nNavigationModel : i18nNavigationModel,
             allNiches: isImmutable ? immutableI18nAllNichesModel : i18nAllNichesModel,
+            ordering: exact({
+                label: PropTypes.string,
+                byDate: PropTypes.string,
+                byDuration: PropTypes.string,
+                byPopularity: PropTypes.string,
+            }),
         })
     }
 
