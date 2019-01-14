@@ -1,17 +1,27 @@
 import React from 'react'
+import {compose, setPropTypes, withHandlers} from 'recompose'
+import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 import {Tabs, Tab} from '@material-ui/core'
-import {navigation} from './fixtures'
-import {compose} from 'recompose'
-import {connect} from 'react-redux'
-import actions from './actions'
-import {Nav} from './assets'
+
+import {
+    getValueForNavigation,
+    immutableProvedGet as ig,
+    plainProvedGet as g,
+    PropTypes,
+} from '../../helpers'
+
+import {routerGetters} from '../../../router-builder'
+import {immutableLocaleRouterModel, immutableI18nNavigationModel} from '../../models'
 import {muiStyles} from './assets/muiStyles'
-import {getValueForNavigation} from '../../helpers'
+import {Nav} from './assets'
+import actions from './actions'
+import {navMenuOrder} from './models'
 
 const
-    Navigation = ({classes, pathname, goToPath}) => {
-        const value = getValueForNavigation(navigation, pathname)
+    Navigation = ({classes, isSSR, pathname, i18nNav, goToPath, getLinkByNavKey}) => {
+        const
+            value = getValueForNavigation(getLinkByNavKey)(navMenuOrder, pathname)
 
         return <Nav>
             <Tabs
@@ -19,22 +29,25 @@ const
                 onChange={goToPath}
                 indicatorColor="primary"
                 textColor="primary"
-                scrollable
+                variant={isSSR ? null : 'scrollable'}
                 scrollButtons="off"
             >
-                {Object.keys(navigation).map((item, index) =>
+                {navMenuOrder.map((navKey, index) => {
+                    const
+                        link = getLinkByNavKey(navKey)
+
                     /* WARNING! <a> with `href` attribute is important to give bare links to SSR */
-                    <Tab
-                        key={index}
-                        href={item}
-                        value={item}
-                        label={navigation[`${item}`]}
+                    return <Tab
+                        key={index /* the order never change */}
+                        href={link}
+                        value={navKey}
+                        label={ig(i18nNav, navKey, 'title')}
                         classes={{
-                            root: classes.labelRoot,
-                            label: classes.label
+                            root: g(classes, 'labelRoot'),
+                            label: g(classes, 'label'),
                         }}
                     />
-                )}
+                })}
             </Tabs>
         </Nav>
     }
@@ -42,14 +55,32 @@ const
 export default compose(
     connect(
         state => ({
-            pathname: state.getIn(['router', 'location', 'pathname'])
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            pathname: ig(state, 'router', 'location', 'pathname'),
+            router: ig(state, 'app', 'locale', 'router'),
+            i18nNav: ig(state, 'app', 'locale', 'i18n', 'navigation'),
         }),
-        dispatch => ({
-            goToPath: (event, value) => {
-                event.preventDefault()
-                dispatch(actions.setNewPath(value))
-            }
-        })
+        {
+            setNewPath: g(actions, 'setNewPath'),
+        }
     ),
-    withStyles(muiStyles)
+    withStyles(muiStyles),
+    withHandlers({
+        getLinkByNavKey: props => navKey => g(routerGetters, navKey, 'link')(g(props, 'router')),
+    }),
+    withHandlers({
+        goToPath: props => (event, value) => {
+            event.preventDefault()
+            props.setNewPath(props.getLinkByNavKey(value))
+        },
+    }),
+    setPropTypes({
+        classes: PropTypes.object,
+        isSSR: PropTypes.bool,
+        pathname: PropTypes.string,
+        router: immutableLocaleRouterModel,
+        i18nNav: immutableI18nNavigationModel,
+        goToPath: PropTypes.func,
+        getLinkByNavKey: PropTypes.func,
+    })
 )(Navigation)

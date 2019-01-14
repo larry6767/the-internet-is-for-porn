@@ -1,15 +1,18 @@
+import {throttle} from 'lodash'
 import React, {Fragment} from 'react'
+import {connect} from 'react-redux'
+import {compose, lifecycle, setPropTypes} from 'recompose'
+import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles'
+import {ThemeProvider as SCThemeProvider} from 'styled-components'
+import {Normalize} from 'styled-normalize'
+
+import {immutableProvedGet as ig, PropTypes} from './helpers'
+import {immutableLocaleRouterModel, routerLocationModel} from './models'
 import MainHeader from './MainHeader'
 import MainFooter from './MainFooter'
-import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles'
-import {connect} from 'react-redux'
-import {compose, lifecycle} from 'recompose'
-import {throttle} from 'lodash'
 import actions from './actions'
-import {ThemeProvider as SCThemeProvider} from 'styled-components'
 import theme from './assets/theme'
 import GlobalStyle from './assets/style'
-import {Normalize} from 'styled-normalize'
 
 const
     muiTheme = createMuiTheme({
@@ -24,7 +27,7 @@ const
         },
     })
 
-export const App = ({sheetsManager, location, children}) => <MuiThemeProvider
+export const App = ({sheetsManager, location, router, children}) => <MuiThemeProvider
     theme={muiTheme}
     sheetsManager={sheetsManager}
 >
@@ -35,7 +38,7 @@ export const App = ({sheetsManager, location, children}) => <MuiThemeProvider
 
             <div className='App'>
                 <MainHeader/>
-                {children ? children({location}) : null}
+                {children ? children({location, router}) : null}
                 <MainFooter/>
             </div>
         </Fragment>
@@ -45,7 +48,8 @@ export const App = ({sheetsManager, location, children}) => <MuiThemeProvider
 export default compose(
     connect(
         state => ({
-            location: state.getIn(['router', 'location'])
+            location: ig(state, 'router', 'location'),
+            router: ig(state, 'app', 'locale', 'router'),
         }),
         dispatch => ({
             resizeAction: event => dispatch(actions.resize(
@@ -67,6 +71,16 @@ export default compose(
 
         componentWillUnmount() {
             window.removeEventListener('resize', this.listener)
-        }
+        },
+    }),
+
+    setPropTypes({
+        location: routerLocationModel,
+        router: immutableLocaleRouterModel,
+
+        // In bare usage of <App> in SSR these are not passed (that's why they're optional).
+        resizeAction: PropTypes.func.isOptional,
+        getFavoriteVideoListAction: PropTypes.func.isOptional,
+        getFavoritePornstarListAction: PropTypes.func.isOptional,
     })
 )(App)

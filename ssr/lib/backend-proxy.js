@@ -1,6 +1,8 @@
 import {cloneDeep, find, includes, unset} from 'lodash'
 
-import apiLocaleMapping from '../api-locale-mapping'
+import apiLocaleMapping from '../locale-mapping/backend-api'
+import routerLocaleMapping from '../locale-mapping/router'
+import i18n from '../locale-mapping/i18n'
 import {plainProvedGet as g} from '../App/helpers'
 import {logRequestError, buildLocalePageCodes} from './helpers'
 
@@ -148,6 +150,8 @@ const
         validTopLevelKeys: ['localeCode', 'pageCode', 'subPageCode'],
     }),
 
+    // TODO Detect `defaultSiteLocaleCode` by Host from `req`.
+    // TODO Also detect for test.* domains.
     getSiteLocale = (siteLocales, defaultSiteLocaleCode) => (req, res) => {
         const
             localeCode = req.body.localeCode || defaultSiteLocaleCode
@@ -155,6 +159,8 @@ const
         res.json({
             localeCode,
             pageCodes: buildLocalePageCodes(localeCode),
+            router: g(routerLocaleMapping, localeCode),
+            i18n: g(i18n, localeCode),
         }).end()
     },
 
@@ -260,6 +266,24 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
             {
                 request: {
                     method: g(req, 'method'),
+                    operation: req.params.operation,
+                    headers: {
+                        'Accept': req.headers['accept'],
+                        'Content-Type': req.headers['content-type'],
+                    },
+                },
+            }
+        )
+    else if (
+        req.body.localeCode &&
+        !find(siteLocales, x => g(x, 'code') === g(req, 'body', 'localeCode'))
+    )
+        jsonThrow400(req, res)(
+            'Provided locale code (`localeCode`) is unknown',
+            {
+                request: {
+                    method: g(req, 'method'),
+                    localeCode: g(req, 'body', 'localeCode'),
                     operation: req.params.operation,
                     headers: {
                         'Accept': req.headers['accept'],

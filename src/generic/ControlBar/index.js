@@ -9,6 +9,10 @@ import {
     OutlinedInput,
 } from '@material-ui/core'
 import {Link} from 'react-router-dom'
+
+import {immutableProvedGet as ig} from '../../App/helpers'
+import {muiStyles} from './assets/muiStyles'
+
 import {
     Wrapper,
     ControlButtons,
@@ -18,7 +22,6 @@ import {
     InlinedSelectionList,
     InlinedSelectionItem,
 } from './assets'
-import {muiStyles} from './assets/muiStyles'
 
 const
     SortSelectMaterial = ({
@@ -155,22 +158,22 @@ const
         tagArchiveListOlder,
         tagArchiveListNewer,
     }) => <Fragment>
-        {tagArchiveListOlder.size
+        {tagArchiveListOlder && tagArchiveListOlder.size
             ? <WrappedButton
                 classes={classes}
                 link={`/${page}${subPage ? `/${subPage}` : ''}/archive/${
-                    tagArchiveListOlder.get('year')}-${tagArchiveListOlder.get('month')}`}
+                    ig(tagArchiveListOlder, 'year')}-${ig(tagArchiveListOlder, 'month')}`}
                 text="previous month"
             /> : null
         }
         <ButtonsList>
             {buttonsElements}
         </ButtonsList>
-        {tagArchiveListNewer.size
+        {tagArchiveListNewer && tagArchiveListNewer.size
             ? <WrappedButton
                 classes={classes}
                 link={`/${page}${subPage ? `/${subPage}` : ''}/archive/${
-                    tagArchiveListNewer.get('year')}-${tagArchiveListNewer.get('month')}`}
+                    ig(tagArchiveListNewer, 'year')}-${ig(tagArchiveListNewer, 'month')}`}
                 text="next month"
             />
             : null

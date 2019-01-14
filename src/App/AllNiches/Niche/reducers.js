@@ -50,7 +50,6 @@ export default
             isFailed: true,
             currentPage: '',
             currentSubPage: '',
-            lastSubPageForRequest: '',
             pageNumber: 1,
             pageText: OrderedMap(),
             pagesCount: 1,
@@ -151,10 +150,8 @@ export default
                 sponsorId: 0,
                 tags: '',
                 tagsShort: '',
-                urlRegular: '',
                 favorite: 0,
                 duration: 0,
-
             }
             */
         ],

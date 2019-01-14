@@ -8,8 +8,8 @@ export default reqBody => fetch(`${BACKEND_URL}/get-page-data`, {
     },
     body: JSON.stringify(reqBody),
 }).then(response => {
-    if (response.status !== 200)
-        throw new Error(`Response status is ${response.status} (not 200)`)
+    if ( ! response.ok)
+        throw new Error(`Response is not OK (status code is ${response.status})`)
 
     return response.json()
 })

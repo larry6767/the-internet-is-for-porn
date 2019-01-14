@@ -25,6 +25,7 @@ export default
             pageText: Map(fromJS(data.pageText)),
             gallery: Map(fromJS(data.gallery)),
             videoList: List(fromJS(data.videoList)),
+
             // clearing report state for new content
             reportIsSending: false,
             reportIsSent: false,
@@ -34,7 +35,6 @@ export default
             isLoading: false,
             isLoaded: false,
             isFailed: true,
-            lastSubPageForRequest: '',
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
             pageText: Map(),
@@ -113,10 +113,8 @@ export default
                 sponsorId: 0,
                 tags: '',
                 tagsShort: '',
-                urlRegular: '',
                 favorite: 0,
                 duration: 0,
-
             }
             */
         ],

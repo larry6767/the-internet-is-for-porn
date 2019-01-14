@@ -98,7 +98,7 @@ const
         </Button>,
 
     renderIframe = (src, isAd) =>
-        ((!process.env.NODE_ENV === 'development' && isAd === 'isAd') || isAd !== 'isAd')
+        ((!process.env.NODE_ENV !== 'production' && isAd === 'isAd') || isAd !== 'isAd')
             ? <iframe
                 title={src}
                 src={src}
@@ -318,8 +318,8 @@ export default compose(
         form: 'reportForm',
         enableReinitialize: true,
         onSubmit: (formData, dispatch) => dispatch(actions.sendReportRequest(formData)),
-		onSubmitSuccess: (values, dispatch) => dispatch(resetForm('reportForm')),
-	}),
+        onSubmitSuccess: (values, dispatch) => dispatch(resetForm('reportForm')),
+    }),
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)

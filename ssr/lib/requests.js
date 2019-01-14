@@ -1,8 +1,10 @@
-import {pick, map, find} from 'lodash'
-import rp from 'request-promise-native'
+import {pick, map, find, mapValues, omit} from 'lodash'
+import fetch from 'node-fetch'
+import FormData from 'form-data'
+import {Agent} from 'https' // TODO FIXME for hacky-wacky stuff (blind trust to SSL cert)
 
 import {defaultHostToFetchSiteLocalesFrom} from '../config'
-import apiLocales from '../api-locale-mapping'
+import apiLocales from '../locale-mapping/backend-api'
 import {plainProvedGet as g} from '../App/helpers'
 import {backendUrl, backendUrlForReport, backendUrlForSearch} from './helpers/backendUrl'
 
@@ -48,7 +50,9 @@ const
 
     getAllMoviesMap = x => {
         const
-            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID)
+            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID),
+            tagArchiveListOlder = pick(x.page.TAG_ARCHIVE_OLDER, ['month', 'year']),
+            tagArchiveListNewer = pick(x.page.TAG_ARCHIVE_NEWER, ['month', 'year'])
 
         return {
             currentPage: x.page.TAG_URL_NAME,
@@ -57,14 +61,13 @@ const
             pagesCount: x.page.PAGES_COUNT,
             tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
             tagArchiveList: getTagArchiveList(x.page.TAG_ARCHIVE_LIST_FULL, x.page.MONTHS_NAMES),
-            tagArchiveListOlder: pick(
-                x.page.TAG_ARCHIVE_OLDER,
-                ['month', 'year']
-            ),
-            tagArchiveListNewer: pick(
-                x.page.TAG_ARCHIVE_NEWER,
-                ['month', 'year']
-            ),
+
+            tagArchiveListOlder:
+                Object.keys(tagArchiveListOlder).length ? tagArchiveListOlder : null,
+
+            tagArchiveListNewer:
+                Object.keys(tagArchiveListNewer).length ? tagArchiveListNewer : null,
+
             sortList: sortList,
             currentSort: sortList.length ? sortList.find(x => x.active).value : '',
             archiveFilms: getArchiveFilms(x.page.ACTIVE_NAV_TABS.tag_archive_gals),
@@ -172,12 +175,48 @@ const
             pageText: getPageText(x.page.PAGE_TEXT),
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }
-    }
+    },
+
+    // `callStackGetter` supposed to be (() => new Error().stack) in place where it's called,
+    // otherwise it's hard to debug which request is caused an exception.
+    fetchResponseExtractor = callStackGetter => response => {
+        if ( ! response.ok)
+            throw new Error(
+                `Response is not OK (status code is ${response.status}), ` +
+                `call stack: ${callStackGetter()}`
+            )
+
+        return response.json()
+    },
+
+    // TODO FIXME remove this when SSL certs will be fixed
+    blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL =
+        process.env.NODE_ENV === 'production' ? null :
+        new Agent({checkServerIdentity: (host, cert) => {
+            console.warn(`
+
+                YOU'RE PLAYING DANGEROUS GAMES!
+                Host: ${host}
+                Certificate: ${'\n' + JSON.stringify(
+                        omit(
+                            mapValues(cert, (x, k) => k === 'issuerCertificate' ? null : x),
+                            ['issuerCertificate', 'raw', 'pubkey']
+                        ),
+                        null,
+                        '  '
+                    )}
+
+            `)
+        }})
 
 /*
     Generic helper to obtain data from backend for specific "page".
 */
-export const getPageData = (siteLocales, localeCode) => async ({headers, pageCode, subPageCode}) => {
+export const getPageData = (siteLocales, localeCode) => async ({
+    headers,
+    pageCode,
+    subPageCode,
+}) => {
     // To assign it in conditions, done it this way to reduce human-factor mistakes
     // (like you may accidentally write `locale.home.code` in condition
     // and `urlFunc(locale.niche.url)` for url
@@ -233,13 +272,15 @@ export const getPageData = (siteLocales, localeCode) => async ({headers, pageCod
     if (params === null)
         throw new Error(`Unexpected page code: "${pageCode}"`)
 
-    return mapFn(await rp({
-        uri: backendUrl(siteLocales, localeCode),
+    return mapFn(await fetch(backendUrl(siteLocales, localeCode), {
         method: 'POST',
         headers,
-        json: true,
-        body: {operation: 'getPageDataByUrl', params},
-    }))
+        body: JSON.stringify({operation: 'getPageDataByUrl', params}),
+
+        // TODO FIXME remove this:
+        agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
+
+    }).then(fetchResponseExtractor(() => new Error().stack)))
 }
 
 /*
@@ -261,25 +302,29 @@ export const getPageData = (siteLocales, localeCode) => async ({headers, pageCod
 */
 export const getSiteLocales = async () => {
     const
-        {page: {CUSTOM_DATA: {langSites}}} = await rp({
-            uri: backendUrl(
+        {page: {CUSTOM_DATA: {langSites}}} = await fetch(
+            backendUrl(
                 [{host: defaultHostToFetchSiteLocalesFrom, code: '--PLUG--'}],
                 '--PLUG--'
             ),
-            method: 'POST',
-            headers: {
-                'accept': 'application/json',
-                'content-type': 'application/json; charset=utf-8',
-            },
-            json: true,
-            body: {
-                operation: 'getPageDataByUrl',
-                params: {
-                    url: '',
-                    options: {blocks: {langSites: 1}},
+            {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'content-type': 'application/json; charset=utf-8',
                 },
-            },
-        }),
+                body: JSON.stringify({
+                    operation: 'getPageDataByUrl',
+                    params: {
+                        url: '',
+                        options: {blocks: {langSites: 1}},
+                    },
+                }),
+
+                // TODO FIXME remove this:
+                agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
+            }
+        ).then(fetchResponseExtractor(() => new Error().stack)),
 
         defaultLocaleCode =
             find(map(langSites, ({active}, code) => ({code, active})), x => x.active).code
@@ -290,17 +335,29 @@ export const getSiteLocales = async () => {
     }
 }
 
-export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => rp({
-    uri: backendUrlForReport(siteLocales, localeCode),
-    method: 'POST',
-    headers,
-    json: true,
-    formData,
-})
+export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => fetch(
+    backendUrlForReport(siteLocales, localeCode),
+    {
+        method: 'POST',
+        headers,
+        body:
+            Object.keys(formData).reduce(
+                (fd, k) => (fd.append(k, g(formData, k)), fd),
+                new FormData()
+            ),
 
-export const getSearchSuggestions = (siteLocales, localeCode) => ({headers, formData}) => rp({
-    uri: `${backendUrlForSearch(siteLocales, localeCode)}?c=${formData.c}&t=${formData.t}`,
-    method: 'GET',
-    headers,
-    json: true,
-})
+        // TODO FIXME remove this:
+        agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
+    }
+).then(fetchResponseExtractor(() => new Error().stack))
+
+export const getSearchSuggestions = (siteLocales, localeCode) => ({headers, formData}) => fetch(
+    `${backendUrlForSearch(siteLocales, localeCode)}?c=${g(formData, 'c')}&t=${g(formData, 't')}`,
+    {
+        method: 'GET',
+        headers,
+
+        // TODO FIXME remove this:
+        agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
+    }
+).then(fetchResponseExtractor(() => new Error().stack))
