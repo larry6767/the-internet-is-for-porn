@@ -9,6 +9,9 @@ import deepFreeze from '../lib/helpers/deepFreeze'
 const
     mapping = deepFreeze({
         eng: {
+            search: {
+                inputPlaceholder: 'Search box',
+            },
             navigation: {
                 home: {title: 'Home'},
                 allNiches: {title: 'All Niches'},
@@ -21,6 +24,9 @@ const
             },
         },
         deu: {
+            search: {
+                inputPlaceholder: 'Stichworte hinzufügen',
+            },
             navigation: {
                 home: {title: 'Hauptseite'},
                 allNiches: {title: 'Alle Gruppen'},
@@ -33,6 +39,9 @@ const
             },
         },
         ita: {
+            search: {
+                inputPlaceholder: 'Inserisci parole chiave...',
+            },
             navigation: {
                 home: {title: 'Principale'},
                 allNiches: {title: 'Tutte le Categorie'},
@@ -45,6 +54,9 @@ const
             },
         },
         fra: { // TODO
+            search: {
+                inputPlaceholder: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -57,6 +69,9 @@ const
             },
         },
         spa: { // TODO
+            search: {
+                inputPlaceholder: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -69,6 +84,9 @@ const
             },
         },
         por: { // TODO
+            search: {
+                inputPlaceholder: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -81,6 +99,9 @@ const
             },
         },
         swe: { // TODO
+            search: {
+                inputPlaceholder: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -93,6 +114,9 @@ const
             },
         },
         nld: { // TODO
+            search: {
+                inputPlaceholder: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -105,6 +129,9 @@ const
             },
         },
         fin: { // TODO
+            search: {
+                inputPlaceholder: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -117,6 +144,9 @@ const
             },
         },
         rus: { // TODO
+            search: {
+                inputPlaceholder: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -129,6 +159,9 @@ const
             },
         },
         tur: { // TODO
+            search: {
+                inputPlaceholder: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},

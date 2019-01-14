@@ -1,15 +1,20 @@
 import React from 'react'
-import {compose} from 'recompose'
+import {compose, setPropTypes} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, Field} from 'redux-form/immutable'
 import Autosuggest from 'react-autosuggest'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
-
 import {TextField, Paper, MenuItem} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
 
-import {immutableProvedGet as ig} from '../../helpers'
+import {
+    immutableProvedGet as ig,
+    plainProvedGet as g,
+    PropTypes,
+} from '../../helpers'
+
+import {immutableI18nSearchModel} from '../../models'
 import {
     SearchForm,
     SearchButton
@@ -23,12 +28,12 @@ const
         type,
     }) => <input {...input} type={type}/>,
 
-    renderInputComponent = ({classes, ...input}) => <TextField
+    renderInputComponent = ({classes, i18nSearch, ...input}) => <TextField
         fullWidth
-        placeholder="Search 65,123,242 videos..."
+        placeholder={ig(i18nSearch, 'inputPlaceholder')}
         InputProps={{
             classes: {
-                input: classes.input,
+                input: g(classes, 'input'),
             },
             ...input,
             disableUnderline: true,
@@ -60,7 +65,7 @@ const
         change('t', suggestion)
     },
 
-    renderAutosuggest = ({classes, search, input, change}) => <Autosuggest
+    renderAutosuggest = ({classes, i18nSearch, search, input, change}) => <Autosuggest
         renderInputComponent={renderInputComponent}
         suggestions={ig(search, 'suggestions').toJS()}
         getSuggestionValue={getSuggestionValue.bind(this, change)}
@@ -72,14 +77,15 @@ const
             classes,
             value: input.value, // these params are required,
             onChange: () => {}, // but with redux-form are useless
+            i18nSearch,
             ...input,
         }}
 
         theme={{
-            container: classes.container,
-            suggestionsContainerOpen: classes.suggestionsContainerOpen,
-            suggestionsList: classes.suggestionsList,
-            suggestion: classes.suggestion,
+            container: g(classes, 'container'),
+            suggestionsContainerOpen: g(classes, 'suggestionsContainerOpen'),
+            suggestionsList: g(classes, 'suggestionsList'),
+            suggestion: g(classes, 'suggestion'),
         }}
 
         renderSuggestionsContainer={options =>
@@ -117,6 +123,7 @@ export default compose(
                 t: '',
             },
             search: ig(state, ['app', 'mainHeader', 'search']),
+            i18nSearch: ig(state, 'app', 'locale', 'i18n', 'search'),
         }),
         dispatch => ({
             suggestionsFetchRequestHandler: () => dispatch(actions.suggestionsFetchRequest()),
@@ -134,6 +141,10 @@ export default compose(
             dispatch(actions.suggestionsFetchRequest(values))
         },
         onSubmit: (values, dispatch) => dispatch(actions.runSearch(values))
-	}),
-    withStyles(muiStyles)
+    }),
+    withStyles(muiStyles),
+    setPropTypes({
+        classes: PropTypes.object,
+        i18nSearch: immutableI18nSearchModel,
+    })
 )(Search)

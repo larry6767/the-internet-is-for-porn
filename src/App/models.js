@@ -34,6 +34,15 @@ const
         })
     },
 
+    i18nSearchModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            inputPlaceholder: PropTypes.string,
+        })
+    },
+
     i18nNavigationModelBuilder = isImmutable => {
         const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
@@ -48,6 +57,9 @@ const
         })
     },
 
+    i18nSearchModel = i18nSearchModelBuilder(false),
+    immutableI18nSearchModel = i18nSearchModelBuilder(true),
+
     i18nNavigationModel = i18nNavigationModelBuilder(false),
     immutableI18nNavigationModel = i18nNavigationModelBuilder(true),
 
@@ -56,6 +68,7 @@ const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
 
         return exact({
+            search: isImmutable ? immutableI18nSearchModel : i18nSearchModel,
             navigation: isImmutable ? immutableI18nNavigationModel : i18nNavigationModel,
             allNiches: exact({
                 pageHeader: PropTypes.string,
@@ -63,7 +76,10 @@ const
         })
     }
 
-export {i18nNavigationModel, immutableI18nNavigationModel}
+export {
+    i18nSearchModel, immutableI18nSearchModel,
+    i18nNavigationModel, immutableI18nNavigationModel
+}
 
 export const
     localeRouterModel = localeRouterModelBuilder(false),
