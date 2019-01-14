@@ -1,202 +1,139 @@
 import React from 'react'
-import {deburr} from 'lodash'
 import {compose} from 'recompose'
 import {connect} from 'react-redux'
-import PropTypes from 'prop-types'
+import {reduxForm, Field} from 'redux-form/immutable'
 import Autosuggest from 'react-autosuggest'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
 
-import {TextField, Paper, MenuItem, Button} from '@material-ui/core'
+import {TextField, Paper, MenuItem} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
+
+import {immutableProvedGet as ig} from '../../helpers'
 import {
-    Search,
+    SearchForm,
     SearchButton
 } from './assets'
 import {muiStyles} from './assets/muiStyles'
 import actions from './actions'
 
-const suggestions = [
-  { label: 'Afghanistan' },
-  { label: 'Aland Islands' },
-  { label: 'Albania' },
-  { label: 'Algeria' },
-  { label: 'American Samoa' },
-  { label: 'Andorra' },
-  { label: 'Angola' },
-  { label: 'Anguilla' },
-  { label: 'Antarctica' },
-  { label: 'Antigua and Barbuda' },
-  { label: 'Argentina' },
-  { label: 'Armenia' },
-  { label: 'Aruba' },
-  { label: 'Australia' },
-  { label: 'Austria' },
-  { label: 'Azerbaijan' },
-  { label: 'Bahamas' },
-  { label: 'Bahrain' },
-  { label: 'Bangladesh' },
-  { label: 'Barbados' },
-  { label: 'Belarus' },
-  { label: 'Belgium' },
-  { label: 'Belize' },
-  { label: 'Benin' },
-  { label: 'Bermuda' },
-  { label: 'Bhutan' },
-  { label: 'Bolivia, Plurinational State of' },
-  { label: 'Bonaire, Sint Eustatius and Saba' },
-  { label: 'Bosnia and Herzegovina' },
-  { label: 'Botswana' },
-  { label: 'Bouvet Island' },
-  { label: 'Brazil' },
-  { label: 'British Indian Ocean Territory' },
-  { label: 'Brunei Darussalam' },
-]
+const
+    renderHiddenField = ({
+        input,
+        type,
+    }) => <input {...input} type={type}/>,
 
-function renderInputComponent(inputProps) {
-    const {classes, inputRef = () => {}, ref, ...other} = inputProps
-
-    return <TextField
+    renderInputComponent = ({classes, ...input}) => <TextField
         fullWidth
+        placeholder="Search 65,123,242 videos..."
         InputProps={{
-            inputRef: node => {
-                ref(node)
-                inputRef(node)
-            },
             classes: {
                 input: classes.input,
             },
-            disableUnderline: true
+            ...input,
+            disableUnderline: true,
         }}
-        {...other}
-    />
-}
+    />,
 
-function renderSuggestion(suggestion, {query, isHighlighted}) {
-    const matches = match(suggestion.label, query)
-    const parts = parse(suggestion.label, matches)
+    renderSuggestion = (suggestion, {query, isHighlighted}) => {
+        const matches = match(suggestion, query)
+        const parts = parse(suggestion, matches)
 
-    return <MenuItem selected={isHighlighted} component="div">
-        <div>
-            {parts.map((part, index) => {
-                return part.highlight ? (
-                    <span key={String(index)} style={{fontWeight: 500}}>
-                    {part.text}
-                    </span>
-                ) : (
-                    <strong key={String(index)} style={{fontWeight: 300}}>
-                    {part.text}
-                    </strong>
-                )
-            })}
-        </div>
-    </MenuItem>
-}
+        return <MenuItem selected={isHighlighted} component="div">
+            <div>
+                {parts.map((part, index) => {
+                    return part.highlight ? (
+                        <span key={String(index)} style={{fontWeight: 500}}>
+                            {part.text}
+                        </span>
+                    ) : (
+                        <strong key={String(index)} style={{fontWeight: 300}}>
+                            {part.text}
+                        </strong>
+                    )
+                })}
+            </div>
+        </MenuItem>
+    },
 
-function getSuggestions(value) {
-    const inputValue = deburr(value.trim()).toLowerCase()
-    const inputLength = inputValue.length
-    let count = 0
+    getSuggestionValue = (change, suggestion) => {
+        change('t', suggestion)
+    },
 
-    return inputLength === 0
-        ? []
-        : suggestions.filter(suggestion => {
-            const
-                keep = count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue
+    renderAutosuggest = ({classes, search, input, change}) => <Autosuggest
+        renderInputComponent={renderInputComponent}
+        suggestions={ig(search, 'suggestions').toJS()}
+        getSuggestionValue={getSuggestionValue.bind(this, change)}
+        renderSuggestion={renderSuggestion}
 
-            if (keep) {
-                count += 1
-            }
+        onSuggestionsFetchRequested={() => {}} // these params are required,
+        onSuggestionsClearRequested={() => {}} // but with redux-form are useless
+        inputProps={{
+            classes,
+            value: input.value, // these params are required,
+            onChange: () => {}, // but with redux-form are useless
+            ...input,
+        }}
 
-            return keep
-        })
-}
+        theme={{
+            container: classes.container,
+            suggestionsContainerOpen: classes.suggestionsContainerOpen,
+            suggestionsList: classes.suggestionsList,
+            suggestion: classes.suggestion,
+        }}
 
-function getSuggestionValue(suggestion) {
-    return suggestion.label
-}
-
-class IntegrationAutosuggest extends React.Component {
-    state = {
-        single: '',
-        popper: '',
-        suggestions: [],
-    }
-
-    handleSuggestionsFetchRequested = ({ value }) => {
-        this.setState({
-            suggestions: getSuggestions(value),
-        })
-    }
-
-    handleSuggestionsClearRequested = () => {
-        this.setState({
-            suggestions: [],
-        })
-    }
-
-    handleChange = name => (event, { newValue }) => {
-        this.setState({
-            [name]: newValue,
-        })
-    }
-
-    render() {
-        const {classes, suggestionsFetchRequestHandler} = this.props
-
-        const autosuggestProps = {
-            renderInputComponent,
-            suggestions: this.state.suggestions,
-            onSuggestionsFetchRequested: this.handleSuggestionsFetchRequested,
-            onSuggestionsClearRequested: this.handleSuggestionsClearRequested,
-            getSuggestionValue,
-            renderSuggestion,
-        }
-
-        return <Search>
-            <Autosuggest
-            {...autosuggestProps}
-            inputProps={{
-                classes,
-                placeholder: 'Search 65,123,242 videos... (start with a)',
-                value: this.state.single,
-                onChange: this.handleChange('single'),
-            }}
-            theme={{
-                container: classes.container,
-                suggestionsContainerOpen: classes.suggestionsContainerOpen,
-                suggestionsList: classes.suggestionsList,
-                suggestion: classes.suggestion,
-            }}
-            renderSuggestionsContainer={options => (
-                <Paper {...options.containerProps} square>
+        renderSuggestionsContainer={options =>
+            <Paper {...options.containerProps} square>
                 {options.children}
-                </Paper>
-            )}
-            />
-            <SearchButton/>
-            <Button variant="outlined" color="secondary" onClick={suggestionsFetchRequestHandler}>
-                get suggestions
-            </Button>
-        </Search>
-    }
-}
+            </Paper>
+        }
+    />,
 
-IntegrationAutosuggest.propTypes = {
-    classes: PropTypes.object.isRequired,
-}
+    Search = props => <SearchForm
+        onSubmit={props.handleSubmit}
+    >
+        <Field
+            name="c"
+            type="hidden"
+            component={renderHiddenField}
+        />
+        <Field
+            name="t"
+            type="text"
+            props={props}
+            component={renderAutosuggest}
+        />
+        <SearchButton
+            type="submit"
+        />
+    </SearchForm>
+
 
 export default compose(
     connect(
         state => ({
-            input: state.getIn(['app', 'mainHeader', 'search', 'input'])
+            initialValues: { // Setting default form values. redux-form creates keys in store for this
+                c: '1', // ig(state, ['app', 'videoPage', 'gallery', 'classId']),
+                t: '',
+            },
+            search: ig(state, ['app', 'mainHeader', 'search']),
         }),
         dispatch => ({
-            suggestionsFetchRequestHandler: () => dispatch(actions.suggestionsFetchRequest({
-                c: '1',
-                t: 'as',
-            })),
+            suggestionsFetchRequestHandler: () => dispatch(actions.suggestionsFetchRequest()),
+            selectSuggestion: () => dispatch(actions.suggestionsFetchRequest()),
         })
     ),
+    reduxForm({
+        form: 'searchForm',
+        enableReinitialize: true,
+        onChange: (values, dispatch) => {
+            if (ig(values, 't') === '') {
+                dispatch(actions.setEmptySuggestions())
+                return
+            }
+            dispatch(actions.suggestionsFetchRequest(values))
+        },
+        onSubmit: (values, dispatch) => dispatch(actions.runSearch(values))
+	}),
     withStyles(muiStyles)
-)(IntegrationAutosuggest)
+)(Search)

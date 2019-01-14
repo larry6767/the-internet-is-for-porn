@@ -291,7 +291,7 @@ export default compose(
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
             pageUrl: state.getIn(['router', 'location', 'pathname']),
             favoriteVideoList: state.getIn(['app', 'ui', 'favoriteVideoList']),
-            initialValues: { // Setting default form values. Redux form create keys in store for this
+            initialValues: { // Setting default form values. redux-form creates keys in store for this
                 [fieldNamesArray[0]]: 'abuse_report',
                 [fieldNamesArray[1]]: state.getIn(['app', 'videoPage', 'gallery', 'classId']),
                 [fieldNamesArray[2]]: state.getIn(['app', 'videoPage', 'gallery', 'id']),

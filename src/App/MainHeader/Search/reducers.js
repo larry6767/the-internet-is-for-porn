@@ -1,19 +1,16 @@
-// TODO FIXME: Now it isn't used
-import {combineReducers} from 'redux-immutable'
+import {compact} from 'lodash'
 import {handleActions} from 'redux-actions'
-import {fromJS} from 'immutable'
-
-import {getSuggestions} from './helpers'
-import {plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
+import {fromJS, List} from 'immutable'
+import {plainProvedGet as g} from '../../helpers'
 import actions from './actions'
 
-export default combineReducers({
+export default handleActions({
+        [g(actions, 'setNewSuggestions')]: (state, {payload: suggestions}) => state.merge({
+            // 'compact' is for array with a single empty value
+            suggestions: List(compact(suggestions)),
+        }),
 
-    input: handleActions({
-        // [g(actions, 'suggestionsFetchRequest')]: (state, action) => {
-        //     return state.set('suggestions', getSuggestions(action.payload.value))
-        // },
-        [g(actions, 'suggestionsClearRequest')]: state => state.set('suggestions', []),
-        [g(actions, 'toggleChange')]: (state, action) => state.set('currentValue', action.payload)
-    }, fromJS({suggestions: [], currentValue: ''}))
-})
+        [g(actions, 'setEmptySuggestions')]: state => state.set('suggestions', List()),
+    }, fromJS({
+        suggestions: [],
+    }))

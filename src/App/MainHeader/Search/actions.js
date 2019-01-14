@@ -2,8 +2,9 @@ import {createActions} from '../../helpers'
 // TODO FIXME: Now it isn't used
 const actions = createActions('SEARCH', [
     'SUGGESTIONS_FETCH_REQUEST',
-    'SUGGESTIONS_CLEAR_REQUEST',
-    'TOGGLE_CHANGE',
+    'SET_NEW_SUGGESTIONS',
+    'SET_EMPTY_SUGGESTIONS',
+    'RUN_SEARCH',
 ])
 
 export default actions
