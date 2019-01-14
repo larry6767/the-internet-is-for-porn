@@ -48,8 +48,20 @@ const
         })
     },
 
+    i18nAllNichesModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            pageHeader: PropTypes.string,
+        })
+    },
+
     i18nNavigationModel = i18nNavigationModelBuilder(false),
     immutableI18nNavigationModel = i18nNavigationModelBuilder(true),
+
+    i18nAllNichesModel = i18nAllNichesModelBuilder(false),
+    immutableI18nAllNichesModel = i18nAllNichesModelBuilder(true),
 
     i18nModelBuilder = isImmutable => {
         const
@@ -57,13 +69,14 @@ const
 
         return exact({
             navigation: isImmutable ? immutableI18nNavigationModel : i18nNavigationModel,
-            allNiches: exact({
-                pageHeader: PropTypes.string,
-            }),
+            allNiches: isImmutable ? immutableI18nAllNichesModel : i18nAllNichesModel,
         })
     }
 
-export {i18nNavigationModel, immutableI18nNavigationModel}
+export {
+    i18nNavigationModel, immutableI18nNavigationModel,
+    i18nAllNichesModel, immutableI18nAllNichesModel,
+}
 
 export const
     localeRouterModel = localeRouterModelBuilder(false),

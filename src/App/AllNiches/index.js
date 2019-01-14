@@ -24,6 +24,7 @@ import {
 
 import ErrorContent from '../../generic/ErrorContent'
 import {routerGetters} from '../../router-builder'
+import {immutableI18nAllNichesModel} from '../models'
 import {nicheItemModel} from './models'
 import actions from './actions'
 import {AllNichesPage, Content, PageWrapper} from './assets'
@@ -124,9 +125,7 @@ export default compose(
 
             nichesList: ImmutablePropTypes.listOf(nicheItemModel),
         }),
-        i18nAllNiches: ImmutablePropTypes.shape({
-            pageHeader: PropTypes.string,
-        }),
+        i18nAllNiches: immutableI18nAllNichesModel,
         getChildLink: PropTypes.func,
     })
 )(AllNiches)
