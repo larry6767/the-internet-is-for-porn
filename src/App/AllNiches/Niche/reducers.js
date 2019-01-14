@@ -1,5 +1,5 @@
 import {handleActions} from 'redux-actions'
-import {fromJS, List, OrderedMap, Map} from 'immutable'
+import {fromJS, List, Map} from 'immutable'
 import actions from './actions'
 
 export default
@@ -51,7 +51,7 @@ export default
             currentPage: '',
             currentSubPage: '',
             pageNumber: 1,
-            pageText: OrderedMap(),
+            pageText: Map(),
             pagesCount: 1,
             tagList: List(),
             tagArchiveList: List(),
