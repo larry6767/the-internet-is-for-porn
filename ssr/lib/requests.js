@@ -233,6 +233,27 @@ const
         return result
     },
 
+    getPageDataParamsModel = PropTypes.exact({
+        url: PropTypes.string,
+        options: PropTypes.shape({
+            blocks: PropTypes.exact({
+                allTagsBlock: PropTypes.number.isOptional,
+                modelsABCBlockText: PropTypes.number.isOptional,
+                modelsABCBlockThumbs: PropTypes.number.isOptional,
+            }).isOptional,
+        }).isOptional,
+    }),
+
+    getPageDataResultModel = PropTypes.exactTuple([
+        getPageDataParamsModel,
+        PropTypes.func,
+    ]).isOptional,
+
+    getPageDataReqBodyModel = PropTypes.exact({
+        operation: PropTypes.string,
+        params: getPageDataParamsModel,
+    }),
+
     // `callStackGetter` supposed to be (() => new Error().stack) in place where it's called,
     // otherwise it's hard to debug which request is caused an exception.
     fetchResponseExtractor = callStackGetter => response => {
@@ -286,7 +307,7 @@ export const getPageData = (siteLocales, localeCode) => async ({
             .replace(/%PAGE_CODE%/g, pageCode)
             .replace(/%SUB_PAGE_CODE%/g, subPageCode),
 
-        [params, mapFn] =
+        result =
             pageCode === (x = localeBranch('home'), g(x, 'code'))
             ? [{url: urlFunc(g(x, 'url')), options: {blocks: {
                 allTagsBlock: 1,
@@ -325,13 +346,23 @@ export const getPageData = (siteLocales, localeCode) => async ({
 
             : null
 
-    if (params === null)
+    if (process.env.NODE_ENV !== 'production')
+        assertPropTypes(getPageDataResultModel, result, 'requests', 'getPageData')
+
+    if (result === null)
         throw new Error(`Unexpected page code: "${pageCode}"`)
+
+    const
+        [params, mapFn] = result,
+        body = {operation: 'getPageDataByUrl', params}
+
+    if (process.env.NODE_ENV !== 'production')
+        assertPropTypes(getPageDataReqBodyModel, body, 'requests', 'getPageData')
 
     return mapFn(await fetch(backendUrl(siteLocales, localeCode), {
         method: 'POST',
         headers,
-        body: JSON.stringify({operation: 'getPageDataByUrl', params}),
+        body: JSON.stringify(body),
 
         // TODO FIXME remove this:
         agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
