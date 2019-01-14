@@ -117,7 +117,7 @@ export default compose(
     withStylesProps(muiStyles),
     setPropTypes({
         currentBreakpoint: PropTypes.string,
-        niches: ImmutablePropTypes.recordOf({
+        niches: ImmutablePropTypes.exactRecordOf({
             isLoading: PropTypes.bool,
             isLoaded: PropTypes.bool,
             isFailed: PropTypes.bool,
