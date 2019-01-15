@@ -9,7 +9,7 @@ import {SheetsRegistry} from 'jss'
 import JssProvider from 'react-jss/lib/JssProvider'
 import {createGenerateClassName} from '@material-ui/core/styles'
 
-import {plainProvedGet as g, immutableProvedGet as ig} from '../App/helpers'
+import {plainProvedGet as g, immutableProvedGet as ig, getRouterContext} from '../App/helpers'
 import {buildLocalePageCodes, logRequestError} from './helpers'
 import {getPageData as requestPageData} from './requests'
 import {proxiedHeaders} from './backend-proxy'
@@ -57,14 +57,13 @@ export default (
         const
             staticRouterContext = {isPreRouting: true},
             state = store.getState(),
-            location = ig(state, 'router', 'location'),
-            router = ig(state, 'app', 'locale', 'router')
+            routerContext = getRouterContext(state)
 
         // just filling `staticRouterContext` with meta info,
         // not really rendering anything.
         renderToString(
             <StaticRouter location={req.url} context={staticRouterContext}>
-                <RouterBuilder location={location} router={router}/>
+                <RouterBuilder routerContext={routerContext}/>
             </StaticRouter>
         )
 
@@ -103,7 +102,7 @@ export default (
                 <JssProvider registry={jssSheetsRegistry} generateClassName={generateClassName}>
                     <Provider store={store}>
                         <StaticRouter location={req.url} context={{}}>
-                            <App sheetsManager={sheetsManager} location={location} router={router}>
+                            <App sheetsManager={sheetsManager} routerContext={routerContext}>
                                 {RouterBuilder}
                             </App>
                         </StaticRouter>

@@ -13,7 +13,7 @@ import {
     assertPropTypes,
 } from './App/helpers'
 
-import {immutableLocaleRouterModel, routerLocationModel} from './App/models'
+import {routerContextModel} from './App/models'
 
 import Home from './App/Home'
 import {loadHomeFlow} from './App/Home/sagas'
@@ -59,65 +59,66 @@ export const
         }),
 
         allNiches: Object.freeze({
-            path: r => `/${ig(r, 'routes', 'allNiches', 'section')}`,
-            link: r => `/${ig(r, 'routes', 'allNiches', 'section')}`,
+            path: r => `/${ig(r, 'router', 'routes', 'allNiches', 'section')}`,
+            link: r => `/${ig(r, 'router', 'routes', 'allNiches', 'section')}`,
         }),
         niche: Object.freeze({
-            path: r => `/${ig(r, 'routes', 'niche', 'section')}/:child`,
-            link: (r, child) => `/${ig(r, 'routes', 'niche', 'section')}/${child}`,
+            path: r => `/${ig(r, 'router', 'routes', 'niche', 'section')}/:child`,
+            link: (r, child) => `/${ig(r, 'router', 'routes', 'niche', 'section')}/${child}`,
         }),
         nicheArchive: Object.freeze({
             path: r =>
-                `/${ig(r, 'routes', 'niche', 'section')
-                }/:child/${ig(r, 'routes', 'archive', 'label')
+                `/${ig(r, 'router', 'routes', 'niche', 'section')
+                }/:child/${ig(r, 'router', 'routes', 'archive', 'label')
                 }/(\\d{4})-(\\d{2})`,
             link: (r, child, year, month) =>
-                `/${ig(r, 'routes', 'niche', 'section')
-                }/${child}/${ig(r, 'routes', 'archive', 'label')
+                `/${ig(r, 'router', 'routes', 'niche', 'section')
+                }/${child}/${ig(r, 'router', 'routes', 'archive', 'label')
                 }/${year}-${month}`,
         }),
 
         allMovies: Object.freeze({
-            path: r => `/${ig(r, 'routes', 'allMovies', 'section')}`,
-            link: r => `/${ig(r, 'routes', 'allMovies', 'section')}`,
+            path: r => `/${ig(r, 'router', 'routes', 'allMovies', 'section')}`,
+            link: r => `/${ig(r, 'router', 'routes', 'allMovies', 'section')}`,
         }),
         allMoviesArchive: Object.freeze({
             path: r =>
-                `/${ig(r, 'routes', 'allMovies', 'section')
-                }/${ig(r, 'routes', 'archive', 'label')
+                `/${ig(r, 'router', 'routes', 'allMovies', 'section')
+                }/${ig(r, 'router', 'routes', 'archive', 'label')
                 }(\\d{4})-(\\d{2})`,
             link: (r, year, month) =>
-                `/${ig(r, 'routes', 'allMovies', 'section')
-                }/${ig(r, 'routes', 'archive', 'label')
+                `/${ig(r, 'router', 'routes', 'allMovies', 'section')
+                }/${ig(r, 'router', 'routes', 'archive', 'label')
                 }/${year}-${month}`,
         }),
 
         pornstars: Object.freeze({
-            path: r => `/${ig(r, 'routes', 'pornstars', 'section')}`,
-            link: r => `/${ig(r, 'routes', 'pornstars', 'section')}`,
+            path: r => `/${ig(r, 'router', 'routes', 'pornstars', 'section')}`,
+            link: r => `/${ig(r, 'router', 'routes', 'pornstars', 'section')}`,
         }),
         pornstar: Object.freeze({
-            path: r => `/${ig(r, 'routes', 'pornstar', 'section')}/:child`,
-            link: (r, child) => `/${ig(r, 'routes', 'pornstar', 'section')}/${child}`,
+            path: r => `/${ig(r, 'router', 'routes', 'pornstar', 'section')}/:child`,
+            link: (r, child) => `/${ig(r, 'router', 'routes', 'pornstar', 'section')}/${child}`,
         }),
 
         favorite: Object.freeze({
-            path: r => `/${ig(r, 'routes', 'favorite', 'section')}`,
-            link: r => `/${ig(r, 'routes', 'favorite', 'section')}`,
+            path: r => `/${ig(r, 'router', 'routes', 'favorite', 'section')}`,
+            link: r => `/${ig(r, 'router', 'routes', 'favorite', 'section')}`,
         }),
         favoritePornstars: Object.freeze({
-            path: r => `/${ig(r, 'routes', 'favoritePornstars', 'section')}`,
-            link: r => `/${ig(r, 'routes', 'favoritePornstars', 'section')}`,
+            path: r => `/${ig(r, 'router', 'routes', 'favoritePornstars', 'section')}`,
+            link: r => `/${ig(r, 'router', 'routes', 'favoritePornstars', 'section')}`,
         }),
 
         video: Object.freeze({
             redirectFrom: r =>
-                `/${ig(r, 'redirects', 'video', 'fromPfx')
-                }:child/:name${ig(r, 'redirects', 'video', 'fromExt')}`,
+                `/${ig(r, 'router', 'redirects', 'video', 'fromPfx')
+                }:child/:name${ig(r, 'router', 'redirects', 'video', 'fromExt')}`,
             path: r =>
-                `/${ig(r, 'routes', 'video', 'sectionPfx')}:child/:name`,
+                `/${ig(r, 'router', 'routes', 'video', 'sectionPfx')}:child/:name`,
             link: (r, videoId, title) =>
-                `/${ig(r, 'routes', 'video', 'sectionPfx')}${videoId}/${title.replace(/ /g, '-')}`,
+                `/${ig(r, 'router', 'routes', 'video', 'sectionPfx')}${videoId
+                }/${title.replace(/ /g, '-')}`,
         }),
     })
 
@@ -158,9 +159,9 @@ if (process.env.NODE_ENV !== 'production')
 // (using just `null` plugs) but to just prepare meta info for SSR
 // (such as status code, redirect, action to dispatch).
 // The `router` prop is this store branch: `app.locale.router`.
-const RouterBuilder = ({router: r, location}) => <Switch>
+const RouterBuilder = ({routerContext: r}) => <Switch>
     <Route exact path={routerGetters.home.path(r)} render={props => {
-        if (ig(location, 'search') === ig(r, 'redirects', 'categories', 'search'))
+        if (ig(r, 'location', 'search') === ig(r, 'router', 'redirects', 'categories', 'search'))
             return <Redirect to={routerGetters.allNiches.link(r)}/>
 
         if (get(props, ['staticContext', 'isPreRouting'])) {
@@ -182,7 +183,7 @@ const RouterBuilder = ({router: r, location}) => <Switch>
     <Route path={routerGetters.nicheArchive.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(location, 'search')),
+                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
                 action = nicheActions.loadPageRequest(
                     getSubPage(params.child, sort, page, [params[0], params[1]])
@@ -197,7 +198,7 @@ const RouterBuilder = ({router: r, location}) => <Switch>
     <Route path={routerGetters.niche.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(location, 'search')),
+                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
                 action = nicheActions.loadPageRequest(getSubPage(params.child, sort, page))
 
@@ -210,13 +211,13 @@ const RouterBuilder = ({router: r, location}) => <Switch>
 
     <Redirect
         exact
-        from={ig(r, 'redirects', 'allMovies', 'from')}
+        from={ig(r, 'router', 'redirects', 'allMovies', 'from')}
         to={routerGetters.allMovies.link(r)}
     />
     <Route exact path={routerGetters.allMovies.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(location, 'search')),
+                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
                 action = allMoviesActions.loadPageRequest(getSubPage(null, sort, page))
 
             props.staticContext.saga = loadAllMoviesPageFlow.bind(null, action)
@@ -228,7 +229,7 @@ const RouterBuilder = ({router: r, location}) => <Switch>
     <Route path={routerGetters.allMoviesArchive.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(location, 'search')),
+                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
                 action = allMoviesActions.loadPageRequest(
                     getSubPage(null, sort, page, [params[0], params[1]])
@@ -243,7 +244,7 @@ const RouterBuilder = ({router: r, location}) => <Switch>
 
     <Redirect
         exact
-        from={ig(r, 'redirects', 'pornstars', 'from')}
+        from={ig(r, 'router', 'redirects', 'pornstars', 'from')}
         to={routerGetters.pornstars.link(r)}
     />
     <Route exact path={routerGetters.pornstars.path(r)} render={props => {
@@ -258,7 +259,7 @@ const RouterBuilder = ({router: r, location}) => <Switch>
     <Route path={routerGetters.pornstar.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(location, 'search')),
+                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
                 action = pornstarActions.loadPageRequest(getSubPage(params.child, sort, page))
 
@@ -271,12 +272,12 @@ const RouterBuilder = ({router: r, location}) => <Switch>
 
     <Redirect
         exact
-        from={ig(r, 'redirects', 'favorite', 'from')}
+        from={ig(r, 'router', 'redirects', 'favorite', 'from')}
         to={routerGetters.favorite.link(r)}
     />
     <Redirect
         exact
-        from={ig(r, 'redirects', 'favorite', 'fromMovies')}
+        from={ig(r, 'router', 'redirects', 'favorite', 'fromMovies')}
         to={routerGetters.favorite.link(r)}
     />
     <Route exact path={routerGetters.favorite.path(r)} render={props => {
@@ -294,7 +295,7 @@ const RouterBuilder = ({router: r, location}) => <Switch>
 
     <Redirect
         exact
-        from={ig(r, 'redirects', 'favoritePornstars', 'from')}
+        from={ig(r, 'router', 'redirects', 'favoritePornstars', 'from')}
         to={routerGetters.favoritePornstars.link(r)}
     />
     <Route path={routerGetters.favoritePornstars.path(r)} render={props => {
@@ -342,7 +343,6 @@ const RouterBuilder = ({router: r, location}) => <Switch>
 
 export default compose(
     setPropTypes({
-        location: routerLocationModel,
-        router: immutableLocaleRouterModel,
+        routerContext: routerContextModel,
     })
 )(RouterBuilder)

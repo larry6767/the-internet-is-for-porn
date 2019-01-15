@@ -6,13 +6,14 @@ import {Tabs, Tab} from '@material-ui/core'
 
 import {
     getValueForNavigation,
+    getRouterContext,
     immutableProvedGet as ig,
     plainProvedGet as g,
     PropTypes,
 } from '../../helpers'
 
 import {routerGetters} from '../../../router-builder'
-import {immutableLocaleRouterModel, immutableI18nNavigationModel} from '../../models'
+import {immutableI18nNavigationModel, routerContextModel} from '../../models'
 import {muiStyles} from './assets/muiStyles'
 import {Nav} from './assets'
 import actions from './actions'
@@ -57,16 +58,16 @@ export default compose(
         state => ({
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             pathname: ig(state, 'router', 'location', 'pathname'),
-            router: ig(state, 'app', 'locale', 'router'),
             i18nNav: ig(state, 'app', 'locale', 'i18n', 'navigation'),
+            routerContext: getRouterContext(state),
         }),
         {
             setNewPath: g(actions, 'setNewPath'),
         }
     ),
-    withStyles(muiStyles),
     withHandlers({
-        getLinkByNavKey: props => navKey => g(routerGetters, navKey, 'link')(g(props, 'router')),
+        getLinkByNavKey: props => navKey =>
+            g(routerGetters, navKey, 'link')(g(props, 'routerContext')),
     }),
     withHandlers({
         goToPath: props => (event, value) => {
@@ -74,11 +75,12 @@ export default compose(
             props.setNewPath(props.getLinkByNavKey(value))
         },
     }),
+    withStyles(muiStyles),
     setPropTypes({
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
         pathname: PropTypes.string,
-        router: immutableLocaleRouterModel,
+        routerContext: routerContextModel,
         i18nNav: immutableI18nNavigationModel,
         goToPath: PropTypes.func,
         getLinkByNavKey: PropTypes.func,

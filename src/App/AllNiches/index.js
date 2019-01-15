@@ -16,6 +16,7 @@ import {
 
 import {
     withStylesProps,
+    getRouterContext,
     immutableProvedGet as ig,
     plainProvedGet as g,
     PropTypes,
@@ -94,8 +95,8 @@ export default compose(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             niches: NichesRecord(ig(state, 'app', 'niches', 'all')),
-            router: ig(state, 'app', 'locale', 'router'),
             i18nAllNiches: ig(state, 'app', 'locale', 'i18n', 'allNiches'),
+            routerContext: getRouterContext(state),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -103,7 +104,7 @@ export default compose(
     ),
     withHandlers({
         loadPage: props => () => props.loadPageRequest(),
-        getChildLink: props => child => routerGetters.niche.link(g(props, 'router'), child),
+        getChildLink: props => child => routerGetters.niche.link(g(props, 'routerContext'), child),
     }),
     lifecycle({
         componentDidMount() {
