@@ -65,6 +65,7 @@ const
                         newSortValue = event.target.value
 
                     parsedQS.sort = newSortValue
+                    // TODO FIXME
                     chooseSort(newSortValue, `?${queryString.stringify(parsedQS)}`)
                 }}
                 labelWidth={0}
@@ -85,7 +86,7 @@ const
         search: PropTypes.string, // TODO get rid of it
         routerContext: routerContextModel,
         i18nOrdering: immutableI18nOrderingModel,
-    })(({sortList, pageUrl, search, i18nOrdering}) => <InlinedSelectionWrap>
+    })(({sortList, pageUrl, search, routerContext, i18nOrdering}) => <InlinedSelectionWrap>
         <InlinedSelectionList>
             {sortList.map(x => {
                 const parsedQS = queryString.parse(search)

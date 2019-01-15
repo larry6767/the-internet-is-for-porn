@@ -8,6 +8,7 @@ import status500 from './App/helpers/status500BranchResolver'
 
 import {
     getSubPage,
+    plainProvedGet as g,
     immutableProvedGet as ig,
     PropTypes,
     assertPropTypes,
@@ -51,6 +52,10 @@ import {loadVideoPageFlow} from './App/VideoPage/sagas'
 import NotFound from './App/NotFound'
 
 export const
+    getQs = r => queryString.parse(ig(r, 'location', 'search')),
+    renderQs = qs => g(Object.keys(qs), 'length') > 0 ? '?' + queryString.stringify(qs) : '',
+    withQs = r => renderQs(getQs(r)),
+
     // The `r` argument is this store branch: `app.locale.router`.
     routerGetters = Object.freeze({
         home: Object.freeze({
@@ -64,17 +69,40 @@ export const
         }),
         niche: Object.freeze({
             path: r => `/${ig(r, 'router', 'routes', 'niche', 'section')}/:child`,
-            link: (r, child) => `/${ig(r, 'router', 'routes', 'niche', 'section')}/${child}`,
+            link: (r, child, ordering=null) => {
+                const
+                    link = `/${ig(r, 'router', 'routes', 'niche', 'section')}/${child}`,
+                    qs = getQs(r)
+
+                // TODO only for the same route
+                if (ordering !== null)
+                    qs[ig(r, 'router', 'ordering', 'qsKey')] =
+                        ig(r, 'router', 'ordering', ordering, 'qsValue')
+
+                return `${link}${renderQs(qs)}`
+            }
         }),
         nicheArchive: Object.freeze({
             path: r =>
                 `/${ig(r, 'router', 'routes', 'niche', 'section')
                 }/:child/${ig(r, 'router', 'routes', 'archive', 'label')
                 }/(\\d{4})-(\\d{2})`,
-            link: (r, child, year, month) =>
-                `/${ig(r, 'router', 'routes', 'niche', 'section')
-                }/${child}/${ig(r, 'router', 'routes', 'archive', 'label')
-                }/${year}-${month}`,
+            link: (r, child, year, month, ordering=null) => {
+                const
+                    link =
+                        `/${ig(r, 'router', 'routes', 'niche', 'section')
+                        }/${child}/${ig(r, 'router', 'routes', 'archive', 'label')
+                        }/${year}-${month}`,
+
+                    qs = getQs(r)
+
+                // TODO only for the same route
+                if (ordering !== null)
+                    qs[ig(r, 'router', 'ordering', 'qsKey')] =
+                        ig(r, 'router', 'ordering', ordering, 'qsValue')
+
+                return `${link}${renderQs(qs)}`
+            }
         }),
 
         allMovies: Object.freeze({
@@ -183,11 +211,14 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     <Route path={routerGetters.nicheArchive.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
+                qs = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
-                action = nicheActions.loadPageRequest(
-                    getSubPage(params.child, sort, page, [params[0], params[1]])
-                )
+                action = nicheActions.loadPageRequest(getSubPage(
+                    params.child,
+                    qs[ig(r, 'router', 'ordering', 'qsKey')],
+                    qs.page,
+                    [params[0], params[1]]
+                ))
 
             x.saga = loadNichePageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'niches', 'niche', 'isFailed'])
@@ -198,9 +229,13 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     <Route path={routerGetters.niche.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
+                qs = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
-                action = nicheActions.loadPageRequest(getSubPage(params.child, sort, page))
+                action = nicheActions.loadPageRequest(getSubPage(
+                    params.child,
+                    qs[ig(r, 'router', 'ordering', 'qsKey')],
+                    qs.page
+                ))
 
             x.saga = loadNichePageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'niches', 'niche', 'isFailed'])
