@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {compose, setPropTypes} from 'recompose'
+import {compose, setPropTypes, withHandlers} from 'recompose'
 import {replace, set} from 'lodash'
 import {withStyles} from '@material-ui/core/styles'
 import {Typography} from '@material-ui/core'
@@ -9,6 +9,7 @@ import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
 
 import {
+    getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
     ImmutablePropTypes,
@@ -16,7 +17,7 @@ import {
 } from '../../App/helpers'
 
 import {routerGetters} from '../../router-builder'
-import {immutableLocaleRouterModel} from '../../App/models'
+import {routerContextModel} from '../../App/models'
 import actions from '../../App/actions'
 import {muiStyles} from './assets/muiStyles'
 import {immutableVideoItemModel} from './models'
@@ -132,7 +133,7 @@ const
     </VideoPreview>,
 
     VideoItem = ({
-        classes, x, isSSR, router, addVideoToFavoriteHandler,
+        classes, x, getVideoLink, isSSR, addVideoToFavoriteHandler,
         removeVideoFromFavoriteHandler, favoriteVideoList,
     }) => {
         const
@@ -151,10 +152,7 @@ const
                         removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
                     )}
                 </a>
-                : <Link
-                    to={routerGetters.video.link(router, ig(x, 'videoPageRef'), ig(x, 'title'))}
-                    className={g(classes, 'routerLink')}
-                >
+                : <Link to={getVideoLink(x)} className={g(classes, 'routerLink')}>
                     {renderVideoPreview(
                         classes, x, isSSR, addVideoToFavoriteHandler,
                         removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
@@ -199,7 +197,7 @@ export default compose(
         state => ({
             favoriteVideoList: ig(state, 'app', 'ui', 'favoriteVideoList'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            router: ig(state, 'app', 'locale', 'router'),
+            routerContext: getRouterContext(state),
         }),
         dispatch => ({
             addVideoToFavoriteHandler: video => e => {
@@ -212,11 +210,18 @@ export default compose(
             }
         })
     ),
+    withHandlers({
+        getVideoLink: props => x => routerGetters.video.link(
+            g(props, 'routerContext'),
+            ig(x, 'videoPageRef'),
+            ig(x, 'title')
+        ),
+    }),
     withStyles(muiStyles),
     setPropTypes({
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
-        router: immutableLocaleRouterModel,
+        routerContext: routerContextModel,
         x: immutableVideoItemModel,
         addVideoToFavoriteHandler: PropTypes.func,
         removeVideoFromFavoriteHandler: PropTypes.func,

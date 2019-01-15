@@ -34,7 +34,7 @@ var ImmutablePropTypes;
     orderedSetOf: createOrderedSetOfTypeChecker,
     stackOf:      createStackOfTypeChecker,
     iterableOf:   createIterableOfTypeChecker,
-    recordOf:     createRecordOfTypeChecker,
+    // recordOf:     createRecordOfTypeChecker, // overwritten below
     shape:        createShapeChecker,
     contains:     createShapeChecker,
     mapContains:  createMapContainsChecker,
@@ -240,7 +240,7 @@ function createIterableOfTypeChecker(typeChecker) {
   return createIterableTypeChecker(typeChecker, 'Iterable', Immutable.Iterable.isIterable);
 }
 
-function createRecordOfTypeChecker(recordKeys) {
+function createRecordOfTypeChecker(/*START:CUSTOM*/exact, /*END:CUSTOM*/recordKeys) {
   function validate(props, propName, componentName, location, propFullName, ...rest) {
     var propValue = props[propName];
     if (!(propValue instanceof Immutable.Record)) {
@@ -251,10 +251,26 @@ function createRecordOfTypeChecker(recordKeys) {
         `supplied to \`${componentName}\`, expected an Immutable.js Record.`
       );
     }
-    for (var key in recordKeys) {
+    // for (var key in recordKeys) {
+    // START: customization
+    const
+        typeKeys = Object.keys(recordKeys),
+        actualKeys = exact ? [...propValue.toSeq().keys()] : null,
+        allKeys = exact ? typeKeys.concat(actualKeys) : typeKeys
+    for (const key of allKeys) {
+    // END: customization
       var checker = recordKeys[key];
       if (!checker) {
-        continue;
+        // continue;
+        // START: customization
+        if (!exact) continue;
+        return new Error(
+          `Invalid ${location} \`${propFullName}\` key \`${key}\` `+
+          `supplied to \`${componentName}\`.` +
+          `\nBad Immutable.js Record: ${JSON.stringify(actualKeys, null, '  ')}` +
+          `\nValid keys: ${JSON.stringify(typeKeys, null, '  ')}`
+        );
+        // END: customization
       }
       var mutablePropValue = propValue.toObject();
       var error = checker(mutablePropValue, key, componentName, location, `${propFullName}.${key}`, ...rest);
@@ -281,9 +297,10 @@ function createShapeTypeChecker(/*START:CUSTOM*/exact, /*END:CUSTOM*/shapeTypes,
     var mutablePropValue = propValue.toObject();
     // for (var key in shapeTypes) {
     // START: customization
-    var allKeys = exact
-        ? Object.keys(mutablePropValue).concat(Object.keys(shapeTypes))
-        : Object.keys(shapeTypes);
+    const
+        typeKeys = Object.keys(shapeTypes),
+        actualKeys = exact ? Object.keys(mutablePropValue) : null,
+        allKeys = exact ? typeKeys.concat(actualKeys) : typeKeys
     for (const key of allKeys) {
     // END: customization
       var checker = shapeTypes[key];
@@ -294,9 +311,8 @@ function createShapeTypeChecker(/*START:CUSTOM*/exact, /*END:CUSTOM*/shapeTypes,
         return new Error(
           `Invalid ${location} \`${propFullName}\` key \`${key}\` `+
           `supplied to \`${componentName}\`.` +
-          `\nBad Immutable.js ${immutableClassName}: ` +
-          JSON.stringify(Object.keys(mutablePropValue), null, '  ') +
-          `\nValid keys: ${JSON.stringify(Object.keys(shapeTypes), null, '  ')}`
+          `\nBad Immutable.js ${immutableClassName}: ${JSON.stringify(actualKeys, null, '  ')}` +
+          `\nValid keys: ${JSON.stringify(typeKeys, null, '  ')}`
         );
         // END: customization
       }
@@ -323,6 +339,10 @@ function createStrictShapeChecker(shapeTypes) {
 }
 // like `contains`/`shape` but strict for specific fields
 ImmutablePropTypes.exact = createStrictShapeChecker
+// overwriting
+ImmutablePropTypes.recordOf = createRecordOfTypeChecker.bind(null, false)
+// own `exact` version of `recordOf`
+ImmutablePropTypes.exactRecordOf = createRecordOfTypeChecker.bind(null, true)
 // END: customization
 
 // module.exports = ImmutablePropTypes;

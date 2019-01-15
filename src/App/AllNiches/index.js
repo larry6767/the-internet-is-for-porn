@@ -16,6 +16,7 @@ import {
 
 import {
     withStylesProps,
+    getRouterContext,
     immutableProvedGet as ig,
     plainProvedGet as g,
     PropTypes,
@@ -24,6 +25,7 @@ import {
 
 import ErrorContent from '../../generic/ErrorContent'
 import {routerGetters} from '../../router-builder'
+import {immutableI18nAllNichesModel} from '../models'
 import {nicheItemModel} from './models'
 import actions from './actions'
 import {AllNichesPage, Content, PageWrapper} from './assets'
@@ -93,8 +95,8 @@ export default compose(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             niches: NichesRecord(ig(state, 'app', 'niches', 'all')),
-            router: ig(state, 'app', 'locale', 'router'),
             i18nAllNiches: ig(state, 'app', 'locale', 'i18n', 'allNiches'),
+            routerContext: getRouterContext(state),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -102,7 +104,7 @@ export default compose(
     ),
     withHandlers({
         loadPage: props => () => props.loadPageRequest(),
-        getChildLink: props => child => routerGetters.niche.link(g(props, 'router'), child),
+        getChildLink: props => child => routerGetters.niche.link(g(props, 'routerContext'), child),
     }),
     lifecycle({
         componentDidMount() {
@@ -117,16 +119,14 @@ export default compose(
     withStylesProps(muiStyles),
     setPropTypes({
         currentBreakpoint: PropTypes.string,
-        niches: ImmutablePropTypes.recordOf({
+        niches: ImmutablePropTypes.exactRecordOf({
             isLoading: PropTypes.bool,
             isLoaded: PropTypes.bool,
             isFailed: PropTypes.bool,
 
             nichesList: ImmutablePropTypes.listOf(nicheItemModel),
         }),
-        i18nAllNiches: ImmutablePropTypes.shape({
-            pageHeader: PropTypes.string,
-        }),
+        i18nAllNiches: immutableI18nAllNichesModel,
         getChildLink: PropTypes.func,
     })
 )(AllNiches)

@@ -1,7 +1,10 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
+import {Record, Map, List} from 'immutable'
 import {Link} from 'react-router-dom'
+import PermIdentityIcon from '@material-ui/icons/PermIdentity'
+
 import {
     List as ListComponent,
     ListItem,
@@ -10,12 +13,11 @@ import {
     CircularProgress,
     Typography,
 } from '@material-ui/core'
-import PermIdentityIcon from '@material-ui/icons/PermIdentity'
-import {Record, Map, List} from 'immutable'
 
 import ErrorContent from '../../generic/ErrorContent'
-import {withStylesProps} from '../helpers'
-import {immutableProvedGet as ig} from '../helpers'
+import {withStylesProps, getRouterContext, immutableProvedGet as ig} from '../helpers'
+import {muiStyles} from './assets/muiStyles'
+import actions from './actions'
 
 import {
     Page,
@@ -26,8 +28,6 @@ import {
     Niche,
     NicheImage,
 } from './assets'
-import {muiStyles} from './assets/muiStyles'
-import actions from './actions'
 
 const
     HomeRecord = Record({
@@ -117,7 +117,10 @@ const
 export default compose(
     connect(
         state => ({
-            home: HomeRecord(ig(state, ['app', 'home'])),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            home: HomeRecord(ig(state, 'app', 'home')),
+            routerContext: getRouterContext(state),
+            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
         }),
         dispatch => ({
             loadPage: (event, value) => dispatch(actions.loadPageRequest())

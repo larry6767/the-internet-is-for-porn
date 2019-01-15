@@ -5,7 +5,7 @@ import {compose, lifecycle} from 'recompose'
 import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List} from 'immutable'
 
-import {getSubPage} from '../../helpers'
+import {getSubPage, immutableProvedGet as ig, getRouterContext} from '../../helpers'
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
@@ -28,7 +28,7 @@ const
         pageText: Map(),
         pagesCount: 1,
         sortList: List(),
-        currentSort: '',
+        currentSort: null,
         itemsCount: 0,
         videoList: List(),
         modelsList: List(),
@@ -37,7 +37,7 @@ const
     }),
 
     Pornstar = ({
-        currentBreakpoint, pageUrl, search, pornstar, chooseSort,
+        currentBreakpoint, pageUrl, search, routerContext, i18nOrdering, pornstar, chooseSort,
         isSSR, modelInfoHandler, modelInfoIsOpen
     }) => <Page>
         { pornstar.get('isFailed')
@@ -65,6 +65,9 @@ const
                     <ControlBar
                         pageUrl={pageUrl}
                         search={search}
+                        routerContext={routerContext}
+                        i18nOrdering={i18nOrdering}
+
                         chooseSort={chooseSort}
                         isSSR={isSSR}
                         subPage={pornstar.get('currentSubPage')}
@@ -116,12 +119,14 @@ const
 export default compose(
     connect(
         state => ({
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            pornstar: PornstarRecord(state.getIn(['app', 'pornstars', 'pornstar'])),
-            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
-            pageUrl: state.getIn(['router', 'location', 'pathname']),
-            search: state.getIn(['router', 'location', 'search']),
-            modelInfoIsOpen: state.getIn(['app', 'pornstars', 'pornstar', 'modelInfoIsOpen']),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            pornstar: PornstarRecord(ig(state, 'app', 'pornstars', 'pornstar')),
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            pageUrl: ig(state, 'router', 'location', 'pathname'),
+            search: ig(state, 'router', 'location', 'search'),
+            routerContext: getRouterContext(state),
+            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
+            modelInfoIsOpen: ig(state, 'app', 'pornstars', 'pornstar', 'modelInfoIsOpen'),
         }),
         dispatch => ({
             loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),

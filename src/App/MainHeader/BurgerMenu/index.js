@@ -7,13 +7,14 @@ import {withStyles} from '@material-ui/core/styles'
 
 import {
     getValueForNavigation,
+    getRouterContext,
     immutableProvedGet as ig,
     plainProvedGet as g,
     PropTypes,
 } from '../../helpers'
 
 import {routerGetters} from '../../../router-builder'
-import {immutableLocaleRouterModel, immutableI18nNavigationModel} from '../../models'
+import {immutableI18nNavigationModel, routerContextModel} from '../../models'
 import Language from '../Language'
 import actionsNavigation from '../Navigation/actions'
 import {navMenuOrder} from '../Navigation/models'
@@ -74,8 +75,8 @@ export default compose(
         state => ({
             isOpened: ig(state, 'app', 'mainHeader', 'burgerMenu', 'isOpened'),
             pathname: ig(state, 'router', 'location', 'pathname'),
-            router: ig(state, 'app', 'locale', 'router'),
             i18nNav: ig(state, 'app', 'locale', 'i18n', 'navigation'),
+            routerContext: getRouterContext(state),
         }),
         {
             setNewPath: g(actionsNavigation, 'setNewPath'),
@@ -85,7 +86,8 @@ export default compose(
     ),
     withState('anchorEl', 'setAnchorEl', null),
     withHandlers({
-        getLinkByNavKey: props => navKey => g(routerGetters, navKey, 'link')(g(props, 'router')),
+        getLinkByNavKey: props => navKey =>
+            g(routerGetters, navKey, 'link')(g(props, 'routerContext')),
 
         openModal: props => event => {
             props.open()
@@ -112,7 +114,7 @@ export default compose(
         setAnchorEl: PropTypes.func,
         isOpened: PropTypes.bool,
         pathname: PropTypes.string,
-        router: immutableLocaleRouterModel,
+        routerContext: routerContextModel,
         i18nNav: immutableI18nNavigationModel,
         goToPath: PropTypes.func,
         openModal: PropTypes.func,

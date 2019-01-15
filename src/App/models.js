@@ -31,6 +31,12 @@ const
                     fromExt: PropTypes.string,
                 }),
             }),
+            ordering: exact({
+                qsKey: PropTypes.string,
+                byDate: exact({qsValue: PropTypes.string}),
+                byDuration: exact({qsValue: PropTypes.string}),
+                byPopularity: exact({qsValue: PropTypes.string}),
+            }),
         })
     },
 
@@ -58,11 +64,38 @@ const
         })
     },
 
+    i18nAllNichesModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            pageHeader: PropTypes.string,
+        })
+    },
+
+    i18nOrderingModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            label: PropTypes.string,
+            byDate: PropTypes.string,
+            byDuration: PropTypes.string,
+            byPopularity: PropTypes.string,
+        })
+    },
+
     i18nSearchModel = i18nSearchModelBuilder(false),
     immutableI18nSearchModel = i18nSearchModelBuilder(true),
 
     i18nNavigationModel = i18nNavigationModelBuilder(false),
     immutableI18nNavigationModel = i18nNavigationModelBuilder(true),
+
+    i18nAllNichesModel = i18nAllNichesModelBuilder(false),
+    immutableI18nAllNichesModel = i18nAllNichesModelBuilder(true),
+
+    i18nOrderingModel = i18nOrderingModelBuilder(false),
+    immutableI18nOrderingModel = i18nOrderingModelBuilder(true),
 
     i18nModelBuilder = isImmutable => {
         const
@@ -71,15 +104,16 @@ const
         return exact({
             search: isImmutable ? immutableI18nSearchModel : i18nSearchModel,
             navigation: isImmutable ? immutableI18nNavigationModel : i18nNavigationModel,
-            allNiches: exact({
-                pageHeader: PropTypes.string,
-            }),
+            allNiches: isImmutable ? immutableI18nAllNichesModel : i18nAllNichesModel,
+            ordering: isImmutable ? immutableI18nOrderingModel : i18nOrderingModel,
         })
     }
 
 export {
     i18nSearchModel, immutableI18nSearchModel,
-    i18nNavigationModel, immutableI18nNavigationModel
+    i18nNavigationModel, immutableI18nNavigationModel,
+    i18nAllNichesModel, immutableI18nAllNichesModel,
+    i18nOrderingModel, immutableI18nOrderingModel,
 }
 
 export const
@@ -95,4 +129,9 @@ export const
         search: PropTypes.string,
         state: ImmutablePropTypes.shape({}).isOptional,
         key: PropTypes.string.isOptional,
+    }),
+
+    routerContextModel = ImmutablePropTypes.exactRecordOf({
+        location: routerLocationModel,
+        router: immutableLocaleRouterModel,
     })

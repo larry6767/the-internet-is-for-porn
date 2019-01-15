@@ -34,7 +34,7 @@ export default combineReducers({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            nichesList: fromJS(g(payload, 'data')),
+            nichesList: List(fromJS(g(payload, 'data'))),
         }),
         [actions.loadPageFailure]: (state) => state.merge({
             isLoading: false,

@@ -6,8 +6,8 @@ import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles'
 import {ThemeProvider as SCThemeProvider} from 'styled-components'
 import {Normalize} from 'styled-normalize'
 
-import {immutableProvedGet as ig, PropTypes} from './helpers'
-import {immutableLocaleRouterModel, routerLocationModel} from './models'
+import {PropTypes, getRouterContext} from './helpers'
+import {routerContextModel} from './models'
 import MainHeader from './MainHeader'
 import MainFooter from './MainFooter'
 import actions from './actions'
@@ -27,7 +27,7 @@ const
         },
     })
 
-export const App = ({sheetsManager, location, router, children}) => <MuiThemeProvider
+export const App = ({sheetsManager, routerContext, children}) => <MuiThemeProvider
     theme={muiTheme}
     sheetsManager={sheetsManager}
 >
@@ -38,7 +38,7 @@ export const App = ({sheetsManager, location, router, children}) => <MuiThemePro
 
             <div className='App'>
                 <MainHeader/>
-                {children ? children({location, router}) : null}
+                {children ? children({routerContext}) : null}
                 <MainFooter/>
             </div>
         </Fragment>
@@ -48,8 +48,7 @@ export const App = ({sheetsManager, location, router, children}) => <MuiThemePro
 export default compose(
     connect(
         state => ({
-            location: ig(state, 'router', 'location'),
-            router: ig(state, 'app', 'locale', 'router'),
+            routerContext: getRouterContext(state),
         }),
         dispatch => ({
             resizeAction: event => dispatch(actions.resize(
@@ -75,8 +74,7 @@ export default compose(
     }),
 
     setPropTypes({
-        location: routerLocationModel,
-        router: immutableLocaleRouterModel,
+        routerContext: routerContextModel,
 
         // In bare usage of <App> in SSR these are not passed (that's why they're optional).
         resizeAction: PropTypes.func.isOptional,

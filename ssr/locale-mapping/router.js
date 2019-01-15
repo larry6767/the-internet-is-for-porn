@@ -26,6 +26,12 @@ const
                 favoritePornstars: {from: '/your-favorite-porn-stars.html'},
                 video: {fromPfx: 'vid-', fromExt: '.htm'},
             },
+            ordering: {
+                qsKey: 'sort',
+                byDate: {qsValue: 'latest'},
+                byDuration: {qsValue: 'longest'},
+                byPopularity: {qsValue: 'popular'},
+            },
         },
         deu: {
             routes: {
@@ -46,6 +52,12 @@ const
                 favorite: {from: '/your-favorite.html', fromMovies: '/your-favorite-movs.html'},
                 favoritePornstars: {from: '/your-favorite-porn-stars.html'},
                 video: {fromPfx: 'vid-', fromExt: '.htm'},
+            },
+            ordering: {
+                qsKey: 'sortiert',
+                byDate: {qsValue: 'das-neueste'},
+                byDuration: {qsValue: 'dauer'},
+                byPopularity: {qsValue: 'popularität'},
             },
         },
         ita: {
@@ -68,30 +80,228 @@ const
                 favoritePornstars: {from: '/your-favorite-porn-stars.html'},
                 video: {fromPfx: 'vid-', fromExt: '.htm'},
             },
+            ordering: {
+                qsKey: 'ordina',
+                byDate: {qsValue: 'più-recenti'},
+                byDuration: {qsValue: 'i-più-lunghi'},
+                byPopularity: {qsValue: 'popolari'},
+            },
         },
-        fra: {
-            // TODO
+        fra: { // TODO
+            routes: {
+                archive: {label: ''},
+                allNiches: {section: ''},
+                niche: {section: ''},
+                allMovies: {section: ''},
+                pornstars: {section: ''},
+                pornstar: {section: ''},
+                favorite: {section: ''},
+                favoritePornstars: {section: ''},
+                video: {sectionPfx: ''},
+            },
+            redirects: {
+                categories: {search: ''},
+                allMovies: {from: ''},
+                pornstars: {from: ''},
+                favorite: {from: '', fromMovies: ''},
+                favoritePornstars: {from: ''},
+                video: {fromPfx: '', fromExt: ''},
+            },
+            ordering: {
+                qsKey: '',
+                byDate: {qsValue: ''},
+                byDuration: {qsValue: ''},
+                byPopularity: {qsValue: ''},
+            },
         },
-        spa: {
-            // TODO
+        spa: { // TODO
+            routes: {
+                archive: {label: ''},
+                allNiches: {section: ''},
+                niche: {section: ''},
+                allMovies: {section: ''},
+                pornstars: {section: ''},
+                pornstar: {section: ''},
+                favorite: {section: ''},
+                favoritePornstars: {section: ''},
+                video: {sectionPfx: ''},
+            },
+            redirects: {
+                categories: {search: ''},
+                allMovies: {from: ''},
+                pornstars: {from: ''},
+                favorite: {from: '', fromMovies: ''},
+                favoritePornstars: {from: ''},
+                video: {fromPfx: '', fromExt: ''},
+            },
+            ordering: {
+                qsKey: '',
+                byDate: {qsValue: ''},
+                byDuration: {qsValue: ''},
+                byPopularity: {qsValue: ''},
+            },
         },
-        por: {
-            // TODO
+        por: { // TODO
+            routes: {
+                archive: {label: ''},
+                allNiches: {section: ''},
+                niche: {section: ''},
+                allMovies: {section: ''},
+                pornstars: {section: ''},
+                pornstar: {section: ''},
+                favorite: {section: ''},
+                favoritePornstars: {section: ''},
+                video: {sectionPfx: ''},
+            },
+            redirects: {
+                categories: {search: ''},
+                allMovies: {from: ''},
+                pornstars: {from: ''},
+                favorite: {from: '', fromMovies: ''},
+                favoritePornstars: {from: ''},
+                video: {fromPfx: '', fromExt: ''},
+            },
+            ordering: {
+                qsKey: '',
+                byDate: {qsValue: ''},
+                byDuration: {qsValue: ''},
+                byPopularity: {qsValue: ''},
+            },
         },
-        swe: {
-            // TODO
+        swe: { // TODO
+            routes: {
+                archive: {label: ''},
+                allNiches: {section: ''},
+                niche: {section: ''},
+                allMovies: {section: ''},
+                pornstars: {section: ''},
+                pornstar: {section: ''},
+                favorite: {section: ''},
+                favoritePornstars: {section: ''},
+                video: {sectionPfx: ''},
+            },
+            redirects: {
+                categories: {search: ''},
+                allMovies: {from: ''},
+                pornstars: {from: ''},
+                favorite: {from: '', fromMovies: ''},
+                favoritePornstars: {from: ''},
+                video: {fromPfx: '', fromExt: ''},
+            },
+            ordering: {
+                qsKey: '',
+                byDate: {qsValue: ''},
+                byDuration: {qsValue: ''},
+                byPopularity: {qsValue: ''},
+            },
         },
-        nld: {
-            // TODO
+        nld: { // TODO
+            routes: {
+                archive: {label: ''},
+                allNiches: {section: ''},
+                niche: {section: ''},
+                allMovies: {section: ''},
+                pornstars: {section: ''},
+                pornstar: {section: ''},
+                favorite: {section: ''},
+                favoritePornstars: {section: ''},
+                video: {sectionPfx: ''},
+            },
+            redirects: {
+                categories: {search: ''},
+                allMovies: {from: ''},
+                pornstars: {from: ''},
+                favorite: {from: '', fromMovies: ''},
+                favoritePornstars: {from: ''},
+                video: {fromPfx: '', fromExt: ''},
+            },
+            ordering: {
+                qsKey: '',
+                byDate: {qsValue: ''},
+                byDuration: {qsValue: ''},
+                byPopularity: {qsValue: ''},
+            },
         },
-        fin: {
-            // TODO
+        fin: { // TODO
+            routes: {
+                archive: {label: ''},
+                allNiches: {section: ''},
+                niche: {section: ''},
+                allMovies: {section: ''},
+                pornstars: {section: ''},
+                pornstar: {section: ''},
+                favorite: {section: ''},
+                favoritePornstars: {section: ''},
+                video: {sectionPfx: ''},
+            },
+            redirects: {
+                categories: {search: ''},
+                allMovies: {from: ''},
+                pornstars: {from: ''},
+                favorite: {from: '', fromMovies: ''},
+                favoritePornstars: {from: ''},
+                video: {fromPfx: '', fromExt: ''},
+            },
+            ordering: {
+                qsKey: '',
+                byDate: {qsValue: ''},
+                byDuration: {qsValue: ''},
+                byPopularity: {qsValue: ''},
+            },
         },
-        rus: {
-            // TODO
+        rus: { // TODO
+            routes: {
+                archive: {label: ''},
+                allNiches: {section: ''},
+                niche: {section: ''},
+                allMovies: {section: ''},
+                pornstars: {section: ''},
+                pornstar: {section: ''},
+                favorite: {section: ''},
+                favoritePornstars: {section: ''},
+                video: {sectionPfx: ''},
+            },
+            redirects: {
+                categories: {search: ''},
+                allMovies: {from: ''},
+                pornstars: {from: ''},
+                favorite: {from: '', fromMovies: ''},
+                favoritePornstars: {from: ''},
+                video: {fromPfx: '', fromExt: ''},
+            },
+            ordering: {
+                qsKey: '',
+                byDate: {qsValue: ''},
+                byDuration: {qsValue: ''},
+                byPopularity: {qsValue: ''},
+            },
         },
-        tur: {
-            // TODO
+        tur: { // TODO
+            routes: {
+                archive: {label: ''},
+                allNiches: {section: ''},
+                niche: {section: ''},
+                allMovies: {section: ''},
+                pornstars: {section: ''},
+                pornstar: {section: ''},
+                favorite: {section: ''},
+                favoritePornstars: {section: ''},
+                video: {sectionPfx: ''},
+            },
+            redirects: {
+                categories: {search: ''},
+                allMovies: {from: ''},
+                pornstars: {from: ''},
+                favorite: {from: '', fromMovies: ''},
+                favoritePornstars: {from: ''},
+                video: {fromPfx: '', fromExt: ''},
+            },
+            ordering: {
+                qsKey: '',
+                byDate: {qsValue: ''},
+                byDuration: {qsValue: ''},
+                byPopularity: {qsValue: ''},
+            },
         },
     })
 
@@ -105,11 +315,7 @@ export const validate = siteLocales => {
         siteLocales.reduce((obj, x) => set(obj, g(x, 'code'), localeRouterModel), {})
     )
 
-    // TODO implement other locales
-    // assertPropTypes(mappingModel, mapping, 'router-locale-mapping', 'validate')
-    assertPropTypes(localeRouterModel, mapping.eng, 'router-locale-mapping', 'validate')
-    assertPropTypes(localeRouterModel, mapping.deu, 'router-locale-mapping', 'validate')
-    assertPropTypes(localeRouterModel, mapping.ita, 'router-locale-mapping', 'validate')
+    assertPropTypes(mappingModel, mapping, 'router-locale-mapping', 'validate')
 }
 
 export default mapping

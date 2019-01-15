@@ -23,6 +23,12 @@ const
             allNiches: {
                 pageHeader: 'All Niches',
             },
+            ordering: {
+                label: 'Sort',
+                byDate: 'Recent',
+                byDuration: 'Duration',
+                byPopularity: 'Popularity',
+            },
         },
         deu: {
             search: {
@@ -38,6 +44,12 @@ const
             },
             allNiches: {
                 pageHeader: 'Alle Gruppen',
+            },
+            ordering: {
+                label: 'Sortiert',
+                byDate: 'Das Neueste',
+                byDuration: 'Dauer',
+                byPopularity: 'Popularität',
             },
         },
         ita: {
@@ -55,6 +67,12 @@ const
             allNiches: {
                 pageHeader: 'Tutte le Categorie',
             },
+            ordering: {
+                label: 'Ordina',
+                byDate: 'Più Recenti',
+                byDuration: 'I più lunghi',
+                byPopularity: 'Popolari',
+            },
         },
         fra: { // TODO
             search: {
@@ -70,6 +88,12 @@ const
             },
             allNiches: {
                 pageHeader: '',
+            },
+            ordering: {
+                label: '',
+                byDate: '',
+                byDuration: '',
+                byPopularity: '',
             },
         },
         spa: { // TODO
@@ -87,6 +111,12 @@ const
             allNiches: {
                 pageHeader: '',
             },
+            ordering: {
+                label: '',
+                byDate: '',
+                byDuration: '',
+                byPopularity: '',
+            },
         },
         por: { // TODO
             search: {
@@ -102,6 +132,12 @@ const
             },
             allNiches: {
                 pageHeader: '',
+            },
+            ordering: {
+                label: '',
+                byDate: '',
+                byDuration: '',
+                byPopularity: '',
             },
         },
         swe: { // TODO
@@ -119,6 +155,12 @@ const
             allNiches: {
                 pageHeader: '',
             },
+            ordering: {
+                label: '',
+                byDate: '',
+                byDuration: '',
+                byPopularity: '',
+            },
         },
         nld: { // TODO
             search: {
@@ -134,6 +176,12 @@ const
             },
             allNiches: {
                 pageHeader: '',
+            },
+            ordering: {
+                label: '',
+                byDate: '',
+                byDuration: '',
+                byPopularity: '',
             },
         },
         fin: { // TODO
@@ -151,6 +199,12 @@ const
             allNiches: {
                 pageHeader: '',
             },
+            ordering: {
+                label: '',
+                byDate: '',
+                byDuration: '',
+                byPopularity: '',
+            },
         },
         rus: { // TODO
             search: {
@@ -167,6 +221,12 @@ const
             allNiches: {
                 pageHeader: '',
             },
+            ordering: {
+                label: '',
+                byDate: '',
+                byDuration: '',
+                byPopularity: '',
+            },
         },
         tur: { // TODO
             search: {
@@ -182,6 +242,12 @@ const
             },
             allNiches: {
                 pageHeader: '',
+            },
+            ordering: {
+                label: '',
+                byDate: '',
+                byDuration: '',
+                byPopularity: '',
             },
         },
     })

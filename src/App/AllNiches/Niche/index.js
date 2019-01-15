@@ -2,22 +2,14 @@ import React from 'react'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
-import {
-    CircularProgress,
-    Typography
-} from '@material-ui/core'
-import {
-    Record,
-    Map,
-    List,
-    fromJS,
-} from 'immutable'
+import {CircularProgress, Typography} from '@material-ui/core'
+import {Record, Map, List, fromJS} from 'immutable'
 
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
-import {getSubPage} from '../../helpers'
+import {getSubPage, immutableProvedGet as ig, getRouterContext} from '../../helpers'
 
 import {Page, Content, PageWrapper} from './assets'
 import actions from './actions'
@@ -39,7 +31,7 @@ const
         tagList: List(),
         tagArchiveList: List(),
         sortList: List(),
-        currentSort: '',
+        currentSort: null,
         archiveFilms: Map(),
         tagArchiveListOlder: fromJS(),
         tagArchiveListNewer: fromJS(),
@@ -47,7 +39,16 @@ const
         videoList: List(),
     }),
 
-    Niche = ({currentBreakpoint, pageUrl, search, niche, chooseSort, isSSR}) => <Page>
+    Niche = ({
+        currentBreakpoint,
+        pageUrl,
+        search,
+        routerContext,
+        i18nOrdering,
+        niche,
+        chooseSort,
+        isSSR,
+    }) => <Page>
         { niche.get('isFailed')
             ? <ErrorContent/>
             : niche.get('isLoading')
@@ -66,6 +67,9 @@ const
                     <ControlBar
                         pageUrl={pageUrl}
                         search={search}
+                        routerContext={routerContext}
+                        i18nOrdering={i18nOrdering}
+
                         chooseSort={chooseSort}
                         isSSR={isSSR}
                         page={niche.get('currentPage')}
@@ -118,11 +122,13 @@ const
 export default compose(
     connect(
         state => ({
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            niche: NicheRecord(state.getIn(['app', 'niches', 'niche'])),
-            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
-            pageUrl: state.getIn(['router', 'location', 'pathname']),
-            search: state.getIn(['router', 'location', 'search']),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            niche: NicheRecord(ig(state, 'app', 'niches', 'niche')),
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            pageUrl: ig(state, 'router', 'location', 'pathname'),
+            search: ig(state, 'router', 'location', 'search'),
+            routerContext: getRouterContext(state),
+            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
         }),
         dispatch => ({
             loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),

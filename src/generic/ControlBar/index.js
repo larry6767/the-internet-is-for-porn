@@ -1,6 +1,9 @@
-import React, {Fragment} from 'react'
 import queryString from 'query-string'
+import React, {Fragment} from 'react'
+import {Link} from 'react-router-dom'
+import {compose, setPropTypes} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
+
 import {
     Typography,
     Button,
@@ -8,9 +11,19 @@ import {
     MenuItem,
     OutlinedInput,
 } from '@material-ui/core'
-import {Link} from 'react-router-dom'
 
-import {immutableProvedGet as ig} from '../../App/helpers'
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    PropTypes,
+    ImmutablePropTypes,
+} from '../../App/helpers'
+
+import {
+    immutableI18nOrderingModel,
+    routerContextModel,
+} from '../../App/models'
+
 import {muiStyles} from './assets/muiStyles'
 
 import {
@@ -24,20 +37,29 @@ import {
 } from './assets'
 
 const
-    SortSelectMaterial = ({
-        classes,
-        search,
-        sortList,
-        chooseSort,
-        currentSort,
-    }) => <Select
+    sortListModel = ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
+        isActive: PropTypes.bool,
+        code: PropTypes.string,
+    })),
+
+    SortSelectMaterial = setPropTypes({
+        classes: PropTypes.shape({selectRoot: PropTypes.string}),
+
+        search: PropTypes.string, // TODO get rid of it
+        routerContext: routerContextModel,
+        i18nOrdering: immutableI18nOrderingModel,
+
+        sortList: sortListModel,
+        chooseSort: PropTypes.func,
+        currentSort: PropTypes.string.isOptional, // could be `null`
+    })(({classes, search, i18nOrdering, sortList, chooseSort, currentSort}) => <Select
         classes={{
-            select: classes.selectRoot
+            select: g(classes, 'selectRoot'),
         }}
         value={currentSort}
         input={
             <OutlinedInput
-                onChange={(event) => {
+                onChange={event => {
                     const
                         parsedQS = queryString.parse(search),
                         newSortValue = event.target.value
@@ -46,42 +68,40 @@ const
                     chooseSort(newSortValue, `?${queryString.stringify(parsedQS)}`)
                 }}
                 labelWidth={0}
-                name="sort"
-                id="sort"
             />
         }
     >
         {sortList.map(x =>
-            <MenuItem
-                key={x.get('value')}
-                value={x.get('value')}
-            >
-                {x.get('localText')}
+            <MenuItem key={ig(x, 'code')} value={ig(x, 'code')}>
+                {ig(i18nOrdering, ig(x, 'code'))}
             </MenuItem>
         )}
-    </Select>,
+    </Select>),
 
-    SortSelectInlined = ({
-        sortList,
-        pageUrl,
-        search,
-    }) => <InlinedSelectionWrap>
+    SortSelectInlined = setPropTypes({
+        sortList: sortListModel,
+
+        pageUrl: PropTypes.string, // TODO get rid of it
+        search: PropTypes.string, // TODO get rid of it
+        routerContext: routerContextModel,
+        i18nOrdering: immutableI18nOrderingModel,
+    })(({sortList, pageUrl, search, i18nOrdering}) => <InlinedSelectionWrap>
         <InlinedSelectionList>
             {sortList.map(x => {
                 const parsedQS = queryString.parse(search)
-                parsedQS.sort = x.get('value')
+                parsedQS.sort = ig(x, 'code')
                 const link = `${pageUrl}?${queryString.stringify(parsedQS)}`
 
                 return <InlinedSelectionItem
-                    key={x.get('value')}
+                    key={ig(x, 'code')}
                     href={link}
-                    isActive={x.get('active')}
+                    isActive={ig(x, 'isActive')}
                 >
-                    {x.get('localText')}
+                    {ig(i18nOrdering, ig(x, 'code'))}
                 </InlinedSelectionItem>
             })}
         </InlinedSelectionList>
-    </InlinedSelectionWrap>,
+    </InlinedSelectionWrap>),
 
     WrappedButton = ({
         classes,
@@ -104,8 +124,12 @@ const
 
     NicheControlBar = ({
         classes,
+
         pageUrl,
         search,
+        routerContext,
+        i18nOrdering,
+
         isSSR,
         chooseSort,
         buttonsElements,
@@ -131,18 +155,25 @@ const
                     root: classes.typographyRoot
                 }}
             >
-                sort:
+                {`${ig(i18nOrdering, 'label')}:`}
             </Typography>
             {isSSR
                 ? <SortSelectInlined
                     sortList={sortList}
+
                     pageUrl={pageUrl}
                     search={search}
+                    routerContext={routerContext}
+                    i18nOrdering={i18nOrdering}
                 />
                 : <SortSelectMaterial
                     classes={classes}
                     sortList={sortList}
+
                     search={search}
+                    routerContext={routerContext}
+                    i18nOrdering={i18nOrdering}
+
                     chooseSort={chooseSort}
                     currentSort={currentSort}
                 />
@@ -211,8 +242,12 @@ const
 
     ControlBar = ({
         classes,
+
         pageUrl,
-        search,
+        search, // TODO get rid of it
+        routerContext,
+        i18nOrdering,
+
         isSSR,
         chooseSort,
         page,
@@ -268,8 +303,12 @@ const
                     />
                     : <NicheControlBar
                         classes={classes}
+
                         pageUrl={pageUrl}
                         search={search}
+                        routerContext={routerContext}
+                        i18nOrdering={i18nOrdering}
+
                         isSSR={isSSR}
                         chooseSort={chooseSort}
                         buttonsElements={buttonsElements}
@@ -286,4 +325,41 @@ const
         </Wrapper>
     }
 
-export default withStyles(muiStyles)(ControlBar)
+export default compose(
+    withStyles(muiStyles),
+    setPropTypes({
+        classes: PropTypes.object,
+        isSSR: PropTypes.bool,
+
+        pageUrl: PropTypes.string, // TODO get rid of it
+        search: PropTypes.string, // TODO get rid of it
+        routerContext: routerContextModel.isOptional,
+        i18nOrdering: immutableI18nOrderingModel.isOptional,
+
+        chooseSort: PropTypes.func.isOptional,
+        page: PropTypes.string,
+        subPage: PropTypes.string.isOptional,
+        pagesCount: PropTypes.number,
+        pageNumber: PropTypes.number,
+        itemsCount: PropTypes.number,
+        sortList: sortListModel,
+        currentSort: PropTypes.string.isOptional, // could be `null`
+
+        archiveFilms: ImmutablePropTypes.exact({
+            current: PropTypes.number,
+            monthForLink: PropTypes.string,
+        }).isOptional,
+
+        tagArchiveListOlder: ImmutablePropTypes.exact({
+            month: PropTypes.string,
+            year: PropTypes.string,
+        }).isOptional,
+
+        tagArchiveListNewer: ImmutablePropTypes.exact({
+            month: PropTypes.string,
+            year: PropTypes.string,
+        }).isOptional,
+
+        favoriteButtons: PropTypes.bool.isOptional, // could be not presented at all
+    })
+)(ControlBar)
