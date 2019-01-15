@@ -40,6 +40,7 @@ const
 
         return exact({
             inputPlaceholder: PropTypes.string,
+            buttonTitle: PropTypes.string,
         })
     },
 

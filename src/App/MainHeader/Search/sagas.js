@@ -10,7 +10,7 @@ export function* loadSuggestionsFlow({payload: formData}) {
         const
             reqData = yield select(x => ({
                 localeCode: ig(x, 'app', 'locale', 'localeCode'),
-                ...formData.toJS()
+                ...formData
             })),
 
             suggestions = yield fetch(`${BACKEND_URL}/get-search-suggestions`, {

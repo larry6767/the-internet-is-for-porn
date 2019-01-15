@@ -11,6 +11,7 @@ const
         eng: {
             search: {
                 inputPlaceholder: 'Search box',
+                buttonTitle: 'Run search',
             },
             navigation: {
                 home: {title: 'Home'},
@@ -26,6 +27,7 @@ const
         deu: {
             search: {
                 inputPlaceholder: 'Stichworte hinzufügen',
+                buttonTitle: 'Suche starten',
             },
             navigation: {
                 home: {title: 'Hauptseite'},
@@ -41,6 +43,7 @@ const
         ita: {
             search: {
                 inputPlaceholder: 'Inserisci parole chiave...',
+                buttonTitle: 'Esegui la ricerca',
             },
             navigation: {
                 home: {title: 'Principale'},
@@ -56,6 +59,7 @@ const
         fra: { // TODO
             search: {
                 inputPlaceholder: '',
+                buttonTitle: '',
             },
             navigation: {
                 home: {title: ''},
@@ -71,6 +75,7 @@ const
         spa: { // TODO
             search: {
                 inputPlaceholder: '',
+                buttonTitle: '',
             },
             navigation: {
                 home: {title: ''},
@@ -86,6 +91,7 @@ const
         por: { // TODO
             search: {
                 inputPlaceholder: '',
+                buttonTitle: '',
             },
             navigation: {
                 home: {title: ''},
@@ -101,6 +107,7 @@ const
         swe: { // TODO
             search: {
                 inputPlaceholder: '',
+                buttonTitle: '',
             },
             navigation: {
                 home: {title: ''},
@@ -116,6 +123,7 @@ const
         nld: { // TODO
             search: {
                 inputPlaceholder: '',
+                buttonTitle: '',
             },
             navigation: {
                 home: {title: ''},
@@ -131,6 +139,7 @@ const
         fin: { // TODO
             search: {
                 inputPlaceholder: '',
+                buttonTitle: '',
             },
             navigation: {
                 home: {title: ''},
@@ -146,6 +155,7 @@ const
         rus: { // TODO
             search: {
                 inputPlaceholder: '',
+                buttonTitle: '',
             },
             navigation: {
                 home: {title: ''},
@@ -161,6 +171,7 @@ const
         tur: { // TODO
             search: {
                 inputPlaceholder: '',
+                buttonTitle: '',
             },
             navigation: {
                 home: {title: ''},

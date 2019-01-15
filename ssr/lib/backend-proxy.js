@@ -206,7 +206,7 @@ const
         .catch(jsonThrow500(req, res))
     })({
         validTopLevelKeys: [
-            'localeCode', 'c', 't',
+            'localeCode', 'classId', 'searchKey',
         ],
     }),
 

@@ -1,4 +1,4 @@
-import {pick, map, find, mapValues, omit} from 'lodash'
+import {pick, map, find, mapValues, omit, compact} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 import {Agent} from 'https' // TODO FIXME for hacky-wacky stuff (blind trust to SSL cert)
@@ -351,13 +351,19 @@ export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => 
     }
 ).then(fetchResponseExtractor(() => new Error().stack))
 
-export const getSearchSuggestions = (siteLocales, localeCode) => ({headers, formData}) => fetch(
-    `${backendUrlForSearch(siteLocales, localeCode)}?c=${g(formData, 'c')}&t=${g(formData, 't')}`,
-    {
-        method: 'GET',
-        headers,
+export const getSearchSuggestions = (siteLocales, localeCode) => async ({headers, formData}) => {
+    const
+        prepareData = x => compact(x) // 'compact' is for array with a single empty value, like ['']
 
-        // TODO FIXME remove this:
-        agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
-    }
-).then(fetchResponseExtractor(() => new Error().stack))
+    return prepareData(await fetch(
+        `${backendUrlForSearch(siteLocales, localeCode)}?c=${
+            g(formData, 'classId')}&t=${g(formData, 'searchKey')}`,
+        {
+            method: 'GET',
+            headers,
+
+            // TODO FIXME remove this:
+            agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
+        }
+    ).then(fetchResponseExtractor(() => new Error().stack)))
+}

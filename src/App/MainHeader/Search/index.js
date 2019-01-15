@@ -1,7 +1,8 @@
 import React from 'react'
+import {Record, List} from 'immutable'
 import {compose, setPropTypes} from 'recompose'
 import {connect} from 'react-redux'
-import {reduxForm, Field} from 'redux-form/immutable'
+import {reduxForm, Field, formValueSelector} from 'redux-form/immutable'
 import Autosuggest from 'react-autosuggest'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
@@ -12,6 +13,7 @@ import {
     immutableProvedGet as ig,
     plainProvedGet as g,
     PropTypes,
+    ImmutablePropTypes,
 } from '../../helpers'
 
 import {immutableI18nSearchModel} from '../../models'
@@ -28,12 +30,15 @@ const
         type,
     }) => <input {...input} type={type}/>,
 
-    renderInputComponent = ({classes, i18nSearch, ...input}) => <TextField
+    renderInputComponent = ({classes, ref, i18nSearch, ...input}) => <TextField
         fullWidth
         placeholder={ig(i18nSearch, 'inputPlaceholder')}
         InputProps={{
             classes: {
                 input: g(classes, 'input'),
+            },
+            inputRef: node => {
+                ref(node)
             },
             ...input,
             disableUnderline: true,
@@ -62,21 +67,24 @@ const
     },
 
     getSuggestionValue = (change, suggestion) => {
-        change('t', suggestion)
+        change('searchKey', suggestion)
     },
 
-    renderAutosuggest = ({classes, i18nSearch, search, input, change}) => <Autosuggest
+    renderAutosuggest = ({
+        classes, i18nSearch, search, input, change,
+        suggestionsFetchRequestHandler, suggestionsClearRequestHandler,
+        suggestionSelectedHandler, classId,
+    }) => <Autosuggest
         renderInputComponent={renderInputComponent}
         suggestions={ig(search, 'suggestions').toJS()}
         getSuggestionValue={getSuggestionValue.bind(this, change)}
         renderSuggestion={renderSuggestion}
 
-        onSuggestionsFetchRequested={() => {}} // these params are required,
-        onSuggestionsClearRequested={() => {}} // but with redux-form are useless
+        onSuggestionsFetchRequested={suggestionsFetchRequestHandler.bind(this, classId)}
+        onSuggestionsClearRequested={suggestionsClearRequestHandler}
+        onSuggestionSelected={suggestionSelectedHandler.bind(this, change)}
         inputProps={{
             classes,
-            value: input.value, // these params are required,
-            onChange: () => {}, // but with redux-form are useless
             i18nSearch,
             ...input,
         }}
@@ -95,56 +103,73 @@ const
         }
     />,
 
-    Search = props => <SearchForm
-        onSubmit={props.handleSubmit}
-    >
-        <Field
-            name="c"
-            type="hidden"
-            component={renderHiddenField}
-        />
-        <Field
-            name="t"
-            type="text"
-            props={props}
-            component={renderAutosuggest}
-        />
-        <SearchButton
-            type="submit"
-        />
-    </SearchForm>
+    Search = props => {
+        const {handleSubmit, i18nSearch} = props
+
+        return <SearchForm
+            onSubmit={handleSubmit}
+        >
+            <Field
+                name="classId"
+                type="hidden"
+                component={renderHiddenField}
+            />
+            <Field
+                name="searchKey"
+                type="text"
+                props={props}
+                component={renderAutosuggest}
+            />
+            <SearchButton
+                type="submit"
+                title={ig(i18nSearch, 'buttonTitle')}
+            />
+        </SearchForm>
+    },
+
+    SearchRecord = Record({
+        suggestions: List(),
+    })
 
 
 export default compose(
     connect(
         state => ({
             initialValues: { // Setting default form values. redux-form creates keys in store for this
-                c: '1', // ig(state, ['app', 'videoPage', 'gallery', 'classId']),
-                t: '',
+                classId: '1', // ig(state, ['app', 'videoPage', 'gallery', 'classId']),
+                searchKey: '',
             },
-            search: ig(state, ['app', 'mainHeader', 'search']),
+            search: SearchRecord(ig(state, ['app', 'mainHeader', 'search'])),
             i18nSearch: ig(state, 'app', 'locale', 'i18n', 'search'),
+            classId: formValueSelector('searchForm')(state, 'classId'),
         }),
         dispatch => ({
-            suggestionsFetchRequestHandler: () => dispatch(actions.suggestionsFetchRequest()),
-            selectSuggestion: () => dispatch(actions.suggestionsFetchRequest()),
+            suggestionsFetchRequestHandler: (classId, {value, reason}) => {
+                dispatch(actions.suggestionsFetchRequest({
+                    classId,
+                    searchKey: value,
+                }))
+            },
+            suggestionsClearRequestHandler: () => dispatch(actions.setEmptySuggestions()),
+            suggestionSelectedHandler: (change, event, {suggestion, method}) => {
+                if (method === 'enter')
+                change('searchKey', suggestion)
+            }
         })
     ),
     reduxForm({
         form: 'searchForm',
         enableReinitialize: true,
-        onChange: (values, dispatch) => {
-            if (ig(values, 't') === '') {
-                dispatch(actions.setEmptySuggestions())
-                return
-            }
-            dispatch(actions.suggestionsFetchRequest(values))
-        },
         onSubmit: (values, dispatch) => dispatch(actions.runSearch(values))
     }),
     withStyles(muiStyles),
     setPropTypes({
         classes: PropTypes.object,
+        search: ImmutablePropTypes.recordOf({
+            suggestions: ImmutablePropTypes.list,
+        }),
         i18nSearch: immutableI18nSearchModel,
+        handleSubmit: PropTypes.func,
+        change: PropTypes.func,
     })
 )(Search)
