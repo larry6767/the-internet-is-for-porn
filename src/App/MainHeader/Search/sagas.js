@@ -1,4 +1,5 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
+import {push} from 'connected-react-router/immutable'
 
 import {BACKEND_URL} from '../../../config'
 import {plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
@@ -35,8 +36,8 @@ export function* loadSuggestionsFlow({payload: formData}) {
     }
 }
 
-export function* runSearchFlow({payload: formData}) {
-    yield console.log('run search')
+export function* runSearchFlow({payload: searchKey}) {
+    yield put(push(`/find-videos?key=${searchKey}`))
 }
 
 export default function* saga() {

@@ -160,7 +160,7 @@ export default compose(
     reduxForm({
         form: 'searchForm',
         enableReinitialize: true,
-        onSubmit: (values, dispatch) => dispatch(actions.runSearch(values))
+        onSubmit: (values, dispatch) => dispatch(actions.runSearch(ig(values, 'searchKey')))
     }),
     withStyles(muiStyles),
     setPropTypes({

@@ -1,13 +1,13 @@
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
 
-import {set, map, pick, keys} from 'lodash'
+import {set, map, pick} from 'lodash'
 
 const
     ordering = Object.freeze({
         sort_LATEST: 'byDate',
         sort_LONGEST: 'byDuration',
         sort_POPULAR: 'byPopularity',
-        sort_RELEVANT: 'byPopularity',
+        sort_RELEVANT: 'byRelevant',
     }),
 
     favorites = Object.freeze({

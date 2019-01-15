@@ -6,7 +6,7 @@ import {compose, lifecycle} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
 
-import {getSubPage, immutableProvedGet as ig, getRouterContext} from '../helpers'
+import {immutableProvedGet as ig, getRouterContext} from '../helpers'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'

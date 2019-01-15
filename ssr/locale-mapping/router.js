@@ -32,6 +32,7 @@ const
                 byDate: {qsValue: 'latest'},
                 byDuration: {qsValue: 'longest'},
                 byPopularity: {qsValue: 'popular'},
+                byRelevant: {qsValue: 'relevant'},
             },
         },
         deu: {
@@ -60,6 +61,7 @@ const
                 byDate: {qsValue: 'das-neueste'},
                 byDuration: {qsValue: 'dauer'},
                 byPopularity: {qsValue: 'popularität'},
+                byRelevant: {qsValue: 'ähnlich'},
             },
         },
         ita: {
@@ -88,6 +90,7 @@ const
                 byDate: {qsValue: 'più-recenti'},
                 byDuration: {qsValue: 'i-più-lunghi'},
                 byPopularity: {qsValue: 'popolari'},
+                byRelevant: {qsValue: 'сorrelati'},
             },
         },
         fra: { // TODO
@@ -116,6 +119,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         spa: { // TODO
@@ -144,6 +148,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         por: { // TODO
@@ -172,6 +177,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         swe: { // TODO
@@ -200,6 +206,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         nld: { // TODO
@@ -228,6 +235,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         fin: { // TODO
@@ -256,6 +264,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         rus: { // TODO
@@ -284,6 +293,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         tur: { // TODO
@@ -312,6 +322,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
     })

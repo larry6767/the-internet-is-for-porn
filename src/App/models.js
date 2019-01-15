@@ -37,6 +37,7 @@ const
                 byDate: exact({qsValue: PropTypes.string}),
                 byDuration: exact({qsValue: PropTypes.string}),
                 byPopularity: exact({qsValue: PropTypes.string}),
+                byRelevant: exact({qsValue: PropTypes.string}),
             }),
         })
     },
@@ -83,6 +84,7 @@ const
             byDate: PropTypes.string,
             byDuration: PropTypes.string,
             byPopularity: PropTypes.string,
+            byRelevant: PropTypes.string,
         })
     },
 

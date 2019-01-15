@@ -28,6 +28,7 @@ const
                 byDate: 'Recent',
                 byDuration: 'Duration',
                 byPopularity: 'Popularity',
+                byRelevant: 'Relevant',
             },
         },
         deu: {
@@ -50,6 +51,7 @@ const
                 byDate: 'Das Neueste',
                 byDuration: 'Dauer',
                 byPopularity: 'Popularität',
+                byRelevant: 'Ähnlich',
             },
         },
         ita: {
@@ -72,6 +74,7 @@ const
                 byDate: 'Più Recenti',
                 byDuration: 'I più lunghi',
                 byPopularity: 'Popolari',
+                byRelevant: 'Correlati',
             },
         },
         fra: { // TODO
@@ -94,6 +97,7 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         spa: { // TODO
@@ -116,6 +120,7 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         por: { // TODO
@@ -138,6 +143,7 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         swe: { // TODO
@@ -160,6 +166,7 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         nld: { // TODO
@@ -182,6 +189,7 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         fin: { // TODO
@@ -204,6 +212,7 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         rus: { // TODO
@@ -226,6 +235,7 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         tur: { // TODO
@@ -248,6 +258,7 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
     })
