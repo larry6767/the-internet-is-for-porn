@@ -1,4 +1,4 @@
-import {pick, map, find, mapValues, omit} from 'lodash'
+import {pick, map, find, mapValues, omit, compact} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 import {Agent} from 'https' // TODO FIXME for hacky-wacky stuff (blind trust to SSL cert)
@@ -11,7 +11,7 @@ import {
 
 import {defaultHostToFetchSiteLocalesFrom} from '../config'
 import apiLocales from '../locale-mapping/backend-api'
-import {backendUrl, backendUrlForReport} from './helpers/backendUrl'
+import {backendUrl, backendUrlForReport, backendUrlForSearch} from './helpers/backendUrl'
 import {videoItemModel} from '../generic/VideoItem/models'
 import {incomingPageTextModel, pageTextModel} from './helpers/requests/getPageText'
 import {incomingVideoItemModel} from './helpers/requests/getFilteredVideoList'
@@ -242,6 +242,24 @@ const
         return result
     },
 
+    getFindVideosMap = x => {
+        const
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS'))
+
+        return {
+            pageNumber: x.page.PAGE_NUMBER,
+            pageText: getPageText(x.page.PAGE_TEXT),
+            pagesCount: x.page.PAGES_COUNT,
+
+            sortList,
+            currentSort:
+                g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
+
+            itemsCount: x.page.ITEMS_PER_PAGE,
+            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
+        }
+    },
+
     getPageDataParamsModel = PropTypes.exact({
         url: PropTypes.string,
         options: PropTypes.shape({
@@ -353,6 +371,9 @@ export const getPageData = (siteLocales, localeCode) => async ({
             : pageCode === (x = localeBranch('video'), g(x, 'code'))
             ? [{url: urlFunc(g(x, 'url'))}, getVideoPageMap]
 
+            : pageCode === (x = localeBranch('findVideos'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url'))}, getFindVideosMap]
+
             : null
 
     if (process.env.NODE_ENV !== 'production')
@@ -446,3 +467,20 @@ export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => 
         agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
     }
 ).then(fetchResponseExtractor(() => new Error().stack))
+
+export const getSearchSuggestions = (siteLocales, localeCode) => async ({headers, formData}) => {
+    const
+        prepareData = x => compact(x) // 'compact' is for array with a single empty value, like ['']
+
+    return prepareData(await fetch(
+        `${backendUrlForSearch(siteLocales, localeCode)}?c=${
+            g(formData, 'classId')}&t=${g(formData, 'searchKey')}`,
+        {
+            method: 'GET',
+            headers,
+
+            // TODO FIXME remove this:
+            agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
+        }
+    ).then(fetchResponseExtractor(() => new Error().stack)))
+}

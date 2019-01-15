@@ -20,6 +20,7 @@ import pornstarsReducer from './Pornstars/reducers'
 import favoriteReducer from './Favorite/reducers'
 import favoritePornstarsReducer from './FavoritePornstars/reducers'
 import videoPageReducer from './VideoPage/reducers'
+import findVideosReducer from './FindVideos/reducers'
 import actions from './actions'
 import {immutableLocaleRouterModel, immutableI18nModel} from './models'
 
@@ -36,6 +37,7 @@ const
         favorite: PropTypes.string,
         favoritePornstars: PropTypes.string,
         video: PropTypes.string,
+        findVideos: PropTypes.string,
     })
 
 export default combineReducers({
@@ -47,6 +49,7 @@ export default combineReducers({
     favorite: favoriteReducer,
     favoritePornstars: favoritePornstarsReducer,
     videoPage: videoPageReducer,
+    findVideos: findVideosReducer,
 
     ui: handleActions({
         [g(actions, 'resize')]: (state, action) =>

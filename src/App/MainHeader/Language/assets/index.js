@@ -8,8 +8,7 @@ export const Item = styled.span`
     background-size: contain;
     background-repeat: no-repeat;
     ${({type}) => `background-image: url('/img/flags/${type}.svg');`}
-`
-
+` // TODO FIXME: this icons isn't completely free
 // https://www.flaticon.com/packs/flags-3
 
 export const InlinedSelectionWrap = styled.div`

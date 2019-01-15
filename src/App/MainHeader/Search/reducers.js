@@ -1,17 +1,14 @@
-// TODO FIXME: Now it isn't used
-import {combineReducers} from 'redux-immutable'
 import {handleActions} from 'redux-actions'
-import {suggestionsFetchRequest, suggestionsClearRequest, toggleChange} from './actions'
-import {fromJS} from 'immutable'
-import {getSuggestions} from './helpers'
+import {fromJS, List} from 'immutable'
+import {plainProvedGet as g} from '../../helpers'
+import actions from './actions'
 
-export default combineReducers({
+export default handleActions({
+        [g(actions, 'setNewSuggestions')]: (state, {payload: suggestions}) => state.merge({
+            suggestions: List(suggestions),
+        }),
 
-    input: handleActions({
-        [suggestionsFetchRequest]: (state, action) => {
-            return state.set('suggestions', getSuggestions(action.payload.value))
-        },
-        [suggestionsClearRequest]: state => state.set('suggestions', []),
-        [toggleChange]: (state, action) => state.set('currentValue', action.payload)
-    }, fromJS({suggestions: [], currentValue: ''}))
-})
+        [g(actions, 'setEmptySuggestions')]: state => state.set('suggestions', List()),
+    }, fromJS({
+        suggestions: [],
+    }))

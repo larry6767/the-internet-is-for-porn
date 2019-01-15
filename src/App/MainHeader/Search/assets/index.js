@@ -1,42 +1,11 @@
 import styled from 'styled-components'
 
-export const Search = styled.div`
+export const SearchForm = styled.form`
     position: relative;
     width: 100%;
 
     ${({theme}) => theme.media.mobile`width: calc(100% - 60px); order: 1;`}
 `
-
-// export const SearchInput = styled.header`
-//     width: 100%;
-//     display: flex;
-//     align-items: center;
-//     border: none;
-//     border-radius: 4px;
-//     background-color: ${({theme}) => theme.palette.primary.dark};
-//     background-image: url('/img/search.svg');
-//     background-repeat: no-repeat;
-//     background-position: right 15px center;
-//     background-size: 25px;
-//     display: block;
-//     padding: 15px 60px 15px 20px;
-//     transition: background-image 0.3s;
-
-//     ${({theme}) => theme.media.sm`padding: 12px 60px 12px 20px;`}
-
-//     &::placeholder {
-//         color: ${({theme}) => theme.palette.primary.light};
-//     }
-
-//     &:focus {
-//         outline: none;
-//         color: ${({theme}) => theme.palette.primary.contrastText};
-//     }
-
-//     &:disabled {
-//         cursor: not-allowed;
-//     }
-// `
 
 export const SearchButton = styled.button`
     position: absolute;

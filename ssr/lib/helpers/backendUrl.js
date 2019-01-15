@@ -11,4 +11,7 @@ export const
         `https://${getHost(siteLocales, localeCode)}/react`,
 
     backendUrlForReport = (siteLocales, localeCode) =>
-        `https://${getHost(siteLocales, localeCode)}/rot`
+        `https://${getHost(siteLocales, localeCode)}/rot`,
+
+    backendUrlForSearch = (siteLocales, localeCode) =>
+        `https://${getHost(siteLocales, localeCode)}/ac`

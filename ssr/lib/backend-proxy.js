@@ -9,6 +9,7 @@ import {logRequestError, buildLocalePageCodes} from './helpers'
 import {
     getPageData as requestPageData,
     sendReport as sendReportRequest,
+    getSearchSuggestions as searchSuggestionsRequest
 } from './requests'
 
 export const proxiedHeaders = (siteLocales, localeCode) => req => {
@@ -131,7 +132,7 @@ const
                 code = g(matchedPageCode, 'code'),
 
                 withSubPageCode = includes(
-                    ['niche', 'allMovies', 'pornstar', 'video']
+                    ['niche', 'allMovies', 'pornstar', 'video', 'findVideos']
                         .map(x => g(currentApiLocale, 'pageCode', x, 'code')),
                     code
                 )
@@ -162,6 +163,52 @@ const
             i18n: g(i18n, localeCode),
         }).end()
     },
+
+    getSearchSuggestions = siteLocales => (({validTopLevelKeys}) => (req, res) => {
+        const
+            invalidKeys = Object.keys(req.body).filter(x => !includes(validTopLevelKeys, x))
+
+        if (invalidKeys.length !== 0)
+            return jsonThrow400(req, res)(
+                'Found unexpected/unknown top-level keys in request body',
+                {
+                    request: {
+                        method: g(req, 'method'),
+                        operation: g(req, 'params', 'operation'),
+                        invalidTopLevelKeys: invalidKeys,
+                    },
+                }
+            )
+
+        if ( ! req.body.localeCode)
+            return jsonThrow400(req, res)(
+                'Some required field(s) is not provided in request body',
+                {
+                    request: {
+                        method: g(req, 'method'),
+                        operation: g(req, 'params', 'operation'),
+                        required: {
+                            localeCode: req.body.localeCode,
+                        },
+                    },
+                }
+            )
+
+        const localeCode = g(req, 'body', 'localeCode')
+        unset(g(req, 'body'), 'localeCode')
+        const formData = g(req, 'body')
+
+        searchSuggestionsRequest(siteLocales, localeCode)({
+            headers: proxiedHeaders(siteLocales, localeCode)(req),
+            formData,
+        })
+        .then(x => res.json(x).end())
+        .catch(jsonThrow500(req, res))
+    })({
+        validTopLevelKeys: [
+            'localeCode', 'classId', 'searchKey',
+        ],
+    }),
 
     sendReport = siteLocales => (({validTopLevelKeys}) => (req, res) => {
         const
@@ -251,6 +298,8 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
         getSiteLocale(siteLocales, defaultSiteLocaleCode)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-page-data')
         getPageData(siteLocales)(req, res)
+    else if (g(req, 'method') === 'POST' && req.params.operation === 'get-search-suggestions')
+        getSearchSuggestions(siteLocales)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'send-report')
         sendReport(siteLocales)(req, res)
     else

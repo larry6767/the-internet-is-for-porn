@@ -9,6 +9,10 @@ import deepFreeze from '../lib/helpers/deepFreeze'
 const
     mapping = deepFreeze({
         eng: {
+            search: {
+                inputPlaceholder: 'Search box',
+                buttonTitle: 'Run search',
+            },
             navigation: {
                 home: {title: 'Home'},
                 allNiches: {title: 'All Niches'},
@@ -24,9 +28,14 @@ const
                 byDate: 'Recent',
                 byDuration: 'Duration',
                 byPopularity: 'Popularity',
+                byRelevant: 'Relevant',
             },
         },
         deu: {
+            search: {
+                inputPlaceholder: 'Stichworte hinzufügen',
+                buttonTitle: 'Suche starten',
+            },
             navigation: {
                 home: {title: 'Hauptseite'},
                 allNiches: {title: 'Alle Gruppen'},
@@ -42,9 +51,14 @@ const
                 byDate: 'Das Neueste',
                 byDuration: 'Dauer',
                 byPopularity: 'Popularität',
+                byRelevant: 'Ähnlich',
             },
         },
         ita: {
+            search: {
+                inputPlaceholder: 'Inserisci parole chiave...',
+                buttonTitle: 'Esegui la ricerca',
+            },
             navigation: {
                 home: {title: 'Principale'},
                 allNiches: {title: 'Tutte le Categorie'},
@@ -60,9 +74,14 @@ const
                 byDate: 'Più Recenti',
                 byDuration: 'I più lunghi',
                 byPopularity: 'Popolari',
+                byRelevant: 'Correlati',
             },
         },
         fra: { // TODO
+            search: {
+                inputPlaceholder: '',
+                buttonTitle: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -78,9 +97,14 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         spa: { // TODO
+            search: {
+                inputPlaceholder: '',
+                buttonTitle: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -96,9 +120,14 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         por: { // TODO
+            search: {
+                inputPlaceholder: '',
+                buttonTitle: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -114,9 +143,14 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         swe: { // TODO
+            search: {
+                inputPlaceholder: '',
+                buttonTitle: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -132,9 +166,14 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         nld: { // TODO
+            search: {
+                inputPlaceholder: '',
+                buttonTitle: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -150,9 +189,14 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         fin: { // TODO
+            search: {
+                inputPlaceholder: '',
+                buttonTitle: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -168,9 +212,14 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         rus: { // TODO
+            search: {
+                inputPlaceholder: '',
+                buttonTitle: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -186,9 +235,14 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
         tur: { // TODO
+            search: {
+                inputPlaceholder: '',
+                buttonTitle: '',
+            },
             navigation: {
                 home: {title: ''},
                 allNiches: {title: ''},
@@ -204,6 +258,7 @@ const
                 byDate: '',
                 byDuration: '',
                 byPopularity: '',
+                byRelevant: '',
             },
         },
     })

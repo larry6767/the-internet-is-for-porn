@@ -17,6 +17,7 @@ const
                 favorite: {section: 'favorite'}, // maybe "favorite-movies"?
                 favoritePornstars: {section: 'favorite-porn-stars'},
                 video: {sectionPfx: 'video-'},
+                findVideos: {section: 'find-videos'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -31,6 +32,7 @@ const
                 byDate: {qsValue: 'latest'},
                 byDuration: {qsValue: 'longest'},
                 byPopularity: {qsValue: 'popular'},
+                byRelevant: {qsValue: 'relevant'},
             },
         },
         deu: {
@@ -44,6 +46,7 @@ const
                 favorite: {section: 'favorisierten'}, // maybe "favorisierten-video"?
                 favoritePornstars: {section: 'favorisierten-models'},
                 video: {sectionPfx: 'video-'},
+                findVideos: {section: 'find-videos'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -58,6 +61,7 @@ const
                 byDate: {qsValue: 'das-neueste'},
                 byDuration: {qsValue: 'dauer'},
                 byPopularity: {qsValue: 'popularität'},
+                byRelevant: {qsValue: 'ähnlich'},
             },
         },
         ita: {
@@ -71,6 +75,7 @@ const
                 favorite: {section: 'preferiti'}, // maybe "filmati-preferiti"?
                 favoritePornstars: {section: 'pornostar-preferiti'},
                 video: {sectionPfx: 'film-'},
+                findVideos: {section: 'find-videos'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -85,6 +90,7 @@ const
                 byDate: {qsValue: 'più-recenti'},
                 byDuration: {qsValue: 'i-più-lunghi'},
                 byPopularity: {qsValue: 'popolari'},
+                byRelevant: {qsValue: 'сorrelati'},
             },
         },
         fra: { // TODO
@@ -98,6 +104,7 @@ const
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
                 video: {sectionPfx: ''},
+                findVideos: {section: ''},
             },
             redirects: {
                 categories: {search: ''},
@@ -112,6 +119,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         spa: { // TODO
@@ -125,6 +133,7 @@ const
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
                 video: {sectionPfx: ''},
+                findVideos: {section: ''},
             },
             redirects: {
                 categories: {search: ''},
@@ -139,6 +148,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         por: { // TODO
@@ -152,6 +162,7 @@ const
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
                 video: {sectionPfx: ''},
+                findVideos: {section: ''},
             },
             redirects: {
                 categories: {search: ''},
@@ -166,6 +177,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         swe: { // TODO
@@ -179,6 +191,7 @@ const
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
                 video: {sectionPfx: ''},
+                findVideos: {section: ''},
             },
             redirects: {
                 categories: {search: ''},
@@ -193,6 +206,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         nld: { // TODO
@@ -206,6 +220,7 @@ const
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
                 video: {sectionPfx: ''},
+                findVideos: {section: ''},
             },
             redirects: {
                 categories: {search: ''},
@@ -220,6 +235,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         fin: { // TODO
@@ -233,6 +249,7 @@ const
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
                 video: {sectionPfx: ''},
+                findVideos: {section: ''},
             },
             redirects: {
                 categories: {search: ''},
@@ -247,6 +264,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         rus: { // TODO
@@ -260,6 +278,7 @@ const
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
                 video: {sectionPfx: ''},
+                findVideos: {section: ''},
             },
             redirects: {
                 categories: {search: ''},
@@ -274,6 +293,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
         tur: { // TODO
@@ -287,6 +307,7 @@ const
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
                 video: {sectionPfx: ''},
+                findVideos: {section: ''},
             },
             redirects: {
                 categories: {search: ''},
@@ -301,6 +322,7 @@ const
                 byDate: {qsValue: ''},
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
+                byRelevant: {qsValue: ''},
             },
         },
     })

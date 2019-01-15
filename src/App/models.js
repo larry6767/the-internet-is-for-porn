@@ -16,6 +16,7 @@ const
                 favorite: exact({section: PropTypes.string}),
                 favoritePornstars: exact({section: PropTypes.string}),
                 video: exact({sectionPfx: PropTypes.string}),
+                findVideos: exact({section: PropTypes.string}),
             }),
             redirects: exact({
                 categories: exact({search: PropTypes.string}),
@@ -36,7 +37,18 @@ const
                 byDate: exact({qsValue: PropTypes.string}),
                 byDuration: exact({qsValue: PropTypes.string}),
                 byPopularity: exact({qsValue: PropTypes.string}),
+                byRelevant: exact({qsValue: PropTypes.string}),
             }),
+        })
+    },
+
+    i18nSearchModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            inputPlaceholder: PropTypes.string,
+            buttonTitle: PropTypes.string,
         })
     },
 
@@ -72,8 +84,12 @@ const
             byDate: PropTypes.string,
             byDuration: PropTypes.string,
             byPopularity: PropTypes.string,
+            byRelevant: PropTypes.string,
         })
     },
+
+    i18nSearchModel = i18nSearchModelBuilder(false),
+    immutableI18nSearchModel = i18nSearchModelBuilder(true),
 
     i18nNavigationModel = i18nNavigationModelBuilder(false),
     immutableI18nNavigationModel = i18nNavigationModelBuilder(true),
@@ -89,6 +105,7 @@ const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
 
         return exact({
+            search: isImmutable ? immutableI18nSearchModel : i18nSearchModel,
             navigation: isImmutable ? immutableI18nNavigationModel : i18nNavigationModel,
             allNiches: isImmutable ? immutableI18nAllNichesModel : i18nAllNichesModel,
             ordering: isImmutable ? immutableI18nOrderingModel : i18nOrderingModel,
@@ -96,6 +113,7 @@ const
     }
 
 export {
+    i18nSearchModel, immutableI18nSearchModel,
     i18nNavigationModel, immutableI18nNavigationModel,
     i18nAllNichesModel, immutableI18nAllNichesModel,
     i18nOrderingModel, immutableI18nOrderingModel,
