@@ -16,6 +16,7 @@ const
                 favorite: exact({section: PropTypes.string}),
                 favoritePornstars: exact({section: PropTypes.string}),
                 video: exact({sectionPfx: PropTypes.string}),
+                findVideos: exact({section: PropTypes.string}),
             }),
             redirects: exact({
                 categories: exact({search: PropTypes.string}),

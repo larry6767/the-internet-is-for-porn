@@ -48,6 +48,10 @@ import VideoPage from './App/VideoPage'
 import videoPageActions from './App/VideoPage/actions'
 import {loadVideoPageFlow} from './App/VideoPage/sagas'
 
+import FindVideos from './App/FindVideos'
+import findVideosActions from './App/FindVideos/actions'
+import {loadFindVideosPageFlow} from './App/FindVideos/sagas'
+
 import NotFound from './App/NotFound'
 
 export const
@@ -120,6 +124,11 @@ export const
                 `/${ig(r, 'router', 'routes', 'video', 'sectionPfx')}${videoId
                 }/${title.replace(/ /g, '-')}`,
         }),
+
+        findVideos: Object.freeze({
+            path: r => `/${ig(r, 'router', 'routes', 'findVideos', 'section')}`,
+            link: r => `/${ig(r, 'router', 'routes', 'findVideos', 'section')}`,
+        }),
     })
 
 const
@@ -149,6 +158,8 @@ const
             path: PropTypes.func,
             link: PropTypes.func,
         }),
+
+        findVideos: getterModel,
     })
 
 if (process.env.NODE_ENV !== 'production')
@@ -329,6 +340,19 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             return null
         } else
             return <VideoPage {...props}/>
+    }}/>
+
+    <Route exact path={routerGetters.findVideos.path(r)} render={props => {
+        if (get(props, ['staticContext', 'isPreRouting'])) {
+            const
+                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
+                action = findVideosActions.loadPageRequest(getSubPage(null, sort, page))
+
+            props.staticContext.saga = loadFindVideosPageFlow.bind(null, action)
+            props.staticContext.statusCodeResolver = status500(['app', 'findVideos', 'isFailed'])
+            return null
+        } else
+            return <FindVideos {...props}/>
     }}/>
 
     <Route render={props => {

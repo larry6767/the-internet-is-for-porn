@@ -132,7 +132,7 @@ const
                 code = g(matchedPageCode, 'code'),
 
                 withSubPageCode = includes(
-                    ['niche', 'allMovies', 'pornstar', 'video']
+                    ['niche', 'allMovies', 'pornstar', 'video', 'findVideos']
                         .map(x => g(currentApiLocale, 'pageCode', x, 'code')),
                     code
                 )

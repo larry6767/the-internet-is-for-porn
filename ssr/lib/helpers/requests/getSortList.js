@@ -7,6 +7,7 @@ const
         sort_LATEST: 'byDate',
         sort_LONGEST: 'byDuration',
         sort_POPULAR: 'byPopularity',
+        sort_RELEVANT: 'byPopularity',
     }),
 
     favorites = Object.freeze({

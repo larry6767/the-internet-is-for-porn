@@ -242,6 +242,24 @@ const
         return result
     },
 
+    getFindVideosMap = x => {
+        const
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS'))
+
+        return {
+            pageNumber: x.page.PAGE_NUMBER,
+            pageText: getPageText(x.page.PAGE_TEXT),
+            pagesCount: x.page.PAGES_COUNT,
+
+            sortList,
+            currentSort:
+                g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
+
+            itemsCount: x.page.ITEMS_PER_PAGE,
+            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
+        }
+    },
+
     getPageDataParamsModel = PropTypes.exact({
         url: PropTypes.string,
         options: PropTypes.shape({
@@ -352,6 +370,9 @@ export const getPageData = (siteLocales, localeCode) => async ({
 
             : pageCode === (x = localeBranch('video'), g(x, 'code'))
             ? [{url: urlFunc(g(x, 'url'))}, getVideoPageMap]
+
+            : pageCode === (x = localeBranch('findVideos'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url'))}, getFindVideosMap]
 
             : null
 
