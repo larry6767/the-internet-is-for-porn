@@ -26,7 +26,8 @@ import {
     getTagList,
     getTagListByLetters,
     getModelsList,
-    getSortList,
+    getOrderingSortList,
+    getFavoritesSortList,
     getFilteredVideoList,
     getPageText,
     getTagArchiveList,
@@ -64,7 +65,7 @@ const
 
     getAllMoviesMap = x => {
         const
-            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID),
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS')),
             tagArchiveListOlder = pick(x.page.TAG_ARCHIVE_OLDER, ['month', 'year']),
             tagArchiveListNewer = pick(x.page.TAG_ARCHIVE_NEWER, ['month', 'year'])
 
@@ -82,8 +83,10 @@ const
             tagArchiveListNewer:
                 Object.keys(tagArchiveListNewer).length ? tagArchiveListNewer : null,
 
-            sortList: sortList,
-            currentSort: sortList.length ? sortList.find(x => x.active).value : '',
+            sortList,
+            currentSort:
+                g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
+
             archiveFilms: getArchiveFilms(x.page.ACTIVE_NAV_TABS.tag_archive_gals),
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
@@ -92,7 +95,7 @@ const
 
     getNicheMap = x => {
         const
-            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID)
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS'))
 
         return {
             currentPage: 'all-niches',
@@ -110,8 +113,11 @@ const
                 x.page.TAG_ARCHIVE_NEWER,
                 ['month', 'year']
             ),
-            sortList: sortList,
-            currentSort: sortList.length ? sortList.find(x => x.active).value : '',
+
+            sortList,
+            currentSort:
+                g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
+
             archiveFilms: getArchiveFilms(x.page.ACTIVE_NAV_TABS.tag_archive_gals),
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
@@ -120,15 +126,18 @@ const
 
     getPornstarMap = x => {
         const
-            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID)
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS'))
 
         return {
             currentSubPage: x.page.TAG_URL_NAME,
             pageNumber: x.page.PAGE_NUMBER,
             pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
-            sortList: sortList,
-            currentSort: sortList.length ? sortList.find(x => x.active).value : '',
+
+            sortList,
+            currentSort:
+                g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
+
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
             modelsList: getModelsList(

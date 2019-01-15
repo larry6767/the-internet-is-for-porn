@@ -1,10 +1,12 @@
 import {handleActions} from 'redux-actions'
 import {fromJS, List, Map} from 'immutable'
+
+import {plainProvedGet as g} from '../../helpers'
 import actions from './actions'
 
 export default
     handleActions({
-        [actions.loadPageRequest]: (state, {payload}) => state.merge({
+        [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
@@ -17,14 +19,14 @@ export default
             tagList: List(),
             tagArchiveList: List(),
             sortList: List(),
-            currentSort: '',
+            currentSort: null,
             archiveFilms: fromJS(),
             tagArchiveListOlder: fromJS(),
             tagArchiveListNewer: fromJS(),
             itemsCount: 0,
             videoList: List(),
         }),
-        [actions.loadPageSuccess]: (state, {payload: {data, subPageForRequest}}) => state.merge({
+        [g(actions, 'loadPageSuccess')]: (state, {payload: {data, subPageForRequest}}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
@@ -37,14 +39,14 @@ export default
             tagList: List(fromJS(data.tagList)),
             tagArchiveList: List(fromJS(data.tagArchiveList)),
             sortList: List(fromJS(data.sortList)),
-            currentSort: data.currentSort,
+            currentSort: g(data, 'currentSort'),
             archiveFilms: fromJS(data.archiveFilms),
             tagArchiveListOlder: fromJS(data.tagArchiveListOlder),
             tagArchiveListNewer: fromJS(data.tagArchiveListNewer),
             itemsCount: data.itemsCount,
             videoList: List(fromJS(data.videoList)),
         }),
-        [actions.loadPageFailure]: state => state.merge({
+        [g(actions, 'loadPageFailure')]: state => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
@@ -56,14 +58,15 @@ export default
             tagList: List(),
             tagArchiveList: List(),
             sortList: List(),
-            currentSort: '',
+            currentSort: null,
             archiveFilms: fromJS(),
             tagArchiveListOlder: fromJS(),
             tagArchiveListNewer: fromJS(),
             itemsCount: 0,
             videoList: List(),
         }),
-        [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
+        [g(actions, 'setNewSort')]: (state, {payload}) =>
+            state.set('currentSort', g(payload, 'newSortValue')),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
@@ -115,7 +118,7 @@ export default
             }
             */
         ],
-        currentSort: '',
+        currentSort: null,
         archiveFilms: {
             /*
             {

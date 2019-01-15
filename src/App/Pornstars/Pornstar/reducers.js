@@ -1,10 +1,12 @@
 import {handleActions} from 'redux-actions'
 import {fromJS, List, OrderedMap, Map} from 'immutable'
+
+import {plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
 import actions from './actions'
 
 export default
     handleActions({
-        [actions.loadPageRequest]: (state, {payload}) => state.merge({
+        [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
@@ -15,32 +17,32 @@ export default
             pageText: Map(),
             pagesCount: 1,
             sortList: List(),
-            currentSort: '',
+            currentSort: null,
             itemsCount: 0,
             videoList: List(),
             modelsList: List(),
             modelInfo: List(),
             modelThumb: '',
         }),
-        [actions.loadPageSuccess]: (state, {payload: {data, subPageForRequest}}) => state.merge({
+        [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
             modelInfoIsOpen: false,
-            currentSubPage: data.currentSubPage,
-            lastSubPageForRequest: subPageForRequest,
-            pageNumber: data.pageNumber,
-            pageText: Map(fromJS(data.pageText)),
-            pagesCount: data.pagesCount,
-            sortList: List(fromJS(data.sortList)),
-            currentSort: data.currentSort,
-            itemsCount: data.itemsCount,
-            videoList: List(fromJS(data.videoList)),
-            modelsList: List(fromJS(data.modelsList)),
-            modelInfo: List(fromJS(data.modelInfo)),
-            modelThumb: data.modelThumb,
+            currentSubPage: g(payload, 'data', 'currentSubPage'),
+            lastSubPageForRequest: g(payload, 'subPageForRequest'),
+            pageNumber: g(payload, 'data', 'pageNumber'),
+            pageText: Map(fromJS(g(payload, 'data', 'pageText'))),
+            pagesCount: g(payload, 'data', 'pagesCount'),
+            sortList: List(fromJS(g(payload, 'data', 'sortList'))),
+            currentSort: g(payload, 'data', 'currentSort'),
+            itemsCount: g(payload, 'data', 'itemsCount'),
+            videoList: List(fromJS(g(payload, 'data', 'videoList'))),
+            modelsList: List(fromJS(g(payload, 'data', 'modelsList'))),
+            modelInfo: List(fromJS(g(payload, 'data', 'modelInfo'))),
+            modelThumb: g(payload, 'data', 'modelThumb'),
         }),
-        [actions.loadPageFailure]: state => state.merge({
+        [g(actions, 'loadPageFailure')]: state => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
@@ -50,16 +52,17 @@ export default
             pageText: OrderedMap(),
             pagesCount: 1,
             sortList: List(),
-            currentSort: '',
+            currentSort: null,
             itemsCount: 0,
             videoList: List(),
             modelsList: List(),
             modelInfo: List(),
             modelThumb: '',
         }),
-        [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
-        [actions.toggleModelInfo]: state =>
-             state.set('modelInfoIsOpen', !state.get('modelInfoIsOpen'))
+        [g(actions, 'setNewSort')]: (state, {payload}) =>
+            state.set('currentSort', g(payload, 'newSortValue')),
+        [g(actions, 'toggleModelInfo')]: state =>
+            state.set('modelInfoIsOpen', !ig(state, 'modelInfoIsOpen'))
     }, fromJS({
         isLoading: false,
         isLoaded: false,
@@ -89,7 +92,7 @@ export default
             }
             */
         ],
-        currentSort: '',
+        currentSort: null,
         itemsCount: 0,
         videoList: [
             /*

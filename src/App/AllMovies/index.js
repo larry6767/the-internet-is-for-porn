@@ -1,28 +1,17 @@
 import React from 'react'
+import {Record, Map, List, fromJS} from 'immutable'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
 import {withStyles} from '@material-ui/core'
-import {
-    CircularProgress,
-    Typography
-} from '@material-ui/core'
-import {
-    Record,
-    Map,
-    List,
-    fromJS,
-} from 'immutable'
-import {getSubPage} from '../helpers'
+import {CircularProgress, Typography} from '@material-ui/core'
+
+import {getSubPage, immutableProvedGet as ig, getRouterContext} from '../helpers'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import Lists from '../../generic/Lists'
 import VideoList from '../../generic/VideoList'
-import {
-    Page,
-    Content,
-    AllMoviesPageWrapper,
-} from './assets'
+import {Page, Content, AllMoviesPageWrapper} from './assets'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
@@ -42,7 +31,7 @@ const
         tagList: List(),
         tagArchiveList: List(),
         sortList: List(),
-        currentSort: '',
+        currentSort: null,
         archiveFilms: Map(),
         tagArchiveListOlder: fromJS(),
         tagArchiveListNewer: fromJS(),
@@ -52,7 +41,17 @@ const
         lastSubPage: '',
     }),
 
-    AllMovies = ({classes, currentBreakpoint, pageUrl, search, allMovies, chooseSort, isSSR}) => <Page>
+    AllMovies = ({
+        classes,
+        currentBreakpoint,
+        pageUrl,
+        search,
+        routerContext,
+        i18nOrdering,
+        allMovies,
+        chooseSort,
+        isSSR,
+    }) => <Page>
         { allMovies.get('isFailed')
             ? <ErrorContent/>
             : allMovies.get('isLoading')
@@ -77,6 +76,9 @@ const
                     <ControlBar
                         pageUrl={pageUrl}
                         search={search}
+                        routerContext={routerContext}
+                        i18nOrdering={i18nOrdering}
+
                         chooseSort={chooseSort}
                         isSSR={isSSR}
                         page={allMovies.get('currentPage')}
@@ -128,11 +130,13 @@ const
 export default compose(
     connect(
         state => ({
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            allMovies: AllMoviesRecord(state.getIn(['app', 'allMovies'])),
-            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
-            pageUrl: state.getIn(['router', 'location', 'pathname']),
-            search: state.getIn(['router', 'location', 'search']),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            allMovies: AllMoviesRecord(ig(state, 'app', 'allMovies')),
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            pageUrl: ig(state, 'router', 'location', 'pathname'),
+            search: ig(state, 'router', 'location', 'search'),
+            routerContext: getRouterContext(state),
+            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
         }),
         dispatch => ({
             loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),

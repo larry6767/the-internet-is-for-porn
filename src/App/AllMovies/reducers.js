@@ -38,13 +38,10 @@ const
             url: PropTypes.string,
         })),
         sortList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
-            active: PropTypes.bool,
-            value: PropTypes.string,
-
-            // TODO FIXME it's optional only because of lack of localized titles mapping
-            localText: PropTypes.string.isOptional,
+            isActive: PropTypes.bool,
+            code: PropTypes.string,
         })),
-        currentSort: PropTypes.string,
+        currentSort: PropTypes.string.isOptional, // may be `null`
         archiveFilms: ImmutablePropTypes.exact({
             current: PropTypes.number,
             monthForLink: PropTypes.string,
@@ -74,7 +71,7 @@ const
 
 export default
     provedHandleActions(model, {
-        [actions.loadPageRequest]: (state, {payload}) => state.merge({
+        [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
@@ -86,14 +83,14 @@ export default
             tagList: List(),
             tagArchiveList: List(),
             sortList: List(),
-            currentSort: '',
+            currentSort: null,
             archiveFilms: null,
             tagArchiveListOlder: null,
             tagArchiveListNewer: null,
             itemsCount: 0,
             videoList: List(),
         }),
-        [actions.loadPageSuccess]: (state, {payload: {data, subPageForRequest}}) => {
+        [g(actions, 'loadPageSuccess')]: (state, {payload: {data, subPageForRequest}}) => {
             const
                 archiveFilms = g(data, 'archiveFilms'),
                 tagArchiveListOlder = g(data, 'tagArchiveListOlder'),
@@ -111,7 +108,7 @@ export default
                 tagList: List(fromJS(g(data, 'tagList'))),
                 tagArchiveList: List(fromJS(g(data, 'tagArchiveList'))),
                 sortList: List(fromJS(g(data, 'sortList'))),
-                currentSort: data.currentSort,
+                currentSort: g(data, 'currentSort'),
                 archiveFilms: archiveFilms && Map(fromJS(archiveFilms)),
                 tagArchiveListOlder: tagArchiveListOlder && Map(fromJS(tagArchiveListOlder)),
                 tagArchiveListNewer: tagArchiveListNewer && Map(fromJS(tagArchiveListNewer)),
@@ -119,7 +116,7 @@ export default
                 videoList: List(fromJS(g(data, 'videoList'))),
             })
         },
-        [actions.loadPageFailure]: state => state.merge({
+        [g(actions, 'loadPageFailure')]: state => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
@@ -130,14 +127,15 @@ export default
             tagList: List(),
             tagArchiveList: List(),
             sortList: List(),
-            currentSort: '',
+            currentSort: null,
             archiveFilms: null,
             tagArchiveListOlder: null,
             tagArchiveListNewer: null,
             itemsCount: 0,
             videoList: List(),
         }),
-        [actions.setNewSort]: (state, {payload}) => state.set('currentSort', payload.newSortValue),
+        [g(actions, 'setNewSort')]: (state, {payload}) =>
+            state.set('currentSort', g(payload, 'newSortValue')),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
@@ -150,7 +148,7 @@ export default
         tagList: [],
         tagArchiveList: [],
         sortList: [],
-        currentSort: '',
+        currentSort: null,
         archiveFilms: null,
         tagArchiveListOlder: null,
         tagArchiveListNewer: null,
