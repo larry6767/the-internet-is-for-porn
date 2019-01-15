@@ -153,7 +153,9 @@ export default compose(
             suggestionsClearRequestHandler: () => dispatch(actions.setEmptySuggestions()),
             suggestionSelectedHandler: (change, event, {suggestion, method}) => {
                 if (method === 'enter')
-                change('searchKey', suggestion)
+                    change('searchKey', suggestion)
+
+                dispatch(actions.runSearch(suggestion))
             }
         })
     ),
