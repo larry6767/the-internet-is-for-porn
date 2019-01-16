@@ -34,6 +34,9 @@ const
                 byPopularity: {qsValue: 'popular'},
                 byRelevant: {qsValue: 'relevant'},
             },
+            pagination: {
+                qsKey: 'page',
+            },
         },
         deu: {
             routes: {
@@ -46,7 +49,7 @@ const
                 favorite: {section: 'favorisierten'}, // maybe "favorisierten-video"?
                 favoritePornstars: {section: 'favorisierten-models'},
                 video: {sectionPfx: 'video-'},
-                findVideos: {section: 'find-videos'},
+                findVideos: {section: 'find-videos'}, // TODO localize
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -63,6 +66,9 @@ const
                 byPopularity: {qsValue: 'popularität'},
                 byRelevant: {qsValue: 'ähnlich'},
             },
+            pagination: {
+                qsKey: 'seite',
+            },
         },
         ita: {
             routes: {
@@ -75,7 +81,7 @@ const
                 favorite: {section: 'preferiti'}, // maybe "filmati-preferiti"?
                 favoritePornstars: {section: 'pornostar-preferiti'},
                 video: {sectionPfx: 'film-'},
-                findVideos: {section: 'find-videos'},
+                findVideos: {section: 'find-videos'}, // TODO localize
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -91,6 +97,9 @@ const
                 byDuration: {qsValue: 'i-più-lunghi'},
                 byPopularity: {qsValue: 'popolari'},
                 byRelevant: {qsValue: 'сorrelati'},
+            },
+            pagination: {
+                qsKey: 'pagina',
             },
         },
         fra: { // TODO
@@ -121,6 +130,9 @@ const
                 byPopularity: {qsValue: ''},
                 byRelevant: {qsValue: ''},
             },
+            pagination: {
+                qsKey: '',
+            },
         },
         spa: { // TODO
             routes: {
@@ -149,6 +161,9 @@ const
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
                 byRelevant: {qsValue: ''},
+            },
+            pagination: {
+                qsKey: '',
             },
         },
         por: { // TODO
@@ -179,6 +194,9 @@ const
                 byPopularity: {qsValue: ''},
                 byRelevant: {qsValue: ''},
             },
+            pagination: {
+                qsKey: '',
+            },
         },
         swe: { // TODO
             routes: {
@@ -207,6 +225,9 @@ const
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
                 byRelevant: {qsValue: ''},
+            },
+            pagination: {
+                qsKey: '',
             },
         },
         nld: { // TODO
@@ -237,6 +258,9 @@ const
                 byPopularity: {qsValue: ''},
                 byRelevant: {qsValue: ''},
             },
+            pagination: {
+                qsKey: '',
+            },
         },
         fin: { // TODO
             routes: {
@@ -265,6 +289,9 @@ const
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
                 byRelevant: {qsValue: ''},
+            },
+            pagination: {
+                qsKey: '',
             },
         },
         rus: { // TODO
@@ -295,6 +322,9 @@ const
                 byPopularity: {qsValue: ''},
                 byRelevant: {qsValue: ''},
             },
+            pagination: {
+                qsKey: '',
+            },
         },
         tur: { // TODO
             routes: {
@@ -323,6 +353,9 @@ const
                 byDuration: {qsValue: ''},
                 byPopularity: {qsValue: ''},
                 byRelevant: {qsValue: ''},
+            },
+            pagination: {
+                qsKey: '',
             },
         },
     })

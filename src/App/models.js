@@ -39,6 +39,9 @@ const
                 byPopularity: exact({qsValue: PropTypes.string}),
                 byRelevant: exact({qsValue: PropTypes.string}),
             }),
+            pagination: exact({
+                qsKey: PropTypes.string,
+            }),
         })
     },
 
