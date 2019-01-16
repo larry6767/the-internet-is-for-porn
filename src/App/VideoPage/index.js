@@ -25,7 +25,7 @@ import {
     getSubPage,
 } from '../helpers'
 
-import {immutableI18nButtonsModel} from '../../App/models'
+import {immutableI18nButtonsModel} from '../models'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
 import ReportDialog from './ReportDialog'

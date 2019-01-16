@@ -110,6 +110,16 @@ const
         })
     },
 
+    i18nFooterModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            forParents: PropTypes.string,
+            disclaimer: PropTypes.string,
+        })
+    },
+
     i18nSearchModel = i18nSearchModelBuilder(false),
     immutableI18nSearchModel = i18nSearchModelBuilder(true),
 
@@ -125,6 +135,9 @@ const
     i18nButtonsModel = i18nButtonsModelBuilder(false),
     immutableI18nButtonsModel = i18nButtonsModelBuilder(true),
 
+    i18nFooterModel = i18nFooterModelBuilder(false),
+    immutableI18nFooterModel = i18nFooterModelBuilder(true),
+
     i18nModelBuilder = isImmutable => {
         const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
@@ -135,6 +148,7 @@ const
             allNiches: isImmutable ? immutableI18nAllNichesModel : i18nAllNichesModel,
             ordering: isImmutable ? immutableI18nOrderingModel : i18nOrderingModel,
             buttons: isImmutable ? immutableI18nButtonsModel : i18nButtonsModel,
+            footer: isImmutable ? immutableI18nFooterModel : i18nFooterModel,
         })
     }
 
@@ -144,6 +158,7 @@ export {
     i18nAllNichesModel, immutableI18nAllNichesModel,
     i18nOrderingModel, immutableI18nOrderingModel,
     i18nButtonsModel, immutableI18nButtonsModel,
+    i18nFooterModel, immutableI18nFooterModel,
 }
 
 export const
