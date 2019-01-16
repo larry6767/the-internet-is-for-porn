@@ -1,12 +1,14 @@
+// TODO: this page needs propTypes
 import React from 'react'
 import {Record, Map, List, fromJS} from 'immutable'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
-import {compose, lifecycle} from 'recompose'
+import {compose, lifecycle, setPropTypes} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
 
 import {getSubPage, immutableProvedGet as ig} from '../helpers'
+import {immutableI18nButtonsModel} from '../models'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import Lists from '../../generic/Lists'
@@ -47,6 +49,7 @@ const
         pageUrl,
         search,
         i18nOrdering,
+        i18nButtons,
         allMovies,
         chooseSort,
         isSSR,
@@ -76,6 +79,7 @@ const
                         pageUrl={pageUrl}
                         search={search}
                         i18nOrdering={i18nOrdering}
+                        i18nButtons={i18nButtons}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
                         page={allMovies.get('currentPage')}
@@ -133,6 +137,7 @@ export default compose(
             pageUrl: ig(state, 'router', 'location', 'pathname'),
             search: ig(state, 'router', 'location', 'search'),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
+            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
         }),
         dispatch => ({
             loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
@@ -151,5 +156,8 @@ export default compose(
             loadPageFlow(nextProps)
         },
     }),
-    withStyles(muiStyles)
+    withStyles(muiStyles),
+    setPropTypes({
+        i18nButtons: immutableI18nButtonsModel,
+    }),
 )(AllMovies)

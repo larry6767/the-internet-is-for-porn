@@ -1,6 +1,7 @@
+// TODO: this page needs propTypes
 import React from 'react'
 import {connect} from 'react-redux'
-import {compose, lifecycle} from 'recompose'
+import {compose, lifecycle, setPropTypes} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {
     CircularProgress,
@@ -11,6 +12,14 @@ import {
     Map,
     List,
 } from 'immutable'
+import {
+    getRouterContext,
+    immutableProvedGet as ig,
+} from '../helpers'
+import {
+    immutableI18nButtonsModel,
+    routerContextModel
+} from '../models'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
@@ -35,8 +44,8 @@ const
     }),
 
     Favorite = ({
-        classes, pageUrl, search,
-        favorite, isSSR,
+        classes, isSSR, routerContext, i18nButtons,
+        favorite, pageUrl, search,
     }) => <Page>
         { favorite.get('isFailed')
             ? <ErrorContent/>
@@ -58,9 +67,11 @@ const
                         }
                     </Typography>
                     <ControlBar
+                        isSSR={isSSR}
+                        routerContext={routerContext}
+                        i18nButtons={i18nButtons}
                         pageUrl={pageUrl}
                         search={search}
-                        isSSR={isSSR}
                         pagesCount={favorite.get('pagesCount')}
                         pageNumber={favorite.get('pageNumber')}
                         itemsCount={favorite.get('itemsCount')}
@@ -77,8 +88,10 @@ const
 export default compose(
     connect(
         state => ({
-            favorite: FavoriteRecord(state.getIn(['app', 'favorite'])),
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
+            routerContext: getRouterContext(state),
+            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+            favorite: FavoriteRecord(state.getIn(['app', 'favorite'])),
             pageUrl: state.getIn(['router', 'location', 'pathname']),
             search: state.getIn(['router', 'location', 'search']),
         }),
@@ -93,5 +106,9 @@ export default compose(
             }
         }
     }),
-    withStyles(muiStyles)
+    withStyles(muiStyles),
+    setPropTypes({
+        routerContext: routerContextModel,
+        i18nButtons: immutableI18nButtonsModel,
+    }),
 )(Favorite)
