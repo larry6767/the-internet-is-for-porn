@@ -2,6 +2,7 @@ import queryString from 'query-string'
 import React, {Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {compose, setPropTypes} from 'recompose'
+import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 
 import {
@@ -13,13 +14,19 @@ import {
 } from '@material-ui/core'
 
 import {
+    getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
     PropTypes,
     ImmutablePropTypes,
 } from '../../App/helpers'
 
-import {immutableI18nOrderingModel} from '../../App/models'
+import {routerGetters} from '../../router-builder'
+import {
+    immutableI18nOrderingModel,
+    immutableI18nButtonsModel,
+    routerContextModel
+} from '../../App/models'
 import {muiStyles} from './assets/muiStyles'
 
 import {
@@ -108,6 +115,7 @@ const
         pageUrl,
         linkBuilder,
         i18nOrdering,
+        i18nButtons,
 
         isSSR,
         chooseSort,
@@ -123,7 +131,7 @@ const
             ? <WrappedButton
                 classes={classes}
                 link={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
-                text="Archive films"
+                text={ig(i18nButtons, 'archive')}
             /> : null
         }
         <SortWrapper>
@@ -155,6 +163,7 @@ const
 
     ArchiveControlBar = ({
         classes,
+        i18nButtons,
         page,
         subPage,
         buttonsElements,
@@ -166,7 +175,7 @@ const
                 classes={classes}
                 link={`/${page}${subPage ? `/${subPage}` : ''}/archive/${
                     ig(tagArchiveListOlder, 'year')}-${ig(tagArchiveListOlder, 'month')}`}
-                text="previous month"
+                text={ig(i18nButtons, 'previousMonth')}
             /> : null
         }
         <ButtonsList>
@@ -177,7 +186,7 @@ const
                 classes={classes}
                 link={`/${page}${subPage ? `/${subPage}` : ''}/archive/${
                     ig(tagArchiveListNewer, 'year')}-${ig(tagArchiveListNewer, 'month')}`}
-                text="next month"
+                text={ig(i18nButtons, 'nextMonth')}
             />
             : null
         }
@@ -185,11 +194,11 @@ const
         <WrappedButton
             classes={classes}
             link={`/${page}${subPage ? `/${subPage}` : ''}`}
-            text="Top Films"
+            text={ig(i18nButtons, 'topFilms')}
         />
     </Fragment>,
 
-    FavoriteControlBar = ({classes, buttonsElements, favoriteButtons}) => <Fragment>
+    FavoriteControlBar = ({classes, buttonsElements, i18nButtons, routerContext}) => <Fragment>
         {buttonsElements.length
             ? <ButtonsList>
             {buttonsElements}
@@ -197,14 +206,14 @@ const
 
         <WrappedButton
             classes={classes}
-            link={'/favorite'}
-            text={'Films'}
+            link={g(routerGetters, 'favorite', 'link')(routerContext)}
+            text={ig(i18nButtons, 'favoriteMovies')}
         />
 
         <WrappedButton
             classes={classes}
-            link={'/favorite-porn-stars'}
-            text={'Pornstars'}
+            link={g(routerGetters, 'favoritePornstars', 'link')(routerContext)}
+            text={ig(i18nButtons, 'favoritePornstars')}
         />
     </Fragment>,
 
@@ -214,13 +223,15 @@ const
 
     ControlBar = ({
         classes,
+        isSSR,
+        routerContext,
+        i18nButtons,
 
         pageUrl, // TODO get rid of it
         search, // TODO get rid of it
         linkBuilder,
         i18nOrdering,
 
-        isSSR,
         chooseSort,
         page,
         subPage,
@@ -262,6 +273,7 @@ const
                 {archiveFilms && ig(archiveFilms, 'current') !== 0
                     ? <ArchiveControlBar
                         classes={classes}
+                        i18nButtons={i18nButtons}
                         page={page}
                         subPage={subPage}
                         buttonsElements={buttonsElements}
@@ -271,6 +283,8 @@ const
                     : favoriteButtons
                     ? <FavoriteControlBar
                         classes={classes}
+                        routerContext={routerContext}
+                        i18nButtons={i18nButtons}
                         buttonsElements={buttonsElements}
                     />
                     : <NicheControlBar
@@ -279,6 +293,7 @@ const
                         pageUrl={pageUrl}
                         linkBuilder={linkBuilder}
                         i18nOrdering={i18nOrdering}
+                        i18nButtons={i18nButtons}
 
                         isSSR={isSSR}
                         chooseSort={chooseSort}
@@ -297,10 +312,18 @@ const
     }
 
 export default compose(
+    connect(
+        state => ({
+            routerContext: getRouterContext(state),
+            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+        })
+    ),
     withStyles(muiStyles),
     setPropTypes({
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
+        routerContext: routerContextModel,
+        i18nButtons: immutableI18nButtonsModel,
 
         pageUrl: PropTypes.string, // TODO get rid of it
         search: PropTypes.string.isOptional, // TODO get rid of it

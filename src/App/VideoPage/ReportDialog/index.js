@@ -23,6 +23,7 @@ import {
     TableCell,
     CircularProgress,
 } from '@material-ui/core'
+import {immutableProvedGet as ig} from '../../helpers'
 import {
     VideoBlock,
     Thumb,
@@ -86,6 +87,7 @@ const
 
     ReportDialog = ({
         classes,
+        i18nButtons,
         data,
         toggleReportDialogHandler,
         pageUrl,
@@ -195,7 +197,7 @@ const
                         disabled={data.get('reportIsSending')}
                         color="primary"
                     >
-                        Cancel
+                        {ig(i18nButtons, 'cancel')}
                     </Button>
 
                     {!data.get('reportIsSent')
@@ -205,7 +207,7 @@ const
                                 type="submit"
                                 color="primary"
                             >
-                                Report
+                                {ig(i18nButtons, 'report')}
                             </Button>
                             {data.get('reportIsSending')
                                 ? <CircularProgress size={24} className={classes.buttonProgress}/>

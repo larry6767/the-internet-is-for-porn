@@ -91,6 +91,25 @@ const
         })
     },
 
+    i18nButtonsModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            report: PropTypes.string,
+            favoriteMovies: PropTypes.string,
+            favoritePornstars: PropTypes.string,
+            archive: PropTypes.string,
+            previousMonth: PropTypes.string,
+            nextMonth: PropTypes.string,
+            topFilms: PropTypes.string,
+            backToMainPage: PropTypes.string,
+            addToFavorite: PropTypes.string,
+            removeFromFavorite: PropTypes.string,
+            cancel: PropTypes.string,
+        })
+    },
+
     i18nSearchModel = i18nSearchModelBuilder(false),
     immutableI18nSearchModel = i18nSearchModelBuilder(true),
 
@@ -103,6 +122,9 @@ const
     i18nOrderingModel = i18nOrderingModelBuilder(false),
     immutableI18nOrderingModel = i18nOrderingModelBuilder(true),
 
+    i18nButtonsModel = i18nButtonsModelBuilder(false),
+    immutableI18nButtonsModel = i18nButtonsModelBuilder(true),
+
     i18nModelBuilder = isImmutable => {
         const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
@@ -112,6 +134,7 @@ const
             navigation: isImmutable ? immutableI18nNavigationModel : i18nNavigationModel,
             allNiches: isImmutable ? immutableI18nAllNichesModel : i18nAllNichesModel,
             ordering: isImmutable ? immutableI18nOrderingModel : i18nOrderingModel,
+            buttons: isImmutable ? immutableI18nButtonsModel : i18nButtonsModel,
         })
     }
 
@@ -120,6 +143,7 @@ export {
     i18nNavigationModel, immutableI18nNavigationModel,
     i18nAllNichesModel, immutableI18nAllNichesModel,
     i18nOrderingModel, immutableI18nOrderingModel,
+    i18nButtonsModel, immutableI18nButtonsModel,
 }
 
 export const
