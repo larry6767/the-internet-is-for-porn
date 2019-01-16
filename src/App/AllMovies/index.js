@@ -6,7 +6,7 @@ import {compose, lifecycle} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
 
-import {getSubPage, immutableProvedGet as ig, getRouterContext} from '../helpers'
+import {getSubPage, immutableProvedGet as ig} from '../helpers'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import Lists from '../../generic/Lists'
@@ -46,7 +46,6 @@ const
         currentBreakpoint,
         pageUrl,
         search,
-        routerContext,
         i18nOrdering,
         allMovies,
         chooseSort,
@@ -76,9 +75,7 @@ const
                     <ControlBar
                         pageUrl={pageUrl}
                         search={search}
-                        routerContext={routerContext}
                         i18nOrdering={i18nOrdering}
-
                         chooseSort={chooseSort}
                         isSSR={isSSR}
                         page={allMovies.get('currentPage')}
@@ -135,7 +132,6 @@ export default compose(
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             pageUrl: ig(state, 'router', 'location', 'pathname'),
             search: ig(state, 'router', 'location', 'search'),
-            routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
         }),
         dispatch => ({

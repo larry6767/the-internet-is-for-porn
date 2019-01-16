@@ -326,6 +326,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                 {match: {params}, staticContext: x} = props,
                 action = nicheActions.loadPageRequest(getSubPage(
                     params.child,
+                    // TODO backward mapping to "eng" values for ordering
                     get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
                     get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
                     [g(params, 0), g(params, 1)]

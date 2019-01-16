@@ -5,7 +5,7 @@ import {compose, lifecycle} from 'recompose'
 import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List} from 'immutable'
 
-import {getSubPage, immutableProvedGet as ig, getRouterContext} from '../../helpers'
+import {getSubPage, immutableProvedGet as ig} from '../../helpers'
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
@@ -37,7 +37,7 @@ const
     }),
 
     Pornstar = ({
-        currentBreakpoint, pageUrl, search, routerContext, i18nOrdering, pornstar, chooseSort,
+        currentBreakpoint, pageUrl, search, i18nOrdering, pornstar, chooseSort,
         isSSR, modelInfoHandler, modelInfoIsOpen
     }) => <Page>
         { pornstar.get('isFailed')
@@ -65,7 +65,6 @@ const
                     <ControlBar
                         pageUrl={pageUrl}
                         search={search}
-                        routerContext={routerContext}
                         i18nOrdering={i18nOrdering}
 
                         chooseSort={chooseSort}
@@ -124,7 +123,6 @@ export default compose(
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             pageUrl: ig(state, 'router', 'location', 'pathname'),
             search: ig(state, 'router', 'location', 'search'),
-            routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             modelInfoIsOpen: ig(state, 'app', 'pornstars', 'pornstar', 'modelInfoIsOpen'),
         }),

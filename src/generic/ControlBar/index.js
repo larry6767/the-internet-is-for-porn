@@ -19,11 +19,7 @@ import {
     ImmutablePropTypes,
 } from '../../App/helpers'
 
-import {
-    immutableI18nOrderingModel,
-    routerContextModel,
-} from '../../App/models'
-
+import {immutableI18nOrderingModel} from '../../App/models'
 import {muiStyles} from './assets/muiStyles'
 
 import {
@@ -44,29 +40,19 @@ const
 
     SortSelectMaterial = setPropTypes({
         classes: PropTypes.shape({selectRoot: PropTypes.string}),
-
-        search: PropTypes.string, // TODO get rid of it
-        routerContext: routerContextModel,
         i18nOrdering: immutableI18nOrderingModel,
-
         sortList: sortListModel,
         chooseSort: PropTypes.func,
         currentSort: PropTypes.string.isOptional, // could be `null`
-    })(({classes, search, i18nOrdering, sortList, chooseSort, currentSort}) => <Select
+    })(({classes, i18nOrdering, sortList, chooseSort, currentSort}) => <Select
         classes={{
             select: g(classes, 'selectRoot'),
         }}
-        value={currentSort}
+        value={currentSort || ''}
         input={
             <OutlinedInput
                 onChange={event => {
-                    const
-                        parsedQS = queryString.parse(search),
-                        newSortValue = event.target.value
-
-                    parsedQS.sort = newSortValue
-                    // TODO FIXME
-                    chooseSort(newSortValue, `?${queryString.stringify(parsedQS)}`)
+                    chooseSort(event.target.value)
                 }}
                 labelWidth={0}
             />
@@ -81,26 +67,19 @@ const
 
     SortSelectInlined = setPropTypes({
         sortList: sortListModel,
-
-        pageUrl: PropTypes.string, // TODO get rid of it
-        search: PropTypes.string, // TODO get rid of it
-        routerContext: routerContextModel,
+        linkBuilder: PropTypes.func,
         i18nOrdering: immutableI18nOrderingModel,
-    })(({sortList, pageUrl, search, routerContext, i18nOrdering}) => <InlinedSelectionWrap>
+    })(({sortList, linkBuilder, i18nOrdering}) => <InlinedSelectionWrap>
         <InlinedSelectionList>
-            {sortList.map(x => {
-                const parsedQS = queryString.parse(search)
-                parsedQS.sort = ig(x, 'code')
-                const link = `${pageUrl}?${queryString.stringify(parsedQS)}`
-
-                return <InlinedSelectionItem
+            {sortList.map(x =>
+                <InlinedSelectionItem
                     key={ig(x, 'code')}
-                    href={link}
+                    href={linkBuilder({ordering: ig(x, 'code')})}
                     isActive={ig(x, 'isActive')}
                 >
                     {ig(i18nOrdering, ig(x, 'code'))}
                 </InlinedSelectionItem>
-            })}
+            )}
         </InlinedSelectionList>
     </InlinedSelectionWrap>),
 
@@ -110,13 +89,13 @@ const
         text
     }) => <Link
         to={link}
-        className={classes.link}
+        className={g(classes, 'link')}
     >
         <Button
             variant="outlined"
             color="primary"
             classes={{
-                root: classes.buttonRoot
+                root: g(classes, 'buttonRoot'),
             }}
         >
             {text}
@@ -127,8 +106,7 @@ const
         classes,
 
         pageUrl,
-        search,
-        routerContext,
+        linkBuilder,
         i18nOrdering,
 
         isSSR,
@@ -153,7 +131,7 @@ const
                 variant="body1"
                 gutterBottom
                 classes={{
-                    root: classes.typographyRoot
+                    root: g(classes, 'typographyRoot')
                 }}
             >
                 {`${ig(i18nOrdering, 'label')}:`}
@@ -161,20 +139,13 @@ const
             {isSSR
                 ? <SortSelectInlined
                     sortList={sortList}
-
-                    pageUrl={pageUrl}
-                    search={search}
-                    routerContext={routerContext}
+                    linkBuilder={linkBuilder}
                     i18nOrdering={i18nOrdering}
                 />
                 : <SortSelectMaterial
                     classes={classes}
-                    sortList={sortList}
-
-                    search={search}
-                    routerContext={routerContext}
                     i18nOrdering={i18nOrdering}
-
+                    sortList={sortList}
                     chooseSort={chooseSort}
                     currentSort={currentSort}
                 />
@@ -244,9 +215,9 @@ const
     ControlBar = ({
         classes,
 
-        pageUrl,
+        pageUrl, // TODO get rid of it
         search, // TODO get rid of it
-        routerContext,
+        linkBuilder,
         i18nOrdering,
 
         isSSR,
@@ -273,11 +244,11 @@ const
                 return <Link
                     key={idx + 1}
                     to={link}
-                    className={classes.paginationLink}
+                    className={g(classes, 'paginationLink')}
                 >
                     <Button
                         classes={{
-                            root: classes.paginationButtonRoot
+                            root: g(classes, 'paginationButtonRoot'),
                         }}
                         variant={(idx + 1 === pageNumber) ? 'contained' : 'outlined'}
                         color="primary"
@@ -288,7 +259,7 @@ const
 
         return <Wrapper>
             <ControlButtons>
-                {archiveFilms && archiveFilms.get('current') !== 0
+                {archiveFilms && ig(archiveFilms, 'current') !== 0
                     ? <ArchiveControlBar
                         classes={classes}
                         page={page}
@@ -306,8 +277,7 @@ const
                         classes={classes}
 
                         pageUrl={pageUrl}
-                        search={search}
-                        routerContext={routerContext}
+                        linkBuilder={linkBuilder}
                         i18nOrdering={i18nOrdering}
 
                         isSSR={isSSR}
@@ -333,8 +303,8 @@ export default compose(
         isSSR: PropTypes.bool,
 
         pageUrl: PropTypes.string, // TODO get rid of it
-        search: PropTypes.string, // TODO get rid of it
-        routerContext: routerContextModel.isOptional,
+        search: PropTypes.string.isOptional, // TODO get rid of it
+        linkBuilder: PropTypes.func,
         i18nOrdering: immutableI18nOrderingModel.isOptional,
 
         chooseSort: PropTypes.func.isOptional,

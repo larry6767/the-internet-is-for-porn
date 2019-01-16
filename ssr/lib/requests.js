@@ -66,22 +66,26 @@ const
     getAllMoviesMap = x => {
         const
             sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS')),
-            tagArchiveListOlder = pick(x.page.TAG_ARCHIVE_OLDER, ['month', 'year']),
-            tagArchiveListNewer = pick(x.page.TAG_ARCHIVE_NEWER, ['month', 'year'])
+            tagArchiveListOlder = pick(g(x, 'page').TAG_ARCHIVE_OLDER, ['month', 'year']),
+            tagArchiveListNewer = pick(g(x, 'page').TAG_ARCHIVE_NEWER, ['month', 'year'])
 
         return {
             currentPage: x.page.TAG_URL_NAME,
             pageNumber: x.page.PAGE_NUMBER,
-            pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
+            pageText: getPageText(x.page.PAGE_TEXT),
             tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
             tagArchiveList: getTagArchiveList(x.page.TAG_ARCHIVE_LIST_FULL, x.page.MONTHS_NAMES),
 
             tagArchiveListOlder:
-                Object.keys(tagArchiveListOlder).length ? tagArchiveListOlder : null,
+                tagArchiveListOlder && Object.keys(tagArchiveListOlder).length
+                    ? tagArchiveListOlder
+                    : null,
 
             tagArchiveListNewer:
-                Object.keys(tagArchiveListNewer).length ? tagArchiveListNewer : null,
+                tagArchiveListNewer && Object.keys(tagArchiveListNewer).length
+                    ? tagArchiveListNewer
+                    : null,
 
             sortList,
             currentSort:
@@ -95,32 +99,44 @@ const
 
     getNicheMap = x => {
         const
-            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS'))
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS')),
+            tagArchiveListOlder = pick(g(x, 'page').TAG_ARCHIVE_OLDER, ['month', 'year']),
+            tagArchiveListNewer = pick(g(x, 'page').TAG_ARCHIVE_NEWER, ['month', 'year'])
 
         return {
             currentPage: 'all-niches',
-            currentSubPage: x.page.TAG_URL_NAME,
-            pageNumber: x.page.PAGE_NUMBER,
-            pageText: getPageText(x.page.PAGE_TEXT),
-            pagesCount: x.page.PAGES_COUNT,
-            tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
-            tagArchiveList: getTagArchiveList(x.page.TAG_ARCHIVE_LIST_FULL, x.page.MONTHS_NAMES),
-            tagArchiveListOlder: pick(
-                x.page.TAG_ARCHIVE_OLDER,
-                ['month', 'year']
+            currentSubPage: g(x, 'page', 'TAG_URL_NAME'),
+            pageNumber: g(x, 'page', 'PAGE_NUMBER'),
+            pagesCount: g(x, 'page', 'PAGES_COUNT'),
+            pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
+            tagList: getTagListByLetters(g(x, 'page', 'TAGS_BY_LETTERS', 'letters')),
+
+            tagArchiveList: getTagArchiveList(
+                g(x, 'page', 'TAG_ARCHIVE_LIST_FULL'),
+                g(x, 'page', 'MONTHS_NAMES')
             ),
-            tagArchiveListNewer: pick(
-                x.page.TAG_ARCHIVE_NEWER,
-                ['month', 'year']
-            ),
+
+            tagArchiveListOlder:
+                tagArchiveListOlder && Object.keys(tagArchiveListOlder).length
+                    ? tagArchiveListOlder
+                    : null,
+
+            tagArchiveListNewer:
+                tagArchiveListNewer && Object.keys(tagArchiveListNewer).length
+                    ? tagArchiveListNewer
+                    : null,
 
             sortList,
             currentSort:
                 g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
 
-            archiveFilms: getArchiveFilms(x.page.ACTIVE_NAV_TABS.tag_archive_gals),
-            itemsCount: x.page.ITEMS_PER_PAGE,
-            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
+            archiveFilms: getArchiveFilms(g(x, 'page', 'ACTIVE_NAV_TABS', 'tag_archive_gals')),
+            itemsCount: g(x, 'page', 'ITEMS_PER_PAGE'),
+
+            videoList: getFilteredVideoList(
+                g(x, 'page', 'GALS_INFO', 'ids'),
+                g(x, 'page', 'GALS_INFO', 'items')
+            ),
         }
     },
 

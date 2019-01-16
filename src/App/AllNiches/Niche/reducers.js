@@ -1,11 +1,92 @@
-import {handleActions} from 'redux-actions'
 import {fromJS, List, Map} from 'immutable'
 
-import {plainProvedGet as g} from '../../helpers'
+import {
+    ImmutablePropTypes,
+    PropTypes,
+    provedHandleActions,
+    plainProvedGet as g,
+} from '../../helpers'
+
+import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
 import actions from './actions'
 
+const
+    stateModel = ImmutablePropTypes.exact({
+        isLoading: PropTypes.bool,
+        isLoaded: PropTypes.bool,
+        isFailed: PropTypes.bool,
+
+        currentPage: PropTypes.string,
+        currentSubPage: PropTypes.string,
+        lastSubPageForRequest: PropTypes.string,
+
+        pageNumber: PropTypes.number,
+        pagesCount: PropTypes.number,
+
+        pageText: ImmutablePropTypes.exact({
+            description: PropTypes.string,
+            headerDescription: PropTypes.string,
+            headerTitle: PropTypes.string.isOptional,
+            keywords: PropTypes.string,
+            listHeader: PropTypes.string.isOptional,
+            listHeaderEmpty: PropTypes.string.isOptional,
+            title: PropTypes.string,
+            galleryTitle: PropTypes.string.isOptional,
+        }),
+
+        tagList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
+            id: PropTypes.number,
+            name: PropTypes.string,
+            subPage: PropTypes.string,
+            itemsCount: PropTypes.number,
+        })),
+
+        tagArchiveList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
+            archiveDate: PropTypes.number,
+            year: PropTypes.number,
+            month: PropTypes.string,
+            monthNumber: PropTypes.number,
+            itemsCount: PropTypes.number,
+            url: PropTypes.string,
+        })),
+
+        sortList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
+            isActive: PropTypes.bool,
+            code: PropTypes.string,
+        })),
+
+        currentSort: PropTypes.string.isOptional, // may be `null`
+
+        archiveFilms: ImmutablePropTypes.exact({
+            current: PropTypes.number,
+            monthForLink: PropTypes.string,
+        }).isOptional,
+        tagArchiveListOlder: ImmutablePropTypes.exact({
+            month: PropTypes.string,
+            year: PropTypes.string,
+        }).isOptional,
+        tagArchiveListNewer: ImmutablePropTypes.exact({
+            month: PropTypes.string,
+            year: PropTypes.string,
+        }).isOptional,
+
+        itemsCount: PropTypes.number,
+        videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
+    }),
+
+    emptyPageText = fromJS({
+        description: '',
+        headerDescription: '',
+        headerTitle: null,
+        keywords: '',
+        listHeader: null,
+        listHeaderEmpty: null,
+        title: '',
+        galleryTitle: null,
+    })
+
 export default
-    handleActions({
+    provedHandleActions(stateModel, {
         [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
@@ -14,38 +95,45 @@ export default
             currentSubPage: '',
             lastSubPageForRequest: payload,
             pageNumber: 1,
-            pageText: Map(),
             pagesCount: 1,
+            pageText: emptyPageText,
             tagList: List(),
             tagArchiveList: List(),
             sortList: List(),
             currentSort: null,
-            archiveFilms: fromJS(),
-            tagArchiveListOlder: fromJS(),
-            tagArchiveListNewer: fromJS(),
+            archiveFilms: null,
+            tagArchiveListOlder: null,
+            tagArchiveListNewer: null,
             itemsCount: 0,
             videoList: List(),
         }),
-        [g(actions, 'loadPageSuccess')]: (state, {payload: {data, subPageForRequest}}) => state.merge({
-            isLoading: false,
-            isLoaded: true,
-            isFailed: false,
-            currentPage: data.currentPage,
-            currentSubPage: data.currentSubPage,
-            lastSubPageForRequest: subPageForRequest,
-            pageNumber: data.pageNumber,
-            pageText: Map(fromJS(data.pageText)),
-            pagesCount: data.pagesCount,
-            tagList: List(fromJS(data.tagList)),
-            tagArchiveList: List(fromJS(data.tagArchiveList)),
-            sortList: List(fromJS(data.sortList)),
-            currentSort: g(data, 'currentSort'),
-            archiveFilms: fromJS(data.archiveFilms),
-            tagArchiveListOlder: fromJS(data.tagArchiveListOlder),
-            tagArchiveListNewer: fromJS(data.tagArchiveListNewer),
-            itemsCount: data.itemsCount,
-            videoList: List(fromJS(data.videoList)),
-        }),
+        [g(actions, 'loadPageSuccess')]: (state, {payload}) => {
+            const
+                archiveFilms = g(payload, 'data', 'archiveFilms'),
+                tagArchiveListOlder = g(payload, 'data', 'tagArchiveListOlder'),
+                tagArchiveListNewer = g(payload, 'data', 'tagArchiveListNewer')
+
+            return state.merge({
+                isLoading: false,
+                isLoaded: true,
+                isFailed: false,
+                currentPage: g(payload, 'data', 'currentPage'),
+                currentSubPage: g(payload, 'data', 'currentSubPage'),
+                lastSubPageForRequest: g(payload, 'subPageForRequest'),
+                pageNumber: g(payload, 'data', 'pageNumber'),
+                pagesCount: g(payload, 'data', 'pagesCount'),
+                pageText: Map(fromJS(g(payload, 'data', 'pageText'))),
+                tagList: List(fromJS(g(payload, 'data', 'tagList'))),
+                tagArchiveList: List(fromJS(g(payload, 'data', 'tagArchiveList'))),
+                sortList: List(fromJS(g(payload, 'data', 'sortList'))),
+                currentSort: g(payload, 'data', 'currentSort'),
+                archiveFilms: archiveFilms && Map(fromJS(archiveFilms)),
+                tagArchiveListOlder: tagArchiveListOlder && Map(fromJS(tagArchiveListOlder)),
+                tagArchiveListNewer: tagArchiveListNewer && Map(fromJS(tagArchiveListNewer)),
+                itemsCount: g(payload, 'data', 'itemsCount'),
+                videoList: List(fromJS(g(payload, 'data', 'videoList'))),
+            })
+        },
         [g(actions, 'loadPageFailure')]: state => state.merge({
             isLoading: false,
             isLoaded: false,
@@ -53,15 +141,15 @@ export default
             currentPage: '',
             currentSubPage: '',
             pageNumber: 1,
-            pageText: Map(),
             pagesCount: 1,
+            pageText: emptyPageText,
             tagList: List(),
             tagArchiveList: List(),
             sortList: List(),
             currentSort: null,
-            archiveFilms: fromJS(),
-            tagArchiveListOlder: fromJS(),
-            tagArchiveListNewer: fromJS(),
+            archiveFilms: null,
+            tagArchiveListOlder: null,
+            tagArchiveListNewer: null,
             itemsCount: 0,
             videoList: List(),
         }),
@@ -75,87 +163,15 @@ export default
         currentSubPage: '',
         lastSubPageForRequest: '',
         pageNumber: 1,
-        pageText: {
-            /*
-            description: '',
-            headerDescription: '',
-            headerTitle: '',
-            keywords: '',
-            listHeader: '',
-            listHeaderEmpty: '',
-            title: '',
-            */
-        },
         pagesCount: 1,
-        tagList: [
-            /*
-            {
-                id: 0,
-                name: '',
-                subPage: '',
-                itemsCount: 0,
-            }
-            */
-        ],
-        tagArchiveList: [
-            /*
-            {
-                archiveDate: 0,
-                year: 0,
-                month: '',
-                monthNumber: 0,
-                itemsCount: 0,
-                url: '',
-            }
-            */
-        ],
-        sortList: [
-            /*
-            {
-                active: false,
-                value: '',
-                localText: '',
-            }
-            */
-        ],
+        pageText: emptyPageText,
+        tagList: [],
+        tagArchiveList: [],
+        sortList: [],
         currentSort: null,
-        archiveFilms: {
-            /*
-            {
-                active: false,
-                url: '',
-            }
-            */
-        },
-        tagArchiveListOlder: {
-            /*
-            {
-                month: '',
-                year: '',
-            }
-            */
-        },
-        tagArchiveListNewer: {
-            /*
-            {
-                month: '',
-                year: '',
-            }
-            */
-        },
+        archiveFilms: null,
+        tagArchiveListOlder: null,
+        tagArchiveListNewer: null,
         itemsCount: 0,
-        videoList: [
-            /*
-            {
-                id: 0,
-                thumb,
-                title: '',
-                sponsorId: 0,
-                tags: '',
-                tagsShort: '',
-                favorite: 0,
-                duration: 0,
-            }
-            */
-        ],
+        videoList: [],
     }))
