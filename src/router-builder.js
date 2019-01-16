@@ -1,4 +1,4 @@
-import {get} from 'lodash'
+import {get, omit} from 'lodash'
 import React from 'react'
 import {Route, Switch, Redirect} from 'react-router-dom'
 import queryString from 'query-string'
@@ -8,6 +8,7 @@ import status500 from './App/helpers/status500BranchResolver'
 
 import {
     getSubPage,
+    plainProvedGet as g,
     immutableProvedGet as ig,
     PropTypes,
     assertPropTypes,
@@ -54,6 +55,52 @@ import {loadFindVideosPageFlow} from './App/FindVideos/sagas'
 
 import NotFound from './App/NotFound'
 
+const
+    getQs = r => queryString.parse(ig(r, 'location', 'search')),
+    renderQs = qs => g(Object.keys(qs), 'length') > 0 ? '?' + queryString.stringify(qs) : '',
+
+    orderingAndPaginationQsParamsModel = PropTypes.exact({
+        ordering: PropTypes.string.isOptional,
+        pagination: PropTypes.number.isOptional,
+    }),
+
+    orderingAndPaginationQs = (r, qsParams) => {
+        if (process.env.NODE_ENV !== 'production')
+            assertPropTypes(
+                orderingAndPaginationQsParamsModel,
+                qsParams,
+                'orderingAndPaginationQs',
+                'qsParams'
+            )
+
+        const
+            qs = getQs(r)
+
+        if (qsParams.hasOwnProperty('ordering')) {
+            const
+                ordering = g(qsParams, 'ordering'),
+                qsKey = ig(r, 'router', 'ordering', 'qsKey')
+
+            if (ordering === null) // `null` means we need to reset ordering if it's set
+                omit(qs, qsKey)
+            else
+                qs[qsKey] = ig(r, 'router', 'ordering', ordering, 'qsValue')
+        }
+
+        if (qsParams.hasOwnProperty('pagination')) {
+            const
+                pagination = g(qsParams, 'pagination'),
+                qsKey = ig(r, 'router', 'pagination', 'qsKey')
+
+            if (pagination === null) // `null` means we need to reset pagination if it's set
+                omit(qs, qsKey)
+            else
+                qs[qsKey] = ig(r, 'router', 'pagination', pagination, 'qsValue')
+        }
+
+        return qs
+    }
+
 export const
     // The `r` argument is this store branch: `app.locale.router`.
     routerGetters = Object.freeze({
@@ -63,71 +110,152 @@ export const
         }),
 
         allNiches: Object.freeze({
-            path: r => `/${ig(r, 'router', 'routes', 'allNiches', 'section')}`,
-            link: r => `/${ig(r, 'router', 'routes', 'allNiches', 'section')}`,
+            path: r => {
+                const allNiches = ig(r, 'router', 'routes', 'allNiches', 'section')
+                return `/${allNiches}`
+            },
+            link: r => {
+                const allNiches = ig(r, 'router', 'routes', 'allNiches', 'section')
+                return `/${allNiches}`
+            },
         }),
         niche: Object.freeze({
-            path: r => `/${ig(r, 'router', 'routes', 'niche', 'section')}/:child`,
-            link: (r, child) => `/${ig(r, 'router', 'routes', 'niche', 'section')}/${child}`,
+            path: r => {
+                const niche = ig(r, 'router', 'routes', 'niche', 'section')
+                return `/${niche}/:child`
+            },
+            link: (r, child, qsParams={/*ordering:'…',pagination:1*/}) => {
+                const
+                    niche = ig(r, 'router', 'routes', 'niche', 'section'),
+                    qs = orderingAndPaginationQs(r, qsParams)
+
+                return `/${niche}/${child}${renderQs(qs)}`
+            },
         }),
         nicheArchive: Object.freeze({
-            path: r =>
-                `/${ig(r, 'router', 'routes', 'niche', 'section')
-                }/:child/${ig(r, 'router', 'routes', 'archive', 'label')
-                }/(\\d{4})-(\\d{2})`,
-            link: (r, child, year, month) =>
-                `/${ig(r, 'router', 'routes', 'niche', 'section')
-                }/${child}/${ig(r, 'router', 'routes', 'archive', 'label')
-                }/${year}-${month}`,
+            path: r => {
+                const
+                    niche = ig(r, 'router', 'routes', 'niche', 'section'),
+                    archive = ig(r, 'router', 'routes', 'archive', 'label')
+
+                return `/${niche}/:child/${archive}/(\\d{4})-(\\d{2})`
+            },
+            link: (r, child, year, month, qsParams={/*ordering:'…',pagination:1*/}) => {
+                const
+                    niche = ig(r, 'router', 'routes', 'niche', 'section'),
+                    archive = ig(r, 'router', 'routes', 'archive', 'label'),
+                    qs = orderingAndPaginationQs(r, qsParams)
+
+                return `/${niche}/${child}/${archive}/${year}-${month}${renderQs(qs)}`
+            }
         }),
 
         allMovies: Object.freeze({
-            path: r => `/${ig(r, 'router', 'routes', 'allMovies', 'section')}`,
-            link: r => `/${ig(r, 'router', 'routes', 'allMovies', 'section')}`,
+            path: r => {
+                const allMovies = ig(r, 'router', 'routes', 'allMovies', 'section')
+                return `/${allMovies}`
+            },
+            link: (r, qsParams={/*ordering:'…',pagination:1*/}) => {
+                const
+                    allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
+                    qs = orderingAndPaginationQs(r, qsParams)
+
+                return `/${allMovies}${renderQs(qs)}`
+            },
         }),
         allMoviesArchive: Object.freeze({
-            path: r =>
-                `/${ig(r, 'router', 'routes', 'allMovies', 'section')
-                }/${ig(r, 'router', 'routes', 'archive', 'label')
-                }(\\d{4})-(\\d{2})`,
-            link: (r, year, month) =>
-                `/${ig(r, 'router', 'routes', 'allMovies', 'section')
-                }/${ig(r, 'router', 'routes', 'archive', 'label')
-                }/${year}-${month}`,
+            path: r => {
+                const
+                    allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
+                    archive = ig(r, 'router', 'routes', 'archive', 'label')
+
+                return `/${allMovies}/${archive}(\\d{4})-(\\d{2})`
+            },
+            link: (r, year, month, qsParams={/*ordering:'…',pagination:1*/}) => {
+                const
+                    allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
+                    archive = ig(r, 'router', 'routes', 'archive', 'label'),
+                    qs = orderingAndPaginationQs(r, qsParams)
+
+                return `/${allMovies}/${archive}/${year}-${month}${renderQs(qs)}`
+            },
         }),
 
         pornstars: Object.freeze({
-            path: r => `/${ig(r, 'router', 'routes', 'pornstars', 'section')}`,
-            link: r => `/${ig(r, 'router', 'routes', 'pornstars', 'section')}`,
+            path: r => {
+                const pornstars = ig(r, 'router', 'routes', 'pornstars', 'section')
+                return `/${pornstars}`
+            },
+            link: r => {
+                const pornstars = ig(r, 'router', 'routes', 'pornstars', 'section')
+                return `/${pornstars}`
+            },
         }),
         pornstar: Object.freeze({
-            path: r => `/${ig(r, 'router', 'routes', 'pornstar', 'section')}/:child`,
-            link: (r, child) => `/${ig(r, 'router', 'routes', 'pornstar', 'section')}/${child}`,
+            path: r => {
+                const pornstar = ig(r, 'router', 'routes', 'pornstar', 'section')
+                return `/${pornstar}/:child`
+            },
+            link: (r, child, qsParams={/*ordering:'…',pagination:1*/}) => {
+                const
+                    pornstar = ig(r, 'router', 'routes', 'pornstar', 'section'),
+                    qs = orderingAndPaginationQs(r, qsParams)
+
+                return `/${pornstar}/${child}${renderQs(qs)}`
+            },
         }),
 
         favorite: Object.freeze({
-            path: r => `/${ig(r, 'router', 'routes', 'favorite', 'section')}`,
-            link: r => `/${ig(r, 'router', 'routes', 'favorite', 'section')}`,
+            path: r => {
+                const favorite = ig(r, 'router', 'routes', 'favorite', 'section')
+                return `/${favorite}`
+            },
+            link: r => {
+                const favorite = ig(r, 'router', 'routes', 'favorite', 'section')
+                return `/${favorite}`
+            },
         }),
         favoritePornstars: Object.freeze({
-            path: r => `/${ig(r, 'router', 'routes', 'favoritePornstars', 'section')}`,
-            link: r => `/${ig(r, 'router', 'routes', 'favoritePornstars', 'section')}`,
+            path: r => {
+                const favoritePornstars = ig(r, 'router', 'routes', 'favoritePornstars', 'section')
+                return `/${favoritePornstars}`
+            },
+            link: r => {
+                const favoritePornstars = ig(r, 'router', 'routes', 'favoritePornstars', 'section')
+                return `/${favoritePornstars}`
+            },
         }),
 
         video: Object.freeze({
-            redirectFrom: r =>
-                `/${ig(r, 'router', 'redirects', 'video', 'fromPfx')
-                }:child/:name${ig(r, 'router', 'redirects', 'video', 'fromExt')}`,
-            path: r =>
-                `/${ig(r, 'router', 'routes', 'video', 'sectionPfx')}:child/:name`,
-            link: (r, videoId, title) =>
-                `/${ig(r, 'router', 'routes', 'video', 'sectionPfx')}${videoId
-                }/${title.replace(/ /g, '-')}`,
+            redirectFrom: r => {
+                const
+                    videoPfx = ig(r, 'router', 'redirects', 'video', 'fromPfx'),
+                    ext = ig(r, 'router', 'redirects', 'video', 'fromExt')
+
+                return `/${videoPfx}:child/:name${ext}`
+            },
+            path: r => {
+                const videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
+                return `/${videoPfx}:child/:name`
+            },
+            link: (r, videoId, title) => {
+                const videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
+                return `/${videoPfx}${videoId}/${title.replace(/ /g, '-')}`
+            },
         }),
 
         findVideos: Object.freeze({
-            path: r => `/${ig(r, 'router', 'routes', 'findVideos', 'section')}`,
-            link: r => `/${ig(r, 'router', 'routes', 'findVideos', 'section')}`,
+            path: r => {
+                const findVideos = ig(r, 'router', 'routes', 'findVideos', 'section')
+                return `/${findVideos}`
+            },
+            link: (r, qsParams={/*ordering:'…',pagination:1*/}) => {
+                const
+                    findVideos = ig(r, 'router', 'routes', 'findVideos', 'section'),
+                    qs = orderingAndPaginationQs(r, qsParams)
+
+                return `/${findVideos}${renderQs(qs)}`
+            },
         }),
     })
 
@@ -194,11 +322,15 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     <Route path={routerGetters.nicheArchive.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
+                qs = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
-                action = nicheActions.loadPageRequest(
-                    getSubPage(params.child, sort, page, [params[0], params[1]])
-                )
+                action = nicheActions.loadPageRequest(getSubPage(
+                    params.child,
+                    // TODO backward mapping to "eng" values for ordering
+                    get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                    get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
+                    [g(params, 0), g(params, 1)]
+                ))
 
             x.saga = loadNichePageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'niches', 'niche', 'isFailed'])
@@ -209,9 +341,13 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     <Route path={routerGetters.niche.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
+                qs = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
-                action = nicheActions.loadPageRequest(getSubPage(params.child, sort, page))
+                action = nicheActions.loadPageRequest(getSubPage(
+                    params.child,
+                    get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                    get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
+                ))
 
             x.saga = loadNichePageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'niches', 'niche', 'isFailed'])
@@ -228,8 +364,12 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     <Route exact path={routerGetters.allMovies.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
-                action = allMoviesActions.loadPageRequest(getSubPage(null, sort, page))
+                qs = queryString.parse(ig(r, 'location', 'search')),
+                action = allMoviesActions.loadPageRequest(getSubPage(
+                    null,
+                    get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                    get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
+                ))
 
             props.staticContext.saga = loadAllMoviesPageFlow.bind(null, action)
             props.staticContext.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
@@ -240,11 +380,14 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     <Route path={routerGetters.allMoviesArchive.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
+                qs = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
-                action = allMoviesActions.loadPageRequest(
-                    getSubPage(null, sort, page, [params[0], params[1]])
-                )
+                action = allMoviesActions.loadPageRequest(getSubPage(
+                    null,
+                    get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                    get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
+                    [g(params, 0), g(params, 1)]
+                ))
 
             x.saga = loadAllMoviesPageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
@@ -270,9 +413,13 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     <Route path={routerGetters.pornstar.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
+                qs = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
-                action = pornstarActions.loadPageRequest(getSubPage(params.child, sort, page))
+                action = pornstarActions.loadPageRequest(getSubPage(
+                    params.child,
+                    get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                    get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
+                ))
 
             x.saga = loadPornstarPageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'pornstars', 'pornstar', 'isFailed'])
@@ -345,8 +492,12 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     <Route exact path={routerGetters.findVideos.path(r)} render={props => {
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
-                {sort, page} = queryString.parse(ig(r, 'location', 'search')),
-                action = findVideosActions.loadPageRequest(getSubPage(null, sort, page))
+                qs = queryString.parse(ig(r, 'location', 'search')),
+                action = findVideosActions.loadPageRequest(getSubPage(
+                    null,
+                    get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                    get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
+                ))
 
             props.staticContext.saga = loadFindVideosPageFlow.bind(null, action)
             props.staticContext.statusCodeResolver = status500(['app', 'findVideos', 'isFailed'])

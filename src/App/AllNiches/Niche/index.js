@@ -1,16 +1,23 @@
+import {get} from 'lodash'
 import React from 'react'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
-import {compose, lifecycle} from 'recompose'
+import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List, fromJS} from 'immutable'
 
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    getSubPage,
+    getRouterContext,
+} from '../../helpers'
+
+import {routerGetters} from '../../../router-builder'
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
-import {getSubPage, immutableProvedGet as ig, getRouterContext} from '../../helpers'
-
 import {Page, Content, PageWrapper} from './assets'
 import actions from './actions'
 
@@ -42,12 +49,11 @@ const
     Niche = ({
         currentBreakpoint,
         pageUrl,
-        search,
-        routerContext,
         i18nOrdering,
         niche,
         chooseSort,
         isSSR,
+        controlLinkBuilder,
     }) => <Page>
         { niche.get('isFailed')
             ? <ErrorContent/>
@@ -66,10 +72,8 @@ const
                     </Typography>
                     <ControlBar
                         pageUrl={pageUrl}
-                        search={search}
-                        routerContext={routerContext}
+                        linkBuilder={controlLinkBuilder}
                         i18nOrdering={i18nOrdering}
-
                         chooseSort={chooseSort}
                         isSSR={isSSR}
                         page={niche.get('currentPage')}
@@ -91,14 +95,23 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({search, match, niche, loadPage}) => {
+    loadPageFlow = ({search, routerContext, nicheCode, archiveParams, niche, loadPage}) => {
         const
-            {sort, page} = queryString.parse(search),
+            qs = queryString.parse(search),
+
+            // TODO backward mapping to "eng" values for ordering
+            ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
+
+            pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
+
+            archive =
+                archiveParams === null ? null :
+                [g(archiveParams, 'year'), g(archiveParams, 'month')],
 
             subPageForRequest =
-                match.params[0] && match.params[1]
-                ? getSubPage(match.params.child, sort, page, [match.params[0], match.params[1]])
-                : getSubPage(match.params.child, sort, page)
+                archive !== null
+                ? getSubPage(nicheCode, ordering, pagination, archive)
+                : getSubPage(nicheCode, ordering, pagination)
 
         if (typeof subPageForRequest !== 'string')
             throw new Error(
@@ -110,10 +123,10 @@ const
         // "unless" condition.
         // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
         if (!(
-            niche.get('isLoading') ||
+            ig(niche, 'isLoading') ||
             (
-                (niche.get('isLoaded') || niche.get('isFailed')) &&
-                subPageForRequest === niche.get('lastSubPageForRequest')
+                (ig(niche, 'isLoaded') || ig(niche, 'isFailed')) &&
+                subPageForRequest === ig(niche, 'lastSubPageForRequest')
             )
         ))
             loadPage(subPageForRequest)
@@ -130,14 +143,39 @@ export default compose(
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
         }),
-        dispatch => ({
-            loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
-            chooseSort: (newSortValue, stringifiedQS) => dispatch(actions.setNewSort({
-                newSortValue: newSortValue,
-                stringifiedQS: stringifiedQS
-            }))
-        })
+        {
+            loadPageRequest: g(actions, 'loadPageRequest'),
+            setNewSort: g(actions, 'setNewSort'),
+        }
     ),
+    withProps(props => ({
+        nicheCode: g(props, 'match', 'params', 'child'),
+        archiveParams:
+            !(props.match.params[0] && props.match.params[1]) ? null : {
+                year: g(props, 'match', 'params', 0),
+                month: g(props, 'match', 'params', 1),
+            },
+    })),
+    withHandlers({
+        loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+
+        chooseSort: props => newSortValue => props.setNewSort({
+            newSortValue,
+            nicheCode: g(props, 'nicheCode'),
+            archiveParams: g(props, 'archiveParams'),
+        }),
+
+        controlLinkBuilder: props => qsParams =>
+            g(props, 'archiveParams') === null
+            ? routerGetters.niche.link(g(props, 'routerContext'), g(props, 'nicheCode'), qsParams)
+            : routerGetters.nicheArchive.link(
+                g(props, 'routerContext'),
+                g(props, 'nicheCode'),
+                g(props, 'archiveParams', 'year'),
+                g(props, 'archiveParams', 'month'),
+                qsParams
+            ),
+    }),
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)

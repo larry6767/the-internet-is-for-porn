@@ -15,10 +15,10 @@ const
         pageText: ImmutablePropTypes.exact({
             description: PropTypes.string,
             headerDescription: PropTypes.string,
-            headerTitle: PropTypes.string,
+            headerTitle: PropTypes.string.isOptional,
             keywords: PropTypes.string,
-            listHeader: PropTypes.string,
-            listHeaderEmpty: PropTypes.string,
+            listHeader: PropTypes.string.isOptional,
+            listHeaderEmpty: PropTypes.string.isOptional,
             title: PropTypes.string,
             galleryTitle: PropTypes.string.isOptional,
         }),
@@ -61,10 +61,10 @@ const
     emptyPageText = fromJS({
         description: '',
         headerDescription: '',
-        headerTitle: '',
+        headerTitle: null,
         keywords: '',
-        listHeader: '',
-        listHeaderEmpty: '',
+        listHeader: null,
+        listHeaderEmpty: null,
         title: '',
         galleryTitle: null,
     })
@@ -90,30 +90,30 @@ export default
             itemsCount: 0,
             videoList: List(),
         }),
-        [g(actions, 'loadPageSuccess')]: (state, {payload: {data, subPageForRequest}}) => {
+        [g(actions, 'loadPageSuccess')]: (state, {payload}) => {
             const
-                archiveFilms = g(data, 'archiveFilms'),
-                tagArchiveListOlder = g(data, 'tagArchiveListOlder'),
-                tagArchiveListNewer = g(data, 'tagArchiveListNewer')
+                archiveFilms = g(payload, 'data', 'archiveFilms'),
+                tagArchiveListOlder = g(payload, 'data', 'tagArchiveListOlder'),
+                tagArchiveListNewer = g(payload, 'data', 'tagArchiveListNewer')
 
             return state.merge({
                 isLoading: false,
                 isLoaded: true,
                 isFailed: false,
-                currentPage: data.currentPage,
-                lastSubPageForRequest: subPageForRequest,
-                pageNumber: data.pageNumber,
-                pageText: Map(fromJS(g(data, 'pageText'))),
-                pagesCount: data.pagesCount,
-                tagList: List(fromJS(g(data, 'tagList'))),
-                tagArchiveList: List(fromJS(g(data, 'tagArchiveList'))),
-                sortList: List(fromJS(g(data, 'sortList'))),
-                currentSort: g(data, 'currentSort'),
+                currentPage: g(payload, 'data', 'currentPage'),
+                lastSubPageForRequest: g(payload, 'subPageForRequest'),
+                pageNumber: g(payload, 'data', 'pageNumber'),
+                pageText: Map(fromJS(g(payload, 'data', 'pageText'))),
+                pagesCount: g(payload, 'data', 'pagesCount'),
+                tagList: List(fromJS(g(payload, 'data', 'tagList'))),
+                tagArchiveList: List(fromJS(g(payload, 'data', 'tagArchiveList'))),
+                sortList: List(fromJS(g(payload, 'data', 'sortList'))),
+                currentSort: g(payload, 'data', 'currentSort'),
                 archiveFilms: archiveFilms && Map(fromJS(archiveFilms)),
                 tagArchiveListOlder: tagArchiveListOlder && Map(fromJS(tagArchiveListOlder)),
                 tagArchiveListNewer: tagArchiveListNewer && Map(fromJS(tagArchiveListNewer)),
-                itemsCount: data.itemsCount,
-                videoList: List(fromJS(g(data, 'videoList'))),
+                itemsCount: g(payload, 'data', 'itemsCount'),
+                videoList: List(fromJS(g(payload, 'data', 'videoList'))),
             })
         },
         [g(actions, 'loadPageFailure')]: state => state.merge({
