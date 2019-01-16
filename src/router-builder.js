@@ -1,4 +1,4 @@
-import {get, omit} from 'lodash'
+import {get, padStart} from 'lodash'
 import React from 'react'
 import {Route, Switch, Redirect} from 'react-router-dom'
 import queryString from 'query-string'
@@ -82,7 +82,7 @@ const
                 qsKey = ig(r, 'router', 'ordering', 'qsKey')
 
             if (ordering === null) // `null` means we need to reset ordering if it's set
-                omit(qs, qsKey)
+                delete qs[qsKey]
             else
                 qs[qsKey] = ig(r, 'router', 'ordering', ordering, 'qsValue')
         }
@@ -93,9 +93,9 @@ const
                 qsKey = ig(r, 'router', 'pagination', 'qsKey')
 
             if (pagination === null) // `null` means we need to reset pagination if it's set
-                omit(qs, qsKey)
+                delete qs[qsKey]
             else
-                qs[qsKey] = ig(r, 'router', 'pagination', pagination, 'qsValue')
+                qs[qsKey] = pagination
         }
 
         return qs
@@ -124,10 +124,10 @@ export const
                 const niche = ig(r, 'router', 'routes', 'niche', 'section')
                 return `/${niche}/:child`
             },
-            link: (r, child, qsParams={/*ordering:'…',pagination:1*/}) => {
+            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
                     niche = ig(r, 'router', 'routes', 'niche', 'section'),
-                    qs = orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
 
                 return `/${niche}/${child}${renderQs(qs)}`
             },
@@ -140,12 +140,14 @@ export const
 
                 return `/${niche}/:child/${archive}/(\\d{4})-(\\d{2})`
             },
-            link: (r, child, year, month, qsParams={/*ordering:'…',pagination:1*/}) => {
+            link: (r, child, year, month, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
                     niche = ig(r, 'router', 'routes', 'niche', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label'),
-                    qs = orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
 
+                year = padStart(year, 4, '0')
+                month = padStart(month, 2, '0')
                 return `/${niche}/${child}/${archive}/${year}-${month}${renderQs(qs)}`
             }
         }),
@@ -155,10 +157,10 @@ export const
                 const allMovies = ig(r, 'router', 'routes', 'allMovies', 'section')
                 return `/${allMovies}`
             },
-            link: (r, qsParams={/*ordering:'…',pagination:1*/}) => {
+            link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
                     allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
-                    qs = orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
 
                 return `/${allMovies}${renderQs(qs)}`
             },
@@ -171,12 +173,14 @@ export const
 
                 return `/${allMovies}/${archive}(\\d{4})-(\\d{2})`
             },
-            link: (r, year, month, qsParams={/*ordering:'…',pagination:1*/}) => {
+            link: (r, year, month, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
                     allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label'),
-                    qs = orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
 
+                year = padStart(year, 4, '0')
+                month = padStart(month, 2, '0')
                 return `/${allMovies}/${archive}/${year}-${month}${renderQs(qs)}`
             },
         }),
@@ -196,10 +200,10 @@ export const
                 const pornstar = ig(r, 'router', 'routes', 'pornstar', 'section')
                 return `/${pornstar}/:child`
             },
-            link: (r, child, qsParams={/*ordering:'…',pagination:1*/}) => {
+            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
                     pornstar = ig(r, 'router', 'routes', 'pornstar', 'section'),
-                    qs = orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
 
                 return `/${pornstar}/${child}${renderQs(qs)}`
             },
@@ -249,10 +253,10 @@ export const
                 const findVideos = ig(r, 'router', 'routes', 'findVideos', 'section')
                 return `/${findVideos}`
             },
-            link: (r, qsParams={/*ordering:'…',pagination:1*/}) => {
+            link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
                     findVideos = ig(r, 'router', 'routes', 'findVideos', 'section'),
-                    qs = orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
 
                 return `/${findVideos}${renderQs(qs)}`
             },

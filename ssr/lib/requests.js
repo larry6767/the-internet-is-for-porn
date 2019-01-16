@@ -1,4 +1,4 @@
-import {pick, map, find, mapValues, omit, compact} from 'lodash'
+import {pick, map, find, mapValues, omit, compact, get} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 import {Agent} from 'https' // TODO FIXME for hacky-wacky stuff (blind trust to SSL cert)
@@ -13,8 +13,13 @@ import {defaultHostToFetchSiteLocalesFrom} from '../config'
 import apiLocales from '../locale-mapping/backend-api'
 import {backendUrl, backendUrlForReport, backendUrlForSearch} from './helpers/backendUrl'
 import {videoItemModel} from '../generic/VideoItem/models'
-import {incomingPageTextModel, pageTextModel} from './helpers/requests/getPageText'
 import {incomingVideoItemModel} from './helpers/requests/getFilteredVideoList'
+
+import {
+    incomingVideoPageTextModel,
+    videoPageTextModel,
+    getVideoPageText,
+} from './helpers/requests/getPageText'
 
 import {
     incomingGalleryModel,
@@ -67,7 +72,8 @@ const
         const
             sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS')),
             tagArchiveListOlder = pick(g(x, 'page').TAG_ARCHIVE_OLDER, ['month', 'year']),
-            tagArchiveListNewer = pick(g(x, 'page').TAG_ARCHIVE_NEWER, ['month', 'year'])
+            tagArchiveListNewer = pick(g(x, 'page').TAG_ARCHIVE_NEWER, ['month', 'year']),
+            archiveFilms = get(g(x, 'page', 'ACTIVE_NAV_TABS'), ['tag_archive_gals'], null)
 
         return {
             currentPage: x.page.TAG_URL_NAME,
@@ -75,44 +81,9 @@ const
             pagesCount: x.page.PAGES_COUNT,
             pageText: getPageText(x.page.PAGE_TEXT),
             tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
-            tagArchiveList: getTagArchiveList(x.page.TAG_ARCHIVE_LIST_FULL, x.page.MONTHS_NAMES),
-
-            tagArchiveListOlder:
-                tagArchiveListOlder && Object.keys(tagArchiveListOlder).length
-                    ? tagArchiveListOlder
-                    : null,
-
-            tagArchiveListNewer:
-                tagArchiveListNewer && Object.keys(tagArchiveListNewer).length
-                    ? tagArchiveListNewer
-                    : null,
-
-            sortList,
-            currentSort:
-                g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
-
-            archiveFilms: getArchiveFilms(x.page.ACTIVE_NAV_TABS.tag_archive_gals),
-            itemsCount: x.page.ITEMS_PER_PAGE,
-            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
-        }
-    },
-
-    getNicheMap = x => {
-        const
-            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS')),
-            tagArchiveListOlder = pick(g(x, 'page').TAG_ARCHIVE_OLDER, ['month', 'year']),
-            tagArchiveListNewer = pick(g(x, 'page').TAG_ARCHIVE_NEWER, ['month', 'year'])
-
-        return {
-            currentPage: 'all-niches',
-            currentSubPage: g(x, 'page', 'TAG_URL_NAME'),
-            pageNumber: g(x, 'page', 'PAGE_NUMBER'),
-            pagesCount: g(x, 'page', 'PAGES_COUNT'),
-            pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
-            tagList: getTagListByLetters(g(x, 'page', 'TAGS_BY_LETTERS', 'letters')),
 
             tagArchiveList: getTagArchiveList(
-                g(x, 'page', 'TAG_ARCHIVE_LIST_FULL'),
+                get(g(x, 'page'), ['TAG_ARCHIVE_LIST_FULL'], g(x, 'page', 'TAG_ARCHIVE_LIST')),
                 g(x, 'page', 'MONTHS_NAMES')
             ),
 
@@ -130,7 +101,47 @@ const
             currentSort:
                 g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
 
-            archiveFilms: getArchiveFilms(g(x, 'page', 'ACTIVE_NAV_TABS', 'tag_archive_gals')),
+            archiveFilms: archiveFilms && getArchiveFilms(archiveFilms),
+            itemsCount: x.page.ITEMS_PER_PAGE,
+            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
+        }
+    },
+
+    getNicheMap = x => {
+        const
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS')),
+            tagArchiveListOlder = pick(g(x, 'page').TAG_ARCHIVE_OLDER, ['month', 'year']),
+            tagArchiveListNewer = pick(g(x, 'page').TAG_ARCHIVE_NEWER, ['month', 'year']),
+            archiveFilms = get(g(x, 'page', 'ACTIVE_NAV_TABS'), ['tag_archive_gals'], null)
+
+        return {
+            currentPage: 'all-niches',
+            currentSubPage: g(x, 'page', 'TAG_URL_NAME'),
+            pageNumber: g(x, 'page', 'PAGE_NUMBER'),
+            pagesCount: g(x, 'page', 'PAGES_COUNT'),
+            pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
+            tagList: getTagListByLetters(g(x, 'page', 'TAGS_BY_LETTERS', 'letters')),
+
+            tagArchiveList: getTagArchiveList(
+                get(g(x, 'page'), ['TAG_ARCHIVE_LIST_FULL'], g(x, 'page', 'TAG_ARCHIVE_LIST')),
+                g(x, 'page', 'MONTHS_NAMES')
+            ),
+
+            tagArchiveListOlder:
+                tagArchiveListOlder && Object.keys(tagArchiveListOlder).length
+                    ? tagArchiveListOlder
+                    : null,
+
+            tagArchiveListNewer:
+                tagArchiveListNewer && Object.keys(tagArchiveListNewer).length
+                    ? tagArchiveListNewer
+                    : null,
+
+            sortList,
+            currentSort:
+                g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
+
+            archiveFilms: archiveFilms && getArchiveFilms(archiveFilms),
             itemsCount: g(x, 'page', 'ITEMS_PER_PAGE'),
 
             videoList: getFilteredVideoList(
@@ -213,7 +224,7 @@ const
             GALLERY: incomingGalleryModel,
             PAGE_URL: PropTypes.string,
             TIME_AGO: publishedTemplateModel,
-            PAGE_TEXT: incomingPageTextModel,
+            PAGE_TEXT: incomingVideoPageTextModel,
             GALS_INFO: PropTypes.shape({
                 ids: PropTypes.arrayOf(PropTypes.number),
                 items: PropTypes.objectOf(incomingVideoItemModel),
@@ -223,7 +234,7 @@ const
 
     mappedVideoPageModel = PropTypes.shape({
         gallery: galleryModel,
-        pageText: pageTextModel,
+        pageText: videoPageTextModel,
         videoList: PropTypes.arrayOf(videoItemModel),
     }),
 
@@ -239,7 +250,7 @@ const
                     g(x, 'page', 'TIME_AGO')
                 ),
 
-                pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
+                pageText: getVideoPageText(g(x, 'page', 'PAGE_TEXT')),
 
                 videoList: getFilteredVideoList(
                     g(x, 'page', 'GALS_INFO', 'ids'),
