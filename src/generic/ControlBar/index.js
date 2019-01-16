@@ -2,7 +2,6 @@ import queryString from 'query-string'
 import React, {Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {compose, setPropTypes} from 'recompose'
-import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 
 import {
@@ -14,7 +13,6 @@ import {
 } from '@material-ui/core'
 
 import {
-    getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
     PropTypes,
@@ -312,18 +310,12 @@ const
     }
 
 export default compose(
-    connect(
-        state => ({
-            routerContext: getRouterContext(state),
-            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
-        })
-    ),
     withStyles(muiStyles),
     setPropTypes({
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
-        routerContext: routerContextModel,
-        i18nButtons: immutableI18nButtonsModel,
+        routerContext: routerContextModel.isOptional,
+        i18nButtons: immutableI18nButtonsModel.isOptional,
 
         pageUrl: PropTypes.string, // TODO get rid of it
         search: PropTypes.string.isOptional, // TODO get rid of it

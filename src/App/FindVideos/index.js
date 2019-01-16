@@ -1,3 +1,4 @@
+// TODO: this page needs propTypes
 import React from 'react'
 import {Record, Map, List} from 'immutable'
 import queryString from 'query-string'

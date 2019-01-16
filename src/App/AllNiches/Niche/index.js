@@ -1,8 +1,9 @@
+// TODO: this page needs propTypes
 import {get} from 'lodash'
 import React from 'react'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
-import {compose, lifecycle, withHandlers, withProps} from 'recompose'
+import {compose, lifecycle, withHandlers, withProps, setPropTypes} from 'recompose'
 import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List, fromJS} from 'immutable'
 
@@ -12,6 +13,11 @@ import {
     getSubPage,
     getRouterContext,
 } from '../../helpers'
+
+import {
+    immutableI18nButtonsModel,
+    routerContextModel
+} from '../../models'
 
 import {routerGetters} from '../../../router-builder'
 import ControlBar from '../../../generic/ControlBar'
@@ -50,6 +56,7 @@ const
         currentBreakpoint,
         pageUrl,
         i18nOrdering,
+        i18nButtons,
         niche,
         chooseSort,
         isSSR,
@@ -74,6 +81,7 @@ const
                         pageUrl={pageUrl}
                         linkBuilder={controlLinkBuilder}
                         i18nOrdering={i18nOrdering}
+                        i18nButtons={i18nButtons}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
                         page={niche.get('currentPage')}
@@ -142,6 +150,7 @@ export default compose(
             search: ig(state, 'router', 'location', 'search'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
+            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -184,5 +193,9 @@ export default compose(
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
         },
-    })
+    }),
+    setPropTypes({
+        routerContext: routerContextModel,
+        i18nButtons: immutableI18nButtonsModel,
+    }),
 )(Niche)
