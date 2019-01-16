@@ -30,6 +30,27 @@ const
                 byPopularity: 'Popularity',
                 byRelevant: 'Relevant',
             },
+            buttons: {
+                report: 'Report',
+                favoriteMovies: 'Films',
+                favoritePornstars: 'Pornstars',
+                archive: 'Archive films',
+                previousMonth: 'Previous month',
+                nextMonth: 'Next month',
+                topFilms: 'Top films',
+                backToMainPage: 'Back to main page',
+                addToFavorite: 'Add to favorite',
+                removeFromFavorite: 'Remove from favorite',
+                cancel: 'Cancel',
+            },
+            footer: {
+                forParents: 'Parents — Protect your children from adult content with these services:',
+                disclaimer: `Disclaimer: All models on this website are 18 years or older. \
+                videosection.com has a zero-tolerance policy against illegal pornography. \
+                We have no control over the content of these pages. All films and links \
+                are provided by 3rd parties. We take no responsibility for the content on any \
+                website which we link to, please use your own discretion.`,
+            }
         },
         deu: {
             search: {
@@ -53,6 +74,29 @@ const
                 byPopularity: 'Popularität',
                 byRelevant: 'Ähnlich',
             },
+            buttons: {
+                report: 'Bericht',
+                favoriteMovies: 'Filme',
+                favoritePornstars: 'Pornostars',
+                archive: 'Archivfilme',
+                previousMonth: 'Vorheriger Monat',
+                nextMonth: 'Nächsten Monat',
+                topFilms: 'Top-Filme',
+                backToMainPage: 'Zurück zur Hauptseite',
+                addToFavorite: 'Zu den Favoriten hinzufügen',
+                removeFromFavorite: 'Aus Favoriten entfernen',
+                cancel: 'Stornieren',
+            },
+            footer: {
+                forParents: 'Eltern - Schützen sie Ihre Kinder vor Pornografie mit der Hilfe \
+                folgender Service Anbieter:',
+                disclaimer: `Hinweis: Alle Models auf dieser Sex Seite sind 18 Jahre alt oder \
+                älter. de.videosection.com pflegt eine Null-Toleranz Einstellung gegenüber \
+                Pornografie die illegal ist. Wenn Du etwas entdecken solltest das illegal ist, \
+                schicke uns bitte den Link und wir werden diesen umgehend löschen. Alle Galerien, \
+                Links und Videos auf dieser Tube Seite unterliegen der Verantwortung Dritter, \
+                sichte diese bitten in eigener Verantwortung.`,
+            }
         },
         ita: {
             search: {
@@ -76,6 +120,28 @@ const
                 byPopularity: 'Popolari',
                 byRelevant: 'Correlati',
             },
+            buttons: {
+                report: 'Rapporto',
+                favoriteMovies: 'Cinema',
+                favoritePornstars: 'Pornstar',
+                archive: 'Film d\'archivio',
+                previousMonth: 'Il mese scorso',
+                nextMonth: 'Il prossimo mese',
+                topFilms: 'Top film',
+                backToMainPage: 'Torna alla pagina principale',
+                addToFavorite: 'Aggiungi ai favoriti',
+                removeFromFavorite: 'Rimuovi dai preferiti',
+                cancel: 'Annulla',
+            },
+            footer: {
+                forParents: `Genitori – Proteggete i vostri bambini dai contenuti per adulti \
+                con questi servizi:`,
+                disclaimer: `Disclaimer: it.videosection.com usa la politica di zero-tolleranza \
+                contro la pornografia illegale. Ogni materiale, incluse le gallerie e i link, \
+                sono forniti da terze parti e non sono controllati da noi. Non accettiamo nessuna \
+                responsabilità per il materiale dei siti ai quali colleghiamo. Vi preghiamo \
+                di usare la propria discrezione mentre guardate i link.`,
+            }
         },
         fra: { // TODO
             search: {
@@ -98,6 +164,23 @@ const
                 byDuration: '',
                 byPopularity: '',
                 byRelevant: '',
+            },
+            buttons: {
+                report: '',
+                favoriteMovies: '',
+                favoritePornstars: '',
+                archive: '',
+                previousMonth: '',
+                nextMonth: '',
+                topFilms: '',
+                backToMainPage: '',
+                addToFavorite: '',
+                removeFromFavorite: '',
+                cancel: '',
+            },
+            footer: {
+                forParents: '',
+                disclaimer: '',
             },
         },
         spa: { // TODO
@@ -122,6 +205,23 @@ const
                 byPopularity: '',
                 byRelevant: '',
             },
+            buttons: {
+                report: '',
+                favoriteMovies: '',
+                favoritePornstars: '',
+                archive: '',
+                previousMonth: '',
+                nextMonth: '',
+                topFilms: '',
+                backToMainPage: '',
+                addToFavorite: '',
+                removeFromFavorite: '',
+                cancel: '',
+            },
+            footer: {
+                forParents: '',
+                disclaimer: '',
+            },
         },
         por: { // TODO
             search: {
@@ -144,6 +244,23 @@ const
                 byDuration: '',
                 byPopularity: '',
                 byRelevant: '',
+            },
+            buttons: {
+                report: '',
+                favoriteMovies: '',
+                favoritePornstars: '',
+                archive: '',
+                previousMonth: '',
+                nextMonth: '',
+                topFilms: '',
+                backToMainPage: '',
+                addToFavorite: '',
+                removeFromFavorite: '',
+                cancel: '',
+            },
+            footer: {
+                forParents: '',
+                disclaimer: '',
             },
         },
         swe: { // TODO
@@ -168,6 +285,23 @@ const
                 byPopularity: '',
                 byRelevant: '',
             },
+            buttons: {
+                report: '',
+                favoriteMovies: '',
+                favoritePornstars: '',
+                archive: '',
+                previousMonth: '',
+                nextMonth: '',
+                topFilms: '',
+                backToMainPage: '',
+                addToFavorite: '',
+                removeFromFavorite: '',
+                cancel: '',
+            },
+            footer: {
+                forParents: '',
+                disclaimer: '',
+            },
         },
         nld: { // TODO
             search: {
@@ -190,6 +324,23 @@ const
                 byDuration: '',
                 byPopularity: '',
                 byRelevant: '',
+            },
+            buttons: {
+                report: '',
+                favoriteMovies: '',
+                favoritePornstars: '',
+                archive: '',
+                previousMonth: '',
+                nextMonth: '',
+                topFilms: '',
+                backToMainPage: '',
+                addToFavorite: '',
+                removeFromFavorite: '',
+                cancel: '',
+            },
+            footer: {
+                forParents: '',
+                disclaimer: '',
             },
         },
         fin: { // TODO
@@ -214,6 +365,23 @@ const
                 byPopularity: '',
                 byRelevant: '',
             },
+            buttons: {
+                report: '',
+                favoriteMovies: '',
+                favoritePornstars: '',
+                archive: '',
+                previousMonth: '',
+                nextMonth: '',
+                topFilms: '',
+                backToMainPage: '',
+                addToFavorite: '',
+                removeFromFavorite: '',
+                cancel: '',
+            },
+            footer: {
+                forParents: '',
+                disclaimer: '',
+            },
         },
         rus: { // TODO
             search: {
@@ -237,6 +405,23 @@ const
                 byPopularity: '',
                 byRelevant: '',
             },
+            buttons: {
+                report: '',
+                favoriteMovies: '',
+                favoritePornstars: '',
+                archive: '',
+                previousMonth: '',
+                nextMonth: '',
+                topFilms: '',
+                backToMainPage: '',
+                addToFavorite: '',
+                removeFromFavorite: '',
+                cancel: '',
+            },
+            footer: {
+                forParents: '',
+                disclaimer: '',
+            },
         },
         tur: { // TODO
             search: {
@@ -259,6 +444,23 @@ const
                 byDuration: '',
                 byPopularity: '',
                 byRelevant: '',
+            },
+            buttons: {
+                report: '',
+                favoriteMovies: '',
+                favoritePornstars: '',
+                archive: '',
+                previousMonth: '',
+                nextMonth: '',
+                topFilms: '',
+                backToMainPage: '',
+                addToFavorite: '',
+                removeFromFavorite: '',
+                cancel: '',
+            },
+            footer: {
+                forParents: '',
+                disclaimer: '',
             },
         },
     })

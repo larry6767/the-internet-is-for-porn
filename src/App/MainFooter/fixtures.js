@@ -1,16 +1,3 @@
-export const links = [
-    {
-        "id": "1",
-        "href": "http://www.trafficholder.com/aff.php?ct1",
-        "text": "Buy/Sell traffic"
-    },
-    {
-        "id": "2",
-        "href": "#somelink",
-        "text": "Report"
-    },
-]
-
 export const linksToProtect = [
     {
         "id": "3",

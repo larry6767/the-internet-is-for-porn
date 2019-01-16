@@ -170,14 +170,19 @@ const
                     {ig(x, 'title')}
                 </Typography>
                 <InfoBlockInner>
-                    <Typography
-                        variant="body2"
-                        classes={{
-                            root: g(classes, 'typographySource')
-                        }}
+                    <Link
+                        to={`/find-videos?key=${ig(x, 'sponsorId')}`}
+                        className={classes.routerLinkGray}
                     >
-                        {ig(x, 'sponsorId')}
-                    </Typography>
+                        <Typography
+                            variant="body2"
+                            classes={{
+                                root: g(classes, 'typographySource')
+                            }}
+                        >
+                            {ig(x, 'sponsorId')}
+                        </Typography>
+                    </Link>
                     <Typography
                         variant="body2"
                         classes={{

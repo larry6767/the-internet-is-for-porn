@@ -14,7 +14,7 @@ const
                 allMovies: {section: 'all-movies'},
                 pornstars: {section: 'porn-stars'},
                 pornstar: {section: 'porn-star'},
-                favorite: {section: 'favorite'}, // maybe "favorite-movies"?
+                favorite: {section: 'favorite-movies'},
                 favoritePornstars: {section: 'favorite-porn-stars'},
                 video: {sectionPfx: 'video-'},
                 findVideos: {section: 'find-videos'},
@@ -46,10 +46,10 @@ const
                 allMovies: {section: 'alle-videos'},
                 pornstars: {section: 'models'},
                 pornstar: {section: 'model'},
-                favorite: {section: 'favorisierten'}, // maybe "favorisierten-video"?
+                favorite: {section: 'favorisierten-video'},
                 favoritePornstars: {section: 'favorisierten-models'},
                 video: {sectionPfx: 'video-'},
-                findVideos: {section: 'find-videos'}, // TODO localize
+                findVideos: {section: 'finde-videos'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -78,10 +78,10 @@ const
                 allMovies: {section: 'tutti-i-film'},
                 pornstars: {section: 'pornostar'},
                 pornstar: {section: 'pornostar'},
-                favorite: {section: 'preferiti'}, // maybe "filmati-preferiti"?
+                favorite: {section: 'filmati-preferiti'},
                 favoritePornstars: {section: 'pornostar-preferiti'},
                 video: {sectionPfx: 'film-'},
-                findVideos: {section: 'find-videos'}, // TODO localize
+                findVideos: {section: 'trova-video'},
             },
             redirects: {
                 categories: {search: '?categories'},

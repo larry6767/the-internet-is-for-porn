@@ -1,6 +1,7 @@
+// TODO: this page needs refactoring (propTypes, ig, g, etc)
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {compose, lifecycle} from 'recompose'
+import {compose, lifecycle, setPropTypes} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, reset as resetForm} from 'redux-form/immutable'
 import {withStyles} from '@material-ui/core'
@@ -17,10 +18,17 @@ import {
     Map,
     List,
 } from 'immutable'
+
+import {
+    immutableProvedGet as ig,
+    PropTypes,
+    getSubPage,
+} from '../helpers'
+
+import {immutableI18nButtonsModel} from '../models'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
 import ReportDialog from './ReportDialog'
-import {getSubPage} from '../helpers'
 import {
     Page,
     Content,
@@ -68,7 +76,7 @@ const
 
     renderFavoriteButton = (
         classes, data, favoriteVideoList,
-        addVideoToFavoriteHandler, removeVideoFromFavoriteHandler
+        addVideoToFavoriteHandler, removeVideoFromFavoriteHandler, i18nButtons,
     ) => favoriteVideoList.find(id => id === data.getIn(['gallery', 'id']))
         ? <Button
             variant="contained"
@@ -81,7 +89,7 @@ const
             <Favorite
                 classes={{root: classes.favoriteIcon}}
             />
-            {'Remove from favorites'}
+            {ig(i18nButtons, 'removeFromFavorite')}
         </Button>
         : <Button
             variant="contained"
@@ -94,7 +102,7 @@ const
             <FavoriteBorder
                 classes={{root: classes.favoriteBorderIcon}}
             />
-            {'Add to favorites'}
+            {ig(i18nButtons, 'addToFavorite')}
         </Button>,
 
     renderIframe = (src, isAd) =>
@@ -110,7 +118,7 @@ const
         classes, isSSR, data, favoriteVideoList, closeAdvertisementHandler,
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
         toggleReportDialogHandler, pageUrl,
-        handleSubmit, pristine, reset, currentBreakpoint,
+        handleSubmit, pristine, reset, currentBreakpoint, i18nButtons,
     }) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
@@ -167,7 +175,7 @@ const
                                             ? renderFavoriteButton(
                                                 classes, data, favoriteVideoList,
                                                 addVideoToFavoriteHandler,
-                                                removeVideoFromFavoriteHandler
+                                                removeVideoFromFavoriteHandler, i18nButtons,
                                             )
                                             : null}
                                         <Link to="/" className={classes.routerLink}>
@@ -178,7 +186,7 @@ const
                                                     root: classes.buttonRoot
                                                 }}
                                             >
-                                                {'Back to main page'}
+                                                {ig(i18nButtons, 'backToMainPage')}
                                             </Button>
                                         </Link>
                                     </ControlPanelBlock>
@@ -192,7 +200,7 @@ const
                                                 }}
                                                 onClick={toggleReportDialogHandler}
                                             >
-                                                {'Report'}
+                                                {ig(i18nButtons, 'report')}
                                             </Button>
                                             : null}
                                     </ControlPanelBlock>
@@ -249,6 +257,7 @@ const
                     </BottomAdvertisement>
                 </PageWrapper>
                 <ReportDialog
+                    i18nButtons={i18nButtons}
                     data={data}
                     toggleReportDialogHandler={toggleReportDialogHandler}
                     pageUrl={pageUrl}
@@ -299,6 +308,7 @@ export default compose(
                 'report-reason': 'reason_nothing',
             },
             currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
+            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
         }),
         dispatch => ({
             loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
@@ -329,5 +339,10 @@ export default compose(
             loadPageFlow(nextProps)
         },
     }),
-    withStyles(muiStyles)
+    withStyles(muiStyles),
+    setPropTypes({
+        classes: PropTypes.object,
+        isSSR: PropTypes.bool,
+        i18nButtons: immutableI18nButtonsModel,
+    })
 )(VideoPage)
