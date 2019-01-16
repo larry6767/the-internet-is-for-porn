@@ -59,7 +59,20 @@ const
     getQs = r => queryString.parse(ig(r, 'location', 'search')),
     renderQs = qs => g(Object.keys(qs), 'length') > 0 ? '?' + queryString.stringify(qs) : '',
 
+    orderingAndPaginationQsParamsModel = PropTypes.exact({
+        ordering: PropTypes.string.isOptional,
+        pagination: PropTypes.number.isOptional,
+    }),
+
     orderingAndPaginationQs = (r, qsParams) => {
+        if (process.env.NODE_ENV !== 'production')
+            assertPropTypes(
+                orderingAndPaginationQsParamsModel,
+                qsParams,
+                'orderingAndPaginationQs',
+                'qsParams'
+            )
+
         const
             qs = getQs(r)
 
