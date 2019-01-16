@@ -652,6 +652,29 @@ ReactPropTypes.tuple = createTupleTypeChecker(false)
 //   Example [10, "foo"] is INVALID by PropTypes.tuple([PropTypes.number])
 ReactPropTypes.exactTuple = createTupleTypeChecker(true)
 
+const createNullableTypeChecker = typeChecker => {
+    if (typeof typeChecker !== 'function')
+        return new PropTypeError(
+            'Invalid type checker argument supplied to `nullable`. ' +
+            `Expected a function, but received ${typeof typeChecker}.`
+        )
+
+    const validate = (props, propName, ...etc) => {
+        if (props[propName] === null) return // skipping any further checking
+        const error = typeChecker(props, propName, ...etc)
+        if (error instanceof Error) return error
+    }
+
+    return validate
+}
+
+// `nullable` isn't the same as `.isOptional`, optional value may be undefined (which could mean
+// that user just mistyped some key name), or when value isn't presented at all in the props.
+// But `nullable` allows either a type which valid by provided type checker or is explicit `null`.
+// It will check whether it's `null` (will skip any further checking) or check it with provided
+// type checker.
+ReactPropTypes.nullable = createNullableTypeChecker
+
 // END: own custom prop types
 
 export default ReactPropTypes

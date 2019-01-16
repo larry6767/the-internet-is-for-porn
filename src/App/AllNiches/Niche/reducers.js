@@ -1,4 +1,4 @@
-import {fromJS, List, Map} from 'immutable'
+import {fromJS, List, Map, Record} from 'immutable'
 
 import {
     ImmutablePropTypes,
@@ -7,6 +7,7 @@ import {
     plainProvedGet as g,
 } from '../../helpers'
 
+import {immutableArchiveFilmsModel} from '../../models'
 import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
 import actions from './actions'
 
@@ -23,15 +24,14 @@ const
         pageNumber: PropTypes.number,
         pagesCount: PropTypes.number,
 
-        pageText: ImmutablePropTypes.exact({
+        pageText: ImmutablePropTypes.exactRecordOf({
             description: PropTypes.string,
             headerDescription: PropTypes.string,
-            headerTitle: PropTypes.string.isOptional,
+            headerTitle: PropTypes.nullable(PropTypes.string),
             keywords: PropTypes.string,
-            listHeader: PropTypes.string.isOptional,
-            listHeaderEmpty: PropTypes.string.isOptional,
+            listHeader: PropTypes.nullable(PropTypes.string),
+            listHeaderEmpty: PropTypes.nullable(PropTypes.string),
             title: PropTypes.string,
-            galleryTitle: PropTypes.string.isOptional,
         }),
 
         tagList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
@@ -55,26 +55,23 @@ const
             code: PropTypes.string,
         })),
 
-        currentSort: PropTypes.string.isOptional, // may be `null`
+        currentSort: PropTypes.nullable(PropTypes.string),
 
-        archiveFilms: ImmutablePropTypes.exact({
-            current: PropTypes.number,
-            monthForLink: PropTypes.string,
-        }).isOptional,
-        tagArchiveListOlder: ImmutablePropTypes.exact({
+        archiveFilms: PropTypes.nullable(immutableArchiveFilmsModel),
+        tagArchiveListOlder: PropTypes.nullable(ImmutablePropTypes.exact({
             month: PropTypes.string,
             year: PropTypes.string,
-        }).isOptional,
-        tagArchiveListNewer: ImmutablePropTypes.exact({
+        })),
+        tagArchiveListNewer: PropTypes.nullable(ImmutablePropTypes.exact({
             month: PropTypes.string,
             year: PropTypes.string,
-        }).isOptional,
+        })),
 
         itemsCount: PropTypes.number,
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
     }),
 
-    emptyPageText = fromJS({
+    PageTextRecord = Record({
         description: '',
         headerDescription: '',
         headerTitle: null,
@@ -82,7 +79,6 @@ const
         listHeader: null,
         listHeaderEmpty: null,
         title: '',
-        galleryTitle: null,
     })
 
 export default
@@ -96,7 +92,7 @@ export default
             lastSubPageForRequest: payload,
             pageNumber: 1,
             pagesCount: 1,
-            pageText: emptyPageText,
+            pageText: PageTextRecord(),
             tagList: List(),
             tagArchiveList: List(),
             sortList: List(),
@@ -122,7 +118,7 @@ export default
                 lastSubPageForRequest: g(payload, 'subPageForRequest'),
                 pageNumber: g(payload, 'data', 'pageNumber'),
                 pagesCount: g(payload, 'data', 'pagesCount'),
-                pageText: Map(fromJS(g(payload, 'data', 'pageText'))),
+                pageText: PageTextRecord(g(payload, 'data', 'pageText')),
                 tagList: List(fromJS(g(payload, 'data', 'tagList'))),
                 tagArchiveList: List(fromJS(g(payload, 'data', 'tagArchiveList'))),
                 sortList: List(fromJS(g(payload, 'data', 'sortList'))),
@@ -142,7 +138,7 @@ export default
             currentSubPage: '',
             pageNumber: 1,
             pagesCount: 1,
-            pageText: emptyPageText,
+            pageText: PageTextRecord(),
             tagList: List(),
             tagArchiveList: List(),
             sortList: List(),
@@ -164,7 +160,7 @@ export default
         lastSubPageForRequest: '',
         pageNumber: 1,
         pagesCount: 1,
-        pageText: emptyPageText,
+        pageText: PageTextRecord(),
         tagList: [],
         tagArchiveList: [],
         sortList: [],

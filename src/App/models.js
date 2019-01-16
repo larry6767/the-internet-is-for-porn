@@ -179,4 +179,36 @@ export const
     routerContextModel = ImmutablePropTypes.exactRecordOf({
         location: routerLocationModel,
         router: immutableLocaleRouterModel,
-    })
+    }),
+
+    // year+month like `201901` where `2019` is year and `01` is month
+    archiveIdReg = /^(\d{4})(\d{2})$/,
+
+    archiveIdModel = (props, propName, componentName) => {
+        if (typeof props[propName] !== 'number')
+            return new Error(
+                `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                `(it's not a number but ${typeof props[propName]}). Validation failed.`
+            )
+        if (!archiveIdReg.test(String(props[propName])))
+            return new Error(
+                `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                `(it doesn't match proper archive id format). Validation failed.`
+            )
+    }
+
+const
+    archiveFilmsModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            currentlyActiveId: PropTypes.nullable(archiveIdModel),
+            year: PropTypes.number,
+            month: PropTypes.number,
+        })
+    }
+
+export const
+    archiveFilmsModel = archiveFilmsModelBuilder(false),
+    immutableArchiveFilmsModel = archiveFilmsModelBuilder(true)

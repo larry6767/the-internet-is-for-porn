@@ -1,4 +1,4 @@
-import queryString from 'query-string'
+import {range} from 'lodash'
 import React, {Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {compose, setPropTypes} from 'recompose'
@@ -19,12 +19,14 @@ import {
     ImmutablePropTypes,
 } from '../../App/helpers'
 
-import {routerGetters} from '../../router-builder'
 import {
     immutableI18nOrderingModel,
     immutableI18nButtonsModel,
-    routerContextModel
+    routerContextModel,
+    immutableArchiveFilmsModel,
 } from '../../App/models'
+
+import {routerGetters} from '../../router-builder'
 import {muiStyles} from './assets/muiStyles'
 
 import {
@@ -48,7 +50,7 @@ const
         i18nOrdering: immutableI18nOrderingModel,
         sortList: sortListModel,
         chooseSort: PropTypes.func,
-        currentSort: PropTypes.string.isOptional, // could be `null`
+        currentSort: PropTypes.nullable(PropTypes.string),
     })(({classes, i18nOrdering, sortList, chooseSort, currentSort}) => <Select
         classes={{
             select: g(classes, 'selectRoot'),
@@ -88,14 +90,18 @@ const
         </InlinedSelectionList>
     </InlinedSelectionWrap>),
 
-    WrappedButton = ({
+    WrappedButton = setPropTypes({
+        classes: PropTypes.shape({
+            link: PropTypes.string,
+            buttonRoot: PropTypes.string,
+        }),
+        link: PropTypes.string,
+        text: PropTypes.string,
+    })(({
         classes,
         link,
-        text
-    }) => <Link
-        to={link}
-        className={g(classes, 'link')}
-    >
+        text,
+    }) => <Link to={link} className={g(classes, 'link')}>
         <Button
             variant="outlined"
             color="primary"
@@ -105,16 +111,26 @@ const
         >
             {text}
         </Button>
-    </Link>,
+    </Link>),
 
-    NicheControlBar = ({
+    NicheControlBar = setPropTypes({
+        classes: PropTypes.shape({typographyRoot: PropTypes.string}),
+        linkBuilder: PropTypes.func,
+        archiveLinkBuilder: PropTypes.func,
+        i18nOrdering: immutableI18nOrderingModel,
+        i18nButtons: immutableI18nButtonsModel,
+        isSSR: PropTypes.bool,
+        chooseSort: PropTypes.func,
+        buttonsElements: PropTypes.node,
+        sortList: sortListModel,
+        currentSort: PropTypes.nullable(PropTypes.string),
+        archiveFilms: PropTypes.nullable(immutableArchiveFilmsModel),
+    })(({
         classes,
-
-        pageUrl,
         linkBuilder,
+        archiveLinkBuilder,
         i18nOrdering,
         i18nButtons,
-
         isSSR,
         chooseSort,
         buttonsElements,
@@ -125,13 +141,11 @@ const
         <ButtonsList>
             {buttonsElements}
         </ButtonsList>
-        {archiveFilms
-            ? <WrappedButton
-                classes={classes}
-                link={`${pageUrl}/archive/${archiveFilms.get('monthForLink')}`}
-                text={ig(i18nButtons, 'archive')}
-            /> : null
-        }
+        {archiveFilms === null ? null : <WrappedButton
+            classes={classes}
+            link={archiveLinkBuilder(ig(archiveFilms, 'year'), ig(archiveFilms, 'month'))}
+            text={ig(i18nButtons, 'archive')}
+        />}
         <SortWrapper>
             <Typography
                 variant="body1"
@@ -157,44 +171,59 @@ const
                 />
             }
         </SortWrapper>
-    </Fragment>,
+    </Fragment>),
 
-    ArchiveControlBar = ({
+    ArchiveControlBar = setPropTypes({
+        classes: PropTypes.object,
+        i18nButtons: immutableI18nButtonsModel,
+        buttonsElements: PropTypes.node,
+
+        tagArchiveListOlder: PropTypes.nullable(ImmutablePropTypes.exact({
+            month: PropTypes.string,
+            year: PropTypes.string,
+        })),
+
+        tagArchiveListNewer: PropTypes.nullable(ImmutablePropTypes.exact({
+            month: PropTypes.string,
+            year: PropTypes.string,
+        })),
+
+        archiveLinkBuilder: PropTypes.func,
+        backFromArchiveLinkBuilder: PropTypes.func,
+    })(({
         classes,
         i18nButtons,
-        page,
-        subPage,
         buttonsElements,
         tagArchiveListOlder,
         tagArchiveListNewer,
+        archiveLinkBuilder,
+        backFromArchiveLinkBuilder,
     }) => <Fragment>
-        {tagArchiveListOlder && tagArchiveListOlder.size
-            ? <WrappedButton
-                classes={classes}
-                link={`/${page}${subPage ? `/${subPage}` : ''}/archive/${
-                    ig(tagArchiveListOlder, 'year')}-${ig(tagArchiveListOlder, 'month')}`}
-                text={ig(i18nButtons, 'previousMonth')}
-            /> : null
-        }
+        {tagArchiveListOlder === null ? null : <WrappedButton
+            classes={classes}
+            link={archiveLinkBuilder(
+                ig(tagArchiveListOlder, 'year'),
+                ig(tagArchiveListOlder, 'month')
+            )}
+            text={ig(i18nButtons, 'previousMonth')}
+        />}
         <ButtonsList>
             {buttonsElements}
         </ButtonsList>
-        {tagArchiveListNewer && tagArchiveListNewer.size
-            ? <WrappedButton
-                classes={classes}
-                link={`/${page}${subPage ? `/${subPage}` : ''}/archive/${
-                    ig(tagArchiveListNewer, 'year')}-${ig(tagArchiveListNewer, 'month')}`}
-                text={ig(i18nButtons, 'nextMonth')}
-            />
-            : null
-        }
-
+        {tagArchiveListNewer === null ? null : <WrappedButton
+            classes={classes}
+            link={archiveLinkBuilder(
+                ig(tagArchiveListNewer, 'year'),
+                ig(tagArchiveListNewer, 'month')
+            )}
+            text={ig(i18nButtons, 'nextMonth')}
+        />}
         <WrappedButton
             classes={classes}
-            link={`/${page}${subPage ? `/${subPage}` : ''}`}
+            link={backFromArchiveLinkBuilder()}
             text={ig(i18nButtons, 'topFilms')}
         />
-    </Fragment>,
+    </Fragment>),
 
     FavoriteControlBar = ({classes, buttonsElements, i18nButtons, routerContext}) => <Fragment>
         {buttonsElements.length
@@ -224,15 +253,11 @@ const
         isSSR,
         routerContext,
         i18nButtons,
-
-        pageUrl, // TODO get rid of it
-        search, // TODO get rid of it
         linkBuilder,
+        backFromArchiveLinkBuilder,
+        archiveLinkBuilder,
         i18nOrdering,
-
         chooseSort,
-        page,
-        subPage,
         pagesCount,
         pageNumber,
         itemsCount,
@@ -244,39 +269,36 @@ const
         favoriteButtons,
     }) => {
         const
-            array = Array.from(Array(pagesCount).keys()),
-            buttonsElements = array.map((x, idx) => {
-                const parsedQS = queryString.parse(search)
-                parsedQS.page = idx + 1
-                const link = `${pageUrl}?${queryString.stringify(parsedQS)}`
-
-                return <Link
-                    key={idx + 1}
-                    to={link}
+            // pagination
+            buttonsElements = range(1, pagesCount + 1).map(n =>
+                <Link
+                    key={n}
+                    to={linkBuilder({pagination: n})}
                     className={g(classes, 'paginationLink')}
                 >
                     <Button
                         classes={{
                             root: g(classes, 'paginationButtonRoot'),
                         }}
-                        variant={(idx + 1 === pageNumber) ? 'contained' : 'outlined'}
+                        variant={n === pageNumber ? 'contained' : 'outlined'}
                         color="primary"
                     >
-                        {idx + 1}
+                        {n}
                     </Button>
-                </Link>})
+                </Link>
+            )
 
         return <Wrapper>
             <ControlButtons>
-                {archiveFilms && ig(archiveFilms, 'current') !== 0
+                {archiveFilms && ig(archiveFilms, 'currentlyActiveId') !== null
                     ? <ArchiveControlBar
                         classes={classes}
                         i18nButtons={i18nButtons}
-                        page={page}
-                        subPage={subPage}
                         buttonsElements={buttonsElements}
                         tagArchiveListOlder={tagArchiveListOlder}
                         tagArchiveListNewer={tagArchiveListNewer}
+                        archiveLinkBuilder={archiveLinkBuilder}
+                        backFromArchiveLinkBuilder={backFromArchiveLinkBuilder}
                     />
                     : favoriteButtons
                     ? <FavoriteControlBar
@@ -287,12 +309,10 @@ const
                     />
                     : <NicheControlBar
                         classes={classes}
-
-                        pageUrl={pageUrl}
                         linkBuilder={linkBuilder}
+                        archiveLinkBuilder={archiveLinkBuilder}
                         i18nOrdering={i18nOrdering}
                         i18nButtons={i18nButtons}
-
                         isSSR={isSSR}
                         chooseSort={chooseSort}
                         buttonsElements={buttonsElements}
@@ -316,31 +336,26 @@ export default compose(
         isSSR: PropTypes.bool,
         routerContext: routerContextModel.isOptional,
         i18nButtons: immutableI18nButtonsModel.isOptional,
-
-        pageUrl: PropTypes.string, // TODO get rid of it
-        search: PropTypes.string.isOptional, // TODO get rid of it
         linkBuilder: PropTypes.func,
+        archiveLinkBuilder: PropTypes.func,
+        backFromArchiveLinkBuilder: PropTypes.func,
         i18nOrdering: immutableI18nOrderingModel.isOptional,
-
         chooseSort: PropTypes.func.isOptional,
-        page: PropTypes.string,
-        subPage: PropTypes.string.isOptional,
         pagesCount: PropTypes.number,
         pageNumber: PropTypes.number,
         itemsCount: PropTypes.number,
         sortList: sortListModel,
-        currentSort: PropTypes.string.isOptional, // could be `null`
+        currentSort: PropTypes.string.isOptional, // could be not presented at all
 
-        archiveFilms: ImmutablePropTypes.exact({
-            current: PropTypes.number,
-            monthForLink: PropTypes.string,
-        }).isOptional,
+        archiveFilms: immutableArchiveFilmsModel.isOptional, // could be not presented at all
 
+        // could be not presented at all
         tagArchiveListOlder: ImmutablePropTypes.exact({
             month: PropTypes.string,
             year: PropTypes.string,
         }).isOptional,
 
+        // could be not presented at all
         tagArchiveListNewer: ImmutablePropTypes.exact({
             month: PropTypes.string,
             year: PropTypes.string,

@@ -61,6 +61,8 @@ const
         chooseSort,
         isSSR,
         controlLinkBuilder,
+        controlArchiveLinkBuilder,
+        controlBackFromArchiveLinkBuilder,
     }) => <Page>
         { niche.get('isFailed')
             ? <ErrorContent/>
@@ -78,14 +80,13 @@ const
                         {niche.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <ControlBar
-                        pageUrl={pageUrl}
                         linkBuilder={controlLinkBuilder}
+                        archiveLinkBuilder={controlArchiveLinkBuilder}
+                        backFromArchiveLinkBuilder={controlBackFromArchiveLinkBuilder}
                         i18nOrdering={i18nOrdering}
                         i18nButtons={i18nButtons}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        page={niche.get('currentPage')}
-                        subPage={niche.get('currentSubPage')}
                         pagesCount={niche.get('pagesCount')}
                         pageNumber={niche.get('pageNumber')}
                         itemsCount={niche.get('itemsCount')}
@@ -183,6 +184,22 @@ export default compose(
                 g(props, 'archiveParams', 'year'),
                 g(props, 'archiveParams', 'month'),
                 qsParams
+            ),
+
+        controlArchiveLinkBuilder: props => (year, month) =>
+            routerGetters.nicheArchive.link(
+                g(props, 'routerContext'),
+                g(props, 'nicheCode'),
+                year,
+                month,
+                null
+            ),
+
+        controlBackFromArchiveLinkBuilder: props => () =>
+            routerGetters.niche.link(
+                g(props, 'routerContext'),
+                g(props, 'nicheCode'),
+                null
             ),
     }),
     lifecycle({
