@@ -1,7 +1,7 @@
 import React from 'react'
 import {Typography} from '@material-ui/core'
 import {IMG_PATH} from '../../config'
-import {links, linksToProtect} from './fixtures'
+import {linksToProtect} from './fixtures'
 import {
     Footer,
     FooterInner,
@@ -17,17 +17,11 @@ const
         <FooterInner>
             <TextBlock>
                 <LinkList>
-                    {
-                        links.map(link => <LinkItem key={link.id}>
-                            <Link
-                                href={link.href}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                {link.text}
-                            </Link>
-                        </LinkItem>
-                    )}
+                    <LinkItem>
+                        <Link href={'#'}>
+                            {'Report'}
+                        </Link>
+                    </LinkItem>
                 </LinkList>
 
                 <Typography variant="body2" gutterBottom>
