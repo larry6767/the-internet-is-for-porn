@@ -66,8 +66,19 @@ export default compose(
         }
     ),
     withHandlers({
-        getLinkByNavKey: props => navKey =>
-            g(routerGetters, navKey, 'link')(g(props, 'routerContext')),
+        getLinkByNavKey: props => navKey => {
+            switch (navKey) {
+                case 'home':
+                case 'allNiches':
+                case 'pornstars':
+                    return g(routerGetters, navKey, 'link')(g(props, 'routerContext'))
+                case 'allMovies':
+                case 'favorite':
+                    return g(routerGetters, navKey, 'link')(g(props, 'routerContext'), null)
+                default:
+                    throw new Error(`Unexpected navigation key: ${JSON.stringify(navKey)}`)
+            }
+        }
     }),
     withHandlers({
         goToPath: props => (event, value) => {
