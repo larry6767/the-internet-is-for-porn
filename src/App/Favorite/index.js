@@ -40,7 +40,6 @@ const
         isSSR,
         i18nButtons,
         favorite,
-        pageUrl,
         controlLinkBuilder,
         controlFavoriteLinkBuilder,
     }) => <Page>

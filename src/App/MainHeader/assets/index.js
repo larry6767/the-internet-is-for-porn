@@ -85,3 +85,7 @@ export const BottomInner = styled.div`
     ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}
 `
+
+export const TextWrapper = styled.div`
+    width: 100%;
+`

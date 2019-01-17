@@ -1,7 +1,13 @@
 import React from 'react'
+import {compose, setPropTypes} from 'recompose'
+import {Link} from 'react-router-dom'
+import {withStyles} from '@material-ui/core/styles'
+import {
+    immutableProvedGet as ig,
+    PropTypes,
+} from '../helpers'
 import Niche from './Niche'
 import Navigation from './Navigation'
-import HDSwitch from './HDSwitch'
 import Language from './Language'
 import Search from './Search'
 import BurgerMenu from './BurgerMenu'
@@ -15,17 +21,18 @@ import {
     NavigationWrapper,
     Logo,
     Icon,
-    BottomInner
+    BottomInner,
+    TextWrapper,
 } from './assets'
+import {muiStyles} from './assets/muiStyles'
 
 const
-    MainHeader = ({isSSR, appUi, mainHeaderUi, toggleSearchAction}) => {
+    MainHeader = ({
+        classes, isSSR, pageUrl, currentBreakpoint,
+        isSearchShown, toggleSearchAction
+    }) => {
         const
-            isXSorXXS =
-                appUi.get('currentBreakpoint') === 'xs' ||
-                appUi.get('currentBreakpoint') === 'xxs',
-
-            isSearchShown = mainHeaderUi.get('isSearchShown')
+            isXSorXXS = currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
 
         return <Header>
             <Top>
@@ -37,15 +44,24 @@ const
                         }
                         {
                             isXSorXXS && isSearchShown ? '' :
-                            <Logo src="/img/logo.png" alt="VideoSection logo"/>
+                            <Link
+                                to="/"
+                                className={pageUrl === '/' ? classes.routerLinkSpy : ''}
+                            >
+                                <Logo src="/img/logo.png" alt="VideoSection logo"/>
+                            </Link>
                         }
                         {
                             isXSorXXS
                                 ? <Icon
-                                    type={isXSorXXS && isSearchShown ? 'close' : isXSorXXS ? 'search' : ''}
+                                    type={isXSorXXS && isSearchShown
+                                        ? 'close'
+                                        : isXSorXXS
+                                        ? 'search'
+                                        : ''}
                                     onClick={toggleSearchAction}
                                 />
-                                : ''
+                                : null
                         }
                         {
                             !isXSorXXS ? <Search/> :
@@ -53,6 +69,9 @@ const
                         }
                     </SearchWrapper>
                     <Niche/>
+                    <TextWrapper>
+
+                    </TextWrapper>
                 </TopInner>
             </Top>
             {
@@ -61,23 +80,33 @@ const
                         <BottomInner isSSR={isSSR}>
                             <NavigationWrapper>
                                 <Navigation/>
-                                <HDSwitch/>
+                                {/* <HDSwitch/> */}
                             </NavigationWrapper>
                             <Language/>
                         </BottomInner>
                     </div>
-                    : ''
+                    : null
             }
         </Header>
     }
 
-export default connect(
-    state => ({
-        appUi: state.getIn(['app', 'ui']),
-        mainHeaderUi: state.getIn(['app', 'mainHeader', 'ui']),
-        isSSR: state.getIn(['app', 'ssr', 'isSSR']),
+export default compose(
+    connect(
+        state => ({
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            pageUrl: ig(state, 'router', 'location', 'pathname'),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            isSearchShown: ig(state, 'app', 'mainHeader', 'ui', 'isSearchShown'),
+        }),
+        dispatch => ({
+            toggleSearchAction: () => dispatch(toggleSearch())
+        })
+    ),
+    withStyles(muiStyles),
+    setPropTypes({
+        isSSR: PropTypes.bool,
+        pageUrl: PropTypes.string,
+        currentBreakpoint: PropTypes.string,
+        isSearchShown: PropTypes.bool,
     }),
-    dispatch => ({
-        toggleSearchAction: () => dispatch(toggleSearch())
-    })
 )(MainHeader)

@@ -54,7 +54,6 @@ const
 
     Niche = ({
         currentBreakpoint,
-        pageUrl,
         i18nOrdering,
         i18nButtons,
         niche,
@@ -150,7 +149,6 @@ export default compose(
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             niche: NicheRecord(ig(state, 'app', 'niches', 'niche')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            pageUrl: ig(state, 'router', 'location', 'pathname'),
             search: ig(state, 'router', 'location', 'search'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
