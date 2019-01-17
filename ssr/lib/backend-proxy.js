@@ -4,7 +4,7 @@ import apiLocaleMapping from '../locale-mapping/backend-api'
 import routerLocaleMapping from '../locale-mapping/router'
 import i18n from '../locale-mapping/i18n'
 import {plainProvedGet as g} from '../App/helpers'
-import {getPureDomain} from '../App/helpers/hostLocale'
+import {getPureDomain, patchSiteLocales} from '../App/helpers/hostLocale'
 import {logRequestError, buildLocalePageCodes} from './helpers'
 
 import {
@@ -169,13 +169,7 @@ const
     },
 
     getSiteLocales = (siteLocales, defaultSiteLocaleCode) => (req, res) => {
-        res.json(
-            !testHostReg.test(req.get('host')) ? siteLocales : siteLocales.map(x =>
-                g(x, 'host') === defaultSiteLocaleCode
-                    ? {...x, host: `test.${g(x, 'host')}`}
-                    : {...x, host: g(x, 'host').replace(/^([^.]+)\./, '$1.test.')}
-            )
-        ).end()
+        res.json(patchSiteLocales(siteLocales, defaultSiteLocaleCode)(req)).end()
     },
 
     getSearchSuggestions = siteLocales => (({validTopLevelKeys}) => (req, res) => {

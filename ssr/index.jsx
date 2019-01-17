@@ -14,6 +14,7 @@ import Router from 'react-router'
 
 // local libs
 import {plainProvedGet as g} from './App/helpers'
+import {patchSiteLocales} from './App/helpers/hostLocale'
 import {deepFreeze} from './lib/helpers'
 import renderPage from './lib/render'
 import {newStore} from './lib/store'
@@ -50,6 +51,8 @@ const initApp = async () => {
     deepFreeze(siteLocales)
 
     const
+        siteLocalesGen = patchSiteLocales(siteLocales, defaultSiteLocaleCode),
+
         publicDir = isProduction
             ? join(__dirname, '..', 'build')
             : join(__dirname, '..', 'public'),
@@ -86,7 +89,7 @@ const initApp = async () => {
         backendProxyHandler(siteLocales, defaultSiteLocaleCode)
     )
 
-    app.use((req, res) => render(req, res, newStore(siteLocales, g(req, 'url'))))
+    app.use((req, res) => render(req, res, newStore(siteLocalesGen(req), g(req, 'url'))))
 
     app.listen(port, host, () => {
         if (isProduction) console.info('Running in production mode...')
