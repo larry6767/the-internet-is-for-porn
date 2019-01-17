@@ -1,42 +1,56 @@
 import {handleActions} from 'redux-actions'
-import {fromJS, List, OrderedMap, Map} from 'immutable'
-import {addToList, removeFromList} from '../helpers'
+import {fromJS, List, Record} from 'immutable'
+
+import {addToList, removeFromList, plainProvedGet as g} from '../helpers'
 import actions from './actions'
+
+const
+    PageTextRecord = Record({
+        description: '',
+        headerDescription: '',
+        headerTitle: null,
+        keywords: '',
+        listHeader: null,
+        listHeaderEmpty: null,
+        title: '',
+    })
 
 export default
     handleActions({
-        [actions.loadPageRequest]: state => state.merge({
+        [g(actions, 'loadPageRequest')]: state => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
             pageNumber: 1,
-            pageText: Map(),
+            pageText: PageTextRecord(),
             pagesCount: 1,
             itemsCount: 0,
             pornstarList: List(),
         }),
-        [actions.loadPageSuccess]: (state, {payload: {data}}) => state.merge({
+        [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            pageNumber: data.pageNumber,
-            pageText: Map(fromJS(data.pageText)),
-            pagesCount: data.pagesCount,
-            itemsCount: data.itemsCount,
-            pornstarList: List(fromJS(data.pornstarList)),
+            pageNumber: g(payload, 'data', 'pageNumber'),
+            pageText: PageTextRecord(g(payload, 'data', 'pageText')),
+            pagesCount: g(payload, 'data', 'pagesCount'),
+            itemsCount: g(payload, 'data', 'itemsCount'),
+            pornstarList: List(fromJS(g(payload, 'data', 'pornstarList'))),
         }),
-        [actions.loadPageFailure]: state => state.merge({
+        [g(actions, 'loadPageFailure')]: state => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
             pageNumber: 1,
-            pageText: OrderedMap(),
+            pageText: PageTextRecord(),
             pagesCount: 1,
             itemsCount: 0,
             pornstarList: List(),
         }),
-        [actions.addToList]: (state, {payload: item}) => addToList(state, 'pornstarList', item),
-        [actions.removeFromList]: (state, {payload: id}) => removeFromList(state, 'pornstarList', id),
+        [g(actions, 'addToList')]: (state, action) =>
+            addToList(state, 'pornstarList', g(action, 'payload')),
+        [g(actions, 'removeFromList')]: (state, action) =>
+            removeFromList(state, 'pornstarList', g(action, 'payload')),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
@@ -44,17 +58,7 @@ export default
         currentPage: '',
         currentNiche: '',
         pageNumber: 1,
-        pageText: {
-            /*
-            description: '',
-            headerDescription: '',
-            headerTitle: '',
-            keywords: '',
-            listHeader: '',
-            listHeaderEmpty: '',
-            title: '',
-            */
-        },
+        pageText: PageTextRecord(),
         pagesCount: 1,
         itemsCount: 0,
         pornstarList: [

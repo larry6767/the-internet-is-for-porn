@@ -1,33 +1,27 @@
 // TODO: this page needs refactoring (propTypes, ig, ext)
 import React from 'react'
 import {connect} from 'react-redux'
-import {compose, lifecycle, setPropTypes} from 'recompose'
+import {compose, lifecycle, setPropTypes, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core'
-import {
-    CircularProgress,
-    Typography
-} from '@material-ui/core'
-import {
-    Record,
-    Map,
-    List,
-} from 'immutable'
+import {CircularProgress, Typography} from '@material-ui/core'
+import {Record, Map, List} from 'immutable'
+
 import {
     getRouterContext,
+    plainProvedGet as g,
     immutableProvedGet as ig,
 } from '../helpers'
+
 import {
     immutableI18nButtonsModel,
     routerContextModel
 } from '../models'
+
+import {routerGetters} from '../../router-builder'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import PornstarList from '../../generic/PornstarList'
-import {
-    Page,
-    Content,
-    PageWrapper,
-} from './assets'
+import {Page, Content, PageWrapper} from './assets'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
@@ -44,12 +38,16 @@ const
     }),
 
     FavoritePornstars = ({
-        classes, isSSR, routerContext, i18nButtons,
-        favorite, pageUrl, search,
+        classes,
+        isSSR,
+        i18nButtons,
+        controlLinkBuilder,
+        controlFavoriteLinkBuilder,
+        favorite,
     }) => <Page>
-        { favorite.get('isFailed')
+        { ig(favorite, 'isFailed')
             ? <ErrorContent/>
-            : favorite.get('isLoading')
+            : ig(favorite, 'isLoading')
             ? <CircularProgress/>
             : <Content>
                 <PageWrapper>
@@ -57,28 +55,27 @@ const
                         variant="h4"
                         gutterBottom
                         classes={{
-                            root: classes.typographyTitle
+                            root: g(classes, 'typographyTitle')
                         }}
                     >
-                        {favorite.get('pornstarList').size
-                            ? `${favorite.getIn(['pageText', 'listHeader'])
-                                .replace(/[0-9]/g, '')}${favorite.get('pornstarList').size}`
-                            : favorite.getIn(['pageText', 'listHeaderEmpty'])
+                        {g(ig(favorite, 'pornstarList'), 'size')
+                            ? `${(ig(favorite, 'pageText', 'listHeader') || '')
+                                .replace(/[0-9]/g, '')}${g(ig(favorite, 'pornstarList'), 'size')}`
+                            : ig(favorite, 'pageText', 'listHeaderEmpty')
                         }
                     </Typography>
                     <ControlBar
                         isSSR={isSSR}
-                        routerContext={routerContext}
                         i18nButtons={i18nButtons}
-                        pageUrl={pageUrl}
-                        search={search}
-                        pagesCount={favorite.get('pagesCount')}
-                        pageNumber={favorite.get('pageNumber')}
-                        itemsCount={favorite.get('itemsCount')}
+                        linkBuilder={controlLinkBuilder}
+                        favoriteLinkBuilder={controlFavoriteLinkBuilder}
+                        pagesCount={ig(favorite, 'pagesCount')}
+                        pageNumber={ig(favorite, 'pageNumber')}
+                        itemsCount={ig(favorite, 'itemsCount')}
                         favoriteButtons={true}
                     />
                     <PornstarList
-                        pornstarList={favorite.get('pornstarList')}
+                        pornstarList={ig(favorite, 'pornstarList')}
                     />
                 </PageWrapper>
             </Content>
@@ -88,20 +85,30 @@ const
 export default compose(
     connect(
         state => ({
-            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
-            favorite: FavoriteRecord(state.getIn(['app', 'favoritePornstars'])),
-            pageUrl: state.getIn(['router', 'location', 'pathname']),
-            search: state.getIn(['router', 'location', 'search']),
+            favorite: FavoriteRecord(ig(state, 'app', 'favoritePornstars')),
         }),
-        dispatch => ({
-            loadPage: () => dispatch(actions.loadPageRequest())
-        })
+        {
+            loadPageRequest: g(actions, 'loadPageRequest'),
+        }
     ),
+    withHandlers({
+        loadPage: props => () => props.loadPageRequest(),
+
+        controlLinkBuilder: props => qsParams =>
+            routerGetters.favoritePornstars.link(g(props, 'routerContext'), {
+                ordering: null,
+                ...qsParams,
+            }),
+
+        controlFavoriteLinkBuilder: props => section =>
+            g(routerGetters, section).link(g(props, 'routerContext'), null),
+    }),
     lifecycle({
         componentDidMount() {
-            if (!this.props.favorite.get('isLoading') && !this.props.favorite.get('isLoaded')) {
+            if (!ig(this.props.favorite, 'isLoading') && !ig(this.props.favorite, 'isLoaded')) {
                 this.props.loadPage()
             }
         }

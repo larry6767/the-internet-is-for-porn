@@ -22,11 +22,9 @@ import {
 import {
     immutableI18nOrderingModel,
     immutableI18nButtonsModel,
-    routerContextModel,
     immutableArchiveFilmsModel,
 } from '../../App/models'
 
-import {routerGetters} from '../../router-builder'
 import {muiStyles} from './assets/muiStyles'
 
 import {
@@ -225,24 +223,36 @@ const
         />
     </Fragment>),
 
-    FavoriteControlBar = ({classes, buttonsElements, i18nButtons, routerContext}) => <Fragment>
-        {buttonsElements.length
-            ? <ButtonsList>
-            {buttonsElements}
-        </ButtonsList> : null}
+    FavoriteControlBar = setPropTypes({
+        classes: PropTypes.object,
+        buttonsElements: PropTypes.node,
+        i18nButtons: immutableI18nButtonsModel,
+        linkBuilder: PropTypes.func,
+    })(({
+        classes,
+        buttonsElements,
+        i18nButtons,
+        linkBuilder,
+    }) => <Fragment>
+        {
+            g(buttonsElements, 'length') === 0 ? null :
+            <ButtonsList>
+                {buttonsElements}
+            </ButtonsList>
+        }
 
         <WrappedButton
             classes={classes}
-            link={g(routerGetters, 'favorite', 'link')(routerContext)}
+            link={linkBuilder('favorite')}
             text={ig(i18nButtons, 'favoriteMovies')}
         />
 
         <WrappedButton
             classes={classes}
-            link={g(routerGetters, 'favoritePornstars', 'link')(routerContext)}
+            link={linkBuilder('favoritePornstars')}
             text={ig(i18nButtons, 'favoritePornstars')}
         />
-    </Fragment>,
+    </Fragment>),
 
     ShowedElements = ({itemsCount, pageNumber}) => <Typography variant="body1" gutterBottom>
         {`Showing ${itemsCount * pageNumber - (itemsCount - 1)} - ${itemsCount * pageNumber}`}
@@ -251,18 +261,22 @@ const
     ControlBar = ({
         classes,
         isSSR,
-        routerContext,
+
+        i18nOrdering,
         i18nButtons,
+
         linkBuilder,
         backFromArchiveLinkBuilder,
         archiveLinkBuilder,
-        i18nOrdering,
+        favoriteLinkBuilder,
+
         chooseSort,
         pagesCount,
         pageNumber,
         itemsCount,
         sortList,
         currentSort,
+
         archiveFilms,
         tagArchiveListOlder,
         tagArchiveListNewer,
@@ -303,9 +317,9 @@ const
                     : favoriteButtons
                     ? <FavoriteControlBar
                         classes={classes}
-                        routerContext={routerContext}
                         i18nButtons={i18nButtons}
                         buttonsElements={buttonsElements}
+                        linkBuilder={favoriteLinkBuilder}
                     />
                     : <NicheControlBar
                         classes={classes}
@@ -334,17 +348,20 @@ export default compose(
     setPropTypes({
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
-        routerContext: routerContextModel.isOptional,
-        i18nButtons: immutableI18nButtonsModel.isOptional,
-        linkBuilder: PropTypes.func,
-        archiveLinkBuilder: PropTypes.func,
-        backFromArchiveLinkBuilder: PropTypes.func,
+
         i18nOrdering: immutableI18nOrderingModel.isOptional,
+        i18nButtons: immutableI18nButtonsModel,
+
+        linkBuilder: PropTypes.func,
+        archiveLinkBuilder: PropTypes.func.isOptional,
+        backFromArchiveLinkBuilder: PropTypes.func.isOptional,
+        favoriteLinkBuilder: PropTypes.func.isOptional,
+
         chooseSort: PropTypes.func.isOptional,
         pagesCount: PropTypes.number,
         pageNumber: PropTypes.number,
         itemsCount: PropTypes.number,
-        sortList: sortListModel,
+        sortList: sortListModel.isOptional, // could be not presented at all
         currentSort: PropTypes.string.isOptional, // could be not presented at all
 
         archiveFilms: immutableArchiveFilmsModel.isOptional, // could be not presented at all

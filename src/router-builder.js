@@ -215,9 +215,12 @@ export const
                 const favorite = ig(r, 'router', 'routes', 'favorite', 'section')
                 return `/${favorite}`
             },
-            link: r => {
-                const favorite = ig(r, 'router', 'routes', 'favorite', 'section')
-                return `/${favorite}`
+            link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
+                const
+                    favorite = ig(r, 'router', 'routes', 'favorite', 'section'),
+                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+
+                return `/${favorite}${renderQs(qs)}`
             },
         }),
         favoritePornstars: Object.freeze({
@@ -225,9 +228,12 @@ export const
                 const favoritePornstars = ig(r, 'router', 'routes', 'favoritePornstars', 'section')
                 return `/${favoritePornstars}`
             },
-            link: r => {
-                const favoritePornstars = ig(r, 'router', 'routes', 'favoritePornstars', 'section')
-                return `/${favoritePornstars}`
+            link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
+                const
+                    favoritePornstars = ig(r, 'router', 'routes', 'favoritePornstars', 'section'),
+                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+
+                return `/${favoritePornstars}${renderQs(qs)}`
             },
         }),
 

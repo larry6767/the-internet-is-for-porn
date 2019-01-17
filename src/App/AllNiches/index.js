@@ -55,9 +55,9 @@ const
             </ListItemIcon>
             <ListItemText
                 classes={{
-                    root: classes.listItemTextRoot,
-                    primary: classes.primaryTypography,
-                    secondary: classes.secondaryTypography
+                    root: g(classes, 'listItemTextRoot'),
+                    primary: g(classes, 'primaryTypography'),
+                    secondary: g(classes, 'secondaryTypography')
                 }}
                 primary={ig(x, 'name')}
                 secondary={ig(x, 'itemsCount')}
@@ -78,7 +78,7 @@ const
                     <ListComponent
                         component="div"
                         classes={{
-                            root: classes.root
+                            root: g(classes, 'root')
                         }}
                     >
                         {ig(niches, 'nichesList').map(x =>
