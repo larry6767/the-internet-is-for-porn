@@ -1,9 +1,10 @@
-import {cloneDeep, find, includes, unset} from 'lodash'
+import {cloneDeep, find, includes, unset, get} from 'lodash'
 
 import apiLocaleMapping from '../locale-mapping/backend-api'
 import routerLocaleMapping from '../locale-mapping/router'
 import i18n from '../locale-mapping/i18n'
 import {plainProvedGet as g} from '../App/helpers'
+import {getPureDomain} from '../App/helpers/hostLocale'
 import {logRequestError, buildLocalePageCodes} from './helpers'
 
 import {
@@ -150,11 +151,14 @@ const
         validTopLevelKeys: ['localeCode', 'pageCode', 'subPageCode'],
     }),
 
-    // TODO Detect `defaultSiteLocaleCode` by Host from `req`.
-    // TODO Also detect for test.* domains.
     getSiteLocale = (siteLocales, defaultSiteLocaleCode) => (req, res) => {
         const
-            localeCode = req.body.localeCode || defaultSiteLocaleCode
+            // see also ssr/lib/render
+            domain = getPureDomain(req.get('host')),
+
+            localeCode =
+                req.body.localeCode ||
+                get(find(siteLocales, x => g(x, 'host') === domain), 'code', defaultSiteLocaleCode)
 
         res.json({
             localeCode,
@@ -162,6 +166,16 @@ const
             router: g(routerLocaleMapping, localeCode),
             i18n: g(i18n, localeCode),
         }).end()
+    },
+
+    getSiteLocales = (siteLocales, defaultSiteLocaleCode) => (req, res) => {
+        res.json(
+            !testHostReg.test(req.get('host')) ? siteLocales : siteLocales.map(x =>
+                g(x, 'host') === defaultSiteLocaleCode
+                    ? {...x, host: `test.${g(x, 'host')}`}
+                    : {...x, host: g(x, 'host').replace(/^([^.]+)\./, '$1.test.')}
+            )
+        ).end()
     },
 
     getSearchSuggestions = siteLocales => (({validTopLevelKeys}) => (req, res) => {
@@ -293,7 +307,7 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
             }
         )
     else if (g(req, 'method') === 'GET' && req.params.operation === 'get-site-locales')
-        res.json(siteLocales).end()
+        getSiteLocales(siteLocales, defaultSiteLocaleCode)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-site-locale-data')
         getSiteLocale(siteLocales, defaultSiteLocaleCode)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-page-data')

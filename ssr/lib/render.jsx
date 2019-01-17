@@ -10,6 +10,7 @@ import JssProvider from 'react-jss/lib/JssProvider'
 import {createGenerateClassName} from '@material-ui/core/styles'
 
 import {plainProvedGet as g, immutableProvedGet as ig, getRouterContext} from '../App/helpers'
+import {getPureDomain} from '../App/helpers/hostLocale'
 import {buildLocalePageCodes, logRequestError} from './helpers'
 import {getPageData as requestPageData} from './requests'
 import {proxiedHeaders} from './backend-proxy'
@@ -35,7 +36,8 @@ export default (
 ) => async (req, res, store) => {
     try {
         const
-            domain = req.get('host').replace(/:[0-9]+$/, ''),
+            // see also ssr/lib/backend-proxy (getting site locales)
+            domain = getPureDomain(req.get('host')),
             isLocalhost = includes(['localhost', '127.0.0.1'], domain),
 
             locale = isLocalhost
