@@ -63,6 +63,8 @@ const
         controlLinkBuilder,
         controlArchiveLinkBuilder,
         controlBackFromArchiveLinkBuilder,
+        listsTagLinkBuilder,
+        listsArchiveLinkBuilder,
     }) => <Page>
         { ig(niche, 'isFailed')
             ? <ErrorContent/>
@@ -71,9 +73,12 @@ const
             : <Content>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
-                    pageUrl={pageUrl}
+
                     tagList={ig(niche, 'tagList')}
+                    tagLinkBuilder={listsTagLinkBuilder}
+
                     tagArchiveList={ig(niche, 'tagArchiveList')}
+                    archiveLinkBuilder={listsArchiveLinkBuilder}
                 />
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
@@ -197,6 +202,18 @@ export default compose(
             routerGetters.niche.link(
                 g(props, 'routerContext'),
                 g(props, 'nicheCode'),
+                null
+            ),
+
+        listsTagLinkBuilder: props => child =>
+            routerGetters.niche.link(g(props, 'routerContext'), child, null),
+
+        listsArchiveLinkBuilder: props => (year, month) =>
+            routerGetters.nicheArchive.link(
+                g(props, 'routerContext'),
+                g(props, 'nicheCode'),
+                year,
+                month,
                 null
             ),
     }),

@@ -54,7 +54,6 @@ const
     AllMovies = ({
         classes,
         currentBreakpoint,
-        pageUrl,
         i18nOrdering,
         i18nButtons,
         allMovies,
@@ -63,6 +62,8 @@ const
         controlLinkBuilder,
         controlArchiveLinkBuilder,
         controlBackFromArchiveLinkBuilder,
+        listsTagLinkBuilder,
+        listsArchiveLinkBuilder,
     }) => <Page>
         { allMovies.get('isFailed')
             ? <ErrorContent/>
@@ -71,9 +72,12 @@ const
             : <Content>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
-                    pageUrl={pageUrl}
+
                     tagList={allMovies.get('tagList')}
+                    tagLinkBuilder={listsTagLinkBuilder}
+
                     tagArchiveList={allMovies.get('tagArchiveList')}
+                    archiveLinkBuilder={listsArchiveLinkBuilder}
                 />
                 <AllMoviesPageWrapper>
                     <Typography
@@ -151,7 +155,6 @@ export default compose(
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             allMovies: AllMoviesRecord(ig(state, 'app', 'allMovies')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            pageUrl: ig(state, 'router', 'location', 'pathname'),
             search: ig(state, 'router', 'location', 'search'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
@@ -192,6 +195,17 @@ export default compose(
 
         controlBackFromArchiveLinkBuilder: props => () =>
             routerGetters.allMovies.link(g(props, 'routerContext'), null),
+
+        listsTagLinkBuilder: props => child =>
+            routerGetters.niche.link(g(props, 'routerContext'), child, null),
+
+        listsArchiveLinkBuilder: props => (year, month) =>
+            routerGetters.allMoviesArchive.link(
+                g(props, 'routerContext'),
+                year,
+                month,
+                null
+            ),
     }),
     lifecycle({
         componentDidMount() {

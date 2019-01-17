@@ -1,6 +1,8 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
+import ArrowRight from '@material-ui/icons/ChevronRight'
+
 import {
     ListSubheader,
     List as ListComponent,
@@ -8,52 +10,55 @@ import {
     ListItemIcon,
     ListItemText,
 } from '@material-ui/core'
-import ArrowRight from '@material-ui/icons/ChevronRight'
-import {
-    ListsInner
-} from './assets'
+
+import {ListsInner} from './assets'
 import {muiStyles} from './assets/muiStyles'
 
 const
     // Generic list item component generator
-    renderListItem = (idKey, titleKey, countKey, subPage, year, monthNumber) => (x, classes, pageUrl, type = null) => <Link
-        to={type === 'isModels' ?
-            `/porn-star/${x.get(subPage)}${x.get('sort')}`
-            : x.get(subPage)
-            ? `/all-niches/${x.get(subPage)}`
-            : `${pageUrl}/${year && monthNumber ? `archive/${x.get(year)}-${x.get(monthNumber)}` : ''}`
-        }
-        key={x.get(idKey)}
-        className={classes.routerLink}
-    >
-        <ListItem
-            button
-            classes={{
-                root: classes.itemRoot
-            }}
+    renderListItem =
+        (idKey, titleKey, countKey, subPage, year, month) =>
+        (x, classes, linkBuilder) =>
+        <Link
+            to={
+                year && month
+                ? linkBuilder(x.get(year), x.get(month)) // archive links
+                : linkBuilder(x.get(subPage)) // niche link
+            }
+            key={x.get(idKey)}
+            className={classes.routerLink}
         >
-            <ListItemIcon classes={{
-                root: classes.iconRoot
-            }}>
-                <ArrowRight/>
-            </ListItemIcon>
-            <ListItemText
-                inset
-                primary={x.get(titleKey)}
-                secondary={x.get(countKey)}
+            <ListItem
+                button
                 classes={{
-                    root: classes.itemTextRoot,
-                    primary: classes.primaryTypography
+                    root: classes.itemRoot
                 }}
-            />
-        </ListItem>
-    </Link>,
+            >
+                <ListItemIcon classes={{
+                    root: classes.iconRoot
+                }}>
+                    <ArrowRight/>
+                </ListItemIcon>
+                <ListItemText
+                    inset
+                    primary={x.get(titleKey)}
+                    secondary={x.get(countKey)}
+                    classes={{
+                        root: classes.itemTextRoot,
+                        primary: classes.primaryTypography
+                    }}
+                />
+            </ListItem>
+        </Link>,
 
     NichesListItem = renderListItem('id', 'name', 'itemsCount', 'subPage'),
-    ArchiveYearListItem = renderListItem('archiveDate', 'month', 'itemsCount', 'subPage', 'year', 'monthNumber'),
+
+    ArchiveYearListItem =
+        renderListItem('archiveDate', 'month', 'itemsCount', 'subPage', 'year', 'monthNumber'),
+
     ModelsLetterListItem = renderListItem('id', 'name', 'itemsCount', 'subPage', 'letter'),
 
-    ArchiveList = ({classes, tagArchiveList, pageUrl}) => {
+    ArchiveList = ({classes, tagArchiveList, linkBuilder}) => {
         const
             years = tagArchiveList
                 .groupBy(x => x.get('year'))
@@ -72,14 +77,14 @@ const
                         }}>
                             {`Archives ${year}`}
                         </ListSubheader>
-                        {listByYear.map(x => ArchiveYearListItem(x, classes, pageUrl))}
+                        {listByYear.map(x => ArchiveYearListItem(x, classes, linkBuilder))}
                     </ul>
                 </li>
             ).toList()}
         </ListComponent>
     },
 
-    ModelsList = ({classes, modelsList, pageUrl}) => {
+    ModelsList = ({classes, modelsList, linkBuilder}) => {
         const
             letters = modelsList
                 .groupBy(x => x.get('letter'))
@@ -99,14 +104,27 @@ const
                         }}>
                             {`${letter}`}
                         </ListSubheader>
-                        {listByYear.map(x => ModelsLetterListItem(x, classes, pageUrl, 'isModels'))}
+                        {listByYear.map(x => ModelsLetterListItem(x, classes, linkBuilder))}
                     </ul>
                 </li>
             ).toList()}
         </ListComponent>
     },
 
-    Lists = ({classes, currentBreakpoint, pageUrl, tagList, tagArchiveList, modelsList}) => currentBreakpoint === 'md'
+    Lists = ({
+        classes,
+        currentBreakpoint,
+
+        tagList,
+        tagLinkBuilder,
+
+        tagArchiveList,
+        archiveLinkBuilder,
+
+        modelsList,
+        modelLinkBuilder,
+    }) =>
+        currentBreakpoint === 'md'
         || currentBreakpoint === 'lg'
         || currentBreakpoint === 'XL'
             ? <ListsInner>
@@ -116,22 +134,22 @@ const
                         <ListSubheader classes={{
                             root: classes.listSubheader
                         }}>
-                            All straight films
+                            All straight films{/* TODO localize it */}
                         </ListSubheader>
                     }
                 >
-                    {tagList.map(x => NichesListItem(x, classes))}
+                    {tagList.map(x => NichesListItem(x, classes, tagLinkBuilder))}
                 </ListComponent> : null }
 
                 { tagArchiveList ? <ArchiveList
                     classes={classes}
                     tagArchiveList={tagArchiveList}
-                    pageUrl={pageUrl}
+                    linkBuilder={archiveLinkBuilder}
                 /> : null }
                 { modelsList ? <ModelsList
                     classes={classes}
                     modelsList={modelsList}
-                    pageUrl={pageUrl}
+                    linkBuilder={modelLinkBuilder}
                 /> : null }
             </ListsInner> : null
 
