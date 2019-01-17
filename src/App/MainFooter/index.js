@@ -2,6 +2,7 @@ import React from 'react'
 import {compose, setPropTypes} from 'recompose'
 import {connect} from 'react-redux'
 import {Typography} from '@material-ui/core'
+import {Map} from 'immutable'
 
 import {immutableProvedGet as ig} from '../helpers'
 import {immutableI18nFooterModel, immutableI18nButtonsModel} from '../models'
@@ -18,7 +19,10 @@ import {
 } from './assets'
 
 const
-    MainFooter = ({i18nFooter, i18nButtons}) => <Footer>
+    startYear = 2019,
+    currentYear = (new Date()).getFullYear(),
+
+    MainFooter = ({i18nFooter, i18nButtons, domain}) => <Footer>
         <FooterInner>
             <TextBlock>
                 <LinkList>
@@ -51,7 +55,8 @@ const
                     {ig(i18nFooter, 'disclaimer')}
                 </Typography>
                 <Typography variant="body2" gutterBottom color="textSecondary">
-                    {(new Date()).getFullYear()} &copy;&nbsp;Copyright videosection.com
+                    {currentYear > startYear ? `${startYear}–${currentYear}` : startYear}
+                    &nbsp;&copy;&nbsp;Copyright&nbsp;{domain}
                 </Typography>
             </TextBlock>
             <QRCodeBlock>
@@ -65,6 +70,16 @@ export default compose(
         state => ({
             i18nFooter: ig(state, 'app', 'locale', 'i18n', 'footer'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+
+            domain: ig(
+                ig(state, 'app', 'mainHeader', 'language', 'siteLocales', 'list')
+                    .find(
+                        x => ig(x, 'code') === ig(state, 'app', 'locale', 'localeCode'),
+                        null,
+                        Map({host: '…'})
+                    ),
+                'host'
+            ),
         })
     ),
     setPropTypes({
