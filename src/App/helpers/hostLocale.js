@@ -6,7 +6,7 @@ export const
 
     patchSiteLocales = (siteLocales, defaultSiteLocaleCode) => req =>
         !testHostReg.test(req.get('host')) ? siteLocales : siteLocales.map(x =>
-            g(x, 'host') === defaultSiteLocaleCode
+            g(x, 'code') === defaultSiteLocaleCode
                 ? {...x, host: `test.${g(x, 'host')}`}
                 : {...x, host: g(x, 'host').replace(/^([^.]+)\./, '$1.test.')}
         )
