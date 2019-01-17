@@ -1,7 +1,14 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 import {push} from 'connected-react-router/immutable'
 
-import {getPageData, immutableProvedGet as ig} from '../helpers'
+import {
+    getPageData,
+    getRouterContext,
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+} from '../helpers'
+
+import {routerGetters} from '../../router-builder'
 import errorActions from '../../generic/ErrorMessage/actions'
 
 import actions from './actions'
@@ -29,7 +36,24 @@ export function* loadAllMoviesPageFlow({payload: subPageForRequest}, ssrContext)
 }
 
 function* setNewSort({payload}) {
-    yield put(push(payload.stringifiedQS))
+    const
+        routerContext = yield select(state => getRouterContext(state)),
+        archiveParams = g(payload, 'archiveParams'),
+        newSortValue = g(payload, 'newSortValue')
+
+    yield put(push(
+        archiveParams === null
+        ? routerGetters.allMovies.link(
+            routerContext,
+            {ordering: newSortValue, pagination: null}
+        )
+        : routerGetters.allMoviesArchive.link(
+            routerContext,
+            g(archiveParams, 'year'),
+            g(archiveParams, 'month'),
+            {ordering: newSortValue, pagination: null}
+        )
+    ))
 }
 
 export default function* saga() {

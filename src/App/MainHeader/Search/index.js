@@ -1,184 +1,177 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import deburr from 'lodash/deburr'
+import {Record, List} from 'immutable'
+import {compose, setPropTypes} from 'recompose'
+import {connect} from 'react-redux'
+import {reduxForm, Field, formValueSelector} from 'redux-form/immutable'
 import Autosuggest from 'react-autosuggest'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
-import TextField from '@material-ui/core/TextField'
-import Paper from '@material-ui/core/Paper'
-import MenuItem from '@material-ui/core/MenuItem'
+import {TextField, Paper, MenuItem} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
+
 import {
-    Search,
+    immutableProvedGet as ig,
+    plainProvedGet as g,
+    PropTypes,
+    ImmutablePropTypes,
+} from '../../helpers'
+
+import {immutableI18nSearchModel} from '../../models'
+import {
+    SearchForm,
     SearchButton
 } from './assets'
 import {muiStyles} from './assets/muiStyles'
+import actions from './actions'
 
-const suggestions = [
-  { label: 'Afghanistan' },
-  { label: 'Aland Islands' },
-  { label: 'Albania' },
-  { label: 'Algeria' },
-  { label: 'American Samoa' },
-  { label: 'Andorra' },
-  { label: 'Angola' },
-  { label: 'Anguilla' },
-  { label: 'Antarctica' },
-  { label: 'Antigua and Barbuda' },
-  { label: 'Argentina' },
-  { label: 'Armenia' },
-  { label: 'Aruba' },
-  { label: 'Australia' },
-  { label: 'Austria' },
-  { label: 'Azerbaijan' },
-  { label: 'Bahamas' },
-  { label: 'Bahrain' },
-  { label: 'Bangladesh' },
-  { label: 'Barbados' },
-  { label: 'Belarus' },
-  { label: 'Belgium' },
-  { label: 'Belize' },
-  { label: 'Benin' },
-  { label: 'Bermuda' },
-  { label: 'Bhutan' },
-  { label: 'Bolivia, Plurinational State of' },
-  { label: 'Bonaire, Sint Eustatius and Saba' },
-  { label: 'Bosnia and Herzegovina' },
-  { label: 'Botswana' },
-  { label: 'Bouvet Island' },
-  { label: 'Brazil' },
-  { label: 'British Indian Ocean Territory' },
-  { label: 'Brunei Darussalam' },
-]
+const
+    renderHiddenField = ({
+        input,
+        type,
+    }) => <input {...input} type={type}/>,
 
-function renderInputComponent(inputProps) {
-    const {classes, inputRef = () => {}, ref, ...other} = inputProps
-
-    return <TextField
+    renderInputComponent = ({classes, ref, i18nSearch, ...input}) => <TextField
         fullWidth
+        placeholder={ig(i18nSearch, 'inputPlaceholder')}
         InputProps={{
+            classes: {
+                input: g(classes, 'input'),
+            },
             inputRef: node => {
                 ref(node)
-                inputRef(node)
             },
-            classes: {
-                input: classes.input,
-            },
-            disableUnderline: true
+            ...input,
+            disableUnderline: true,
         }}
-        {...other}
-    />
-}
+    />,
 
-function renderSuggestion(suggestion, {query, isHighlighted}) {
-    const matches = match(suggestion.label, query)
-    const parts = parse(suggestion.label, matches)
+    renderSuggestion = (suggestion, {query, isHighlighted}) => {
+        const matches = match(suggestion, query)
+        const parts = parse(suggestion, matches)
 
-    return <MenuItem selected={isHighlighted} component="div">
-        <div>
-            {parts.map((part, index) => {
-                return part.highlight ? (
-                    <span key={String(index)} style={{fontWeight: 500}}>
-                    {part.text}
-                    </span>
-                ) : (
-                    <strong key={String(index)} style={{fontWeight: 300}}>
-                    {part.text}
-                    </strong>
-                )
-            })}
-        </div>
-    </MenuItem>
-}
+        return <MenuItem selected={isHighlighted} component="div">
+            <div>
+                {parts.map((part, index) => {
+                    return part.highlight ? (
+                        <span key={String(index)} style={{fontWeight: 500}}>
+                            {part.text}
+                        </span>
+                    ) : (
+                        <strong key={String(index)} style={{fontWeight: 300}}>
+                            {part.text}
+                        </strong>
+                    )
+                })}
+            </div>
+        </MenuItem>
+    },
 
-function getSuggestions(value) {
-    const inputValue = deburr(value.trim()).toLowerCase()
-    const inputLength = inputValue.length
-    let count = 0
+    getSuggestionValue = (change, suggestion) => {
+        change('searchKey', suggestion)
+    },
 
-    return inputLength === 0
-        ? []
-        : suggestions.filter(suggestion => {
-            const
-                keep = count < 5 && suggestion.label.slice(0, inputLength).toLowerCase() === inputValue
+    renderAutosuggest = ({
+        classes, i18nSearch, search, input, change,
+        suggestionsFetchRequestHandler, suggestionsClearRequestHandler,
+        suggestionSelectedHandler, classId,
+    }) => <Autosuggest
+        renderInputComponent={renderInputComponent}
+        suggestions={ig(search, 'suggestions').toJS()}
+        getSuggestionValue={getSuggestionValue.bind(this, change)}
+        renderSuggestion={renderSuggestion}
 
-            if (keep) {
-                count += 1
-            }
+        onSuggestionsFetchRequested={suggestionsFetchRequestHandler.bind(this, classId)}
+        onSuggestionsClearRequested={suggestionsClearRequestHandler}
+        onSuggestionSelected={suggestionSelectedHandler.bind(this, change)}
+        inputProps={{
+            classes,
+            i18nSearch,
+            ...input,
+        }}
 
-            return keep
-        })
-}
+        theme={{
+            container: g(classes, 'container'),
+            suggestionsContainerOpen: g(classes, 'suggestionsContainerOpen'),
+            suggestionsList: g(classes, 'suggestionsList'),
+            suggestion: g(classes, 'suggestion'),
+        }}
 
-function getSuggestionValue(suggestion) {
-    return suggestion.label
-}
-
-class IntegrationAutosuggest extends React.Component {
-    state = {
-        single: '',
-        popper: '',
-        suggestions: [],
-    }
-
-    handleSuggestionsFetchRequested = ({ value }) => {
-        this.setState({
-            suggestions: getSuggestions(value),
-        })
-    }
-
-    handleSuggestionsClearRequested = () => {
-        this.setState({
-            suggestions: [],
-        })
-    }
-
-    handleChange = name => (event, { newValue }) => {
-        this.setState({
-            [name]: newValue,
-        })
-    }
-
-    render() {
-        const {classes} = this.props
-
-        const autosuggestProps = {
-            renderInputComponent,
-            suggestions: this.state.suggestions,
-            onSuggestionsFetchRequested: this.handleSuggestionsFetchRequested,
-            onSuggestionsClearRequested: this.handleSuggestionsClearRequested,
-            getSuggestionValue,
-            renderSuggestion,
-        }
-
-        return <Search>
-            <Autosuggest
-            {...autosuggestProps}
-            inputProps={{
-                classes,
-                placeholder: 'Search 65,123,242 videos... (start with a)',
-                value: this.state.single,
-                onChange: this.handleChange('single'),
-            }}
-            theme={{
-                container: classes.container,
-                suggestionsContainerOpen: classes.suggestionsContainerOpen,
-                suggestionsList: classes.suggestionsList,
-                suggestion: classes.suggestion,
-            }}
-            renderSuggestionsContainer={options => (
-                <Paper {...options.containerProps} square>
+        renderSuggestionsContainer={options =>
+            <Paper {...options.containerProps} square>
                 {options.children}
-                </Paper>
-            )}
+            </Paper>
+        }
+    />,
+
+    Search = props => {
+        const {handleSubmit, i18nSearch} = props
+
+        return <SearchForm
+            onSubmit={handleSubmit}
+        >
+            <Field
+                name="classId"
+                type="hidden"
+                component={renderHiddenField}
             />
-            <SearchButton/>
-        </Search>
-    }
-}
+            <Field
+                name="searchKey"
+                type="text"
+                props={props}
+                component={renderAutosuggest}
+            />
+            <SearchButton
+                type="submit"
+                title={ig(i18nSearch, 'buttonTitle')}
+            />
+        </SearchForm>
+    },
 
-IntegrationAutosuggest.propTypes = {
-    classes: PropTypes.object.isRequired,
-}
+    SearchRecord = Record({
+        suggestions: List(),
+    })
 
-export default withStyles(muiStyles)(IntegrationAutosuggest)
+
+export default compose(
+    connect(
+        state => ({
+            initialValues: { // Setting default form values. redux-form creates keys in store for this
+                classId: '1', // ig(state, ['app', 'videoPage', 'gallery', 'classId']),
+                searchKey: '',
+            },
+            search: SearchRecord(ig(state, ['app', 'mainHeader', 'search'])),
+            i18nSearch: ig(state, 'app', 'locale', 'i18n', 'search'),
+            classId: formValueSelector('searchForm')(state, 'classId'),
+        }),
+        dispatch => ({
+            suggestionsFetchRequestHandler: (classId, {value, reason}) => {
+                dispatch(actions.suggestionsFetchRequest({
+                    classId,
+                    searchKey: value,
+                }))
+            },
+            suggestionsClearRequestHandler: () => dispatch(actions.setEmptySuggestions()),
+            suggestionSelectedHandler: (change, event, {suggestion, method}) => {
+                if (method === 'enter')
+                    change('searchKey', suggestion)
+
+                dispatch(actions.runSearch(suggestion))
+            }
+        })
+    ),
+    reduxForm({
+        form: 'searchForm',
+        enableReinitialize: true,
+        onSubmit: (values, dispatch) => dispatch(actions.runSearch(ig(values, 'searchKey')))
+    }),
+    withStyles(muiStyles),
+    setPropTypes({
+        classes: PropTypes.object,
+        search: ImmutablePropTypes.recordOf({
+            suggestions: ImmutablePropTypes.list,
+        }),
+        i18nSearch: immutableI18nSearchModel,
+        handleSubmit: PropTypes.func,
+        change: PropTypes.func,
+    })
+)(Search)

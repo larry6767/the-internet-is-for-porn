@@ -1,70 +1,173 @@
+import {mapValues} from 'lodash'
+
+import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
+
+const
+    galleryModelProps = Object.freeze({
+        id: PropTypes.string, // but actually a number
+        id_class: PropTypes.string, // but actually a number
+        title: PropTypes.string,
+        embed_code: PropTypes.string,
+        id_sponsor: PropTypes.string,
+        url: PropTypes.string,
+        published: PropTypes.string, // but actually a number (of seconds, unix time)
+        length: PropTypes.string, // but actually a number (of seconds, unix time)
+
+        thumb_url: PropTypes.string,
+        thumbs: PropTypes.arrayOf(PropTypes.string), // but actually an array of numbers
+
+        tags: PropTypes.arrayOf(PropTypes.string),
+    }),
+
+    pageUrlModel = PropTypes.string,
+
+    // actually a list of two elements
+    publishedTemplateItemModel = PropTypes.exactTuple([
+        PropTypes.string, // singular, example: "1 year ago"
+        PropTypes.string, // multiple, example: "%d years ago"
+    ]),
+
+    publishedTemplateModelProps = Object.freeze({
+        y: publishedTemplateItemModel,
+        m: publishedTemplateItemModel,
+        d: publishedTemplateItemModel,
+        w: publishedTemplateItemModel,
+        h: publishedTemplateItemModel,
+        i: publishedTemplateItemModel,
+        s: publishedTemplateItemModel,
+    })
+
+export const
+    incomingGalleryModel = PropTypes.shape(galleryModelProps),
+    publishedTemplateModel = PropTypes.shape(publishedTemplateModelProps),
+
+    // result model
+    galleryModel = PropTypes.exact({
+        id: PropTypes.number,
+        classId: PropTypes.number,
+        title: PropTypes.string,
+        urlForIframe: PropTypes.string,
+        sponsorId: PropTypes.string,
+        sponsorUrl: PropTypes.string,
+        published: PropTypes.string,
+
+        thumb: PropTypes.string,
+        thumbMask: PropTypes.string,
+        thumbs: PropTypes.arrayOf(PropTypes.number),
+
+        tags: PropTypes.arrayOf(PropTypes.string),
+        tagsShort: PropTypes.string,
+
+        url: PropTypes.string,
+        duration: PropTypes.string,
+    })
+
+const
+    // {foo: 'foo', bar: 'bar'}
+    galleryModelPropsKeys = Object.freeze(mapValues(galleryModelProps, (x, k) => k)),
+
+    // get incoming property by verified key (which must be presented in the model)
+    getProp = (src, propKey, ...xs) => g(src, g(galleryModelPropsKeys, propKey), ...xs),
+
+    // {foo: 'foo', bar: 'bar'}
+    publishedTemplateModelPropsKeys =
+        Object.freeze(mapValues(publishedTemplateModelProps, (x, k) => k)),
+
+    // get incoming property of "publishedTemplate" by verified key
+    // (which must be presented in the model)
+    getPubTplProp = (src, propKey, ...xs) =>
+        g(src, g(publishedTemplateModelPropsKeys, propKey), ...xs)
+
 export default (data, pageUrl, publishedTemplate) => {
+    if (process.env.NODE_ENV !== 'production') {
+        assertPropTypes(incomingGalleryModel, data, 'getGallery', 'original source gallery data')
+        assertPropTypes(pageUrlModel, pageUrl, 'getGallery', 'page url')
+
+        assertPropTypes(
+            publishedTemplateModel,
+            publishedTemplate,
+            'getGallery',
+            'published template'
+        )
+    }
+
     const
-        publishedDate = new Date(Date.now() - data.published * 1000),
+        publishedDate = new Date(Date.now() - getProp(data, 'published') * 1000),
         years = publishedDate.getFullYear() - 1970,
         months = publishedDate.getMonth(),
         days = publishedDate.getDate(),
         hours = publishedDate.getHours(),
         minutes = publishedDate.getMinutes(),
 
-        published = years && years === 1
-            ? publishedTemplate.y[0]
+        published
+            = years && years === 1
+            ? getPubTplProp(publishedTemplate, 'y', 0)
             : years
-            ? publishedTemplate.y[1].replace('%d', years)
+            ? getPubTplProp(publishedTemplate, 'y', 1).replace('%d', years)
 
-            : months && months ===1
-            ? publishedTemplate.m[0]
+            : months && months === 1
+            ? getPubTplProp(publishedTemplate, 'm', 0)
             : months
-            ? publishedTemplate.m[1].replace('%d', months)
+            ? getPubTplProp(publishedTemplate, 'm', 1).replace('%d', months)
 
             : days && days === 1
-            ? publishedTemplate.d[0]
+            ? getPubTplProp(publishedTemplate, 'd', 0)
             : days === 7
-            ? publishedTemplate.w[0]
+            ? getPubTplProp(publishedTemplate, 'w', 0)
             : days === 14
-            ? publishedTemplate.w[1].replace('%d', days / 7)
+            ? getPubTplProp(publishedTemplate, 'w', 1).replace('%d', days / 7)
             : days === 21
-            ? publishedTemplate.w[1].replace('%d', days / 7)
+            ? getPubTplProp(publishedTemplate, 'w', 1).replace('%d', days / 7)
             : days === 28
-            ? publishedTemplate.w[1].replace('%d', days / 7)
+            ? getPubTplProp(publishedTemplate, 'w', 1).replace('%d', days / 7)
             : days
-            ? publishedTemplate.d[1].replace('%d', days)
+            ? getPubTplProp(publishedTemplate, 'd', 1).replace('%d', days)
 
             : hours && hours === 1
-            ? publishedTemplate.h[0]
+            ? getPubTplProp(publishedTemplate, 'h', 0)
             : hours
-            ? publishedTemplate.h[1].replace('%d', hours)
+            ? getPubTplProp(publishedTemplate, 'h', 1).replace('%d', hours)
 
             : minutes && minutes === 1
-            ? publishedTemplate.m[0]
+            ? getPubTplProp(publishedTemplate, 'm', 0)
             : minutes
-            ? publishedTemplate.m[1].replace('%d', minutes)
+            ? getPubTplProp(publishedTemplate, 'm', 1).replace('%d', minutes)
 
-            : publishedTemplate.s[0]
+            : getPubTplProp(publishedTemplate, 's', 0),
 
-    return {
-        id: Number(data.id),
-        classId: Number(data.id_class),
-        title: data.title,
-        urlForIframe: data.embed_code.match(/src="([\S]+)"/)[1],
-        sponsorId: data.id_sponsor,
-        sponsorUrl: data.url,
-        published: published,
+        length = Number(getProp(data, 'length')),
 
-        // The following data is used for ADD_VIDEO_TO_FAVORITE action:
-        thumb: data.thumb_url,
-        thumbMask: data.thumb_url.replace(/-\d+.jpg/, '-{num}.jpg'),
-        thumbs: data.thumbs,
-        tags: data.tags || [],
-        // This is for very small string under a video preview,
-        // it's usually only one single tag.
-        tagsShort: data.tags.reduce((acc, tag) => {
-            const newAcc = acc === '' ? tag : `${acc}, ${tag}`
-            return newAcc.length <= 22 ? newAcc : acc
-        }, ''),
-        url: pageUrl.slice(0, pageUrl.indexOf('.htm')),
-        duration: `${Math.floor(data.length / 60)}:${data.length % 60 < 10
-            ? '0' + data.length % 60
-            : data.length % 60}`,
-    }
+        result = {
+            id: Number(getProp(data, 'id')),
+            classId: Number(getProp(data, 'id_class')),
+            title: getProp(data, 'title'),
+            urlForIframe: g(getProp(data, 'embed_code').match(/src="([\S]+)"/), 1),
+            sponsorId: getProp(data, 'id_sponsor'),
+            sponsorUrl: getProp(data, 'url'),
+            published,
+
+            // The following data is used for ADD_VIDEO_TO_FAVORITE action:
+            thumb: getProp(data, 'thumb_url'),
+            thumbMask: getProp(data, 'thumb_url').replace(/-\d+.jpg/, '-{num}.jpg'),
+            thumbs: getProp(data, 'thumbs').map(x => Number(x)),
+            tags: getProp(data, 'tags'),
+            // This is for very small string under a video preview,
+            // it's usually only one single tag.
+            tagsShort: getProp(data, 'tags').reduce((acc, tag) => {
+                const newAcc = acc === '' ? tag : `${acc}, ${tag}`
+                return g(newAcc, 'length') <= 22 ? newAcc : acc
+            }, ''),
+            url: pageUrl.slice(0, pageUrl.indexOf('.htm')),
+
+            duration: `${
+                Math.floor(length / 60)
+            }:${
+                length % 60 < 10 ? '0' + length % 60 : length % 60
+            }`,
+        }
+
+    if (process.env.NODE_ENV !== 'production')
+        assertPropTypes(galleryModel, result, 'getGallery', 'result gallery data')
+
+    return result
 }

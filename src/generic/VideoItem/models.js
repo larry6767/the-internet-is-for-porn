@@ -1,55 +1,51 @@
-import {mapValues} from 'lodash'
-import {ImmutablePropTypes, PropTypes, plainProvedGet as g} from '../../App/helpers'
+import {ImmutablePropTypes, PropTypes} from '../../App/helpers'
 
 const
-    videoItemModelProps = Object.freeze({
-        id: PropTypes.number,
+    videoItemModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
+            list = isImmutable ? ImmutablePropTypes.listOf : PropTypes.arrayOf
 
-        thumb: PropTypes.string, // an URL
-        thumbMask: PropTypes.string, // an URL with "{num}" placeholder
-        thumbs: PropTypes.arrayOf(PropTypes.number),
-        favorite: PropTypes.number,
+        return exact({
+            id: PropTypes.number,
 
-        title: PropTypes.string,
-        sponsorId: PropTypes.string,
-        tags: PropTypes.arrayOf(PropTypes.string),
+            thumb: PropTypes.string, // an URL
+            thumbMask: PropTypes.string, // an URL with "{num}" placeholder
+            thumbs: list(PropTypes.number),
+            favorite: PropTypes.number,
 
-        // This is for very small string under a video preview, it's usually only one single tag.
-        tagsShort: PropTypes.string,
+            title: PropTypes.string,
+            sponsorId: PropTypes.string,
+            tags: list(PropTypes.string),
 
-        duration: PropTypes.string,
+            // This is for very small string under a video preview,
+            // it's usually only one single tag.
+            tagsShort: PropTypes.string,
 
-        videoPageRef: PropTypes.oneOfType([
-            // Either an internal video id
-            PropTypes.number,
+            duration: PropTypes.string,
 
-            // or a link (URL) to an external resource
-            (props, propName, componentName) => {
-                if (typeof props[propName] !== 'string')
-                    return new Error(
-                        `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
-                        `(it's not a string but ${typeof props[propName]}). Validation failed.`
-                    )
-                if (!/^http/.test(props[propName]))
-                    return new Error(
-                        `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
-                        `(link to an external resource must start with "http"). Validation failed.`
-                    )
-            },
-        ])
-    }),
+            videoPageRef: PropTypes.oneOfType([
+                // Either an internal video id
+                PropTypes.number,
 
-    // {foo: 'foo', bar: 'bar'}
-    videoItemModelPropsKeys = Object.freeze(mapValues(videoItemModelProps, (x, k) => k))
+                // or a link (URL) to an external resource
+                (props, propName, componentName) => {
+                    if (typeof props[propName] !== 'string')
+                        return new Error(
+                            `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                            `(it's not a string but ${typeof props[propName]}). Validation failed.`
+                        )
+                    if (!/^http/.test(props[propName]))
+                        return new Error(
+                            `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                            '(link to an external resource must start with "http"). ' +
+                            'Validation failed.'
+                        )
+                },
+            ])
+        })
+    }
 
 export const
-    videoItemModel = PropTypes.exact(videoItemModelProps),
-
-    // immutable.js version of `videoItemModel` model
-    immutableVideoItemModel = ImmutablePropTypes.exact(mapValues(videoItemModelProps, (x, k) =>
-        k === g(videoItemModelPropsKeys, 'thumbs')
-        ? ImmutablePropTypes.listOf(PropTypes.number)
-        : k === g(videoItemModelPropsKeys, 'tags')
-        ? ImmutablePropTypes.listOf(PropTypes.string)
-        : x
-    ))
+    videoItemModel = videoItemModelBuilder(false),
+    immutableVideoItemModel = videoItemModelBuilder(true)

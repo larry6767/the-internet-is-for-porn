@@ -1,18 +1,38 @@
-import {pick, map, find, mapValues, omit} from 'lodash'
+import {pick, map, find, mapValues, omit, compact, get} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 import {Agent} from 'https' // TODO FIXME for hacky-wacky stuff (blind trust to SSL cert)
 
+import {
+    plainProvedGet as g,
+    PropTypes,
+    assertPropTypes,
+} from '../App/helpers'
+
 import {defaultHostToFetchSiteLocalesFrom} from '../config'
-import apiLocales from '../api-locale-mapping'
-import {plainProvedGet as g} from '../App/helpers'
-import {backendUrl, backendUrlForReport} from './helpers/backendUrl'
+import apiLocales from '../locale-mapping/backend-api'
+import {backendUrl, backendUrlForReport, backendUrlForSearch} from './helpers/backendUrl'
+import {videoItemModel} from '../generic/VideoItem/models'
+import {incomingVideoItemModel} from './helpers/requests/getFilteredVideoList'
+
+import {
+    incomingVideoPageTextModel,
+    videoPageTextModel,
+    getVideoPageText,
+} from './helpers/requests/getPageText'
+
+import {
+    incomingGalleryModel,
+    publishedTemplateModel,
+    galleryModel,
+} from './helpers/requests/getGallery'
 
 import {
     getTagList,
     getTagListByLetters,
     getModelsList,
-    getSortList,
+    getOrderingSortList,
+    getFavoritesSortList,
     getFilteredVideoList,
     getPageText,
     getTagArchiveList,
@@ -50,27 +70,38 @@ const
 
     getAllMoviesMap = x => {
         const
-            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID),
-            tagArchiveListOlder = pick(x.page.TAG_ARCHIVE_OLDER, ['month', 'year']),
-            tagArchiveListNewer = pick(x.page.TAG_ARCHIVE_NEWER, ['month', 'year'])
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS')),
+            tagArchiveListOlder = pick(g(x, 'page').TAG_ARCHIVE_OLDER, ['month', 'year']),
+            tagArchiveListNewer = pick(g(x, 'page').TAG_ARCHIVE_NEWER, ['month', 'year']),
+            archiveFilms = get(g(x, 'page', 'ACTIVE_NAV_TABS'), ['tag_archive_gals'], null)
 
         return {
             currentPage: x.page.TAG_URL_NAME,
             pageNumber: x.page.PAGE_NUMBER,
-            pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
+            pageText: getPageText(x.page.PAGE_TEXT),
             tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
-            tagArchiveList: getTagArchiveList(x.page.TAG_ARCHIVE_LIST_FULL, x.page.MONTHS_NAMES),
+
+            tagArchiveList: getTagArchiveList(
+                get(g(x, 'page'), ['TAG_ARCHIVE_LIST_FULL'], g(x, 'page', 'TAG_ARCHIVE_LIST')),
+                g(x, 'page', 'MONTHS_NAMES')
+            ),
 
             tagArchiveListOlder:
-                Object.keys(tagArchiveListOlder).length ? tagArchiveListOlder : null,
+                tagArchiveListOlder && Object.keys(tagArchiveListOlder).length
+                    ? tagArchiveListOlder
+                    : null,
 
             tagArchiveListNewer:
-                Object.keys(tagArchiveListNewer).length ? tagArchiveListNewer : null,
+                tagArchiveListNewer && Object.keys(tagArchiveListNewer).length
+                    ? tagArchiveListNewer
+                    : null,
 
-            sortList: sortList,
-            currentSort: sortList.length ? sortList.find(x => x.active).value : '',
-            archiveFilms: getArchiveFilms(x.page.ACTIVE_NAV_TABS.tag_archive_gals),
+            sortList,
+            currentSort:
+                g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
+
+            archiveFilms: archiveFilms && getArchiveFilms(archiveFilms),
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }
@@ -78,43 +109,62 @@ const
 
     getNicheMap = x => {
         const
-            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID)
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS')),
+            tagArchiveListOlder = pick(g(x, 'page').TAG_ARCHIVE_OLDER, ['month', 'year']),
+            tagArchiveListNewer = pick(g(x, 'page').TAG_ARCHIVE_NEWER, ['month', 'year']),
+            archiveFilms = get(g(x, 'page', 'ACTIVE_NAV_TABS'), ['tag_archive_gals'], null)
 
         return {
             currentPage: 'all-niches',
-            currentSubPage: x.page.TAG_URL_NAME,
-            pageNumber: x.page.PAGE_NUMBER,
-            pageText: getPageText(x.page.PAGE_TEXT),
-            pagesCount: x.page.PAGES_COUNT,
-            tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
-            tagArchiveList: getTagArchiveList(x.page.TAG_ARCHIVE_LIST_FULL, x.page.MONTHS_NAMES),
-            tagArchiveListOlder: pick(
-                x.page.TAG_ARCHIVE_OLDER,
-                ['month', 'year']
+            currentSubPage: g(x, 'page', 'TAG_URL_NAME'),
+            pageNumber: g(x, 'page', 'PAGE_NUMBER'),
+            pagesCount: g(x, 'page', 'PAGES_COUNT'),
+            pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
+            tagList: getTagListByLetters(g(x, 'page', 'TAGS_BY_LETTERS', 'letters')),
+
+            tagArchiveList: getTagArchiveList(
+                get(g(x, 'page'), ['TAG_ARCHIVE_LIST_FULL'], g(x, 'page', 'TAG_ARCHIVE_LIST')),
+                g(x, 'page', 'MONTHS_NAMES')
             ),
-            tagArchiveListNewer: pick(
-                x.page.TAG_ARCHIVE_NEWER,
-                ['month', 'year']
+
+            tagArchiveListOlder:
+                tagArchiveListOlder && Object.keys(tagArchiveListOlder).length
+                    ? tagArchiveListOlder
+                    : null,
+
+            tagArchiveListNewer:
+                tagArchiveListNewer && Object.keys(tagArchiveListNewer).length
+                    ? tagArchiveListNewer
+                    : null,
+
+            sortList,
+            currentSort:
+                g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
+
+            archiveFilms: archiveFilms && getArchiveFilms(archiveFilms),
+            itemsCount: g(x, 'page', 'ITEMS_PER_PAGE'),
+
+            videoList: getFilteredVideoList(
+                g(x, 'page', 'GALS_INFO', 'ids'),
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
-            sortList: sortList,
-            currentSort: sortList.length ? sortList.find(x => x.active).value : '',
-            archiveFilms: getArchiveFilms(x.page.ACTIVE_NAV_TABS.tag_archive_gals),
-            itemsCount: x.page.ITEMS_PER_PAGE,
-            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }
     },
 
     getPornstarMap = x => {
         const
-            sortList = getSortList(x.page.ACTIVE_NAV_TABS, x.page.LANG_ID)
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS'))
 
         return {
             currentSubPage: x.page.TAG_URL_NAME,
             pageNumber: x.page.PAGE_NUMBER,
             pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
-            sortList: sortList,
-            currentSort: sortList.length ? sortList.find(x => x.active).value : '',
+
+            sortList,
+            currentSort:
+                g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
+
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
             modelsList: getModelsList(
@@ -169,13 +219,94 @@ const
         }
     },
 
+    videoPageModel = PropTypes.shape({
+        page: PropTypes.shape({
+            GALLERY: incomingGalleryModel,
+            PAGE_URL: PropTypes.string,
+            TIME_AGO: publishedTemplateModel,
+            PAGE_TEXT: incomingVideoPageTextModel,
+            GALS_INFO: PropTypes.shape({
+                ids: PropTypes.arrayOf(PropTypes.number),
+                items: PropTypes.objectOf(incomingVideoItemModel),
+            }),
+        }),
+    }),
+
+    mappedVideoPageModel = PropTypes.shape({
+        gallery: galleryModel,
+        pageText: videoPageTextModel,
+        videoList: PropTypes.arrayOf(videoItemModel),
+    }),
+
     getVideoPageMap = x => {
+        if (process.env.NODE_ENV !== 'production')
+            assertPropTypes(videoPageModel, x, 'getVideoPageMap', 'video page source from backend')
+
+        const
+            result = {
+                gallery: getGallery(
+                    g(x, 'page', 'GALLERY'),
+                    g(x, 'page', 'PAGE_URL'),
+                    g(x, 'page', 'TIME_AGO')
+                ),
+
+                pageText: getVideoPageText(g(x, 'page', 'PAGE_TEXT')),
+
+                videoList: getFilteredVideoList(
+                    g(x, 'page', 'GALS_INFO', 'ids'),
+                    g(x, 'page', 'GALS_INFO', 'items')
+                ),
+            }
+
+        if (process.env.NODE_ENV !== 'production')
+            assertPropTypes(
+                mappedVideoPageModel,
+                result,
+                'getVideoPageMap',
+                'mapped video page data'
+            )
+
+        return result
+    },
+
+    getFindVideosMap = x => {
+        const
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS'))
+
         return {
-            gallery: getGallery(x.page.GALLERY, x.page.PAGE_URL, x.page.TIME_AGO),
+            pageNumber: x.page.PAGE_NUMBER,
             pageText: getPageText(x.page.PAGE_TEXT),
+            pagesCount: x.page.PAGES_COUNT,
+
+            sortList,
+            currentSort:
+                g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
+
+            itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
         }
     },
+
+    getPageDataParamsModel = PropTypes.exact({
+        url: PropTypes.string,
+        options: PropTypes.shape({
+            blocks: PropTypes.exact({
+                allTagsBlock: PropTypes.number.isOptional,
+                modelsABCBlockText: PropTypes.number.isOptional,
+                modelsABCBlockThumbs: PropTypes.number.isOptional,
+            }).isOptional,
+        }).isOptional,
+    }),
+
+    getPageDataResultModel = PropTypes.exactTuple([
+        getPageDataParamsModel,
+        PropTypes.func,
+    ]).isOptional,
+
+    getPageDataReqBodyModel = PropTypes.exact({
+        operation: PropTypes.string,
+        params: getPageDataParamsModel,
+    }),
 
     // `callStackGetter` supposed to be (() => new Error().stack) in place where it's called,
     // otherwise it's hard to debug which request is caused an exception.
@@ -230,7 +361,7 @@ export const getPageData = (siteLocales, localeCode) => async ({
             .replace(/%PAGE_CODE%/g, pageCode)
             .replace(/%SUB_PAGE_CODE%/g, subPageCode),
 
-        [params, mapFn] =
+        result =
             pageCode === (x = localeBranch('home'), g(x, 'code'))
             ? [{url: urlFunc(g(x, 'url')), options: {blocks: {
                 allTagsBlock: 1,
@@ -267,15 +398,28 @@ export const getPageData = (siteLocales, localeCode) => async ({
             : pageCode === (x = localeBranch('video'), g(x, 'code'))
             ? [{url: urlFunc(g(x, 'url'))}, getVideoPageMap]
 
+            : pageCode === (x = localeBranch('findVideos'), g(x, 'code'))
+            ? [{url: urlFunc(g(x, 'url'))}, getFindVideosMap]
+
             : null
 
-    if (params === null)
+    if (process.env.NODE_ENV !== 'production')
+        assertPropTypes(getPageDataResultModel, result, 'requests', 'getPageData')
+
+    if (result === null)
         throw new Error(`Unexpected page code: "${pageCode}"`)
+
+    const
+        [params, mapFn] = result,
+        body = {operation: 'getPageDataByUrl', params}
+
+    if (process.env.NODE_ENV !== 'production')
+        assertPropTypes(getPageDataReqBodyModel, body, 'requests', 'getPageData')
 
     return mapFn(await fetch(backendUrl(siteLocales, localeCode), {
         method: 'POST',
         headers,
-        body: JSON.stringify({operation: 'getPageDataByUrl', params}),
+        body: JSON.stringify(body),
 
         // TODO FIXME remove this:
         agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
@@ -350,3 +494,20 @@ export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => 
         agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
     }
 ).then(fetchResponseExtractor(() => new Error().stack))
+
+export const getSearchSuggestions = (siteLocales, localeCode) => async ({headers, formData}) => {
+    const
+        prepareData = x => compact(x) // 'compact' is for array with a single empty value, like ['']
+
+    return prepareData(await fetch(
+        `${backendUrlForSearch(siteLocales, localeCode)}?c=${
+            g(formData, 'classId')}&t=${g(formData, 'searchKey')}`,
+        {
+            method: 'GET',
+            headers,
+
+            // TODO FIXME remove this:
+            agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
+        }
+    ).then(fetchResponseExtractor(() => new Error().stack)))
+}

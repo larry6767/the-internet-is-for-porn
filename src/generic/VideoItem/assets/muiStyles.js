@@ -2,6 +2,9 @@ export const muiStyles = theme => ({
     routerLink: {
         textDecoration: 'none',
     },
+    routerLinkGray: {
+        color: theme.palette.primary.dark,
+    },
     typography: {
         color: theme.palette.primary.contrastText,
     },
@@ -9,13 +12,13 @@ export const muiStyles = theme => ({
         textOverflow: 'ellipsis',
         overflow: 'hidden',
         whiteSpace: 'nowrap',
-        cursor: 'help',
+        color: theme.palette.primary.dark,
     },
     typographyTags: {
-        cursor: 'help',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
+        color: theme.palette.primary.dark,
     },
     typographySource: {
         marginRight: 10,

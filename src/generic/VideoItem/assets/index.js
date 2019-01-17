@@ -6,7 +6,6 @@ export const Wrapper = styled.div`
     width: calc((100% - 15px) / 4);
     margin-right: 5px;
     margin-bottom: 5px;
-    cursor: pointer;
 
     ${({theme}) => theme.media.sm`width: calc((100% - 10px) / 3)`}
     ${({theme}) => theme.media.xs`width: calc((100% - 5px) / 2)`}

@@ -1,7 +1,10 @@
+import {Record, List} from 'immutable'
 import React from 'react'
 import {connect} from 'react-redux'
-import {compose, lifecycle} from 'recompose'
+import {compose, lifecycle, withHandlers, setPropTypes} from 'recompose'
 import {Link} from 'react-router-dom'
+import FolderIcon from '@material-ui/icons/Folder'
+
 import {
     List as ListComponent,
     ListItem,
@@ -10,19 +13,22 @@ import {
     CircularProgress,
     Typography,
 } from '@material-ui/core'
-import FolderIcon from '@material-ui/icons/Folder'
+
 import {
-    Record,
-    List,
-} from 'immutable'
+    withStylesProps,
+    getRouterContext,
+    immutableProvedGet as ig,
+    plainProvedGet as g,
+    PropTypes,
+    ImmutablePropTypes,
+} from '../helpers'
+
 import ErrorContent from '../../generic/ErrorContent'
-import {withStylesProps} from '../helpers'
+import {routerGetters} from '../../router-builder'
+import {immutableI18nAllNichesModel} from '../models'
+import {nicheItemModel} from './models'
 import actions from './actions'
-import {
-    AllNichesPage,
-    Content,
-    PageWrapper,
-} from './assets'
+import {AllNichesPage, Content, PageWrapper} from './assets'
 import {muiStyles} from './assets/muiStyles'
 
 const
@@ -34,14 +40,14 @@ const
         nichesList: List(),
     }),
 
-    renderListItemLink = (x, classes) => <Link to={`/all-niches/${x.get('subPage')}`}
-        key={x.get('id')}
-        className={classes.routerLink}
+    renderListItemLink = (x, classes, getChildLink) => <Link to={getChildLink(ig(x, 'subPage'))}
+        key={ig(x, 'id')}
+        className={g(classes, 'routerLink')}
     >
         <ListItem
             button
             classes={{
-                gutters: classes.itemGutters
+                gutters: g(classes, 'itemGutters'),
             }}
         >
             <ListItemIcon>
@@ -49,33 +55,35 @@ const
             </ListItemIcon>
             <ListItemText
                 classes={{
-                    root: classes.listItemTextRoot,
-                    primary: classes.primaryTypography,
-                    secondary: classes.secondaryTypography
+                    root: g(classes, 'listItemTextRoot'),
+                    primary: g(classes, 'primaryTypography'),
+                    secondary: g(classes, 'secondaryTypography')
                 }}
-                primary={x.get('name')}
-                secondary={x.get('itemsCount')}
+                primary={ig(x, 'name')}
+                secondary={ig(x, 'itemsCount')}
             />
         </ListItem>
     </Link>,
 
-    AllNiches = ({classes, niches}) => <AllNichesPage>
-        { niches.get('isFailed')
+    AllNiches = ({classes, niches, getChildLink, i18nAllNiches}) => <AllNichesPage>
+        { ig(niches, 'isFailed')
             ? <ErrorContent/>
-            : niches.get('isLoading')
+            : ig(niches, 'isLoading')
             ? <CircularProgress/>
-            :<Content>
+            : <Content>
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
-                        All Niches
+                        {ig(i18nAllNiches, 'pageHeader')}
                     </Typography>
                     <ListComponent
                         component="div"
                         classes={{
-                            root: classes.root
+                            root: g(classes, 'root')
                         }}
                     >
-                        {niches.get('nichesList').map(x => renderListItemLink(x, classes))}
+                        {ig(niches, 'nichesList').map(x =>
+                            renderListItemLink(x, classes, getChildLink)
+                        )}
                     </ListComponent>
                 </PageWrapper>
             </Content>
@@ -85,19 +93,40 @@ const
 export default compose(
     connect(
         state => ({
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            niches: NichesRecord(state.getIn(['app', 'niches', 'all'])),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            niches: NichesRecord(ig(state, 'app', 'niches', 'all')),
+            i18nAllNiches: ig(state, 'app', 'locale', 'i18n', 'allNiches'),
+            routerContext: getRouterContext(state),
         }),
-        dispatch => ({
-            loadPage: (event, value) => dispatch(actions.loadPageRequest())
-        })
+        {
+            loadPageRequest: g(actions, 'loadPageRequest'),
+        }
     ),
+    withHandlers({
+        loadPage: props => () => props.loadPageRequest(),
+        getChildLink: props => child => routerGetters.niche.link(g(props, 'routerContext'), child),
+    }),
     lifecycle({
         componentDidMount() {
-            if (!this.props.niches.get('isLoading') && !this.props.niches.get('isLoaded')) {
+            const
+                niches = g(this, 'props', 'niches')
+
+            if (!ig(niches, 'isLoading') && !ig(niches, 'isLoaded')) {
                 this.props.loadPage()
             }
         }
     }),
-    withStylesProps(muiStyles)
+    withStylesProps(muiStyles),
+    setPropTypes({
+        currentBreakpoint: PropTypes.string,
+        niches: ImmutablePropTypes.exactRecordOf({
+            isLoading: PropTypes.bool,
+            isLoaded: PropTypes.bool,
+            isFailed: PropTypes.bool,
+
+            nichesList: ImmutablePropTypes.listOf(nicheItemModel),
+        }),
+        i18nAllNiches: immutableI18nAllNichesModel,
+        getChildLink: PropTypes.func,
+    })
 )(AllNiches)

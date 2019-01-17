@@ -1,9 +1,9 @@
 import {set} from 'lodash'
-import {plainProvedGet as g} from './App/helpers'
-import {PropTypes, assertPropTypes} from './App/helpers'
+
+import {PropTypes, assertPropTypes, plainProvedGet as g} from '../App/helpers'
 
 // only particular helper, because some of all helpers depends on this module
-import deepFreeze from './lib/helpers/deepFreeze'
+import deepFreeze from '../lib/helpers/deepFreeze'
 
 const
     mapping = deepFreeze({
@@ -18,6 +18,7 @@ const
                 favorite: {code: 'favorite', url: '/your-%PAGE_CODE%.html'},
                 favoritePornstars: {code: 'favorite-porn-stars', url: '/your-%PAGE_CODE%.html'},
                 video: {code: 'vid', url: '/%PAGE_CODE%-%SUB_PAGE_CODE%.htm'},
+                findVideos: {code: 'find-vids', url: '/%PAGE_CODE%%SUB_PAGE_CODE%'},
             },
         },
         deu: {
@@ -31,6 +32,7 @@ const
                 favorite: {code: 'favorite', url: '/your-%PAGE_CODE%.html'},
                 favoritePornstars: {code: 'favorite-porn-stars', url: '/your-%PAGE_CODE%.html'},
                 video: {code: 'vid', url: '/%PAGE_CODE%-%SUB_PAGE_CODE%.htm'},
+                findVideos: {code: 'find-vids', url: '/%PAGE_CODE%%SUB_PAGE_CODE%'},
             },
         },
         ita: {
@@ -44,6 +46,7 @@ const
                 favorite: {code: 'favorite', url: '/your-%PAGE_CODE%.html'},
                 favoritePornstars: {code: 'favorite-porn-stars', url: '/your-%PAGE_CODE%.html'},
                 video: {code: 'vid', url: '/%PAGE_CODE%-%SUB_PAGE_CODE%.htm'},
+                findVideos: {code: 'find-vids', url: '/%PAGE_CODE%%SUB_PAGE_CODE%'},
             },
         },
         fra: {
@@ -57,6 +60,7 @@ const
                 favorite: {code: 'favorite', url: '/your-%PAGE_CODE%.html'},
                 favoritePornstars: {code: 'favorite-porn-stars', url: '/your-%PAGE_CODE%.html'},
                 video: {code: 'vid', url: '/%PAGE_CODE%-%SUB_PAGE_CODE%.htm'},
+                findVideos: {code: 'find-vids', url: '/%PAGE_CODE%%SUB_PAGE_CODE%'},
             },
         },
         spa: {
@@ -70,6 +74,7 @@ const
                 favorite: {code: 'favorite', url: '/your-%PAGE_CODE%.html'},
                 favoritePornstars: {code: 'favorite-porn-stars', url: '/your-%PAGE_CODE%.html'},
                 video: {code: 'vid', url: '/%PAGE_CODE%-%SUB_PAGE_CODE%.htm'},
+                findVideos: {code: 'find-vids', url: '/%PAGE_CODE%%SUB_PAGE_CODE%'},
             },
         },
         por: {
@@ -83,6 +88,7 @@ const
                 favorite: {code: 'favorite', url: '/your-%PAGE_CODE%.html'},
                 favoritePornstars: {code: 'favorite-porn-stars', url: '/your-%PAGE_CODE%.html'},
                 video: {code: 'vid', url: '/%PAGE_CODE%-%SUB_PAGE_CODE%.htm'},
+                findVideos: {code: 'find-vids', url: '/%PAGE_CODE%%SUB_PAGE_CODE%'},
             },
         },
         swe: {
@@ -96,6 +102,7 @@ const
                 favorite: {code: 'favorite', url: '/your-%PAGE_CODE%.html'},
                 favoritePornstars: {code: 'favorite-porn-stars', url: '/your-%PAGE_CODE%.html'},
                 video: {code: 'vid', url: '/%PAGE_CODE%-%SUB_PAGE_CODE%.htm'},
+                findVideos: {code: 'find-vids', url: '/%PAGE_CODE%%SUB_PAGE_CODE%'},
             },
         },
         nld: {
@@ -109,6 +116,7 @@ const
                 favorite: {code: 'favorite', url: '/your-%PAGE_CODE%.html'},
                 favoritePornstars: {code: 'favorite-porn-stars', url: '/your-%PAGE_CODE%.html'},
                 video: {code: 'vid', url: '/%PAGE_CODE%-%SUB_PAGE_CODE%.htm'},
+                findVideos: {code: 'find-vids', url: '/%PAGE_CODE%%SUB_PAGE_CODE%'},
             },
         },
         fin: {
@@ -122,6 +130,7 @@ const
                 favorite: {code: 'favorite', url: '/your-%PAGE_CODE%.html'},
                 favoritePornstars: {code: 'favorite-porn-stars', url: '/your-%PAGE_CODE%.html'},
                 video: {code: 'vid', url: '/%PAGE_CODE%-%SUB_PAGE_CODE%.htm'},
+                findVideos: {code: 'find-vids', url: '/%PAGE_CODE%%SUB_PAGE_CODE%'},
             },
         },
         rus: {
@@ -135,6 +144,7 @@ const
                 favorite: {code: 'favorite', url: '/your-%PAGE_CODE%.html'},
                 favoritePornstars: {code: 'favorite-porn-stars', url: '/your-%PAGE_CODE%.html'},
                 video: {code: 'vid', url: '/%PAGE_CODE%-%SUB_PAGE_CODE%.htm'},
+                findVideos: {code: 'find-vids', url: '/%PAGE_CODE%%SUB_PAGE_CODE%'},
             },
         },
         tur: {
@@ -148,6 +158,7 @@ const
                 favorite: {code: 'favorite', url: '/your-%PAGE_CODE%.html'},
                 favoritePornstars: {code: 'favorite-porn-stars', url: '/your-%PAGE_CODE%.html'},
                 video: {code: 'vid', url: '/%PAGE_CODE%-%SUB_PAGE_CODE%.htm'},
+                findVideos: {code: 'find-vids', url: '/%PAGE_CODE%%SUB_PAGE_CODE%'},
             },
         },
     }),
@@ -168,6 +179,7 @@ const
             favorite: pageCodeBranchModel,
             favoritePornstars: pageCodeBranchModel,
             video: pageCodeBranchModel,
+            findVideos: pageCodeBranchModel,
         }),
     })
 
@@ -181,7 +193,7 @@ export const validate = siteLocales => {
         siteLocales.reduce((obj, x) => set(obj, g(x, 'code'), localeInnardsModel), {})
     )
 
-    assertPropTypes(mappingModel, mapping)
+    assertPropTypes(mappingModel, mapping, 'api-locale-mapping', 'validate')
 }
 
 export default mapping

@@ -584,6 +584,99 @@ function emptyFunctionThatReturnsNull() {
   // return ReactPropTypes;
 // };
 
+// START: own custom prop types
+
+const createTupleTypeChecker = exact => arrayOfTypeCheckers => {
+    if ( ! Array.isArray(arrayOfTypeCheckers)) {
+        return new PropTypeError(
+            `Invalid argument supplied to ${exact ? 'exactTuple' : 'tuple'}, ` +
+            'expected an instance of array.'
+        )
+    }
+
+    for (let i = 0; i < arrayOfTypeCheckers.length; i++) {
+        const
+            checker = arrayOfTypeCheckers[i]
+
+        if (typeof checker !== 'function')
+            return new PropTypeError(
+                `Invalid argument supplied to ${exact ? 'exactTuple' : 'tuple'}. ` +
+                'Expected an array of check functions, but ' +
+                `received ${getPostfixForTypeWarning(checker)} at index ${i}.`
+            )
+    }
+
+    const validate = (props, propName, componentName, location, propFullName) => {
+        const
+            propValue = props[propName]
+
+        if ( ! Array.isArray(propValue))
+            return new PropTypeError(
+                `Invalid ${location} \`${propFullName}\` of type \`${getPropType(propValue)}\` ` +
+                `supplied to \`${componentName}\`, expected array.`
+            )
+
+        if (exact && propValue.length > arrayOfTypeCheckers.length)
+            return new PropTypeError(
+                `Invalid ${location} \`${propFullName}\` supplied to \`${componentName}\`, ` +
+                `expected ${arrayOfTypeCheckers.length} tuple item(s) but got ${propValue.length}.`
+            )
+
+        for (let i = 0; i < arrayOfTypeCheckers.length; i++) {
+            const
+                checker = arrayOfTypeCheckers[i],
+                itemValue = propValue[i],
+
+                error = checker(
+                    propValue,
+                    i,
+                    componentName,
+                    location,
+                    `${propFullName}[${i}]`,
+                    ReactPropTypesSecret
+                )
+
+            if (error instanceof Error) return error
+        }
+    }
+
+    return createChainableTypeChecker(validate)
+}
+
+// If a tuple has more items than described in checker it's okay.
+//   Example [10, "foo"] is valid by PropTypes.tuple([PropTypes.number, PropTypes.string])
+//   Example [10, "foo"] is valid by PropTypes.tuple([PropTypes.number])
+ReactPropTypes.tuple = createTupleTypeChecker(false)
+// Also checks for exact amount of items in a tuple as in a checker.
+//   Example [10, "foo"] is valid by PropTypes.tuple([PropTypes.number, PropTypes.string])
+//   Example [10, "foo"] is INVALID by PropTypes.tuple([PropTypes.number])
+ReactPropTypes.exactTuple = createTupleTypeChecker(true)
+
+const createNullableTypeChecker = typeChecker => {
+    if (typeof typeChecker !== 'function')
+        return new PropTypeError(
+            'Invalid type checker argument supplied to `nullable`. ' +
+            `Expected a function, but received ${typeof typeChecker}.`
+        )
+
+    const validate = (props, propName, ...etc) => {
+        if (props[propName] === null) return // skipping any further checking
+        const error = typeChecker(props, propName, ...etc)
+        if (error instanceof Error) return error
+    }
+
+    return validate
+}
+
+// `nullable` isn't the same as `.isOptional`, optional value may be undefined (which could mean
+// that user just mistyped some key name), or when value isn't presented at all in the props.
+// But `nullable` allows either a type which valid by provided type checker or is explicit `null`.
+// It will check whether it's `null` (will skip any further checking) or check it with provided
+// type checker.
+ReactPropTypes.nullable = createNullableTypeChecker
+
+// END: own custom prop types
+
 export default ReactPropTypes
 export {ReactPropTypes as PropTypes}
 export {checkPropTypes, assertPropTypes} from './check'

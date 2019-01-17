@@ -1,49 +1,70 @@
 import React, {Fragment} from 'react'
+import {compose, withHandlers, withState, setPropTypes} from 'recompose'
+import {connect} from 'react-redux'
 import {Menu, MenuItem, IconButton} from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
-import Language from '../Language'
-import {compose} from 'recompose'
-import {connect} from 'react-redux'
-import {navigation} from '../Navigation/fixtures'
-import actionsNavigation from '../Navigation/actions'
-import actions from './actions'
 import {withStyles} from '@material-ui/core/styles'
+
+import {
+    getValueForNavigation,
+    getRouterContext,
+    immutableProvedGet as ig,
+    plainProvedGet as g,
+    PropTypes,
+} from '../../helpers'
+
+import {routerGetters} from '../../../router-builder'
+import {immutableI18nNavigationModel, routerContextModel} from '../../models'
+import Language from '../Language'
+import actionsNavigation from '../Navigation/actions'
+import {navMenuOrder} from '../Navigation/models'
+import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
-import {getValueForNavigation} from '../../helpers'
 
 const
-    BurgerMenu = ({classes, anchorEl, pathname, openAction, closeAction, toggleNavigationAction}) => {
-        const value = getValueForNavigation(navigation, pathname)
+    menuIconStyle = Object.freeze({fill: "#a1a7b1"}),
+
+    BurgerMenu = ({
+        classes,
+        anchorEl,
+        isOpened,
+        pathname,
+        openModal,
+        closeModal,
+        goToPath,
+        getLinkByNavKey,
+        i18nNav,
+    }) => {
+        const
+            value = getValueForNavigation(getLinkByNavKey)(navMenuOrder, pathname)
 
         return <Fragment>
             <IconButton
-                aria-owns={anchorEl ? 'burger-menu' : undefined}
+                aria-owns={isOpened ? 'burger-menu' : null}
                 aria-label="burger-menu"
                 aria-haspopup="true"
-                onClick={openAction}
+                onClick={openModal}
             >
-                <MenuIcon style={{fill: "#a1a7b1"}}/>
+                <MenuIcon style={menuIconStyle}/>
             </IconButton>
             <Menu
                 id="burger-menu"
                 anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={closeAction}
+                open={isOpened}
+                onClose={closeModal}
                 classes={{
-                    paper: classes.paper
+                    paper: g(classes, 'paper'),
                 }}
             >
-                {
-                    Object.keys(navigation).map((item, index) => (
-                        <MenuItem
-                            key={index}
-                            selected={item === value}
-                            onClick={event => toggleNavigationAction(event, item)}
-                        >
-                            {navigation[`${item}`]}
-                        </MenuItem>
-                    ))
-                }
+                {navMenuOrder.map((navKey, index) =>
+                    <MenuItem
+                        key={index /* the order never change */}
+                        selected={navKey === value}
+                        onClick={goToPath(navKey)}
+                    >
+                        {ig(i18nNav, navKey, 'title')}
+                    </MenuItem>
+                )}
                 <Language/>
             </Menu>
         </Fragment>
@@ -52,17 +73,52 @@ const
 export default compose(
     connect(
         state => ({
-            anchorEl: state.getIn(['app', 'mainHeader', 'burgerMenu', 'anchorEl']),
-            pathname: state.getIn(['router', 'location', 'pathname']),
+            isOpened: ig(state, 'app', 'mainHeader', 'burgerMenu', 'isOpened'),
+            pathname: ig(state, 'router', 'location', 'pathname'),
+            i18nNav: ig(state, 'app', 'locale', 'i18n', 'navigation'),
+            routerContext: getRouterContext(state),
         }),
-        dispatch => ({
-            toggleNavigationAction: (event, value) => {
-                dispatch(actionsNavigation.setNewPath(value))
-                dispatch(actions.close())
-            },
-            openAction: event => dispatch(actions.open(event)),
-            closeAction: () => dispatch(actions.close())
-        })
+        {
+            setNewPath: g(actionsNavigation, 'setNewPath'),
+            open: g(actions, 'open'),
+            close: g(actions, 'close'),
+        }
     ),
-    withStyles(muiStyles)
+    withState('anchorEl', 'setAnchorEl', null),
+    withHandlers({
+        getLinkByNavKey: props => navKey =>
+            g(routerGetters, navKey, 'link')(g(props, 'routerContext')),
+
+        openModal: props => event => {
+            props.open()
+            props.setAnchorEl(g(event, 'currentTarget'))
+        },
+
+        closeModal: props => event => {
+            props.close()
+            props.setAnchorEl(null)
+        },
+    }),
+    withHandlers({
+        goToPath: props => value => event => {
+            event.preventDefault()
+            props.setNewPath(props.getLinkByNavKey(value))
+            props.close()
+            props.setAnchorEl(null)
+        },
+    }),
+    withStyles(muiStyles),
+    setPropTypes({
+        classes: PropTypes.object,
+        anchorEl: PropTypes.object.isOptional,
+        setAnchorEl: PropTypes.func,
+        isOpened: PropTypes.bool,
+        pathname: PropTypes.string,
+        routerContext: routerContextModel,
+        i18nNav: immutableI18nNavigationModel,
+        goToPath: PropTypes.func,
+        openModal: PropTypes.func,
+        closeModal: PropTypes.func,
+        getLinkByNavKey: PropTypes.func,
+    })
 )(BurgerMenu)

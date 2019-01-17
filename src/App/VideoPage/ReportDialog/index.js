@@ -1,4 +1,7 @@
+// TODO: this page needs refactoring
 import React, {Fragment} from 'react'
+import {compose, setPropTypes} from 'recompose'
+import {connect} from 'react-redux'
 import {Field} from 'redux-form/immutable'
 import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
@@ -23,6 +26,13 @@ import {
     TableCell,
     CircularProgress,
 } from '@material-ui/core'
+import {immutableProvedGet as ig} from '../../helpers'
+
+import {
+    immutableI18nButtonsModel,
+    immutableI18nReportModel
+} from '../../models'
+
 import {
     VideoBlock,
     Thumb,
@@ -30,7 +40,6 @@ import {
     SubmitButtonWrapper,
 } from './assets'
 import {muiStyles} from './assets/muiStyles'
-import fixtures from './fixtures'
 
 const
     renderTableRow = (x, classes, tableData) => <TableRow key={x}>
@@ -46,6 +55,7 @@ const
     </TableRow>,
 
     renderTextField = ({
+        i18nReport,
         label,
         input,
         meta: {touched, invalid, error},
@@ -56,18 +66,18 @@ const
         margin="normal"
         variant="filled"
         label={label}
-        placeholder="Describe the problem"
+        placeholder={ig(i18nReport, 'commentPlaceholder')}
         error={touched && invalid}
         helperText={touched && error}
         {...input}
         {...custom}
     />,
 
-    renderRadioButtons = ({classes, radioButtons, input, ...rest}) => <FormControl
+    renderRadioButtons = ({classes, i18nReport, radioButtons, input, ...rest}) => <FormControl
         component="fieldset"
         className={classes.formControl}
     >
-        <FormLabel component="legend">Report reason:</FormLabel>
+        <FormLabel component="legend">{ig(i18nReport, 'radioLabel')}</FormLabel>
         <RadioGroup {...input} {...rest}>
             {Object.keys(radioButtons).map(x => <FormControlLabel
                 key={x}
@@ -86,6 +96,8 @@ const
 
     ReportDialog = ({
         classes,
+        i18nButtons,
+        i18nReport,
         data,
         toggleReportDialogHandler,
         pageUrl,
@@ -96,21 +108,31 @@ const
     }) => {
         const
             tableData = {
-                'Duration': data.getIn(['gallery', 'duration']),
-                'Added': data.getIn(['gallery', 'published']),
-                'Hosted by': <a target="_blank"
+                [ig(i18nReport, 'duration')]: data.getIn(['gallery', 'duration']),
+                [ig(i18nReport, 'added')]: data.getIn(['gallery', 'published']),
+                [ig(i18nReport, 'hosted')]: <a target="_blank"
                     rel="noopener noreferrer"
                     href={data.getIn(['gallery', 'sponsorUrl'])}
                 >
                     {data.getIn(['gallery', 'sponsorId'])}
                 </a>,
-                'Found on page': <Fragment>
+                [ig(i18nReport, 'found')]: <Fragment>
                     {<Link to={pageUrl}>{data.get('currentHref')}</Link>}
-                    {` on ${data.get('currentTime')}`}
+                    {` ${ig(i18nReport, 'on')} ${data.get('currentTime')}`}
                 </Fragment>,
             },
 
-            radioButtons = fixtures.radioButtons
+            radioButtons = {
+                reason_other: ig(i18nReport, 'radioButtons', 'other'),
+                reason_deleted: ig(i18nReport, 'radioButtons', 'deleted'),
+                reason_doesnt_play: ig(i18nReport, 'radioButtons', 'doesntPlay'),
+                reason_bad_thumb: ig(i18nReport, 'radioButtons', 'badThumb'),
+                reason_young: ig(i18nReport, 'radioButtons', 'young'),
+                reason_incest: ig(i18nReport, 'radioButtons', 'incest'),
+                reason_animals: ig(i18nReport, 'radioButtons', 'animals'),
+                reason_other_scat: ig(i18nReport, 'radioButtons', 'otherScat'),
+                reason_copyright: ig(i18nReport, 'radioButtons', 'copyright'),
+            }
 
         return <Dialog
             open={data.get('reportDialogIsOpen')}
@@ -120,7 +142,7 @@ const
         >
             <form onSubmit={handleSubmit}>
                 <DialogTitle id="report-dialog">
-                    {fixtures.dialogTitle}
+                    {ig(i18nReport, 'title')}
                 </DialogTitle>
                 <DialogContent>
                     <VideoBlock>
@@ -150,6 +172,7 @@ const
                         ? <Field
                             name="report-reason"
                             classes={classes}
+                            i18nReport={i18nReport}
                             radioButtons={radioButtons}
                             className={classes.group}
                             component={renderRadioButtons}
@@ -158,24 +181,25 @@ const
 
                     {data.get('reportIsSent')
                         ? <DialogContentText classes={{root: classes.dialogSuccessText}}>
-                            {fixtures.dialogSuccessText}
+                            {ig(i18nReport, 'successText')}
                         </DialogContentText>
                         : <DialogContentText>
-                            {fixtures.dialogText}
+                            {ig(i18nReport, 'text')}
                         </DialogContentText>}
 
                     {!data.get('reportIsSent')
                         ? <Field
                             name="report-comment"
-                            label="Comment"
+                            label={ig(i18nReport, 'commentLabel')}
                             type="text"
                             component={renderTextField}
+                            i18nReport={i18nReport}
                         />
                         : null}
 
                     {data.get('reportIsNotSent') && pristine
                         ? <DialogContentText classes={{root: classes.dialogFailureText}}>
-                            {fixtures.dialogFailureText}
+                            {ig(i18nReport, 'failureText')}
                         </DialogContentText>
                         : null}
 
@@ -195,7 +219,7 @@ const
                         disabled={data.get('reportIsSending')}
                         color="primary"
                     >
-                        Cancel
+                        {ig(i18nButtons, 'cancel')}
                     </Button>
 
                     {!data.get('reportIsSent')
@@ -205,7 +229,7 @@ const
                                 type="submit"
                                 color="primary"
                             >
-                                Report
+                                {ig(i18nButtons, 'report')}
                             </Button>
                             {data.get('reportIsSending')
                                 ? <CircularProgress size={24} className={classes.buttonProgress}/>
@@ -218,4 +242,16 @@ const
         </Dialog>
     }
 
-export default withStyles(muiStyles)(ReportDialog)
+export default compose(
+    connect(
+        state => ({
+            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+            i18nReport: ig(state, 'app', 'locale', 'i18n', 'report'),
+        }),
+    ),
+    withStyles(muiStyles),
+    setPropTypes({
+        i18nButtons: immutableI18nButtonsModel,
+        i18nReport: immutableI18nReportModel,
+    }),
+)(ReportDialog)

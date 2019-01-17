@@ -1,11 +1,20 @@
+// TODO: this page needs propTypes
+import {get} from 'lodash'
 import React from 'react'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
-import {compose, lifecycle} from 'recompose'
+import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List} from 'immutable'
 
-import {getSubPage} from '../../helpers'
+import {
+    localizedGetSubPage,
+    getRouterContext,
+    plainProvedGet as g,
+    immutableProvedGet as ig
+} from '../../helpers'
+
+import {routerGetters} from '../../../router-builder'
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
@@ -28,7 +37,7 @@ const
         pageText: Map(),
         pagesCount: 1,
         sortList: List(),
-        currentSort: '',
+        currentSort: null,
         itemsCount: 0,
         videoList: List(),
         modelsList: List(),
@@ -37,8 +46,9 @@ const
     }),
 
     Pornstar = ({
-        currentBreakpoint, pageUrl, search, pornstar, chooseSort,
-        isSSR, modelInfoHandler, modelInfoIsOpen
+        currentBreakpoint, i18nOrdering, i18nButtons, pornstar, chooseSort,
+        isSSR, modelInfoHandler, modelInfoIsOpen,
+        controlLinkBuilder, modelLinkBuilder,
     }) => <Page>
         { pornstar.get('isFailed')
             ? <ErrorContent/>
@@ -47,8 +57,8 @@ const
             : <Content>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
-                    pageUrl={pageUrl}
                     modelsList={pornstar.get('modelsList')}
+                    modelLinkBuilder={modelLinkBuilder}
                 />
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
@@ -63,11 +73,10 @@ const
                         isSSR={isSSR}
                     />
                     <ControlBar
-                        pageUrl={pageUrl}
-                        search={search}
+                        i18nOrdering={i18nOrdering}
+                        i18nButtons={i18nButtons}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        subPage={pornstar.get('currentSubPage')}
                         pagesCount={pornstar.get('pagesCount')}
                         pageNumber={pornstar.get('pageNumber')}
                         itemsCount={pornstar.get('itemsCount')}
@@ -76,6 +85,8 @@ const
                         archiveFilms={null}
                         tagArchiveListOlder={null}
                         tagArchiveListNewer={null}
+                        linkBuilder={controlLinkBuilder}
+                        archiveLinkBuilder={null}
                     />
                     <VideoList
                         videoList={pornstar.get('videoList')}
@@ -85,14 +96,13 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({search, match, pornstar, loadPage}) => {
+    loadPageFlow = ({search, routerContext, pornstarCode, match, pornstar, loadPage}) => {
         const
-            {sort, page} = queryString.parse(search),
-
-            subPageForRequest =
-                match.params[0] && match.params[1]
-                ? getSubPage(match.params.child, sort, page, [match.params[0], match.params[1]])
-                : getSubPage(match.params.child, sort, page)
+            qs = queryString.parse(search),
+            ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
+            pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
+            getSubPage = localizedGetSubPage(routerContext),
+            subPageForRequest = getSubPage(pornstarCode, ordering, pagination)
 
         if (typeof subPageForRequest !== 'string')
             throw new Error(
@@ -116,22 +126,43 @@ const
 export default compose(
     connect(
         state => ({
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            pornstar: PornstarRecord(state.getIn(['app', 'pornstars', 'pornstar'])),
-            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
-            pageUrl: state.getIn(['router', 'location', 'pathname']),
-            search: state.getIn(['router', 'location', 'search']),
-            modelInfoIsOpen: state.getIn(['app', 'pornstars', 'pornstar', 'modelInfoIsOpen']),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            pornstar: PornstarRecord(ig(state, 'app', 'pornstars', 'pornstar')),
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            pageUrl: ig(state, 'router', 'location', 'pathname'),
+            search: ig(state, 'router', 'location', 'search'),
+            routerContext: getRouterContext(state),
+            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
+            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+            modelInfoIsOpen: ig(state, 'app', 'pornstars', 'pornstar', 'modelInfoIsOpen'),
         }),
-        dispatch => ({
-            loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
-            chooseSort: (newSortValue, stringifiedQS) => dispatch(actions.setNewSort({
-                newSortValue: newSortValue,
-                stringifiedQS: stringifiedQS
-            })),
-            modelInfoHandler: state => dispatch(actions.toggleModelInfo(state)),
-        })
+        {
+            loadPageRequest: g(actions, 'loadPageRequest'),
+            toggleModelInfo: g(actions, 'toggleModelInfo'),
+            setNewSort: g(actions, 'setNewSort'),
+        }
     ),
+    withProps(props => ({
+        pornstarCode: g(props, 'match', 'params', 'child'),
+    })),
+    withHandlers({
+        loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+        modelInfoHandler: props => state => props.toggleModelInfo(state),
+
+        chooseSort: props => newSortValue => props.setNewSort({
+            newSortValue,
+            pornstarCode: g(props, 'pornstarCode'),
+        }),
+
+        controlLinkBuilder: props => qsParams => routerGetters.pornstar.link(
+            g(props, 'routerContext'),
+            g(props, 'pornstarCode'),
+            qsParams
+        ),
+
+        modelLinkBuilder: props => child =>
+            routerGetters.pornstar.link(g(props, 'routerContext'), child, null),
+    }),
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)

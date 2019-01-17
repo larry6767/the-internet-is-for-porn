@@ -1,28 +1,27 @@
+// TODO: this page needs propTypes
+import {get} from 'lodash'
 import React from 'react'
+import {Record, Map, List, fromJS} from 'immutable'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
-import {compose, lifecycle} from 'recompose'
+import {compose, lifecycle, setPropTypes, withHandlers, withProps} from 'recompose'
 import {withStyles} from '@material-ui/core'
+import {CircularProgress, Typography} from '@material-ui/core'
+
 import {
-    CircularProgress,
-    Typography
-} from '@material-ui/core'
-import {
-    Record,
-    Map,
-    List,
-    fromJS,
-} from 'immutable'
-import {getSubPage} from '../helpers'
+    localizedGetSubPage,
+    getRouterContext,
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+} from '../helpers'
+
+import {immutableI18nButtonsModel} from '../models'
+import {routerGetters} from '../../router-builder'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import Lists from '../../generic/Lists'
 import VideoList from '../../generic/VideoList'
-import {
-    Page,
-    Content,
-    AllMoviesPageWrapper,
-} from './assets'
+import {Page, Content, AllMoviesPageWrapper} from './assets'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
@@ -42,7 +41,7 @@ const
         tagList: List(),
         tagArchiveList: List(),
         sortList: List(),
-        currentSort: '',
+        currentSort: null,
         archiveFilms: Map(),
         tagArchiveListOlder: fromJS(),
         tagArchiveListNewer: fromJS(),
@@ -52,7 +51,20 @@ const
         lastSubPage: '',
     }),
 
-    AllMovies = ({classes, currentBreakpoint, pageUrl, search, allMovies, chooseSort, isSSR}) => <Page>
+    AllMovies = ({
+        classes,
+        currentBreakpoint,
+        i18nOrdering,
+        i18nButtons,
+        allMovies,
+        chooseSort,
+        isSSR,
+        controlLinkBuilder,
+        controlArchiveLinkBuilder,
+        controlBackFromArchiveLinkBuilder,
+        listsTagLinkBuilder,
+        listsArchiveLinkBuilder,
+    }) => <Page>
         { allMovies.get('isFailed')
             ? <ErrorContent/>
             : allMovies.get('isLoading')
@@ -60,9 +72,12 @@ const
             : <Content>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
-                    pageUrl={pageUrl}
+
                     tagList={allMovies.get('tagList')}
+                    tagLinkBuilder={listsTagLinkBuilder}
+
                     tagArchiveList={allMovies.get('tagArchiveList')}
+                    archiveLinkBuilder={listsArchiveLinkBuilder}
                 />
                 <AllMoviesPageWrapper>
                     <Typography
@@ -75,11 +90,13 @@ const
                         {allMovies.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <ControlBar
-                        pageUrl={pageUrl}
-                        search={search}
+                        linkBuilder={controlLinkBuilder}
+                        archiveLinkBuilder={controlArchiveLinkBuilder}
+                        backFromArchiveLinkBuilder={controlBackFromArchiveLinkBuilder}
+                        i18nOrdering={i18nOrdering}
+                        i18nButtons={i18nButtons}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        page={allMovies.get('currentPage')}
                         pagesCount={allMovies.get('pagesCount')}
                         pageNumber={allMovies.get('pageNumber')}
                         itemsCount={allMovies.get('itemsCount')}
@@ -97,14 +114,21 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({search, match, allMovies, loadPage}) => {
+    loadPageFlow = ({search, routerContext, match, allMovies, archiveParams, loadPage}) => {
         const
-            {sort, page} = queryString.parse(search),
+            qs = queryString.parse(search),
+            ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
+            pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
+            getSubPage = localizedGetSubPage(routerContext),
+
+            archive =
+                archiveParams === null ? null :
+                [g(archiveParams, 'year'), g(archiveParams, 'month')],
 
             subPageForRequest =
-                match.params[0] && match.params[1]
-                ? getSubPage(null, sort, page, [match.params[0], match.params[1]])
-                : getSubPage(null, sort, page)
+                archive !== null
+                ? getSubPage(null, ordering, pagination, archive)
+                : getSubPage(null, ordering, pagination)
 
         if (typeof subPageForRequest !== 'string')
             throw new Error(
@@ -116,10 +140,10 @@ const
         // "unless" condition.
         // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
         if (!(
-            allMovies.get('isLoading') ||
+            ig(allMovies, 'isLoading') ||
             (
-                (allMovies.get('isLoaded') || allMovies.get('isFailed')) &&
-                subPageForRequest === allMovies.get('lastSubPageForRequest')
+                (ig(allMovies, 'isLoaded') || ig(allMovies, 'isFailed')) &&
+                subPageForRequest === ig(allMovies, 'lastSubPageForRequest')
             )
         ))
             loadPage(subPageForRequest)
@@ -128,20 +152,61 @@ const
 export default compose(
     connect(
         state => ({
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            allMovies: AllMoviesRecord(state.getIn(['app', 'allMovies'])),
-            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
-            pageUrl: state.getIn(['router', 'location', 'pathname']),
-            search: state.getIn(['router', 'location', 'search']),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            allMovies: AllMoviesRecord(ig(state, 'app', 'allMovies')),
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            search: ig(state, 'router', 'location', 'search'),
+            routerContext: getRouterContext(state),
+            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
+            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
         }),
-        dispatch => ({
-            loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
-            chooseSort: (newSortValue, stringifiedQS) => dispatch(actions.setNewSort({
-                newSortValue: newSortValue,
-                stringifiedQS: stringifiedQS
-            }))
-        })
+        {
+            loadPageRequest: g(actions, 'loadPageRequest'),
+            setNewSort: g(actions, 'setNewSort'),
+        }
     ),
+    withProps(props => ({
+        archiveParams:
+            !(props.match.params[0] && props.match.params[1]) ? null : {
+                year: g(props, 'match', 'params', 0),
+                month: g(props, 'match', 'params', 1),
+            },
+    })),
+    withHandlers({
+        loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+
+        chooseSort: props => newSortValue => props.setNewSort({
+            newSortValue,
+            archiveParams: g(props, 'archiveParams'),
+        }),
+
+        controlLinkBuilder: props => qsParams =>
+            g(props, 'archiveParams') === null
+            ? routerGetters.allMovies.link(g(props, 'routerContext'), qsParams)
+            : routerGetters.allMoviesArchive.link(
+                g(props, 'routerContext'),
+                g(props, 'archiveParams', 'year'),
+                g(props, 'archiveParams', 'month'),
+                qsParams
+            ),
+
+        controlArchiveLinkBuilder: props => (year, month) =>
+            routerGetters.allMoviesArchive.link(g(props, 'routerContext'), year, month, null),
+
+        controlBackFromArchiveLinkBuilder: props => () =>
+            routerGetters.allMovies.link(g(props, 'routerContext'), null),
+
+        listsTagLinkBuilder: props => child =>
+            routerGetters.niche.link(g(props, 'routerContext'), child, null),
+
+        listsArchiveLinkBuilder: props => (year, month) =>
+            routerGetters.allMoviesArchive.link(
+                g(props, 'routerContext'),
+                year,
+                month,
+                null
+            ),
+    }),
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)
@@ -151,5 +216,8 @@ export default compose(
             loadPageFlow(nextProps)
         },
     }),
-    withStyles(muiStyles)
+    withStyles(muiStyles),
+    setPropTypes({
+        i18nButtons: immutableI18nButtonsModel,
+    }),
 )(AllMovies)

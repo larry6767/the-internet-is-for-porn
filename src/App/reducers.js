@@ -1,13 +1,17 @@
 import {combineReducers} from 'redux-immutable'
 import {handleActions} from 'redux-actions'
-import actions from './actions'
-import {fromJS, List} from 'immutable'
+import {fromJS, List, Map} from 'immutable'
+
 import {
     getCurrentBreakpoint,
     addIdToFavoriteList,
     removeIdFromFavoriteList,
     plainProvedGet as g,
+    ImmutablePropTypes,
+    PropTypes,
+    provedHandleActions,
 } from './helpers'
+
 import homeReducer from './Home/reducers'
 import mainHeaderReducer from './MainHeader/reducers'
 import allMoviesReducer from './AllMovies/reducers'
@@ -16,9 +20,25 @@ import pornstarsReducer from './Pornstars/reducers'
 import favoriteReducer from './Favorite/reducers'
 import favoritePornstarsReducer from './FavoritePornstars/reducers'
 import videoPageReducer from './VideoPage/reducers'
+import findVideosReducer from './FindVideos/reducers'
+import actions from './actions'
+import {immutableLocaleRouterModel, immutableI18nModel} from './models'
 
 const
-    defaultSSR = fromJS({isSSR: false})
+    defaultSSR = fromJS({isSSR: false}),
+
+    localePageCodeModel = ImmutablePropTypes.exact({
+        home: PropTypes.string,
+        allNiches: PropTypes.string,
+        niche: PropTypes.string,
+        allMovies: PropTypes.string,
+        pornstars: PropTypes.string,
+        pornstar: PropTypes.string,
+        favorite: PropTypes.string,
+        favoritePornstars: PropTypes.string,
+        video: PropTypes.string,
+        findVideos: PropTypes.string,
+    })
 
 export default combineReducers({
     home: homeReducer,
@@ -29,6 +49,7 @@ export default combineReducers({
     favorite: favoriteReducer,
     favoritePornstars: favoritePornstarsReducer,
     videoPage: videoPageReducer,
+    findVideos: findVideosReducer,
 
     ui: handleActions({
         [g(actions, 'resize')]: (state, action) =>
@@ -57,22 +78,23 @@ export default combineReducers({
     ssr: (state = defaultSSR) => state,
 
     locale: combineReducers({
-        localeCode: handleActions({
+        localeCode: provedHandleActions(PropTypes.string.isOptional, {
             [g(actions, 'setLocaleCode')]: (state, {payload}) => payload,
-        }, null), // string
+        }, null),
 
-        /*
-            This supposed to be filled at initialization step (depending on current locale).
-            Example:
-                { home:      'home'
-                , allNiches: 'all-niches'
-                , niche:     'niche'
-                , ...
-                }
-        */
-        pageCode: handleActions({
-            [g(actions, 'fillLocalePageCodes')]: (state, {payload}) =>
-                fromJS(payload),
+        // This supposed to be filled at initialization step (depending on current locale).
+        pageCode: provedHandleActions(localePageCodeModel.isOptional, {
+            [g(actions, 'fillLocalePageCodes')]: (state, {payload}) => Map(fromJS(payload)),
+        }, null),
+
+        // This supposed to be filled at initialization step (depending on current locale).
+        router: provedHandleActions(immutableLocaleRouterModel.isOptional, {
+            [g(actions, 'fillLocaleRouter')]: (state, {payload}) => Map(fromJS(payload)),
+        }, null),
+
+        // This supposed to be filled at initialization step (depending on current locale).
+        i18n: provedHandleActions(immutableI18nModel.isOptional, {
+            [g(actions, 'fillLocaleI18n')]: (state, {payload}) => Map(fromJS(payload)),
         }, null),
     }),
 })

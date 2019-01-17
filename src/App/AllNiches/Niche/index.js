@@ -1,24 +1,29 @@
+// TODO: this page needs propTypes
+import {get} from 'lodash'
 import React from 'react'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
-import {compose, lifecycle} from 'recompose'
-import {
-    CircularProgress,
-    Typography
-} from '@material-ui/core'
-import {
-    Record,
-    Map,
-    List,
-    fromJS,
-} from 'immutable'
+import {compose, lifecycle, withHandlers, withProps, setPropTypes} from 'recompose'
+import {CircularProgress, Typography} from '@material-ui/core'
+import {Record, Map, List, fromJS} from 'immutable'
 
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    localizedGetSubPage,
+    getRouterContext,
+} from '../../helpers'
+
+import {
+    immutableI18nButtonsModel,
+    routerContextModel
+} from '../../models'
+
+import {routerGetters} from '../../../router-builder'
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
-import {getSubPage} from '../../helpers'
-
 import {Page, Content, PageWrapper} from './assets'
 import actions from './actions'
 
@@ -39,7 +44,7 @@ const
         tagList: List(),
         tagArchiveList: List(),
         sortList: List(),
-        currentSort: '',
+        currentSort: null,
         archiveFilms: Map(),
         tagArchiveListOlder: fromJS(),
         tagArchiveListNewer: fromJS(),
@@ -47,54 +52,78 @@ const
         videoList: List(),
     }),
 
-    Niche = ({currentBreakpoint, pageUrl, search, niche, chooseSort, isSSR}) => <Page>
-        { niche.get('isFailed')
+    Niche = ({
+        currentBreakpoint,
+        pageUrl,
+        i18nOrdering,
+        i18nButtons,
+        niche,
+        chooseSort,
+        isSSR,
+        controlLinkBuilder,
+        controlArchiveLinkBuilder,
+        controlBackFromArchiveLinkBuilder,
+        listsTagLinkBuilder,
+        listsArchiveLinkBuilder,
+    }) => <Page>
+        { ig(niche, 'isFailed')
             ? <ErrorContent/>
-            : niche.get('isLoading')
+            : ig(niche, 'isLoading')
             ? <CircularProgress/>
             : <Content>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
-                    pageUrl={pageUrl}
-                    tagList={niche.get('tagList')}
-                    tagArchiveList={niche.get('tagArchiveList')}
+
+                    tagList={ig(niche, 'tagList')}
+                    tagLinkBuilder={listsTagLinkBuilder}
+
+                    tagArchiveList={ig(niche, 'tagArchiveList')}
+                    archiveLinkBuilder={listsArchiveLinkBuilder}
                 />
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
-                        {niche.getIn(['pageText', 'listHeader'])}
+                        {ig(niche, 'pageText', 'listHeader')}
                     </Typography>
                     <ControlBar
-                        pageUrl={pageUrl}
-                        search={search}
+                        linkBuilder={controlLinkBuilder}
+                        archiveLinkBuilder={controlArchiveLinkBuilder}
+                        backFromArchiveLinkBuilder={controlBackFromArchiveLinkBuilder}
+                        i18nOrdering={i18nOrdering}
+                        i18nButtons={i18nButtons}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        page={niche.get('currentPage')}
-                        subPage={niche.get('currentSubPage')}
-                        pagesCount={niche.get('pagesCount')}
-                        pageNumber={niche.get('pageNumber')}
-                        itemsCount={niche.get('itemsCount')}
-                        sortList={niche.get('sortList')}
-                        currentSort={niche.get('currentSort')}
-                        archiveFilms={niche.get('archiveFilms')}
-                        tagArchiveListOlder={niche.get('tagArchiveListOlder')}
-                        tagArchiveListNewer={niche.get('tagArchiveListNewer')}
+                        pagesCount={ig(niche, 'pagesCount')}
+                        pageNumber={ig(niche, 'pageNumber')}
+                        itemsCount={ig(niche, 'itemsCount')}
+                        sortList={ig(niche, 'sortList')}
+                        currentSort={ig(niche, 'currentSort')}
+                        archiveFilms={ig(niche, 'archiveFilms')}
+                        tagArchiveListOlder={ig(niche, 'tagArchiveListOlder')}
+                        tagArchiveListNewer={ig(niche, 'tagArchiveListNewer')}
                     />
                     <VideoList
-                        videoList={niche.get('videoList')}
+                        videoList={ig(niche, 'videoList')}
                     />
                 </PageWrapper>
             </Content>
         }
     </Page>,
 
-    loadPageFlow = ({search, match, niche, loadPage}) => {
+    loadPageFlow = ({search, routerContext, nicheCode, archiveParams, niche, loadPage}) => {
         const
-            {sort, page} = queryString.parse(search),
+            qs = queryString.parse(search),
+            ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
+            pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
+            getSubPage = localizedGetSubPage(routerContext),
+
+            archive =
+                archiveParams === null ? null :
+                [g(archiveParams, 'year'), g(archiveParams, 'month')],
 
             subPageForRequest =
-                match.params[0] && match.params[1]
-                ? getSubPage(match.params.child, sort, page, [match.params[0], match.params[1]])
-                : getSubPage(match.params.child, sort, page)
+                archive !== null
+                ? getSubPage(nicheCode, ordering, pagination, archive)
+                : getSubPage(nicheCode, ordering, pagination)
 
         if (typeof subPageForRequest !== 'string')
             throw new Error(
@@ -106,10 +135,10 @@ const
         // "unless" condition.
         // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
         if (!(
-            niche.get('isLoading') ||
+            ig(niche, 'isLoading') ||
             (
-                (niche.get('isLoaded') || niche.get('isFailed')) &&
-                subPageForRequest === niche.get('lastSubPageForRequest')
+                (ig(niche, 'isLoaded') || ig(niche, 'isFailed')) &&
+                subPageForRequest === ig(niche, 'lastSubPageForRequest')
             )
         ))
             loadPage(subPageForRequest)
@@ -118,20 +147,76 @@ const
 export default compose(
     connect(
         state => ({
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            niche: NicheRecord(state.getIn(['app', 'niches', 'niche'])),
-            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
-            pageUrl: state.getIn(['router', 'location', 'pathname']),
-            search: state.getIn(['router', 'location', 'search']),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            niche: NicheRecord(ig(state, 'app', 'niches', 'niche')),
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            pageUrl: ig(state, 'router', 'location', 'pathname'),
+            search: ig(state, 'router', 'location', 'search'),
+            routerContext: getRouterContext(state),
+            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
+            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
         }),
-        dispatch => ({
-            loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
-            chooseSort: (newSortValue, stringifiedQS) => dispatch(actions.setNewSort({
-                newSortValue: newSortValue,
-                stringifiedQS: stringifiedQS
-            }))
-        })
+        {
+            loadPageRequest: g(actions, 'loadPageRequest'),
+            setNewSort: g(actions, 'setNewSort'),
+        }
     ),
+    withProps(props => ({
+        nicheCode: g(props, 'match', 'params', 'child'),
+        archiveParams:
+            !(props.match.params[0] && props.match.params[1]) ? null : {
+                year: g(props, 'match', 'params', 0),
+                month: g(props, 'match', 'params', 1),
+            },
+    })),
+    withHandlers({
+        loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+
+        chooseSort: props => newSortValue => props.setNewSort({
+            newSortValue,
+            nicheCode: g(props, 'nicheCode'),
+            archiveParams: g(props, 'archiveParams'),
+        }),
+
+        controlLinkBuilder: props => qsParams =>
+            g(props, 'archiveParams') === null
+            ? routerGetters.niche.link(g(props, 'routerContext'), g(props, 'nicheCode'), qsParams)
+            : routerGetters.nicheArchive.link(
+                g(props, 'routerContext'),
+                g(props, 'nicheCode'),
+                g(props, 'archiveParams', 'year'),
+                g(props, 'archiveParams', 'month'),
+                qsParams
+            ),
+
+        controlArchiveLinkBuilder: props => (year, month) =>
+            routerGetters.nicheArchive.link(
+                g(props, 'routerContext'),
+                g(props, 'nicheCode'),
+                year,
+                month,
+                null
+            ),
+
+        controlBackFromArchiveLinkBuilder: props => () =>
+            routerGetters.niche.link(
+                g(props, 'routerContext'),
+                g(props, 'nicheCode'),
+                null
+            ),
+
+        listsTagLinkBuilder: props => child =>
+            routerGetters.niche.link(g(props, 'routerContext'), child, null),
+
+        listsArchiveLinkBuilder: props => (year, month) =>
+            routerGetters.nicheArchive.link(
+                g(props, 'routerContext'),
+                g(props, 'nicheCode'),
+                year,
+                month,
+                null
+            ),
+    }),
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)
@@ -140,5 +225,9 @@ export default compose(
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
         },
-    })
+    }),
+    setPropTypes({
+        routerContext: routerContextModel,
+        i18nButtons: immutableI18nButtonsModel,
+    }),
 )(Niche)

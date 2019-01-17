@@ -13,13 +13,15 @@ import React from 'react'
 import Router from 'react-router'
 
 // local libs
+import {plainProvedGet as g} from './App/helpers'
 import {deepFreeze} from './lib/helpers'
 import renderPage from './lib/render'
 import {newStore} from './lib/store'
 import backendProxyHandler from './lib/backend-proxy'
 import {getSiteLocales} from './lib/requests'
-import {validate} from './api-locale-mapping'
-
+import {validate as apiLocaleMappingValidate} from './locale-mapping/backend-api'
+import {validate as routerLocaleMappingValidate} from './locale-mapping/router'
+import {validate as i18nLocaleMappingValidate} from './locale-mapping/i18n'
 
 const
     {port, host, production: isProduction, rc: isRC} = yargs
@@ -67,7 +69,9 @@ const initApp = async () => {
 
         app = express()
 
-    validate(siteLocales)
+    apiLocaleMappingValidate(siteLocales)
+    routerLocaleMappingValidate(siteLocales)
+    i18nLocaleMappingValidate(siteLocales)
 
     // it's recommended to serve these files by nginx as static files
     app.use(favicon(join(publicDir, 'favicon.ico')))
@@ -82,7 +86,7 @@ const initApp = async () => {
         backendProxyHandler(siteLocales, defaultSiteLocaleCode)
     )
 
-    app.use((req, res) => render(req, res, newStore(siteLocales, req.url)))
+    app.use((req, res) => render(req, res, newStore(siteLocales, g(req, 'url'))))
 
     app.listen(port, host, () => {
         if (isProduction) console.info('Running in production mode...')

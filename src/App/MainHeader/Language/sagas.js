@@ -47,7 +47,6 @@ export function* setNewLanguageFlow({payload: localeCode}) {
 
         matchedLocale = siteLocales.find(x => ig(x, 'code') === localeCode)
 
-    // TODO also handle "test.*" domain to store locale in a cookie
     if (process.env.NODE_ENV === 'production') {
         const host = ig(matchedLocale, 'host')
         window.location = `//${host}`

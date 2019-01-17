@@ -1,7 +1,10 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
+import {Record, Map, List} from 'immutable'
 import {Link} from 'react-router-dom'
+import PermIdentityIcon from '@material-ui/icons/PermIdentity'
+
 import {
     List as ListComponent,
     ListItem,
@@ -10,11 +13,12 @@ import {
     CircularProgress,
     Typography,
 } from '@material-ui/core'
-import PermIdentityIcon from '@material-ui/icons/PermIdentity'
-import {Record, Map, List} from 'immutable'
 
+import {routerGetters} from '../../router-builder'
 import ErrorContent from '../../generic/ErrorContent'
-import {withStylesProps} from '../helpers'
+import {withStylesProps, getRouterContext, immutableProvedGet as ig} from '../helpers'
+import {muiStyles} from './assets/muiStyles'
+import actions from './actions'
 
 import {
     Page,
@@ -25,8 +29,6 @@ import {
     Niche,
     NicheImage,
 } from './assets'
-import {muiStyles} from './assets/muiStyles'
-import actions from './actions'
 
 const
     HomeRecord = Record({
@@ -43,8 +45,9 @@ const
         pornstarsList: List(),
     }),
 
-    renderListItemLink = (x, idx, arr, classes) => <Link to={`/porn-star/${x.get('subPage')}${x.get('sort')}`}
-        key={x.get('id')}
+    renderListItemLink = (x, idx, arr, classes, routerContext) => <Link
+        to={routerGetters.pornstar.link(routerContext, ig(x, 'subPage'), null)}
+        key={ig(x, 'id')}
         className={classes.routerLink}
     >
         <ListItem
@@ -54,9 +57,9 @@ const
             }}
         >
             <ListItemIcon>
-                {idx !== 0 && x.get('letter') === arr.getIn([(idx - 1), 'letter'])
+                {idx !== 0 && ig(x, 'letter') === ig(arr, [(idx - 1), 'letter'])
                     ? <PermIdentityIcon></PermIdentityIcon>
-                    : <LetterIcon>{x.get('letter')}</LetterIcon>}
+                    : <LetterIcon>{ig(x, 'letter')}</LetterIcon>}
 
             </ListItemIcon>
             <ListItemText
@@ -65,35 +68,39 @@ const
                     primary: classes.primaryTypography,
                     secondary: classes.secondaryTypography
                 }}
-                primary={x.get('name')}
-                secondary={x.get('itemsCount')}
+                primary={ig(x, 'name')}
+                secondary={ig(x, 'itemsCount')}
             />
         </ListItem>
     </Link>,
 
-    Home = ({classes, currentBreakpoint, pageUrl, search, home, chooseSort, isSSR}) => <Page>
-        { home.get('isFailed')
+    Home = ({classes, home, routerContext}) => <Page>
+        { ig(home, 'isFailed')
             ? <ErrorContent/>
-            : home.get('isLoading')
+            : ig(home, 'isLoading')
             ? <CircularProgress/>
             : <Content>
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>Top Rated Straight Niches</Typography>
                     <NichesList>
-                        {home.get('nichesList').map(x => <Niche key={x.get('id')}>
+                        {ig(home, 'nichesList').map(x => <Niche key={ig(x, 'id')}>
                             <Link
-                                to={`/all-niches/${x.get('subPage')}`}
-                                key={x.get('id')}
+                                to={routerGetters.niche.link(
+                                    routerContext,
+                                    ig(x, 'subPage'),
+                                    null
+                                )}
+                                key={ig(x, 'id')}
                                 className={classes.routerLink}
                             >
-                                <NicheImage thumb={x.get('thumb')}/>
+                                <NicheImage thumb={ig(x, 'thumb')}/>
                                 <Typography
                                     variant="body1"
                                     gutterBottom
                                     classes={{
                                         root: classes.nicheTitleTypography
                                     }}
-                                >{x.get('name')}</Typography>
+                                >{ig(x, 'name')}</Typography>
                             </Link>
                         </Niche>)}
                     </NichesList>
@@ -104,8 +111,13 @@ const
                             root: classes.root
                         }}
                     >
-                        {home.get('pornstarsList').map((x, idx, arr) =>
-                            renderListItemLink(x, idx, arr, classes))}
+                        {ig(home, 'pornstarsList').map((x, idx) => renderListItemLink(
+                            x,
+                            idx,
+                            ig(home, 'pornstarsList'),
+                            classes,
+                            routerContext
+                        ))}
                     </ListComponent>
                 </PageWrapper>
             </Content>
@@ -115,8 +127,10 @@ const
 export default compose(
     connect(
         state => ({
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            home: HomeRecord(state.getIn(['app', 'home'])),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            home: HomeRecord(ig(state, 'app', 'home')),
+            routerContext: getRouterContext(state),
+            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
         }),
         dispatch => ({
             loadPage: (event, value) => dispatch(actions.loadPageRequest())
@@ -124,7 +138,7 @@ export default compose(
     ),
     lifecycle({
         componentDidMount() {
-            if (!this.props.home.get('isLoading') && !this.props.home.get('isLoaded')) {
+            if (!ig(this.props.home, 'isLoading') && !ig(this.props.home, 'isLoaded')) {
                 this.props.loadPage()
             }
         }

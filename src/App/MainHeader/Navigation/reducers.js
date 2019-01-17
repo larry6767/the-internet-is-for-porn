@@ -1,9 +1,19 @@
-import {handleActions} from 'redux-actions'
-import actions from './actions'
 import {fromJS} from 'immutable'
 
-export default handleActions({
-    [actions.setNewPath]: (state, action) => {
-        return state.set('currentPath', action.payload)
-    }
+import {
+    ImmutablePropTypes,
+    PropTypes,
+    provedHandleActions,
+    plainProvedGet as g,
+} from '../../helpers'
+
+import actions from './actions'
+
+const
+    stateModel = ImmutablePropTypes.exact({
+        currentPath: PropTypes.string,
+    })
+
+export default provedHandleActions(stateModel, {
+    [g(actions, 'setNewPath')]: (state, {payload}) => state.set('currentPath', payload),
 }, fromJS({currentPath: '/'}))

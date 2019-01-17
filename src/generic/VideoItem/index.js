@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {compose, setPropTypes} from 'recompose'
+import {compose, setPropTypes, withHandlers} from 'recompose'
 import {replace, set} from 'lodash'
 import {withStyles} from '@material-ui/core/styles'
 import {Typography} from '@material-ui/core'
@@ -9,12 +9,15 @@ import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
 
 import {
+    getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
     ImmutablePropTypes,
     PropTypes,
 } from '../../App/helpers'
 
+import {routerGetters} from '../../router-builder'
+import {routerContextModel} from '../../App/models'
 import actions from '../../App/actions'
 import {muiStyles} from './assets/muiStyles'
 import {immutableVideoItemModel} from './models'
@@ -130,14 +133,14 @@ const
     </VideoPreview>,
 
     VideoItem = ({
-        classes, x, isSSR, addVideoToFavoriteHandler,
+        classes, x, getVideoLink, isSSR, addVideoToFavoriteHandler,
         removeVideoFromFavoriteHandler, favoriteVideoList,
     }) => {
         const
             thumbsLinks = ig(x, 'thumbs').map(thumb => replace(ig(x, 'thumbMask'), '{num}', thumb))
 
         return <Wrapper>
-            {typeof ig(x, 'videoPageRef') === 'string'
+            {typeof ig(x, 'videoPageRef') === 'string' // external resource
                 ? <a
                     href={ig(x, 'videoPageRef')}
                     target="_blank"
@@ -149,10 +152,7 @@ const
                         removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
                     )}
                 </a>
-                : <Link
-                    to={`/video-${ig(x, 'videoPageRef')}/${ig(x, 'title').replace(/ /g, '-')}`}
-                    className={g(classes, 'routerLink')}
-                >
+                : <Link to={getVideoLink(x)} className={g(classes, 'routerLink')}>
                     {renderVideoPreview(
                         classes, x, isSSR, addVideoToFavoriteHandler,
                         removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
@@ -170,14 +170,19 @@ const
                     {ig(x, 'title')}
                 </Typography>
                 <InfoBlockInner>
-                    <Typography
-                        variant="body2"
-                        classes={{
-                            root: g(classes, 'typographySource')
-                        }}
+                    <Link
+                        to={`/find-videos?key=${ig(x, 'sponsorId')}`}
+                        className={classes.routerLinkGray}
                     >
-                        {ig(x, 'sponsorId')}
-                    </Typography>
+                        <Typography
+                            variant="body2"
+                            classes={{
+                                root: g(classes, 'typographySource')
+                            }}
+                        >
+                            {ig(x, 'sponsorId')}
+                        </Typography>
+                    </Link>
                     <Typography
                         variant="body2"
                         classes={{
@@ -197,6 +202,7 @@ export default compose(
         state => ({
             favoriteVideoList: ig(state, 'app', 'ui', 'favoriteVideoList'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            routerContext: getRouterContext(state),
         }),
         dispatch => ({
             addVideoToFavoriteHandler: video => e => {
@@ -209,10 +215,18 @@ export default compose(
             }
         })
     ),
+    withHandlers({
+        getVideoLink: props => x => routerGetters.video.link(
+            g(props, 'routerContext'),
+            ig(x, 'videoPageRef'),
+            ig(x, 'title')
+        ),
+    }),
     withStyles(muiStyles),
     setPropTypes({
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
+        routerContext: routerContextModel,
         x: immutableVideoItemModel,
         addVideoToFavoriteHandler: PropTypes.func,
         removeVideoFromFavoriteHandler: PropTypes.func,

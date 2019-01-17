@@ -1,12 +1,16 @@
-import {cloneDeep, find, includes, unset} from 'lodash'
+import {cloneDeep, find, includes, unset, get} from 'lodash'
 
-import apiLocaleMapping from '../api-locale-mapping'
+import apiLocaleMapping from '../locale-mapping/backend-api'
+import routerLocaleMapping from '../locale-mapping/router'
+import i18n from '../locale-mapping/i18n'
 import {plainProvedGet as g} from '../App/helpers'
+import {getPureDomain} from '../App/helpers/hostLocale'
 import {logRequestError, buildLocalePageCodes} from './helpers'
 
 import {
     getPageData as requestPageData,
     sendReport as sendReportRequest,
+    getSearchSuggestions as searchSuggestionsRequest
 } from './requests'
 
 export const proxiedHeaders = (siteLocales, localeCode) => req => {
@@ -129,7 +133,7 @@ const
                 code = g(matchedPageCode, 'code'),
 
                 withSubPageCode = includes(
-                    ['niche', 'allMovies', 'pornstar', 'video']
+                    ['niche', 'allMovies', 'pornstar', 'video', 'findVideos']
                         .map(x => g(currentApiLocale, 'pageCode', x, 'code')),
                     code
                 )
@@ -147,17 +151,78 @@ const
         validTopLevelKeys: ['localeCode', 'pageCode', 'subPageCode'],
     }),
 
-    // TODO Detect `defaultSiteLocaleCode` by Host from `req`.
-    // TODO Also detect for test.* domains.
     getSiteLocale = (siteLocales, defaultSiteLocaleCode) => (req, res) => {
         const
-            localeCode = req.body.localeCode || defaultSiteLocaleCode
+            // see also ssr/lib/render
+            domain = getPureDomain(req.get('host')),
+
+            localeCode =
+                req.body.localeCode ||
+                get(find(siteLocales, x => g(x, 'host') === domain), 'code', defaultSiteLocaleCode)
 
         res.json({
             localeCode,
             pageCodes: buildLocalePageCodes(localeCode),
+            router: g(routerLocaleMapping, localeCode),
+            i18n: g(i18n, localeCode),
         }).end()
     },
+
+    getSiteLocales = (siteLocales, defaultSiteLocaleCode) => (req, res) => {
+        res.json(
+            !testHostReg.test(req.get('host')) ? siteLocales : siteLocales.map(x =>
+                g(x, 'host') === defaultSiteLocaleCode
+                    ? {...x, host: `test.${g(x, 'host')}`}
+                    : {...x, host: g(x, 'host').replace(/^([^.]+)\./, '$1.test.')}
+            )
+        ).end()
+    },
+
+    getSearchSuggestions = siteLocales => (({validTopLevelKeys}) => (req, res) => {
+        const
+            invalidKeys = Object.keys(req.body).filter(x => !includes(validTopLevelKeys, x))
+
+        if (invalidKeys.length !== 0)
+            return jsonThrow400(req, res)(
+                'Found unexpected/unknown top-level keys in request body',
+                {
+                    request: {
+                        method: g(req, 'method'),
+                        operation: g(req, 'params', 'operation'),
+                        invalidTopLevelKeys: invalidKeys,
+                    },
+                }
+            )
+
+        if ( ! req.body.localeCode)
+            return jsonThrow400(req, res)(
+                'Some required field(s) is not provided in request body',
+                {
+                    request: {
+                        method: g(req, 'method'),
+                        operation: g(req, 'params', 'operation'),
+                        required: {
+                            localeCode: req.body.localeCode,
+                        },
+                    },
+                }
+            )
+
+        const localeCode = g(req, 'body', 'localeCode')
+        unset(g(req, 'body'), 'localeCode')
+        const formData = g(req, 'body')
+
+        searchSuggestionsRequest(siteLocales, localeCode)({
+            headers: proxiedHeaders(siteLocales, localeCode)(req),
+            formData,
+        })
+        .then(x => res.json(x).end())
+        .catch(jsonThrow500(req, res))
+    })({
+        validTopLevelKeys: [
+            'localeCode', 'classId', 'searchKey',
+        ],
+    }),
 
     sendReport = siteLocales => (({validTopLevelKeys}) => (req, res) => {
         const
@@ -223,12 +288,32 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
                 },
             }
         )
+    else if (
+        req.body.localeCode &&
+        !find(siteLocales, x => g(x, 'code') === g(req, 'body', 'localeCode'))
+    )
+        jsonThrow400(req, res)(
+            'Provided locale code (`localeCode`) is unknown',
+            {
+                request: {
+                    method: g(req, 'method'),
+                    localeCode: g(req, 'body', 'localeCode'),
+                    operation: req.params.operation,
+                    headers: {
+                        'Accept': req.headers['accept'],
+                        'Content-Type': req.headers['content-type'],
+                    },
+                },
+            }
+        )
     else if (g(req, 'method') === 'GET' && req.params.operation === 'get-site-locales')
-        res.json(siteLocales).end()
+        getSiteLocales(siteLocales, defaultSiteLocaleCode)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-site-locale-data')
         getSiteLocale(siteLocales, defaultSiteLocaleCode)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-page-data')
         getPageData(siteLocales)(req, res)
+    else if (g(req, 'method') === 'POST' && req.params.operation === 'get-search-suggestions')
+        getSearchSuggestions(siteLocales)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'send-report')
         sendReport(siteLocales)(req, res)
     else
