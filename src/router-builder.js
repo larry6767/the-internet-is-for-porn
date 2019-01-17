@@ -8,6 +8,7 @@ import status500 from './App/helpers/status500BranchResolver'
 
 import {
     getSubPage,
+    localizedGetSubPage,
     plainProvedGet as g,
     immutableProvedGet as ig,
     PropTypes,
@@ -328,9 +329,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             const
                 qs = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
-                action = nicheActions.loadPageRequest(getSubPage(
+                action = nicheActions.loadPageRequest(localizedGetSubPage(r)(
                     params.child,
-                    // TODO backward mapping to "eng" values for ordering
                     get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
                     get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
                     [g(params, 0), g(params, 1)]
@@ -347,7 +347,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             const
                 qs = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
-                action = nicheActions.loadPageRequest(getSubPage(
+                action = nicheActions.loadPageRequest(localizedGetSubPage(r)(
                     params.child,
                     get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
                     get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)

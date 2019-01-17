@@ -10,7 +10,7 @@ import {Record, Map, List, fromJS} from 'immutable'
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
-    getSubPage,
+    localizedGetSubPage,
     getRouterContext,
 } from '../../helpers'
 
@@ -107,11 +107,9 @@ const
     loadPageFlow = ({search, routerContext, nicheCode, archiveParams, niche, loadPage}) => {
         const
             qs = queryString.parse(search),
-
-            // TODO backward mapping to "eng" values for ordering
             ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
-
             pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
+            getSubPage = localizedGetSubPage(routerContext),
 
             archive =
                 archiveParams === null ? null :
