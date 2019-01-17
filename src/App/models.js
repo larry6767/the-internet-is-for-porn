@@ -120,6 +120,37 @@ const
         })
     },
 
+    i18nReportModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            title: PropTypes.string,
+            duration: PropTypes.string,
+            added: PropTypes.string,
+            hosted: PropTypes.string,
+            found: PropTypes.string,
+            on: PropTypes.string,
+            radioLabel: PropTypes.string,
+            radioButtons: exact({
+                other: PropTypes.string,
+                deleted: PropTypes.string,
+                doesntPlay: PropTypes.string,
+                badThumb: PropTypes.string,
+                young: PropTypes.string,
+                incest: PropTypes.string,
+                animals: PropTypes.string,
+                otherScat: PropTypes.string,
+                copyright: PropTypes.string,
+            }),
+            text: PropTypes.string,
+            succesText: PropTypes.string,
+            failureText: PropTypes.string,
+            commentLabel: PropTypes.string,
+            commentPlaceholder: PropTypes.string,
+        })
+    },
+
     i18nSearchModel = i18nSearchModelBuilder(false),
     immutableI18nSearchModel = i18nSearchModelBuilder(true),
 
@@ -138,6 +169,9 @@ const
     i18nFooterModel = i18nFooterModelBuilder(false),
     immutableI18nFooterModel = i18nFooterModelBuilder(true),
 
+    i18nReportModel = i18nReportModelBuilder(false),
+    immutableI18nReportModel = i18nReportModelBuilder(true),
+
     i18nModelBuilder = isImmutable => {
         const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
@@ -149,6 +183,7 @@ const
             ordering: isImmutable ? immutableI18nOrderingModel : i18nOrderingModel,
             buttons: isImmutable ? immutableI18nButtonsModel : i18nButtonsModel,
             footer: isImmutable ? immutableI18nFooterModel : i18nFooterModel,
+            report: isImmutable ? immutableI18nReportModel : i18nReportModel,
         })
     }
 
@@ -159,6 +194,7 @@ export {
     i18nOrderingModel, immutableI18nOrderingModel,
     i18nButtonsModel, immutableI18nButtonsModel,
     i18nFooterModel, immutableI18nFooterModel,
+    i18nReportModel, immutableI18nReportModel,
 }
 
 export const

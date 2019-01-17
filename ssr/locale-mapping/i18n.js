@@ -50,7 +50,40 @@ const
                 We have no control over the content of these pages. All films and links \
                 are provided by 3rd parties. We take no responsibility for the content on any \
                 website which we link to, please use your own discretion.`,
-            }
+            },
+            report: {
+                title: `Have you found a problem on the site? Please use this form to help us \
+                to fix it, or contact us directly`,
+                duration: 'Duration',
+                added: 'Added',
+                hosted: 'Hosted by',
+                found: 'Found on page',
+                on: 'on',
+                radioLabel: 'Report reason',
+                radioButtons: {
+                    other: 'Other',
+                    deleted: 'Movie has been deleted',
+                    doesntPlay: 'Movie doesn\'t play',
+                    badThumb: 'Low quality of the thumbnail',
+                    young: 'Person on the thumbnail looks too young',
+                    incest: 'Incest',
+                    animals: 'Beastiality (sex with animals)',
+                    otherScat: 'Other inappropriate content (rape, blood, scat, etc...)',
+                    copyright: 'Copyright violation',
+                },
+                text: `Take Note of: Our website is a completely automatic adult search engine \
+                focused on videos clips. We do not possess, produce, distribute or host \
+                any movies. All linked clips are automatically gathered and added into our \
+                system by our spider script. Thumbnails are auto-generated from the outside \
+                video contributors. All of the video content performed on our site \
+                are hosted and created by other websites that are not under our control. By your \
+                request we can remove thumbnail and link to the video, \
+                but not the original video file.`,
+                succesText: 'Thank you for your report. We will review it soon',
+                failureText: 'Something went wrong. Try again later',
+                commentLabel: 'Comment',
+                commentPlaceholder: 'Describe the problem',
+            },
         },
         deu: {
             search: {
@@ -96,7 +129,41 @@ const
                 schicke uns bitte den Link und wir werden diesen umgehend löschen. Alle Galerien, \
                 Links und Videos auf dieser Tube Seite unterliegen der Verantwortung Dritter, \
                 sichte diese bitten in eigener Verantwortung.`,
-            }
+            },
+            report: {
+                title: `Bitte schicke uns eine Mitteilung mit dem Betreff "Missbrauch" \
+                mit dem direkten Link zu dem illegalen Material mit Hilfe dieses Eingabeformulars`,
+                duration: 'Dauer',
+                added: 'Hinzugefügt',
+                hosted: 'Veranstaltet von',
+                found: 'Gefunden auf der Seite',
+                on: 'auf',
+                radioLabel: 'Grund melden',
+                radioButtons: {
+                    other: 'Andere',
+                    deleted: 'Film wurde gelöscht',
+                    doesntPlay: 'Film wird nicht abgespielt',
+                    badThumb: 'Niedrige Qualität der Miniaturansicht',
+                    young: 'Die Person auf der Miniaturansicht sieht zu jung aus',
+                    incest: 'Inzest',
+                    animals: 'Bestie (Sex mit Tieren)',
+                    otherScat: 'Andere unangemessene Inhalte (Vergewaltigung, Blut, Scat usw.)',
+                    copyright: 'Urheberrechtsverletzung',
+                },
+                text: `Beachten Sie: Unsere Website ist eine vollautomatische Suchmaschine \
+                für Erwachsene, die sich auf Videoclips konzentriert. Wir besitzen, produzieren, \
+                vertreiben oder hosten keine Filme. Alle verknüpften Clips werden automatisch \
+                von unserem Spider-Skript erfasst und in unser System aufgenommen. \
+                Miniaturansichten werden automatisch von den externen Video-Mitwirkenden \
+                generiert. Alle auf unserer Website bereitgestellten Videoinhalte werden von \
+                anderen Websites gehostet und erstellt, die nicht unserer Kontrolle unterliegen. \
+                Auf Ihren Wunsch können wir Miniaturbilder und Links zum Video entfernen, \
+                nicht jedoch die Originalvideodatei.`,
+                succesText: 'Vielen Dank für Ihren Bericht. Wir werden es bald überprüfen',
+                failureText: 'Etwas ist schief gelaufen. Versuchen Sie es später noch einmal',
+                commentLabel: 'Kommentar',
+                commentPlaceholder: 'Beschreibe das Problem',
+            },
         },
         ita: {
             search: {
@@ -141,7 +208,40 @@ const
                 sono forniti da terze parti e non sono controllati da noi. Non accettiamo nessuna \
                 responsabilità per il materiale dei siti ai quali colleghiamo. Vi preghiamo \
                 di usare la propria discrezione mentre guardate i link.`,
-            }
+            },
+            report: {
+                title: `Hai trovato un problema sul sito? Utilizza questo modulo per aiutarci \
+                a risolverlo o contattaci direttamente`,
+                duration: 'Durata',
+                added: 'Aggiunto',
+                hosted: 'Ospitato da',
+                found: 'Trovato a pagina',
+                on: 'sopra',
+                radioLabel: 'Segnala un motivo',
+                radioButtons: {
+                    other: 'Altro',
+                    deleted: 'Il film è stato cancellato',
+                    doesntPlay: 'Il film non suona',
+                    badThumb: 'Bassa qualità della miniatura',
+                    young: 'La persona sull\'anteprima sembra troppo giovane',
+                    incest: 'Incesto',
+                    animals: 'Beastiality (sesso con animali)',
+                    otherScat: 'Altri contenuti inappropriati (stupro, sangue, scat, ecc ...)',
+                    copyright: 'violazione di copyright',
+                },
+                text: `Prendi nota di: Il nostro sito Web è un motore di ricerca per adulti \
+                completamente automatico, incentrato su clip video. Non possediamo, produciamo, \
+                distribuiamo o ospitiamo alcun film. Tutti i clip collegati vengono \
+                automaticamente raccolti e aggiunti nel nostro sistema dal nostro script spider. \
+                Le miniature sono generate automaticamente dai contributori video esterni. \
+                Tutti i contenuti video eseguiti sul nostro sito sono ospitati e creati da altri \
+                siti web che non sono sotto il nostro controllo. Tramite la tua richiesta, \
+                possiamo rimuovere la miniatura e il link al video, ma non il file video originale.`,
+                succesText: 'Grazie per la segnalazione. Lo rivedremo presto',
+                failureText: 'Qualcosa è andato storto. Riprovare più tardi',
+                commentLabel: 'Commento',
+                commentPlaceholder: 'Descrivi il problema',
+            },
         },
         fra: { // TODO
             search: {
@@ -181,6 +281,31 @@ const
             footer: {
                 forParents: '',
                 disclaimer: '',
+            },
+            report: {
+                title: ``,
+                duration: '',
+                added: '',
+                hosted: '',
+                found: '',
+                on: '',
+                radioLabel: '',
+                radioButtons: {
+                    other: '',
+                    deleted: '',
+                    doesntPlay: '',
+                    badThumb: '',
+                    young: '',
+                    incest: '',
+                    animals: '',
+                    otherScat: '',
+                    copyright: '',
+                },
+                text: ``,
+                succesText: '',
+                failureText: '',
+                commentLabel: '',
+                commentPlaceholder: '',
             },
         },
         spa: { // TODO
@@ -222,6 +347,31 @@ const
                 forParents: '',
                 disclaimer: '',
             },
+            report: {
+                title: ``,
+                duration: '',
+                added: '',
+                hosted: '',
+                found: '',
+                on: '',
+                radioLabel: '',
+                radioButtons: {
+                    other: '',
+                    deleted: '',
+                    doesntPlay: '',
+                    badThumb: '',
+                    young: '',
+                    incest: '',
+                    animals: '',
+                    otherScat: '',
+                    copyright: '',
+                },
+                text: ``,
+                succesText: '',
+                failureText: '',
+                commentLabel: '',
+                commentPlaceholder: '',
+            },
         },
         por: { // TODO
             search: {
@@ -261,6 +411,31 @@ const
             footer: {
                 forParents: '',
                 disclaimer: '',
+            },
+            report: {
+                title: ``,
+                duration: '',
+                added: '',
+                hosted: '',
+                found: '',
+                on: '',
+                radioLabel: '',
+                radioButtons: {
+                    other: '',
+                    deleted: '',
+                    doesntPlay: '',
+                    badThumb: '',
+                    young: '',
+                    incest: '',
+                    animals: '',
+                    otherScat: '',
+                    copyright: '',
+                },
+                text: ``,
+                succesText: '',
+                failureText: '',
+                commentLabel: '',
+                commentPlaceholder: '',
             },
         },
         swe: { // TODO
@@ -302,6 +477,31 @@ const
                 forParents: '',
                 disclaimer: '',
             },
+            report: {
+                title: ``,
+                duration: '',
+                added: '',
+                hosted: '',
+                found: '',
+                on: '',
+                radioLabel: '',
+                radioButtons: {
+                    other: '',
+                    deleted: '',
+                    doesntPlay: '',
+                    badThumb: '',
+                    young: '',
+                    incest: '',
+                    animals: '',
+                    otherScat: '',
+                    copyright: '',
+                },
+                text: ``,
+                succesText: '',
+                failureText: '',
+                commentLabel: '',
+                commentPlaceholder: '',
+            },
         },
         nld: { // TODO
             search: {
@@ -341,6 +541,31 @@ const
             footer: {
                 forParents: '',
                 disclaimer: '',
+            },
+            report: {
+                title: ``,
+                duration: '',
+                added: '',
+                hosted: '',
+                found: '',
+                on: '',
+                radioLabel: '',
+                radioButtons: {
+                    other: '',
+                    deleted: '',
+                    doesntPlay: '',
+                    badThumb: '',
+                    young: '',
+                    incest: '',
+                    animals: '',
+                    otherScat: '',
+                    copyright: '',
+                },
+                text: ``,
+                succesText: '',
+                failureText: '',
+                commentLabel: '',
+                commentPlaceholder: '',
             },
         },
         fin: { // TODO
@@ -382,6 +607,31 @@ const
                 forParents: '',
                 disclaimer: '',
             },
+            report: {
+                title: ``,
+                duration: '',
+                added: '',
+                hosted: '',
+                found: '',
+                on: '',
+                radioLabel: '',
+                radioButtons: {
+                    other: '',
+                    deleted: '',
+                    doesntPlay: '',
+                    badThumb: '',
+                    young: '',
+                    incest: '',
+                    animals: '',
+                    otherScat: '',
+                    copyright: '',
+                },
+                text: ``,
+                succesText: '',
+                failureText: '',
+                commentLabel: '',
+                commentPlaceholder: '',
+            },
         },
         rus: { // TODO
             search: {
@@ -422,6 +672,31 @@ const
                 forParents: '',
                 disclaimer: '',
             },
+            report: {
+                title: ``,
+                duration: '',
+                added: '',
+                hosted: '',
+                found: '',
+                on: '',
+                radioLabel: '',
+                radioButtons: {
+                    other: '',
+                    deleted: '',
+                    doesntPlay: '',
+                    badThumb: '',
+                    young: '',
+                    incest: '',
+                    animals: '',
+                    otherScat: '',
+                    copyright: '',
+                },
+                text: ``,
+                succesText: '',
+                failureText: '',
+                commentLabel: '',
+                commentPlaceholder: '',
+            },
         },
         tur: { // TODO
             search: {
@@ -461,6 +736,31 @@ const
             footer: {
                 forParents: '',
                 disclaimer: '',
+            },
+            report: {
+                title: ``,
+                duration: '',
+                added: '',
+                hosted: '',
+                found: '',
+                on: '',
+                radioLabel: '',
+                radioButtons: {
+                    other: '',
+                    deleted: '',
+                    doesntPlay: '',
+                    badThumb: '',
+                    young: '',
+                    incest: '',
+                    animals: '',
+                    otherScat: '',
+                    copyright: '',
+                },
+                text: ``,
+                succesText: '',
+                failureText: '',
+                commentLabel: '',
+                commentPlaceholder: '',
             },
         },
     })
