@@ -37,8 +37,6 @@ const
 
     FindVideos = ({
         classes,
-        pageUrl,
-        search,
         i18nOrdering,
         findVideos,
         chooseSort,
@@ -60,10 +58,7 @@ const
                         {findVideos.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <ControlBar
-                        pageUrl={pageUrl}
-                        search={search}
                         i18nOrdering={i18nOrdering}
-
                         chooseSort={chooseSort}
                         isSSR={isSSR}
                         pagesCount={findVideos.get('pagesCount')}
@@ -125,7 +120,6 @@ export default compose(
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             findVideos: FindVideosRecord(ig(state, 'app', 'findVideos')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            pageUrl: ig(state, 'router', 'location', 'pathname'),
             search: ig(state, 'router', 'location', 'search'),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
         }),

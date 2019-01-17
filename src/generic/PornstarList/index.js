@@ -6,6 +6,10 @@ import {Link} from 'react-router-dom'
 import Favorite from '@material-ui/icons/Favorite'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import {Typography} from '@material-ui/core'
+
+import actions from '../../App/actions'
+import {muiStyles} from './assets/muiStyles'
+
 import {
     List,
     PornstarItem,
@@ -13,8 +17,6 @@ import {
     InfoBar,
     Like,
 } from './assets'
-import {muiStyles} from './assets/muiStyles'
-import actions from '../../App/actions'
 
 const
     PornstarList = ({
@@ -23,12 +25,13 @@ const
         favoritePornstarList,
         addToFavoriteHandler,
         removeFromFavoriteHandler,
+        linkBuilder,
     }) => {
         return <List>
             {pornstarList.map(x =>
                 <PornstarItem key={x.get('id')}>
                     <Link
-                        to={`/porn-star/${x.get('subPage')}${x.get('sort')}`}
+                        to={linkBuilder(x.get('subPage'))}
                         className={classes.routerLink}
                     >
                         <Thumb thumb={x.get('thumb')} />

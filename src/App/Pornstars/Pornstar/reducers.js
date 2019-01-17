@@ -1,8 +1,19 @@
 import {handleActions} from 'redux-actions'
-import {fromJS, List, OrderedMap, Map} from 'immutable'
+import {fromJS, List, Record} from 'immutable'
 
 import {plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
 import actions from './actions'
+
+const
+    PageTextRecord = Record({
+        description: '',
+        headerDescription: '',
+        headerTitle: null,
+        keywords: '',
+        listHeader: null,
+        listHeaderEmpty: null,
+        title: '',
+    })
 
 export default
     handleActions({
@@ -14,7 +25,7 @@ export default
             currentSubPage: '',
             lastSubPageForRequest: payload,
             pageNumber: 1,
-            pageText: Map(),
+            pageText: PageTextRecord(),
             pagesCount: 1,
             sortList: List(),
             currentSort: null,
@@ -32,7 +43,7 @@ export default
             currentSubPage: g(payload, 'data', 'currentSubPage'),
             lastSubPageForRequest: g(payload, 'subPageForRequest'),
             pageNumber: g(payload, 'data', 'pageNumber'),
-            pageText: Map(fromJS(g(payload, 'data', 'pageText'))),
+            pageText: PageTextRecord(g(payload, 'data', 'pageText')),
             pagesCount: g(payload, 'data', 'pagesCount'),
             sortList: List(fromJS(g(payload, 'data', 'sortList'))),
             currentSort: g(payload, 'data', 'currentSort'),
@@ -49,7 +60,7 @@ export default
             modelInfoIsOpen: false,
             currentSubPage: '',
             pageNumber: 1,
-            pageText: OrderedMap(),
+            pageText: PageTextRecord(),
             pagesCount: 1,
             sortList: List(),
             currentSort: null,
@@ -71,17 +82,7 @@ export default
         currentSubPage: '',
         lastSubPageForRequest: '',
         pageNumber: 1,
-        pageText: {
-            /*
-            description: '',
-            headerDescription: '',
-            headerTitle: '',
-            keywords: '',
-            listHeader: '',
-            listHeaderEmpty: '',
-            title: '',
-            */
-        },
+        pageText: PageTextRecord(),
         pagesCount: 1,
         sortList: [
             /*

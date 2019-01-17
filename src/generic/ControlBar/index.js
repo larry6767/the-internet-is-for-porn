@@ -79,7 +79,7 @@ const
             {sortList.map(x =>
                 <InlinedSelectionItem
                     key={ig(x, 'code')}
-                    href={linkBuilder({ordering: ig(x, 'code')})}
+                    href={linkBuilder({ordering: ig(x, 'code'), pagination: null})}
                     isActive={ig(x, 'isActive')}
                 >
                     {ig(i18nOrdering, ig(x, 'code'))}
@@ -114,7 +114,7 @@ const
     NicheControlBar = setPropTypes({
         classes: PropTypes.shape({typographyRoot: PropTypes.string}),
         linkBuilder: PropTypes.func,
-        archiveLinkBuilder: PropTypes.func,
+        archiveLinkBuilder: PropTypes.nullable(PropTypes.func),
         i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,
         isSSR: PropTypes.bool,

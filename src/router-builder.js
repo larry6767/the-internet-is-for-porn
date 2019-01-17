@@ -7,7 +7,6 @@ import {compose, setPropTypes} from 'recompose'
 import status500 from './App/helpers/status500BranchResolver'
 
 import {
-    getSubPage,
     localizedGetSubPage,
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -336,7 +335,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                 qs = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
                 action = nicheActions.loadPageRequest(localizedGetSubPage(r)(
-                    params.child,
+                    g(params, 'child'),
                     get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
                     get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
                     [g(params, 0), g(params, 1)]
@@ -354,7 +353,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                 qs = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
                 action = nicheActions.loadPageRequest(localizedGetSubPage(r)(
-                    params.child,
+                    g(params, 'child'),
                     get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
                     get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
                 ))
@@ -375,7 +374,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
                 qs = queryString.parse(ig(r, 'location', 'search')),
-                action = allMoviesActions.loadPageRequest(getSubPage(
+                action = allMoviesActions.loadPageRequest(localizedGetSubPage(r)(
                     null,
                     get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
                     get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
@@ -392,7 +391,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             const
                 qs = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
-                action = allMoviesActions.loadPageRequest(getSubPage(
+                action = allMoviesActions.loadPageRequest(localizedGetSubPage(r)(
                     null,
                     get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
                     get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
@@ -425,8 +424,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             const
                 qs = queryString.parse(ig(r, 'location', 'search')),
                 {match: {params}, staticContext: x} = props,
-                action = pornstarActions.loadPageRequest(getSubPage(
-                    params.child,
+                action = pornstarActions.loadPageRequest(localizedGetSubPage(r)(
+                    g(params, 'child'),
                     get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
                     get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
                 ))
@@ -489,7 +488,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             const
                 {match: {params}, staticContext: x} = props,
                 action = videoPageActions.loadPageRequest(
-                    getSubPage(`${params.child}/${params.name}`)
+                    localizedGetSubPage(r)(`${params.child}/${params.name}`)
                 )
 
             x.saga = loadVideoPageFlow.bind(null, action)
@@ -503,7 +502,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
                 qs = queryString.parse(ig(r, 'location', 'search')),
-                action = findVideosActions.loadPageRequest(getSubPage(
+                action = findVideosActions.loadPageRequest(localizedGetSubPage(r)(
                     null,
                     get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
                     get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)

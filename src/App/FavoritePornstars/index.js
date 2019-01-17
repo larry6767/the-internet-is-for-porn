@@ -44,6 +44,7 @@ const
         controlLinkBuilder,
         controlFavoriteLinkBuilder,
         favorite,
+        linkBuilder,
     }) => <Page>
         { ig(favorite, 'isFailed')
             ? <ErrorContent/>
@@ -75,6 +76,7 @@ const
                         favoriteButtons={true}
                     />
                     <PornstarList
+                        linkBuilder={linkBuilder}
                         pornstarList={ig(favorite, 'pornstarList')}
                     />
                 </PageWrapper>
@@ -105,6 +107,9 @@ export default compose(
 
         controlFavoriteLinkBuilder: props => section =>
             g(routerGetters, section).link(g(props, 'routerContext'), null),
+
+        linkBuilder: props => child =>
+            routerGetters.pornstar.link(g(props, 'routerContext'), child, null),
     }),
     lifecycle({
         componentDidMount() {

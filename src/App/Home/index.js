@@ -14,6 +14,7 @@ import {
     Typography,
 } from '@material-ui/core'
 
+import {routerGetters} from '../../router-builder'
 import ErrorContent from '../../generic/ErrorContent'
 import {withStylesProps, getRouterContext, immutableProvedGet as ig} from '../helpers'
 import {muiStyles} from './assets/muiStyles'
@@ -44,8 +45,8 @@ const
         pornstarsList: List(),
     }),
 
-    renderListItemLink = (x, idx, arr, classes) =><Link
-        to={`/porn-star/${ig(x, 'subPage')}${ig(x, 'sort')}`}
+    renderListItemLink = (x, idx, arr, classes, routerContext) => <Link
+        to={routerGetters.pornstar.link(routerContext, ig(x, 'subPage'), null)}
         key={ig(x, 'id')}
         className={classes.routerLink}
     >
@@ -73,7 +74,7 @@ const
         </ListItem>
     </Link>,
 
-    Home = ({classes, home}) => <Page>
+    Home = ({classes, home, routerContext}) => <Page>
         { ig(home, 'isFailed')
             ? <ErrorContent/>
             : ig(home, 'isLoading')
@@ -84,7 +85,11 @@ const
                     <NichesList>
                         {ig(home, 'nichesList').map(x => <Niche key={ig(x, 'id')}>
                             <Link
-                                to={`/all-niches/${ig(x, 'subPage')}`}
+                                to={routerGetters.niche.link(
+                                    routerContext,
+                                    ig(x, 'subPage'),
+                                    null
+                                )}
                                 key={ig(x, 'id')}
                                 className={classes.routerLink}
                             >
@@ -106,8 +111,13 @@ const
                             root: classes.root
                         }}
                     >
-                        {ig(home, 'pornstarsList').map((x, idx) =>
-                            renderListItemLink(x, idx, ig(home, 'pornstarsList'), classes))}
+                        {ig(home, 'pornstarsList').map((x, idx) => renderListItemLink(
+                            x,
+                            idx,
+                            ig(home, 'pornstarsList'),
+                            classes,
+                            routerContext
+                        ))}
                     </ListComponent>
                 </PageWrapper>
             </Content>

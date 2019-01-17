@@ -47,7 +47,7 @@ const
                     }}
                     onClick={modelInfoHandler}
                 >
-                    {modelInfoIsOpen
+                    {modelInfoIsOpen /* TODO localize */
                         ? 'hide info'
                         : 'show info'}
                 </Button> : null}
