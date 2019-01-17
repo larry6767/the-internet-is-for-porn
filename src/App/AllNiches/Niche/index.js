@@ -64,20 +64,20 @@ const
         controlArchiveLinkBuilder,
         controlBackFromArchiveLinkBuilder,
     }) => <Page>
-        { niche.get('isFailed')
+        { ig(niche, 'isFailed')
             ? <ErrorContent/>
-            : niche.get('isLoading')
+            : ig(niche, 'isLoading')
             ? <CircularProgress/>
             : <Content>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
                     pageUrl={pageUrl}
-                    tagList={niche.get('tagList')}
-                    tagArchiveList={niche.get('tagArchiveList')}
+                    tagList={ig(niche, 'tagList')}
+                    tagArchiveList={ig(niche, 'tagArchiveList')}
                 />
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
-                        {niche.getIn(['pageText', 'listHeader'])}
+                        {ig(niche, 'pageText', 'listHeader')}
                     </Typography>
                     <ControlBar
                         linkBuilder={controlLinkBuilder}
@@ -87,17 +87,17 @@ const
                         i18nButtons={i18nButtons}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        pagesCount={niche.get('pagesCount')}
-                        pageNumber={niche.get('pageNumber')}
-                        itemsCount={niche.get('itemsCount')}
-                        sortList={niche.get('sortList')}
-                        currentSort={niche.get('currentSort')}
-                        archiveFilms={niche.get('archiveFilms')}
-                        tagArchiveListOlder={niche.get('tagArchiveListOlder')}
-                        tagArchiveListNewer={niche.get('tagArchiveListNewer')}
+                        pagesCount={ig(niche, 'pagesCount')}
+                        pageNumber={ig(niche, 'pageNumber')}
+                        itemsCount={ig(niche, 'itemsCount')}
+                        sortList={ig(niche, 'sortList')}
+                        currentSort={ig(niche, 'currentSort')}
+                        archiveFilms={ig(niche, 'archiveFilms')}
+                        tagArchiveListOlder={ig(niche, 'tagArchiveListOlder')}
+                        tagArchiveListNewer={ig(niche, 'tagArchiveListNewer')}
                     />
                     <VideoList
-                        videoList={niche.get('videoList')}
+                        videoList={ig(niche, 'videoList')}
                     />
                 </PageWrapper>
             </Content>
