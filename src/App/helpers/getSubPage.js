@@ -13,8 +13,9 @@ const
 
     // API accepts requests like '/somepage-latest-5.html',
     // but on the client side this is implemented like '/section/somepage?sort=lates&page=5'.
-    // No `child` case is for pages like /somepage?sort=lates&page=5
-    getSubPage = (child = '', sort = null, page = 1, archive = []) => {
+    getSubPage = (child, sort = null, page = 1, archive = []) => {
+        child = child || '' // Empty `child` is for pages like /somepage?sort=lates&page=5
+
         switch (archive.length) {
             case 0: break;
             case 2:

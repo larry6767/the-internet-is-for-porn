@@ -172,7 +172,7 @@ export const
                     allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label')
 
-                return `/${allMovies}/${archive}(\\d{4})-(\\d{2})`
+                return `/${allMovies}/${archive}/(\\d{4})-(\\d{2})`
             },
             link: (r, year, month, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
