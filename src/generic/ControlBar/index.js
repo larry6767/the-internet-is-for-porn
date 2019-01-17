@@ -177,13 +177,13 @@ const
         buttonsElements: PropTypes.node,
 
         tagArchiveListOlder: PropTypes.nullable(ImmutablePropTypes.exact({
-            month: PropTypes.string,
-            year: PropTypes.string,
+            month: PropTypes.string, // TODO convert to number on backend proxy
+            year: PropTypes.string,  // TODO convert to number on backend proxy
         })),
 
         tagArchiveListNewer: PropTypes.nullable(ImmutablePropTypes.exact({
-            month: PropTypes.string,
-            year: PropTypes.string,
+            month: PropTypes.string, // TODO convert to number on backend proxy
+            year: PropTypes.string,  // TODO convert to number on backend proxy
         })),
 
         archiveLinkBuilder: PropTypes.func,
