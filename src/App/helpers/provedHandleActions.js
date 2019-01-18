@@ -6,6 +6,15 @@ import {assertPropTypes} from './propTypes/check'
 // helps to validate store branch with prop types
 export default (model, mapping, initialState) => {
     if (process.env.NODE_ENV === 'production') {
+        if (model !== null)
+            console.warn(
+                '`model` is not `null` in production mode, ' +
+                'try to avoid constructing prop types in production at all, ' +
+                "add `process.env.NODE_ENV === 'production' ? null : {...}` condition " +
+                '(keep this bare condition simple so bundler could easily detect ' +
+                'and remove this code from production bundle at all)'
+            )
+
         return handleActions(mapping, initialState)
     } else {
         assertPropTypes(model, initialState)

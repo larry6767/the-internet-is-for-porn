@@ -1,7 +1,7 @@
 // TODO: this page needs propTypes
 import React from 'react'
 import {connect} from 'react-redux'
-import {compose, lifecycle, setPropTypes, withHandlers} from 'recompose'
+import {compose, lifecycle, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List} from 'immutable'
@@ -12,6 +12,7 @@ import {
     immutableProvedGet as ig,
     PropTypes,
     ImmutablePropTypes,
+    setPropTypes,
 } from '../helpers'
 
 import {immutableI18nButtonsModel, routerContextModel} from '../models'

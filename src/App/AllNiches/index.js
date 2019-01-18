@@ -1,7 +1,7 @@
 import {Record, List} from 'immutable'
 import React from 'react'
 import {connect} from 'react-redux'
-import {compose, lifecycle, withHandlers, setPropTypes} from 'recompose'
+import {compose, lifecycle, withHandlers} from 'recompose'
 import {Link} from 'react-router-dom'
 import FolderIcon from '@material-ui/icons/Folder'
 
@@ -21,6 +21,7 @@ import {
     plainProvedGet as g,
     PropTypes,
     ImmutablePropTypes,
+    setPropTypes,
 } from '../helpers'
 
 import ErrorContent from '../../generic/ErrorContent'

@@ -1,7 +1,7 @@
 // TODO: this page needs refactoring (propTypes, ig, ext)
 import React from 'react'
 import {connect} from 'react-redux'
-import {compose, lifecycle, setPropTypes, withHandlers} from 'recompose'
+import {compose, lifecycle, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List} from 'immutable'
@@ -10,6 +10,7 @@ import {
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
+    setPropTypes,
 } from '../helpers'
 
 import {

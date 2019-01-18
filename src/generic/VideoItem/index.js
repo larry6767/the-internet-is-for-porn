@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {compose, setPropTypes, withHandlers} from 'recompose'
+import {compose, withHandlers} from 'recompose'
 import {replace, set} from 'lodash'
 import {withStyles} from '@material-ui/core/styles'
 import {Typography} from '@material-ui/core'
@@ -14,6 +14,7 @@ import {
     immutableProvedGet as ig,
     ImmutablePropTypes,
     PropTypes,
+    setPropTypes,
 } from '../../App/helpers'
 
 import {routerGetters} from '../../router-builder'

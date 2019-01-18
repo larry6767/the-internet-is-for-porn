@@ -1,6 +1,6 @@
 import React from 'react'
 import {Record, List} from 'immutable'
-import {compose, setPropTypes} from 'recompose'
+import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, Field, formValueSelector} from 'redux-form/immutable'
 import Autosuggest from 'react-autosuggest'
@@ -14,6 +14,7 @@ import {
     plainProvedGet as g,
     PropTypes,
     ImmutablePropTypes,
+    setPropTypes,
 } from '../../helpers'
 
 import {immutableI18nSearchModel} from '../../models'

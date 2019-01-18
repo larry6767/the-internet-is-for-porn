@@ -1,13 +1,14 @@
 import React from 'react'
-import {compose, setPropTypes} from 'recompose'
+import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {Typography} from '@material-ui/core'
 import {Map} from 'immutable'
 
-import {immutableProvedGet as ig} from '../helpers'
+import {immutableProvedGet as ig, setPropTypes} from '../helpers'
 import {immutableI18nFooterModel, immutableI18nButtonsModel} from '../models'
 import {IMG_PATH} from '../../config'
 import {linksToProtect} from './fixtures'
+
 import {
     Footer,
     FooterInner,

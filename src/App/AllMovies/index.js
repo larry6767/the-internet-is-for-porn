@@ -4,7 +4,7 @@ import React from 'react'
 import {Record, Map, List, fromJS} from 'immutable'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
-import {compose, lifecycle, setPropTypes, withHandlers, withProps} from 'recompose'
+import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
 
@@ -13,6 +13,7 @@ import {
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
+    setPropTypes,
 } from '../helpers'
 
 import {immutableI18nButtonsModel} from '../models'

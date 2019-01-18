@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {compose, setPropTypes, withHandlers} from 'recompose'
+import {compose, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import {Link} from 'react-router-dom'
 import Favorite from '@material-ui/icons/Favorite'
@@ -12,6 +12,7 @@ import {
     immutableProvedGet as ig,
     PropTypes,
     ImmutablePropTypes,
+    setPropTypes,
 } from '../../App/helpers'
 
 import actions from '../../App/actions'

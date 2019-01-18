@@ -1,34 +1,31 @@
 // TODO: this page needs refactoring (propTypes, ig, g, etc)
+import {Record, Map, List} from 'immutable'
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {compose, lifecycle, setPropTypes} from 'recompose'
+import {compose, lifecycle} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, reset as resetForm} from 'redux-form/immutable'
 import {withStyles} from '@material-ui/core'
-import {
-    CircularProgress,
-    Typography,
-    Button,
-    Chip,
-} from '@material-ui/core'
+import {CircularProgress, Typography, Button, Chip} from '@material-ui/core'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
-import {
-    Record,
-    Map,
-    List,
-} from 'immutable'
 
 import {
     immutableProvedGet as ig,
     PropTypes,
     getSubPage,
+    setPropTypes,
 } from '../helpers'
 
 import {immutableI18nButtonsModel} from '../models'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
 import ReportDialog from './ReportDialog'
+
+import actions from './actions'
+import appActions from '../actions'
+import {muiStyles} from './assets/muiStyles'
+
 import {
     Page,
     Content,
@@ -49,9 +46,6 @@ import {
     TagsWrapper,
     SponsorLink,
 } from './assets'
-import actions from './actions'
-import appActions from '../actions'
-import {muiStyles} from './assets/muiStyles'
 
 const
     fieldNamesArray = ['op', '_cid', '_gid', '_url'], // hidden field names for report request

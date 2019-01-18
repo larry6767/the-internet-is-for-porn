@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {compose, withHandlers, withState, setPropTypes} from 'recompose'
+import {compose, withHandlers, withState} from 'recompose'
 import {connect} from 'react-redux'
 import {Menu, MenuItem, IconButton} from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
@@ -11,6 +11,7 @@ import {
     immutableProvedGet as ig,
     plainProvedGet as g,
     PropTypes,
+    setPropTypes,
 } from '../../helpers'
 
 import {routerGetters} from '../../../router-builder'

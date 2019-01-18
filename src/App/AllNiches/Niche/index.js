@@ -3,7 +3,7 @@ import {get} from 'lodash'
 import React from 'react'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
-import {compose, lifecycle, withHandlers, withProps, setPropTypes} from 'recompose'
+import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List, fromJS} from 'immutable'
 
@@ -12,6 +12,7 @@ import {
     immutableProvedGet as ig,
     localizedGetSubPage,
     getRouterContext,
+    setPropTypes,
 } from '../../helpers'
 
 import {

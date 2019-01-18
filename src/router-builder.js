@@ -2,7 +2,7 @@ import {get, padStart} from 'lodash'
 import React from 'react'
 import {Route, Switch, Redirect} from 'react-router-dom'
 import queryString from 'query-string'
-import {compose, setPropTypes} from 'recompose'
+import {compose} from 'recompose'
 
 import status500 from './App/helpers/status500BranchResolver'
 
@@ -12,6 +12,7 @@ import {
     immutableProvedGet as ig,
     PropTypes,
     assertPropTypes,
+    setPropTypes,
 } from './App/helpers'
 
 import {routerContextModel} from './App/models'

@@ -1,7 +1,7 @@
 import {range} from 'lodash'
 import React, {Fragment} from 'react'
 import {Link} from 'react-router-dom'
-import {compose, setPropTypes} from 'recompose'
+import {compose} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 
 import {
@@ -17,6 +17,7 @@ import {
     immutableProvedGet as ig,
     PropTypes,
     ImmutablePropTypes,
+    setPropTypes,
 } from '../../App/helpers'
 
 import {

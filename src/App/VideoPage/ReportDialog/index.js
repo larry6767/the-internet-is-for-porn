@@ -1,10 +1,11 @@
 // TODO: this page needs refactoring
 import React, {Fragment} from 'react'
-import {compose, setPropTypes} from 'recompose'
+import {compose} from 'recompose'
 import {connect} from 'react-redux'
 import {Field} from 'redux-form/immutable'
 import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
+
 import {
     Typography,
     Dialog,
@@ -26,7 +27,8 @@ import {
     TableCell,
     CircularProgress,
 } from '@material-ui/core'
-import {immutableProvedGet as ig} from '../../helpers'
+
+import {immutableProvedGet as ig, setPropTypes} from '../../helpers'
 
 import {
     immutableI18nButtonsModel,
@@ -39,6 +41,7 @@ import {
     Description,
     SubmitButtonWrapper,
 } from './assets'
+
 import {muiStyles} from './assets/muiStyles'
 
 const

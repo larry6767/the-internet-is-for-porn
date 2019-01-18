@@ -23,6 +23,7 @@ export {PropTypes, checkPropTypes, assertPropTypes} from './propTypes'
 export {ImmutablePropTypes} from './propTypes/immutable'
 export {default as provedHandleActions} from './provedHandleActions'
 export {default as getRouterContext} from './getRouterContext'
+export {default as setPropTypes} from './setPropTypes'
 
 export {default as addToList} from './favoritePages/addToList'
 export {default as removeFromList} from './favoritePages/removeFromList'

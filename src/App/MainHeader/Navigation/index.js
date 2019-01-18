@@ -1,5 +1,5 @@
 import React from 'react'
-import {compose, setPropTypes, withHandlers} from 'recompose'
+import {compose, withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 import {Tabs, Tab} from '@material-ui/core'
@@ -10,6 +10,7 @@ import {
     immutableProvedGet as ig,
     plainProvedGet as g,
     PropTypes,
+    setPropTypes,
 } from '../../helpers'
 
 import {routerGetters} from '../../../router-builder'
