@@ -1,7 +1,6 @@
-import {pick, map, find, mapValues, omit, compact, get} from 'lodash'
+import {pick, map, find, omit, compact, get} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
-import {Agent} from 'https' // TODO FIXME for hacky-wacky stuff (blind trust to SSL cert)
 
 import {
     plainProvedGet as g,
@@ -318,27 +317,7 @@ const
             )
 
         return response.json()
-    },
-
-    // TODO FIXME remove this when SSL certs will be fixed
-    blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL =
-        process.env.NODE_ENV === 'production' ? null :
-        new Agent({checkServerIdentity: (host, cert) => {
-            console.warn(`
-
-                YOU'RE PLAYING DANGEROUS GAMES!
-                Host: ${host}
-                Certificate: ${'\n' + JSON.stringify(
-                        omit(
-                            mapValues(cert, (x, k) => k === 'issuerCertificate' ? null : x),
-                            ['issuerCertificate', 'raw', 'pubkey']
-                        ),
-                        null,
-                        '  '
-                    )}
-
-            `)
-        }})
+    }
 
 /*
     Generic helper to obtain data from backend for specific "page".
@@ -420,10 +399,6 @@ export const getPageData = (siteLocales, localeCode) => async ({
         method: 'POST',
         headers,
         body: JSON.stringify(body),
-
-        // TODO FIXME remove this:
-        agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
-
     }).then(fetchResponseExtractor(() => new Error().stack)))
 }
 
@@ -464,9 +439,6 @@ export const getSiteLocales = async () => {
                         options: {blocks: {langSites: 1}},
                     },
                 }),
-
-                // TODO FIXME remove this:
-                agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
             }
         ).then(fetchResponseExtractor(() => new Error().stack)),
 
@@ -489,9 +461,6 @@ export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => 
                 (fd, k) => (fd.append(k, g(formData, k)), fd),
                 new FormData()
             ),
-
-        // TODO FIXME remove this:
-        agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
     }
 ).then(fetchResponseExtractor(() => new Error().stack))
 
@@ -505,9 +474,6 @@ export const getSearchSuggestions = (siteLocales, localeCode) => async ({headers
         {
             method: 'GET',
             headers,
-
-            // TODO FIXME remove this:
-            agent: blindTruster_REMOVE_IT_SOON_OR_YOUR_ASS_WILL_BE_PENETRATED_AGAINST_YOUR_WILL,
         }
     ).then(fetchResponseExtractor(() => new Error().stack)))
 }
