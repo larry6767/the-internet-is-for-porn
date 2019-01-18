@@ -46,15 +46,20 @@ const
         nichesList: getTagList(x.page.TAGS_INFO.items),
         pornstarsList: getModelsList(
             x.page.MODELS_BY_LETTERS.letters,
-            x.page.MODELS_BY_LETTERS_MODELS_INFO.items
+            x.page.MODELS_BY_LETTERS_MODELS_INFO.items,
+            true
         ),
+        pageText: getPageText(x.page.PAGE_TEXT),
     }),
 
     // TODO FIXME: now i'm not shure about getting this data,
     // because on production we have some additional tags(i don't know yet where i should get it)
     // if we'll leave this implementation we need some additional logic,
     // because it's same data for AllNiches and Niche (we don't need to get twice from API)
-    getAllNichesMap = x => getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
+    getAllNichesMap = x => ({
+        tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
+        pageText: getPageText(x.page.PAGE_TEXT),
+    }),
     // sortBy(
     //     map(
     //         x.page.TAGS_INFO.items,
@@ -176,12 +181,13 @@ const
         }
     },
 
-    getPornstarsMap = x => {
-        return getModelsList(
+    getPornstarsMap = x => ({
+        modelsList: getModelsList(
             x.page.MODELS_BY_LETTERS.letters,
             x.page.MODELS_BY_LETTERS_MODELS_INFO.items
-        )
-    },
+        ),
+        pageText: getPageText(x.page.PAGE_TEXT),
+    }),
 
     getFavoriteMap = x => {
         return {
@@ -199,7 +205,7 @@ const
             pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
             itemsCount: x.page.ITEMS_PER_PAGE,
-            pornstarList: map(
+            modelsList: map(
                 pick(
                     x.page.MODELS_BY_LETTERS_TAGS_INFO,
                     (Object.keys(x.page.MODELS_INFO.items))
@@ -208,12 +214,8 @@ const
                     id: Number(id),
                     name,
                     subPage: sub_url,
-                    itemsCount: items_count,
+                    itemsCount: Number(items_count),
                     thumb: x.page.MODELS_BY_LETTERS_MODELS_INFO.items[id].thumb_url,
-                    sort: x.page.MODELS_BY_LETTERS_MODELS_INFO.items[id].url_galleries.indexOf('latest')
-                        ? '?sort=latest'
-                        : x.page.MODELS_BY_LETTERS_MODELS_INFO.items[id].url_galleries.indexOf('longest')
-                        ? '?sort=longest' : '',
                 })
             )
         }

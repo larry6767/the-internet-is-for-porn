@@ -5,22 +5,23 @@ import {
     reduce,
 } from 'lodash'
 
-export default (letters, items) => reduce(
+export default (letters, items, withLetter = false) => reduce(
     letters,
     (acc, letter, key) => {
         const letterItems = sortBy(
-            map(letter, ({id, name, sub_url, items_count}) => ({
-                id: Number(id),
-                name,
-                subPage: sub_url,
-                itemsCount: items_count,
-                thumb: items[id].thumb_url,
-                sort: items[id].url_galleries.indexOf('latest')
-                    ? '?sort=latest'
-                    : items[id].url_galleries.indexOf('longest')
-                    ? '?sort=longest' : '',
-                letter: key,
-            })),
+            map(letter, ({id, name, sub_url, items_count}) => {
+                const model = {
+                    id: Number(id),
+                    name,
+                    subPage: sub_url,
+                    itemsCount: Number(items_count),
+                    thumb: items[id].thumb_url,
+                }
+                if (withLetter)
+                    model.letter = key
+
+                return model
+            }),
             o => o.name
         )
 

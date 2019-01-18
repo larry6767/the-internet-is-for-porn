@@ -1,44 +1,56 @@
 import {combineReducers} from 'redux-immutable'
-import {handleActions} from 'redux-actions'
 import {fromJS, List} from 'immutable'
+
+import {
+    ImmutablePropTypes,
+    PropTypes,
+    provedHandleActions,
+    plainProvedGet as g,
+} from '../helpers'
+import {immutablePageTextModel, PageTextRecord} from '../models'
+import {modelsListModel} from './models'
 import actions from './actions'
 import pornstarReducer from './Pornstar/reducers'
+
+const
+    stateModel = ImmutablePropTypes.exact({
+        isLoading: PropTypes.bool,
+        isLoaded: PropTypes.bool,
+        isFailed: PropTypes.bool,
+        pageText: immutablePageTextModel,
+        modelsList: ImmutablePropTypes.listOf(modelsListModel),
+    })
 
 export default combineReducers({
     pornstar: pornstarReducer,
 
-    all: handleActions({
+    all: provedHandleActions(stateModel, {
         [actions.loadPageRequest]: (state) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            pornstarList: List(),
+            modelsList: List(),
+            pageText: PageTextRecord(),
         }),
-        [actions.loadPageSuccess]: (state, {payload: {data}}) => state.merge({
+        [actions.loadPageSuccess]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            pornstarList: fromJS(data),
+            modelsList: fromJS(g(payload, 'data', 'modelsList')),
+            pageText: PageTextRecord(g(payload, 'data', 'pageText')),
         }),
         [actions.loadPageFailure]: (state) => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
-            pornstarList: List(),
+            modelsList: List(),
+            pageText: PageTextRecord(),
         }),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        pornstarList: [
-            /*
-            {
-                id: 0,
-                name: '',
-                subPage: '',
-                itemsCount: 0,
-            }
-            */
-        ]
+        modelsList: [],
+        pageText: PageTextRecord(),
     }))
 })

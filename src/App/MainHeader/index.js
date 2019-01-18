@@ -1,10 +1,14 @@
 import React from 'react'
 import {compose, setPropTypes} from 'recompose'
+import {Record} from 'immutable'
 import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
+import {Typography} from '@material-ui/core'
 import {
+    plainProvedGet as g,
     immutableProvedGet as ig,
     PropTypes,
+    ImmutablePropTypes,
 } from '../helpers'
 import Niche from './Niche'
 import Navigation from './Navigation'
@@ -12,7 +16,7 @@ import Language from './Language'
 import Search from './Search'
 import BurgerMenu from './BurgerMenu'
 import {connect} from 'react-redux'
-import {toggleSearch} from './actions'
+import actions from './actions'
 import {
     Header,
     Top,
@@ -29,14 +33,34 @@ import {muiStyles} from './assets/muiStyles'
 const
     MainHeader = ({
         classes, isSSR, pageUrl, currentBreakpoint,
-        isSearchShown, toggleSearchAction
+        data, toggleSearchAction, pageText
     }) => {
         const
-            isXSorXXS = currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
+            isXSorXXS = currentBreakpoint === 'xs' || currentBreakpoint === 'xxs',
+            isSearchShown = ig(data, 'isSearchShown')
 
         return <Header>
             <Top>
                 <TopInner>
+                    <TextWrapper>
+                        <Typography
+                            variant="caption"
+                            gutterBottom
+                            classes={{
+                                root: g(classes, 'typography'),
+                            }}
+                        >
+                            {`${ig(data, 'title')}. `}
+                        </Typography>
+                        <Typography
+                            variant="caption"
+                            classes={{
+                                root: g(classes, 'typography'),
+                            }}
+                        >
+                            {ig(data, 'description')}
+                        </Typography>
+                    </TextWrapper>
                     <SearchWrapper>
                         {
                             isXSorXXS && isSearchShown ? '' :
@@ -69,9 +93,6 @@ const
                         }
                     </SearchWrapper>
                     <Niche/>
-                    <TextWrapper>
-
-                    </TextWrapper>
                 </TopInner>
             </Top>
             {
@@ -88,7 +109,13 @@ const
                     : null
             }
         </Header>
-    }
+    },
+
+    dataRecord = Record({
+        isSearchShown: false,
+        title: '',
+        description: '',
+    })
 
 export default compose(
     connect(
@@ -96,17 +123,18 @@ export default compose(
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             pageUrl: ig(state, 'router', 'location', 'pathname'),
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            isSearchShown: ig(state, 'app', 'mainHeader', 'ui', 'isSearchShown'),
+            data: dataRecord(ig(state, 'app', 'mainHeader', 'ui')),
         }),
         dispatch => ({
-            toggleSearchAction: () => dispatch(toggleSearch())
+            toggleSearchAction: () => dispatch(actions.toggleSearch())
         })
     ),
     withStyles(muiStyles),
     setPropTypes({
+        classes: PropTypes.object,
         isSSR: PropTypes.bool,
         pageUrl: PropTypes.string,
         currentBreakpoint: PropTypes.string,
-        isSearchShown: PropTypes.bool,
+        data: ImmutablePropTypes.record,
     }),
 )(MainHeader)

@@ -14,11 +14,19 @@ import {
     Typography,
 } from '@material-ui/core'
 
+import {
+    withStylesProps,
+    getRouterContext,
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    getHeaderText
+} from '../helpers'
+
 import {routerGetters} from '../../router-builder'
 import ErrorContent from '../../generic/ErrorContent'
-import {withStylesProps, getRouterContext, immutableProvedGet as ig} from '../helpers'
 import {muiStyles} from './assets/muiStyles'
 import actions from './actions'
+import headerActions from '../MainHeader/actions'
 
 import {
     Page,
@@ -133,14 +141,18 @@ export default compose(
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
         }),
         dispatch => ({
-            loadPage: (event, value) => dispatch(actions.loadPageRequest())
+            loadPage: (event, value) => dispatch(actions.loadPageRequest()),
+            setHeaderText: (headerText) => dispatch(
+                headerActions.setNewText(headerText)
+            ),
         })
     ),
     lifecycle({
         componentDidMount() {
-            if (!ig(this.props.home, 'isLoading') && !ig(this.props.home, 'isLoaded')) {
+            if (!ig(this.props.home, 'isLoading') && !ig(this.props.home, 'isLoaded'))
                 this.props.loadPage()
-            }
+            else if (ig(this.props.home, 'isLoaded'))
+                this.props.setHeaderText(getHeaderText(g(this, 'props', 'home'), true))
         }
     }),
     withStylesProps(muiStyles)

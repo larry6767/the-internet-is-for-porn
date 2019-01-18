@@ -11,6 +11,7 @@ export const Top = styled.div`
 
 export const TopInner = styled.div`
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     padding: 15px 10px;
@@ -88,4 +89,5 @@ export const BottomInner = styled.div`
 
 export const TextWrapper = styled.div`
     width: 100%;
+    margin-bottom: 10px;
 `

@@ -1,5 +1,5 @@
 import {handleActions} from 'redux-actions'
-import {fromJS, List} from 'immutable'
+import {fromJS, List, Map} from 'immutable'
 import actions from './actions'
 
 export default
@@ -8,6 +8,7 @@ export default
             isLoading: true,
             isLoaded: false,
             isFailed: false,
+            pageText: Map(),
             nichesList: List(),
             pornstarsList: List(),
         }),
@@ -15,6 +16,7 @@ export default
             isLoading: false,
             isLoaded: true,
             isFailed: false,
+            pageText: Map(fromJS(data.pageText)),
             nichesList: List(fromJS(data.nichesList)),
             pornstarsList: List(fromJS(data.pornstarsList)),
         }),
@@ -22,6 +24,7 @@ export default
             isLoading: false,
             isLoaded: false,
             isFailed: true,
+            pageText: Map(),
             nichesList: List(),
             pornstarsList: List(),
         }),
@@ -29,6 +32,7 @@ export default
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+        pageText: {},
         nichesList: [
             /*
             {

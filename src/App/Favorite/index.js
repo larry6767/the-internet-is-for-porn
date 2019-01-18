@@ -7,6 +7,7 @@ import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List} from 'immutable'
 
 import {
+    getHeaderText,
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -20,6 +21,7 @@ import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
 import {Page, Content, PageWrapper} from './assets'
+import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
@@ -91,10 +93,13 @@ export default compose(
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
+            setNewText: g(headerActions, 'setNewText'),
         }
     ),
     withHandlers({
         loadPage: props => pageUrl => props.loadPageRequest(pageUrl),
+
+        setHeaderText: props => headerText => props.setNewText(headerText),
 
         controlLinkBuilder: props => qsParams =>
             routerGetters.favorite.link(g(props, 'routerContext'), {
@@ -107,9 +112,10 @@ export default compose(
     }),
     lifecycle({
         componentDidMount() {
-            if (!ig(this.props.favorite, 'isLoading') && !ig(this.props.favorite, 'isLoaded')) {
+            if (!ig(this.props.favorite, 'isLoading') && !ig(this.props.favorite, 'isLoaded'))
                 this.props.loadPage()
-            }
+            else if (ig(this.props.favorite, 'isLoaded'))
+                this.props.setHeaderText(getHeaderText(g(this, 'props', 'favorite'), true))
         }
     }),
     withStyles(muiStyles),

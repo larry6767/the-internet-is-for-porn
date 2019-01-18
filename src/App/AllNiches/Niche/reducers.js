@@ -1,4 +1,4 @@
-import {fromJS, List, Map, Record} from 'immutable'
+import {fromJS, List, Map} from 'immutable'
 
 import {
     ImmutablePropTypes,
@@ -7,7 +7,11 @@ import {
     plainProvedGet as g,
 } from '../../helpers'
 
-import {immutableArchiveFilmsModel} from '../../models'
+import {
+    immutableArchiveFilmsModel,
+    immutablePageTextModel,
+    PageTextRecord,
+} from '../../models'
 import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
 import actions from './actions'
 
@@ -24,15 +28,7 @@ const
         pageNumber: PropTypes.number,
         pagesCount: PropTypes.number,
 
-        pageText: ImmutablePropTypes.exactRecordOf({
-            description: PropTypes.string,
-            headerDescription: PropTypes.string,
-            headerTitle: PropTypes.nullable(PropTypes.string),
-            keywords: PropTypes.string,
-            listHeader: PropTypes.nullable(PropTypes.string),
-            listHeaderEmpty: PropTypes.nullable(PropTypes.string),
-            title: PropTypes.string,
-        }),
+        pageText: immutablePageTextModel,
 
         tagList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
             id: PropTypes.number,
@@ -69,16 +65,6 @@ const
 
         itemsCount: PropTypes.number,
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
-    }),
-
-    PageTextRecord = Record({
-        description: '',
-        headerDescription: '',
-        headerTitle: null,
-        keywords: '',
-        listHeader: null,
-        listHeaderEmpty: null,
-        title: '',
     })
 
 export default

@@ -1,4 +1,5 @@
 import {PropTypes, ImmutablePropTypes} from './helpers'
+import {Record} from 'immutable'
 
 const
     localeRouterModelBuilder = isImmutable => {
@@ -248,3 +249,24 @@ const
 export const
     archiveFilmsModel = archiveFilmsModelBuilder(false),
     immutableArchiveFilmsModel = archiveFilmsModelBuilder(true)
+
+export const
+    immutablePageTextModel = ImmutablePropTypes.exactRecordOf({
+        description: PropTypes.string,
+        headerDescription: PropTypes.string,
+        headerTitle: PropTypes.nullable(PropTypes.string),
+        keywords: PropTypes.string,
+        listHeader: PropTypes.nullable(PropTypes.string),
+        listHeaderEmpty: PropTypes.nullable(PropTypes.string),
+        title: PropTypes.string,
+    }),
+
+    PageTextRecord = Record({
+        description: '',
+        headerDescription: '',
+        headerTitle: null,
+        keywords: '',
+        listHeader: null,
+        listHeaderEmpty: null,
+        title: '',
+    })

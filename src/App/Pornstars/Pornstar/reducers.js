@@ -1,22 +1,42 @@
-import {handleActions} from 'redux-actions'
-import {fromJS, List, Record} from 'immutable'
+import {fromJS, List} from 'immutable'
 
-import {plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
+import {
+    ImmutablePropTypes,
+    PropTypes,
+    provedHandleActions,
+    plainProvedGet as g,
+    immutableProvedGet as ig
+} from '../../helpers'
+import {immutablePageTextModel, PageTextRecord} from '../../models'
+import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
+import {modelsListModel, modelInfoModel} from '../models'
 import actions from './actions'
 
 const
-    PageTextRecord = Record({
-        description: '',
-        headerDescription: '',
-        headerTitle: null,
-        keywords: '',
-        listHeader: null,
-        listHeaderEmpty: null,
-        title: '',
+    stateModel = ImmutablePropTypes.exact({
+        isLoading: PropTypes.bool,
+        isLoaded: PropTypes.bool,
+        isFailed: PropTypes.bool,
+        modelInfoIsOpen: PropTypes.bool,
+        currentSubPage: PropTypes.string,
+        lastSubPageForRequest: PropTypes.string,
+        pageNumber: PropTypes.number,
+        pageText: immutablePageTextModel,
+        pagesCount: PropTypes.number,
+        sortList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
+            isActive: PropTypes.bool,
+            code: PropTypes.string,
+        })),
+        currentSort: PropTypes.nullable(PropTypes.string),
+        itemsCount: PropTypes.number,
+        videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
+        modelsList: ImmutablePropTypes.listOf(modelsListModel),
+        modelInfo: ImmutablePropTypes.listOf(modelInfoModel),
+        modelThumb: PropTypes.string,
     })
 
 export default
-    handleActions({
+    provedHandleActions(stateModel, {
         [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
@@ -84,41 +104,11 @@ export default
         pageNumber: 1,
         pageText: PageTextRecord(),
         pagesCount: 1,
-        sortList: [
-            /*
-            {
-                active: false,
-                value: '',
-                localText: '',
-            }
-            */
-        ],
+        sortList: [],
         currentSort: null,
         itemsCount: 0,
-        videoList: [
-            /*
-            {
-                id: 0,
-                thumb,
-                title: '',
-                sponsorId: 0,
-                tags: '',
-                tagsShort: '',
-                favorite: 0,
-                duration: 0,
-            }
-            */
-        ],
-        modelsList: [
-            /*
-            {
-                id: 0,
-                name: '',
-                subPage: '',
-                itemsCount: 0,
-            }
-            */
-        ],
+        videoList: [],
+        modelsList: [],
         modelInfo: [],
         modelThumb: '',
     }))

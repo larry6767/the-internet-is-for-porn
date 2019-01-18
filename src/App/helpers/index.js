@@ -24,6 +24,7 @@ export {ImmutablePropTypes} from './propTypes/immutable'
 export {default as provedHandleActions} from './provedHandleActions'
 export {default as getRouterContext} from './getRouterContext'
 
+export {default as getHeaderText} from './getHeaderText.js'
 export {default as addToList} from './favoritePages/addToList'
 export {default as removeFromList} from './favoritePages/removeFromList'
 export {default as getIdsForInitialFavoriteList} from './favoritePages/getIdsForInitialFavoriteList'

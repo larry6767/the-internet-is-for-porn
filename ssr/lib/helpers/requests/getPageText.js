@@ -4,14 +4,14 @@ import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/help
 
 const
     incomingPageTextModelProps = Object.freeze({
-        DESCRIPTION: PropTypes.string,
-        'HEADER-DESCRIPTION': PropTypes.string,
-        'HEADER-TITLE': PropTypes.string.isOptional, // could be not presented
-        KEYWORDS: PropTypes.string,
-        'LIST-HEADER': PropTypes.string.isOptional, // could be not presented
-        'LIST-HEADER-EMPTY': PropTypes.string.isOptional, // could be not presented
         TITLE: PropTypes.string,
-        'GALLERY-TITLE': PropTypes.string.isOptional, // could be not presented
+        DESCRIPTION: PropTypes.string,
+        KEYWORDS: PropTypes.string,
+        'HEADER-TITLE': PropTypes.string.isOptional, // could be not presented
+        'HEADER-DESCRIPTION': PropTypes.string,
+        'LIST-HEADER': PropTypes.string.isOptional, // only favorite pages
+        'LIST-HEADER-EMPTY': PropTypes.string.isOptional, // only favorite pages
+        'GALLERY-TITLE': PropTypes.string.isOptional, // only video page
     }),
 
     incomingVideoPageTextModelProps = Object.freeze({
@@ -20,13 +20,13 @@ const
     }),
 
     pageTextModelProps = Object.freeze({
+        title: PropTypes.string,
         description: PropTypes.string,
-        headerDescription: PropTypes.string,
-        headerTitle: PropTypes.string.isOptional,
         keywords: PropTypes.string,
+        headerTitle: PropTypes.string.isOptional,
+        headerDescription: PropTypes.string,
         listHeader: PropTypes.string.isOptional,
         listHeaderEmpty: PropTypes.string.isOptional,
-        title: PropTypes.string,
     })
 
 export const
@@ -61,13 +61,13 @@ const
     getVideoProp = (src, propKey) => g(src, getVideoKey(propKey)),
 
     getResult = pageText => ({
+        title: getProp(pageText, 'TITLE'),
         description: getProp(pageText, 'DESCRIPTION'),
-        headerDescription: getProp(pageText, 'HEADER-DESCRIPTION'),
-        headerTitle: pageText[getKey('HEADER-TITLE')] || null,
         keywords: getProp(pageText, 'KEYWORDS'),
+        headerTitle: pageText[getKey('HEADER-TITLE')] || null,
+        headerDescription: getProp(pageText, 'HEADER-DESCRIPTION'),
         listHeader: pageText[getKey('LIST-HEADER')] || null,
         listHeaderEmpty: pageText[getKey('LIST-HEADER-EMPTY')] || null,
-        title: getProp(pageText, 'TITLE'),
     })
 
 export default pageText => {

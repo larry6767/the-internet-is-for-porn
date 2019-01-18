@@ -8,6 +8,7 @@ import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List, fromJS} from 'immutable'
 
 import {
+    getHeaderText,
     plainProvedGet as g,
     immutableProvedGet as ig,
     localizedGetSubPage,
@@ -25,6 +26,7 @@ import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
 import {Page, Content, PageWrapper} from './assets'
+import headerActions from '../../MainHeader/actions'
 import actions from './actions'
 
 const
@@ -108,7 +110,10 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({search, routerContext, nicheCode, archiveParams, niche, loadPage}) => {
+    loadPageFlow = ({
+        search, routerContext, nicheCode, archiveParams, niche,
+        loadPage, setHeaderText
+    }) => {
         const
             qs = queryString.parse(search),
             ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
@@ -141,6 +146,8 @@ const
             )
         ))
             loadPage(subPageForRequest)
+        else if (ig(niche, 'isLoaded'))
+            setHeaderText(getHeaderText(niche, true))
     }
 
 export default compose(
@@ -157,6 +164,7 @@ export default compose(
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
             setNewSort: g(actions, 'setNewSort'),
+            setNewText: g(headerActions, 'setNewText'),
         }
     ),
     withProps(props => ({
@@ -169,6 +177,8 @@ export default compose(
     })),
     withHandlers({
         loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+
+        setHeaderText: props => headerText => props.setNewText(headerText),
 
         chooseSort: props => newSortValue => props.setNewSort({
             newSortValue,

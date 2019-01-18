@@ -1,4 +1,4 @@
-import {Record, List} from 'immutable'
+import {Record, List, Map} from 'immutable'
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, setPropTypes} from 'recompose'
@@ -15,6 +15,7 @@ import {
 } from '@material-ui/core'
 
 import {
+    getHeaderText,
     withStylesProps,
     getRouterContext,
     immutableProvedGet as ig,
@@ -25,8 +26,9 @@ import {
 
 import ErrorContent from '../../generic/ErrorContent'
 import {routerGetters} from '../../router-builder'
-import {immutableI18nAllNichesModel} from '../models'
+import {immutableI18nAllNichesModel, immutablePageTextModel} from '../models'
 import {nicheItemModel} from './models'
+import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import {AllNichesPage, Content, PageWrapper} from './assets'
 import {muiStyles} from './assets/muiStyles'
@@ -38,6 +40,7 @@ const
         isFailed: false,
 
         nichesList: List(),
+        pageText: Map(),
     }),
 
     renderListItemLink = (x, classes, getChildLink) => <Link to={getChildLink(ig(x, 'subPage'))}
@@ -100,10 +103,12 @@ export default compose(
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
+            setNewText: g(headerActions, 'setNewText'),
         }
     ),
     withHandlers({
         loadPage: props => () => props.loadPageRequest(),
+        setHeaderText: props => headerText => props.setNewText(headerText),
         getChildLink: props => child => routerGetters.niche.link(g(props, 'routerContext'), child),
     }),
     lifecycle({
@@ -111,9 +116,10 @@ export default compose(
             const
                 niches = g(this, 'props', 'niches')
 
-            if (!ig(niches, 'isLoading') && !ig(niches, 'isLoaded')) {
+            if (!ig(niches, 'isLoading') && !ig(niches, 'isLoaded'))
                 this.props.loadPage()
-            }
+            else if (ig(niches, 'isLoaded'))
+                this.props.setHeaderText(getHeaderText(niches, true))
         }
     }),
     withStylesProps(muiStyles),
@@ -125,6 +131,7 @@ export default compose(
             isFailed: PropTypes.bool,
 
             nichesList: ImmutablePropTypes.listOf(nicheItemModel),
+            pageText: immutablePageTextModel,
         }),
         i18nAllNiches: immutableI18nAllNichesModel,
         getChildLink: PropTypes.func,
