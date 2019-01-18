@@ -13,7 +13,7 @@ import {modelsListModel, modelInfoModel} from '../models'
 import actions from './actions'
 
 const
-    stateModel = ImmutablePropTypes.exact({
+    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,

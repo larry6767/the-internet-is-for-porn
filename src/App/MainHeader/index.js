@@ -1,5 +1,5 @@
 import React from 'react'
-import {compose, setPropTypes} from 'recompose'
+import {compose} from 'recompose'
 import {Record} from 'immutable'
 import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
@@ -9,6 +9,7 @@ import {
     immutableProvedGet as ig,
     PropTypes,
     ImmutablePropTypes,
+    setPropTypes,
 } from '../helpers'
 import Niche from './Niche'
 import Navigation from './Navigation'
@@ -130,7 +131,7 @@ export default compose(
         })
     ),
     withStyles(muiStyles),
-    setPropTypes({
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
         pageUrl: PropTypes.string,
