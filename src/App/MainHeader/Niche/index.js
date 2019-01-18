@@ -1,10 +1,17 @@
 import React from 'react'
-import {compose} from 'recompose'
+import {compose, withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 import {Select, MenuItem, FormControl, OutlinedInput} from '@material-ui/core'
 
-import {compareCurrentBreakpoint, breakpointXS} from '../../helpers'
+import {
+    compareCurrentBreakpoint,
+    breakpointXS,
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    PropTypes,
+    setPropTypes,
+} from '../../helpers'
 
 import {niches} from './fixtures'
 import actions from './actions'
@@ -54,27 +61,22 @@ const
                 <FormControl variant="outlined">
                     <Select
                         classes={{
-                            select: classes.select,
-                            icon: classes.icon
+                            select: g(classes, 'select'),
+                            icon: g(classes, 'icon'),
                         }}
                         value={currentNiche}
                         onChange={selectNiche}
                         input={
                             <OutlinedInput
                                 classes={{
-                                    notchedOutline: classes.notchedOutline
+                                    notchedOutline: g(classes, 'notchedOutline'),
                                 }}
                                 labelWidth={0}
-                                name="niche"
-                                id="niche"
                             />
                         }
                     >
                         {Object.keys(niches).map(key =>
-                            <MenuItem
-                                key={key}
-                                value={key}
-                            >
+                            <MenuItem key={key} value={key}>
                                 <TextIcon>{String.fromCharCode(niches[key])}</TextIcon>
                                 {key}
                             </MenuItem>
@@ -88,16 +90,31 @@ const
 export default compose(
     connect(
         state => ({
-            currentNiche: state.getIn(['app', 'mainHeader', 'niche', 'currentNiche']),
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
+            currentNiche: ig(state, 'app', 'mainHeader', 'niche', 'currentNiche'),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
         }),
-        dispatch => ({
-            selectNiche: event => {
-                event.preventDefault()
-                dispatch(actions.toggleNiche(event.target.value || event.target.dataset.value))
-            }
-        })
+        {
+            toggleNiche: g(actions, 'toggleNiche'),
+        }
     ),
-    withStyles(muiStyles)
+    withHandlers({
+        selectNiche: props => event => {
+            event.preventDefault()
+            props.toggleNiche(event.target.value || event.target.dataset.value)
+        },
+    }),
+    withStyles(muiStyles),
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        classes: PropTypes.shape({
+            select: PropTypes.string,
+            icon: PropTypes.string,
+            notchedOutline: PropTypes.string,
+        }),
+        isSSR: PropTypes.bool,
+        currentNiche: PropTypes.string,
+        currentBreakpoint: PropTypes.string,
+        toggleNiche: PropTypes.func,
+        selectNiche: PropTypes.func,
+    })
 )(Niche)
