@@ -7,11 +7,13 @@ import {get} from 'lodash'
 // Usage examples:
 //   provedGet(obj, ['foo', 'bar', 5, 'baz'])
 //   provedGet(obj, 'foo', 'bar', 5, 'baz')
+// Also you could use it to verify that a value isn't an `undefined` like that:
+//   provedGet(varName, [])
 export default (obj, path, ...restPath) => {
     if (restPath.length > 0)
         path = [path].concat(restPath)
 
-    const result = get(obj, path)
+    const result = path.length === 0 ? obj : get(obj, path)
 
     if (result === undefined)
         throw new Error(

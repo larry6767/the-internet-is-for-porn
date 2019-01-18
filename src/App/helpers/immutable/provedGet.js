@@ -8,6 +8,8 @@ import {isImmutable, getIn} from 'immutable'
 // Usage examples:
 //   provedGet(immutableObj, ['foo', 'bar', 5, 'baz'])
 //   provedGet(immutableObj, 'foo', 'bar', 5, 'baz')
+// Also you could use it to verify that a value isn't an `undefined` like that:
+//   provedGet(varName, [])
 export default (immutableObj, path, ...restPath) => {
     if (restPath.length > 0)
         path = [path].concat(restPath)
@@ -21,7 +23,7 @@ export default (immutableObj, path, ...restPath) => {
             `(type is: ${typeof immutableObj})`
         )
 
-    const result = getIn(immutableObj, path)
+    const result = path.length === 0 ? immutableObj : getIn(immutableObj, path)
 
     if (result === undefined)
         throw new Error(
