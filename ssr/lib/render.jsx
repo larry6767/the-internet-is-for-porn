@@ -1,6 +1,7 @@
 import {find, includes} from 'lodash'
 import React from 'react'
 import {Provider} from 'react-redux'
+import {all} from 'redux-saga/effects'
 import {StaticRouter} from 'react-router'
 import {renderToString} from 'react-dom/server'
 import Immutable from 'immutable'
@@ -78,7 +79,7 @@ export default (
                                 getPageData: getPageData(req, siteLocales, localeCode),
                             }
 
-                            yield [staticRouterContext.saga(ssrContext)]
+                            yield all([staticRouterContext.saga(ssrContext)])
                             resolve()
                         } catch (e) {reject(e)}
                     })

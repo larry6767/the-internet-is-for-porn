@@ -1,4 +1,4 @@
-import {takeEvery, put} from 'redux-saga/effects'
+import {all, takeEvery, put} from 'redux-saga/effects'
 
 import homeSaga from './Home/sagas'
 import mainHeaderSaga from './MainHeader/sagas'
@@ -60,7 +60,8 @@ export default function* saga() {
     yield takeEvery(actions.getFavoritePornstarList, getFavoritePornstarList)
     yield takeEvery(actions.removePornstarFromFavorite, removePornstarFromFavorite)
     yield takeEvery(actions.addPornstarToFavorite, addPornstarToFavorite)
-    yield [
+
+    yield all([
         homeSaga(),
         mainHeaderSaga(),
         allNichesSaga(),
@@ -70,5 +71,5 @@ export default function* saga() {
         favoritePornstarsSaga(),
         videoPageSaga(),
         findVideosSaga(),
-    ]
+    ])
 }
