@@ -18,6 +18,7 @@ import {
 } from '../helpers'
 
 import {immutableI18nButtonsModel} from '../models'
+import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
 import ReportDialog from './ReportDialog'
@@ -288,6 +289,7 @@ const
     }
 
 export default compose(
+    sectionPortal,
     connect(
         state => ({
             data: VideoPageRecord(state.getIn(['app', 'videoPage'])),

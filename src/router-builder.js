@@ -315,23 +315,31 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         if (ig(r, 'location', 'search') === ig(r, 'router', 'redirects', 'categories', 'search'))
             return <Redirect to={routerGetters.allNiches.link(r)}/>
 
+        const currentSection = 'home'
+
         if (get(props, ['staticContext', 'isPreRouting'])) {
             props.staticContext.saga = loadHomeFlow.bind(null, null)
             props.staticContext.statusCodeResolver = status500(['app', 'home', 'isFailed'])
+            props.staticContext.currentSection = currentSection
             return null
         } else
-            return <Home {...props}/>
+            return <Home {...props} currentSection={currentSection}/>
     }}/>
 
     <Route exact path={routerGetters.allNiches.path(r)} render={props => {
+        const currentSection = 'allNiches'
+
         if (get(props, ['staticContext', 'isPreRouting'])) {
             props.staticContext.saga = loadAllNichesPageFlow.bind(null, null)
             props.staticContext.statusCodeResolver = status500(['app', 'niches', 'all', 'isFailed'])
+            props.staticContext.currentSection = currentSection
             return null
         } else
-            return <AllNiches {...props}/>
+            return <AllNiches {...props} currentSection={currentSection}/>
     }}/>
     <Route path={routerGetters.nicheArchive.path(r)} render={props => {
+        const currentSection = 'allNiches'
+
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
                 qs = queryString.parse(ig(r, 'location', 'search')),
@@ -345,11 +353,14 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
             x.saga = loadNichePageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'niches', 'niche', 'isFailed'])
+            x.currentSection = currentSection
             return null
         } else
-            return <Niche {...props}/>
+            return <Niche {...props} currentSection={currentSection}/>
     }}/>
     <Route path={routerGetters.niche.path(r)} render={props => {
+        const currentSection = 'allNiches'
+
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
                 qs = queryString.parse(ig(r, 'location', 'search')),
@@ -362,9 +373,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
             x.saga = loadNichePageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'niches', 'niche', 'isFailed'])
+            x.currentSection = currentSection
             return null
         } else
-            return <Niche {...props}/>
+            return <Niche {...props} currentSection={currentSection}/>
     }}/>
 
     <Redirect
@@ -373,6 +385,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         to={routerGetters.allMovies.link(r)}
     />
     <Route exact path={routerGetters.allMovies.path(r)} render={props => {
+        const currentSection = 'allMovies'
+
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
                 qs = queryString.parse(ig(r, 'location', 'search')),
@@ -384,11 +398,14 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
             props.staticContext.saga = loadAllMoviesPageFlow.bind(null, action)
             props.staticContext.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
+            props.staticContext.currentSection = currentSection
             return null
         } else
-            return <AllMovies {...props}/>
+            return <AllMovies {...props} currentSection={currentSection}/>
     }}/>
     <Route path={routerGetters.allMoviesArchive.path(r)} render={props => {
+        const currentSection = 'allMovies'
+
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
                 qs = queryString.parse(ig(r, 'location', 'search')),
@@ -402,9 +419,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
             x.saga = loadAllMoviesPageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
+            x.currentSection = currentSection
             return null
         } else
-            return <AllMovies {...props}/>
+            return <AllMovies {...props} currentSection={currentSection}/>
     }}/>
 
     <Redirect
@@ -413,15 +431,20 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         to={routerGetters.pornstars.link(r)}
     />
     <Route exact path={routerGetters.pornstars.path(r)} render={props => {
+        const currentSection = 'pornstars'
+
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const {staticContext: x} = props
             x.saga = loadPornstarsPageFlow.bind(null, null)
             x.statusCodeResolver = status500(['app', 'pornstars', 'all', 'isFailed'])
+            x.currentSection = currentSection
             return null
         } else
-            return <Pornstars {...props}/>
+            return <Pornstars {...props} currentSection={currentSection}/>
     }}/>
     <Route path={routerGetters.pornstar.path(r)} render={props => {
+        const currentSection = 'pornstars'
+
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
                 qs = queryString.parse(ig(r, 'location', 'search')),
@@ -434,9 +457,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
             x.saga = loadPornstarPageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'pornstars', 'pornstar', 'isFailed'])
+            x.currentSection = currentSection
             return null
         } else
-            return <Pornstar {...props}/>
+            return <Pornstar {...props} currentSection={currentSection}/>
     }}/>
 
     <Redirect
@@ -450,6 +474,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         to={routerGetters.favorite.link(r)}
     />
     <Route exact path={routerGetters.favorite.path(r)} render={props => {
+        const currentSection = 'favorite'
+
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const {staticContext: x} = props
             x.saga = loadFavoritePageFlow.bind(
@@ -457,9 +483,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                 favoriteActions.loadPageRequest()
             )
             x.statusCodeResolver = status500(['app', 'favorite', 'isFailed'])
+            x.currentSection = currentSection
             return null
         } else
-            return <Favorite {...props}/>
+            return <Favorite {...props} currentSection={currentSection}/>
     }}/>
 
     <Redirect
@@ -468,6 +495,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         to={routerGetters.favoritePornstars.link(r)}
     />
     <Route path={routerGetters.favoritePornstars.path(r)} render={props => {
+        const currentSection = 'favorite'
+
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const {staticContext: x} = props
             x.saga = loadFavoritePornstarsPageFlow.bind(
@@ -475,9 +504,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                 favoritePornstarsActions.loadPageRequest()
             )
             x.statusCodeResolver = status500(['app', 'favorite', 'isFailed'])
+            x.currentSection = currentSection
             return null
         } else
-            return <FavoritePornstars {...props}/>
+            return <FavoritePornstars {...props} currentSection={currentSection}/>
     }}/>
 
     <Redirect
@@ -486,6 +516,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         to={routerGetters.video.path(r) /* it must be `path` here, not `link`! */}
     />
     <Route path={routerGetters.video.path(r)} render={props => {
+        const currentSection = 'allMovies'
+
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
                 {match: {params}, staticContext: x} = props,
@@ -495,12 +527,15 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
             x.saga = loadVideoPageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'videoPage', 'isFailed'])
+            x.currentSection = currentSection
             return null
         } else
-            return <VideoPage {...props}/>
+            return <VideoPage {...props} currentSection={currentSection}/>
     }}/>
 
     <Route exact path={routerGetters.findVideos.path(r)} render={props => {
+        const currentSection = 'allMovies'
+
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
                 qs = queryString.parse(ig(r, 'location', 'search')),
@@ -512,18 +547,22 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
             props.staticContext.saga = loadFindVideosPageFlow.bind(null, action)
             props.staticContext.statusCodeResolver = status500(['app', 'findVideos', 'isFailed'])
+            props.staticContext.currentSection = currentSection
             return null
         } else
-            return <FindVideos {...props}/>
+            return <FindVideos {...props} currentSection={currentSection}/>
     }}/>
 
     <Route render={props => {
+        const currentSection = null
+
         // making real 404 status response on server-side rendering
         if (get(props, ['staticContext', 'isPreRouting'])) {
             props.staticContext.statusCodeResolver = () => 404
+            props.staticContext.currentSection = currentSection
             return null
         } else
-            return <NotFound {...props}/>
+            return <NotFound {...props} currentSection={currentSection}/>
     }}/>
 </Switch>
 

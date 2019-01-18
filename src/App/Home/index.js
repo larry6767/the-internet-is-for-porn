@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {compose, lifecycle} from 'recompose'
+import {compose, lifecycle, withHandlers} from 'recompose'
 import {Record, Map, List} from 'immutable'
 import {Link} from 'react-router-dom'
 import PermIdentityIcon from '@material-ui/icons/PermIdentity'
@@ -14,9 +14,20 @@ import {
     Typography,
 } from '@material-ui/core'
 
+import {
+    withStylesProps,
+    getRouterContext,
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    setPropTypes,
+    PropTypes,
+    ImmutablePropTypes,
+} from '../helpers'
+
+import {immutableI18nOrderingModel, routerContextModel} from '../models'
 import {routerGetters} from '../../router-builder'
 import ErrorContent from '../../generic/ErrorContent'
-import {withStylesProps, getRouterContext, immutableProvedGet as ig} from '../helpers'
+import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import {muiStyles} from './assets/muiStyles'
 import actions from './actions'
 
@@ -48,12 +59,12 @@ const
     renderListItemLink = (x, idx, arr, classes, routerContext) => <Link
         to={routerGetters.pornstar.link(routerContext, ig(x, 'subPage'), null)}
         key={ig(x, 'id')}
-        className={classes.routerLink}
+        className={g(classes, 'routerLink')}
     >
         <ListItem
             button
             classes={{
-                gutters: classes.itemGutters
+                gutters: g(classes, 'itemGutters'),
             }}
         >
             <ListItemIcon>
@@ -64,9 +75,9 @@ const
             </ListItemIcon>
             <ListItemText
                 classes={{
-                    root: classes.listItemTextRoot,
-                    primary: classes.primaryTypography,
-                    secondary: classes.secondaryTypography
+                    root: g(classes, 'listItemTextRoot'),
+                    primary: g(classes, 'primaryTypography'),
+                    secondary: g(classes, 'secondaryTypography')
                 }}
                 primary={ig(x, 'name')}
                 secondary={ig(x, 'itemsCount')}
@@ -91,14 +102,14 @@ const
                                     null
                                 )}
                                 key={ig(x, 'id')}
-                                className={classes.routerLink}
+                                className={g(classes, 'routerLink')}
                             >
                                 <NicheImage thumb={ig(x, 'thumb')}/>
                                 <Typography
                                     variant="body1"
                                     gutterBottom
                                     classes={{
-                                        root: classes.nicheTitleTypography
+                                        root: g(classes, 'nicheTitleTypography')
                                     }}
                                 >{ig(x, 'name')}</Typography>
                             </Link>
@@ -108,7 +119,7 @@ const
                     <ListComponent
                         component="div"
                         classes={{
-                            root: classes.root
+                            root: g(classes, 'root')
                         }}
                     >
                         {ig(home, 'pornstarsList').map((x, idx) => renderListItemLink(
@@ -125,6 +136,7 @@ const
     </Page>
 
 export default compose(
+    sectionPortal,
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
@@ -132,16 +144,45 @@ export default compose(
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
         }),
-        dispatch => ({
-            loadPage: (event, value) => dispatch(actions.loadPageRequest())
-        })
+        {
+            loadPageRequest: g(actions, 'loadPageRequest'),
+        }
     ),
+    withHandlers({
+        loadPage: props => () => props.loadPageRequest(),
+    }),
     lifecycle({
         componentDidMount() {
             if (!ig(this.props.home, 'isLoading') && !ig(this.props.home, 'isLoaded')) {
                 this.props.loadPage()
             }
-        }
+        },
     }),
-    withStylesProps(muiStyles)
+    withStylesProps(muiStyles),
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        classes: PropTypes.shape({
+            routerLink: PropTypes.string,
+            itemGutters: PropTypes.string,
+            listItemTextRoot: PropTypes.string,
+            primaryTypography: PropTypes.string,
+            secondaryTypography: PropTypes.string,
+            nicheTitleTypography: PropTypes.string,
+            root: PropTypes.string,
+        }),
+        currentBreakpoint: PropTypes.string,
+        home: ImmutablePropTypes.exactRecordOf({
+            isLoading: PropTypes.bool,
+            isLoaded: PropTypes.bool,
+            isFailed: PropTypes.bool,
+            currentPage: PropTypes.string,
+            lastSubPageForRequest: PropTypes.string,
+            pageText: ImmutablePropTypes.shape({}), // TODO better type
+            nichesList: ImmutablePropTypes.listOf(ImmutablePropTypes.shape({})), // TODO better type
+            pornstarsList: ImmutablePropTypes.listOf(ImmutablePropTypes.shape({})), // TODO better type
+        }),
+        routerContext: routerContextModel,
+        i18nOrdering: immutableI18nOrderingModel,
+        loadPageRequest: PropTypes.func,
+        loadPage: PropTypes.func,
+    })
 )(Home)

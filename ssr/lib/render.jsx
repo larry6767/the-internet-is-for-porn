@@ -19,6 +19,7 @@ import RouterBuilder from '../router-builder'
 import {App} from '../App'
 import appActions from '../App/actions'
 import languageActions from '../App/MainHeader/Language/actions'
+import navigationActions from '../App/MainHeader/Navigation/actions'
 import routerLocales from '../locale-mapping/router'
 import i18n from '../locale-mapping/i18n'
 
@@ -69,6 +70,11 @@ export default (
                 <RouterBuilder routerContext={routerContext}/>
             </StaticRouter>
         )
+
+        if (staticRouterContext.hasOwnProperty('currentSection'))
+            store.dispatch(navigationActions.setCurrentSection(
+                g(staticRouterContext, 'currentSection')
+            ))
 
         if (staticRouterContext.saga) {
             await new Promise((resolve, reject) => {

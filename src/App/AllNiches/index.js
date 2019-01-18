@@ -29,6 +29,7 @@ import {routerGetters} from '../../router-builder'
 import {immutableI18nAllNichesModel} from '../models'
 import {nicheItemModel} from './models'
 import actions from './actions'
+import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import {AllNichesPage, Content, PageWrapper} from './assets'
 import {muiStyles} from './assets/muiStyles'
 
@@ -92,6 +93,7 @@ const
     </AllNichesPage>
 
 export default compose(
+    sectionPortal,
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
@@ -115,7 +117,7 @@ export default compose(
             if (!ig(niches, 'isLoading') && !ig(niches, 'isLoaded')) {
                 this.props.loadPage()
             }
-        }
+        },
     }),
     withStylesProps(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {

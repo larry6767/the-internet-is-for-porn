@@ -11,9 +11,12 @@ import actions from './actions'
 
 const
     stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
-        currentPath: PropTypes.string,
+        currentSection: PropTypes.nullable(PropTypes.string),
     })
 
 export default provedHandleActions(stateModel, {
-    [g(actions, 'setNewPath')]: (state, {payload}) => state.set('currentPath', payload),
-}, fromJS({currentPath: '/'}))
+    [g(actions, 'setCurrentSection')]: (state, action) =>
+        state.set('currentSection', g(action, 'payload')),
+}, fromJS({
+    currentSection: null,
+}))

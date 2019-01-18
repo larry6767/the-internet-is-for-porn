@@ -17,6 +17,7 @@ import {
 
 import {immutableI18nButtonsModel, routerContextModel} from '../models'
 import {routerGetters} from '../../router-builder'
+import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
@@ -83,6 +84,7 @@ const
     </Page>
 
 export default compose(
+    sectionPortal,
     connect(
         state => ({
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),

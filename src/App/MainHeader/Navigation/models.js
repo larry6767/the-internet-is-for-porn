@@ -1,2 +1,2 @@
 export const
-    navMenuOrder = ['home', 'allNiches', 'allMovies', 'pornstars', 'favorite']
+    navMenuOrder = Object.freeze(['home', 'allNiches', 'allMovies', 'pornstars', 'favorite'])

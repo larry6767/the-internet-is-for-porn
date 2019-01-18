@@ -1,4 +1,7 @@
 import React from 'react'
+import {compose} from 'recompose'
+
+import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import {Page} from './assets'
 
 const
@@ -6,4 +9,6 @@ const
         <h1>NotFound</h1>
     </Page>
 
-export default NotFound
+export default compose(
+    sectionPortal
+)(NotFound)

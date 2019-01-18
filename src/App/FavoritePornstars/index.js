@@ -19,6 +19,7 @@ import {
 } from '../models'
 
 import {routerGetters} from '../../router-builder'
+import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import PornstarList from '../../generic/PornstarList'
@@ -86,6 +87,7 @@ const
     </Page>
 
 export default compose(
+    sectionPortal,
     connect(
         state => ({
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),

@@ -6,6 +6,7 @@ import {CircularProgress, Typography} from '@material-ui/core'
 
 import {getRouterContext, plainProvedGet as g, immutableProvedGet as ig} from '../helpers'
 import {routerGetters} from '../../router-builder'
+import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ErrorContent from '../../generic/ErrorContent'
 import PornstarList from '../../generic/PornstarList'
 import actions from './actions'
@@ -40,6 +41,7 @@ const
     </Page>
 
 export default compose(
+    sectionPortal,
     connect(
         state => ({
             pornstars: PornstarsRecord(ig(state, 'app', 'pornstars', 'all')),

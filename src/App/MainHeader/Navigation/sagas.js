@@ -1,9 +1,11 @@
 import {put, takeEvery} from 'redux-saga/effects'
-import actions from './actions'
 import {push} from 'connected-react-router/immutable'
 
-function* switchPageFlow({payload}) {
-    yield put(push(payload))
+import {plainProvedGet as g} from '../../helpers'
+import actions from './actions'
+
+function* switchPageFlow(action) {
+    yield put(push(g(action, 'payload')))
 }
 
 export default function* saga() {

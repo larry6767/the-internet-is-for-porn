@@ -8,6 +8,7 @@ import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
 
 import {immutableProvedGet as ig} from '../helpers'
+import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
@@ -115,6 +116,7 @@ const
     }
 
 export default compose(
+    sectionPortal,
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
