@@ -9,8 +9,7 @@ import {
     provedHandleActions,
 } from '../helpers'
 
-import {immutablePageTextModel, PageTextRecord} from '../models'
-import {modelsListModel} from '../Pornstars/models'
+import {immutablePageTextModel, PageTextRecord, immutableModelsListModel} from '../models'
 import actions from './actions'
 
 const
@@ -20,7 +19,7 @@ const
             isLoaded: PropTypes.bool,
             isFailed: PropTypes.bool,
             pageText: immutablePageTextModel,
-            modelsList: ImmutablePropTypes.listOf(modelsListModel),
+            modelsList: immutableModelsListModel,
             // TODO: get rid of that shit below (pornstars not supposed to have pagination)
             pageNumber: PropTypes.number,
             pagesCount: PropTypes.number,

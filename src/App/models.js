@@ -58,7 +58,27 @@ const
             year: PropTypes.number,
             month: PropTypes.number,
         })
-    }
+    },
+
+    modelsListModelBuilder = process.env.NODE_ENV === 'production' ? null :
+        (isImmutable, withLetter) => {
+            const
+                exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
+                listOf = isImmutable ? ImmutablePropTypes.listOf : PropTypes.arrayOf,
+
+                props = {
+                    id: PropTypes.number,
+                    name: PropTypes.string,
+                    subPage: PropTypes.string,
+                    itemsCount: PropTypes.number,
+                    thumb: PropTypes.string,
+                }
+
+            if (withLetter)
+                props.letter = PropTypes.string
+
+            return listOf(exact(props))
+        }
 
 export const
     archiveFilmsModel = process.env.NODE_ENV === 'production' ? null :
@@ -85,4 +105,13 @@ export const
         listHeader: null,
         listHeaderEmpty: null,
         title: '',
-    })
+    }),
+
+    modelsListModel = process.env.NODE_ENV === 'production' ? null :
+        modelsListModelBuilder(false, false),
+    modelsListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
+        modelsListModelBuilder(false, true),
+    immutableModelsListModel = process.env.NODE_ENV === 'production' ? null :
+        modelsListModelBuilder(true, false),
+    immutableModelsListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
+        modelsListModelBuilder(true, true)

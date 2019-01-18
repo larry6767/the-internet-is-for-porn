@@ -7,8 +7,7 @@ import {
     provedHandleActions,
     plainProvedGet as g,
 } from '../helpers'
-import {immutablePageTextModel, PageTextRecord} from '../models'
-import {modelsListModel} from './models'
+import {immutablePageTextModel, PageTextRecord, immutableModelsListModel} from '../models'
 import actions from './actions'
 import pornstarReducer from './Pornstar/reducers'
 
@@ -19,7 +18,7 @@ const
             isLoaded: PropTypes.bool,
             isFailed: PropTypes.bool,
             pageText: immutablePageTextModel,
-            modelsList: ImmutablePropTypes.listOf(modelsListModel),
+            modelsList: immutableModelsListModel,
         })
 
 export default combineReducers({

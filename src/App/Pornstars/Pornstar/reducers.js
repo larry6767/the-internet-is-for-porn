@@ -7,9 +7,15 @@ import {
     plainProvedGet as g,
     immutableProvedGet as ig
 } from '../../helpers'
-import {immutablePageTextModel, PageTextRecord} from '../../models'
+
+import {
+    immutablePageTextModel,
+    PageTextRecord,
+    immutableModelsListWithLetterModel,
+} from '../../models'
+
 import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
-import {modelsListModel, modelInfoModel} from '../models'
+import {modelInfoModel} from '../models'
 import actions from './actions'
 
 const
@@ -30,7 +36,7 @@ const
         currentSort: PropTypes.nullable(PropTypes.string),
         itemsCount: PropTypes.number,
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
-        modelsList: ImmutablePropTypes.listOf(modelsListModel),
+        modelsList: immutableModelsListWithLetterModel,
         modelInfo: ImmutablePropTypes.listOf(modelInfoModel),
         modelThumb: PropTypes.string,
     })

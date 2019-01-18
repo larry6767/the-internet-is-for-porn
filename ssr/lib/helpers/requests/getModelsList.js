@@ -1,6 +1,7 @@
 import {map, concat, sortBy, reduce} from 'lodash'
 
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
+import {modelsListModel, modelsListWithLetterModel} from '../../../App/models'
 
 const
     letterKeyModel = process.env.NODE_ENV === 'production' ? null :
@@ -48,26 +49,7 @@ const
     itemsModel = process.env.NODE_ENV === 'production' ? null :
         PropTypes.objectOf(PropTypes.shape({
             thumb_url: PropTypes.string,
-        })),
-
-    modelsListModelGetter = process.env.NODE_ENV === 'production' ? null : withLetter => {
-        const props = {
-            id: PropTypes.number,
-            name: PropTypes.string,
-            subPage: PropTypes.string,
-            itemsCount: PropTypes.number,
-            thumb: PropTypes.string,
-        }
-
-        if (withLetter)
-            props.letter = PropTypes.string
-
-        return PropTypes.arrayOf(PropTypes.exact(props))
-    },
-
-    modelsListModel = process.env.NODE_ENV === 'production' ? null : modelsListModelGetter(false),
-    modelsListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
-        modelsListModelGetter(true)
+        }))
 
 export default (letters, items, withLetter = false) => {
     if (process.env.NODE_ENV !== 'production') {

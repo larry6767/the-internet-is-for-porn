@@ -173,7 +173,8 @@ const
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
             modelsList: getModelsList(
                 g(x, 'page', 'MODELS_BY_LETTERS', 'letters'),
-                g(x, 'page', 'MODELS_BY_LETTERS_MODELS_INFO', 'items')
+                g(x, 'page', 'MODELS_BY_LETTERS_MODELS_INFO', 'items'),
+                true
             ),
             modelInfo: getModelInfo(x.page.MODEL_INFO),
             modelThumb: x.page.MODEL_INFO.thumb_url,
