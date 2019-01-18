@@ -109,7 +109,7 @@ export default compose(
         },
     }),
     withStyles(muiStyles),
-    setPropTypes({
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,
         anchorEl: PropTypes.object.isOptional,
         setAnchorEl: PropTypes.func,

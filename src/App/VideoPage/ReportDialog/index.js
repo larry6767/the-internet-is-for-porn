@@ -253,7 +253,7 @@ export default compose(
         }),
     ),
     withStyles(muiStyles),
-    setPropTypes({
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         i18nButtons: immutableI18nButtonsModel,
         i18nReport: immutableI18nReportModel,
     }),

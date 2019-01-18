@@ -214,7 +214,7 @@ const
         }
     },
 
-    videoPageModel = PropTypes.shape({
+    videoPageModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape({
         page: PropTypes.shape({
             GALLERY: incomingGalleryModel,
             PAGE_URL: PropTypes.string,
@@ -227,7 +227,7 @@ const
         }),
     }),
 
-    mappedVideoPageModel = PropTypes.shape({
+    mappedVideoPageModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape({
         gallery: galleryModel,
         pageText: videoPageTextModel,
         videoList: PropTypes.arrayOf(videoItemModel),
@@ -282,7 +282,7 @@ const
         }
     },
 
-    getPageDataParamsModel = PropTypes.exact({
+    getPageDataParamsModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         url: PropTypes.string,
         options: PropTypes.shape({
             blocks: PropTypes.exact({
@@ -293,12 +293,12 @@ const
         }).isOptional,
     }),
 
-    getPageDataResultModel = PropTypes.exactTuple([
+    getPageDataResultModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exactTuple([
         getPageDataParamsModel,
         PropTypes.func,
     ]).isOptional,
 
-    getPageDataReqBodyModel = PropTypes.exact({
+    getPageDataReqBodyModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         operation: PropTypes.string,
         params: getPageDataParamsModel,
     }),

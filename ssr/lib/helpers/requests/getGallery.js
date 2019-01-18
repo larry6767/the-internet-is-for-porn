@@ -3,7 +3,7 @@ import {mapValues} from 'lodash'
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
 
 const
-    galleryModelProps = Object.freeze({
+    galleryModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
         id: PropTypes.string, // but actually a number
         id_class: PropTypes.string, // but actually a number
         title: PropTypes.string,
@@ -19,15 +19,16 @@ const
         tags: PropTypes.arrayOf(PropTypes.string),
     }),
 
-    pageUrlModel = PropTypes.string,
+    pageUrlModel = process.env.NODE_ENV === 'production' ? null : PropTypes.string,
 
     // actually a list of two elements
-    publishedTemplateItemModel = PropTypes.exactTuple([
-        PropTypes.string, // singular, example: "1 year ago"
-        PropTypes.string, // multiple, example: "%d years ago"
-    ]),
+    publishedTemplateItemModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.exactTuple([
+            PropTypes.string, // singular, example: "1 year ago"
+            PropTypes.string, // multiple, example: "%d years ago"
+        ]),
 
-    publishedTemplateModelProps = Object.freeze({
+    publishedTemplateModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
         y: publishedTemplateItemModel,
         m: publishedTemplateItemModel,
         d: publishedTemplateItemModel,
@@ -38,11 +39,14 @@ const
     })
 
 export const
-    incomingGalleryModel = PropTypes.shape(galleryModelProps),
-    publishedTemplateModel = PropTypes.shape(publishedTemplateModelProps),
+    incomingGalleryModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.shape(galleryModelProps),
+
+    publishedTemplateModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.shape(publishedTemplateModelProps),
 
     // result model
-    galleryModel = PropTypes.exact({
+    galleryModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         id: PropTypes.number,
         classId: PropTypes.number,
         title: PropTypes.string,
@@ -64,19 +68,21 @@ export const
 
 const
     // {foo: 'foo', bar: 'bar'}
-    galleryModelPropsKeys = Object.freeze(mapValues(galleryModelProps, (x, k) => k)),
+    galleryModelPropsKeys = process.env.NODE_ENV === 'production' ? null :
+        Object.freeze(mapValues(galleryModelProps, (x, k) => k)),
 
     // get incoming property by verified key (which must be presented in the model)
-    getProp = (src, propKey, ...xs) => g(src, g(galleryModelPropsKeys, propKey), ...xs),
+    getProp = process.env.NODE_ENV === 'production' ? g :
+        (src, propKey, ...xs) => g(src, g(galleryModelPropsKeys, propKey), ...xs),
 
     // {foo: 'foo', bar: 'bar'}
-    publishedTemplateModelPropsKeys =
+    publishedTemplateModelPropsKeys = process.env.NODE_ENV === 'production' ? null :
         Object.freeze(mapValues(publishedTemplateModelProps, (x, k) => k)),
 
     // get incoming property of "publishedTemplate" by verified key
     // (which must be presented in the model)
-    getPubTplProp = (src, propKey, ...xs) =>
-        g(src, g(publishedTemplateModelPropsKeys, propKey), ...xs)
+    getPubTplProp = process.env.NODE_ENV === 'production' ? g :
+        (src, propKey, ...xs) => g(src, g(publishedTemplateModelPropsKeys, propKey), ...xs)
 
 export default (data, pageUrl, publishedTemplate) => {
     if (process.env.NODE_ENV !== 'production') {

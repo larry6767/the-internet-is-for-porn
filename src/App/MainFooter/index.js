@@ -83,7 +83,7 @@ export default compose(
             ),
         })
     ),
-    setPropTypes({
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         i18nFooter: immutableI18nFooterModel,
         i18nButtons: immutableI18nButtonsModel,
     }),

@@ -30,11 +30,14 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run ln-prod-dev-modules && react-scripts build && npm run ln-dev-modules",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start-ssr": "nodemon --watch src/ --watch ssr/ ssr/index.jsx --exec babel-node --presets es2015,stage-2,react --",
-    "start-production-ssr": "env NODE_ENV=production babel-node ssr/index.jsx --presets es2015,stage-2,react --production"
+    "start-production-ssr": "env NODE_ENV=production babel-node ssr/index.jsx --presets es2015,stage-2,react --production",
+    "rm-dev-modules": "rm -f src/dev-modules",
+    "ln-dev-modules": "npm run rm-dev-modules && sh -c 'cd src/ && ln -s ../dev-modules/development/ dev-modules'",
+    "ln-prod-dev-modules": "npm run rm-dev-modules && sh -c 'cd src/ && ln -s ../dev-modules/production/ dev-modules'"
   },
   "eslintConfig": {
     "extends": "react-app"

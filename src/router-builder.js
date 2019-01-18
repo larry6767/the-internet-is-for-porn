@@ -60,10 +60,11 @@ const
     getQs = r => queryString.parse(ig(r, 'location', 'search')),
     renderQs = qs => g(Object.keys(qs), 'length') > 0 ? '?' + queryString.stringify(qs) : '',
 
-    orderingAndPaginationQsParamsModel = PropTypes.exact({
-        ordering: PropTypes.string.isOptional,
-        pagination: PropTypes.number.isOptional,
-    }),
+    orderingAndPaginationQsParamsModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.exact({
+            ordering: PropTypes.string.isOptional,
+            pagination: PropTypes.number.isOptional,
+        }),
 
     orderingAndPaginationQs = (r, qsParams) => {
         if (process.env.NODE_ENV !== 'production')
@@ -271,12 +272,12 @@ export const
     })
 
 const
-    getterModel = PropTypes.exact({
+    getterModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         path: PropTypes.func,
         link: PropTypes.func,
     }),
 
-    routerGettersModel = PropTypes.exact({
+    routerGettersModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         home: getterModel,
 
         allNiches: getterModel,
@@ -527,7 +528,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 </Switch>
 
 export default compose(
-    setPropTypes({
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         routerContext: routerContextModel,
     })
 )(RouterBuilder)

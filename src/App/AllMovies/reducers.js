@@ -6,7 +6,7 @@ import {immutableArchiveFilmsModel} from '../models'
 import actions from './actions'
 
 const
-    model = ImmutablePropTypes.exact({
+    model = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,

@@ -13,7 +13,7 @@ import actions from './actions'
 import nicheReducer from './Niche/reducers'
 
 const
-    allStateModel = ImmutablePropTypes.exact({
+    allStateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,

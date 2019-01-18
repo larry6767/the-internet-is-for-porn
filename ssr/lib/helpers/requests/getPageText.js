@@ -1,9 +1,9 @@
-import {mapValues} from 'lodash'
+import {identity, mapValues} from 'lodash'
 
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
 
 const
-    incomingPageTextModelProps = Object.freeze({
+    incomingPageTextModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
         DESCRIPTION: PropTypes.string,
         'HEADER-DESCRIPTION': PropTypes.string,
         'HEADER-TITLE': PropTypes.string.isOptional, // could be not presented
@@ -14,12 +14,12 @@ const
         'GALLERY-TITLE': PropTypes.string.isOptional, // could be not presented
     }),
 
-    incomingVideoPageTextModelProps = Object.freeze({
+    incomingVideoPageTextModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
         ...incomingPageTextModelProps,
         'GALLERY-TITLE': PropTypes.string,
     }),
 
-    pageTextModelProps = Object.freeze({
+    pageTextModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
         description: PropTypes.string,
         headerDescription: PropTypes.string,
         headerTitle: PropTypes.string.isOptional,
@@ -30,35 +30,44 @@ const
     })
 
 export const
-    incomingPageTextModel = PropTypes.shape(incomingPageTextModelProps),
-    pageTextModel = PropTypes.exact(pageTextModelProps),
+    incomingPageTextModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.shape(incomingPageTextModelProps),
 
-    incomingVideoPageTextModel = PropTypes.shape(incomingVideoPageTextModelProps),
-    videoPageTextModel = PropTypes.exact({
+    pageTextModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.exact(pageTextModelProps),
+
+    incomingVideoPageTextModel =
+        process.env.NODE_ENV === 'production' ? null : PropTypes.shape(incomingVideoPageTextModelProps),
+
+    videoPageTextModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         ...pageTextModelProps,
         galleryTitle: PropTypes.string,
     })
 
 const
     // {foo: 'foo', bar: 'bar'}
-    incomingPageTextModelPropsKeys =
+    incomingPageTextModelPropsKeys = process.env.NODE_ENV === 'production' ? null :
         Object.freeze(mapValues(incomingPageTextModelProps, (x, k) => k)),
 
     // get verified key (verified that it is presented in the model)
-    getKey = key => g(incomingPageTextModelPropsKeys, key),
+    getKey = process.env.NODE_ENV === 'production' ? identity :
+        key => g(incomingPageTextModelPropsKeys, key),
 
     // get incoming property by verified key (which must be presented in the model)
-    getProp = (src, propKey) => g(src, getKey(propKey)),
+    getProp = process.env.NODE_ENV === 'production' ? g :
+        (src, propKey) => g(src, getKey(propKey)),
 
     // {foo: 'foo', bar: 'bar'}
-    incomingVideoPageTextModelPropsKeys =
+    incomingVideoPageTextModelPropsKeys = process.env.NODE_ENV === 'production' ? null :
         Object.freeze(mapValues(incomingVideoPageTextModelProps, (x, k) => k)),
 
     // get verified key (verified that it is presented in the model)
-    getVideoKey = key => g(incomingVideoPageTextModelPropsKeys, key),
+    getVideoKey = process.env.NODE_ENV === 'production' ? identity :
+        key => g(incomingVideoPageTextModelPropsKeys, key),
 
     // get incoming property by verified key (which must be presented in the model)
-    getVideoProp = (src, propKey) => g(src, getVideoKey(propKey)),
+    getVideoProp = process.env.NODE_ENV === 'production' ? g :
+        (src, propKey) => g(src, getVideoKey(propKey)),
 
     getResult = pageText => ({
         description: getProp(pageText, 'DESCRIPTION'),

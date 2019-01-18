@@ -1,7 +1,7 @@
 import {ImmutablePropTypes, PropTypes} from '../../App/helpers'
 
 const
-    videoItemModelBuilder = isImmutable => {
+    videoItemModelBuilder = process.env.NODE_ENV === 'production' ? null : isImmutable => {
         const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
             list = isImmutable ? ImmutablePropTypes.listOf : PropTypes.arrayOf
@@ -47,5 +47,7 @@ const
     }
 
 export const
-    videoItemModel = videoItemModelBuilder(false),
-    immutableVideoItemModel = videoItemModelBuilder(true)
+    videoItemModel = process.env.NODE_ENV === 'production' ? null :
+        videoItemModelBuilder(false),
+    immutableVideoItemModel = process.env.NODE_ENV === 'production' ? null :
+        videoItemModelBuilder(true)

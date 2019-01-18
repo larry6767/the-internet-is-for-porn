@@ -12,7 +12,8 @@ export default (model, mapping, initialState) => {
                 'try to avoid constructing prop types in production at all, ' +
                 "add `process.env.NODE_ENV === 'production' ? null : {...}` condition " +
                 '(keep this bare condition simple so bundler could easily detect ' +
-                'and remove this code from production bundle at all)'
+                'and remove this code from production bundle at all).',
+                `Stack trace: ${new Error().stack}`
             )
 
         return handleActions(mapping, initialState)

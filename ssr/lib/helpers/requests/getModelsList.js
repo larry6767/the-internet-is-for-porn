@@ -3,59 +3,62 @@ import {map, concat, sortBy, reduce, find} from 'lodash'
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
 
 const
-    letterKeyModel = (props, propName, componentName) => {
-        const propValue = props[propName]
-        if (typeof propValue !== 'string')
-            return new Error(
-                `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
-                `(it's not a string but ${typeof propValue}). Validation failed.`
-            )
-        if (propValue.length !== 1 || propValue !== propValue.toUpperCase())
-            return new Error(
-                `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
-                `(it must be one uppercase letter). Validation failed.`
-            )
-    },
+    letterKeyModel = process.env.NODE_ENV === 'production' ? null :
+        (props, propName, componentName) => {
+            const propValue = props[propName]
+            if (typeof propValue !== 'string')
+                return new Error(
+                    `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                    `(it's not a string but ${typeof propValue}). Validation failed.`
+                )
+            if (propValue.length !== 1 || propValue !== propValue.toUpperCase())
+                return new Error(
+                    `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                    `(it must be one uppercase letter). Validation failed.`
+                )
+        },
 
-    letterModel = PropTypes.shape({
+    letterModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape({
         id: PropTypes.string, // but actually is a number
         name: PropTypes.string,
         sub_url: PropTypes.string,
         items_count: PropTypes.string, // but actually is a number
     }),
 
-    nestedLettersModel = PropTypes.objectOf(
-        PropTypes.objectOf(letterModel)
-    ),
+    nestedLettersModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.objectOf(PropTypes.objectOf(letterModel)),
 
     // {'A': {'1234': {...}}, 'B': {'4321': {...}}, ...}
-    lettersModel = (props, propName, componentName, ...etc) => {
-        const propValue = props[propName]
-        if (typeof propValue !== 'object')
-            return new Error(
-                `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
-                `(it's not a object but ${typeof propValue}). Validation failed.`
-            )
-        for (const key of Object.keys(propValue)) {
-            const error = letterKeyModel({[propName]: key}, propName, componentName, ...etc)
-            if (error) return error
-        }
-        return nestedLettersModel(props, propName, componentName, ...etc)
-    },
+    lettersModel = process.env.NODE_ENV === 'production' ? null :
+        (props, propName, componentName, ...etc) => {
+            const propValue = props[propName]
+            if (typeof propValue !== 'object')
+                return new Error(
+                    `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                    `(it's not a object but ${typeof propValue}). Validation failed.`
+                )
+            for (const key of Object.keys(propValue)) {
+                const error = letterKeyModel({[propName]: key}, propName, componentName, ...etc)
+                if (error) return error
+            }
+            return nestedLettersModel(props, propName, componentName, ...etc)
+        },
 
     // keys are `letters[].id`s
-    itemsModel = PropTypes.objectOf(PropTypes.shape({
-        thumb_url: PropTypes.string,
-    })),
+    itemsModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.objectOf(PropTypes.shape({
+            thumb_url: PropTypes.string,
+        })),
 
-    modelsListModel = PropTypes.arrayOf(PropTypes.exact({
-        id: PropTypes.number,
-        name: PropTypes.string,
-        subPage: PropTypes.string,
-        itemsCount: PropTypes.number,
-        thumb: PropTypes.string,
-        letter: PropTypes.string,
-    }))
+    modelsListModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.arrayOf(PropTypes.exact({
+            id: PropTypes.number,
+            name: PropTypes.string,
+            subPage: PropTypes.string,
+            itemsCount: PropTypes.number,
+            thumb: PropTypes.string,
+            letter: PropTypes.string,
+        }))
 
 export default (letters, items) => {
     if (process.env.NODE_ENV !== 'production') {

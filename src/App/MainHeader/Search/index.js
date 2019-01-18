@@ -166,7 +166,7 @@ export default compose(
         onSubmit: (values, dispatch) => dispatch(actions.runSearch(ig(values, 'searchKey')))
     }),
     withStyles(muiStyles),
-    setPropTypes({
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,
         search: ImmutablePropTypes.recordOf({
             suggestions: ImmutablePropTypes.list,

@@ -39,12 +39,13 @@ import {
 } from './assets'
 
 const
-    sortListModel = ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
-        isActive: PropTypes.bool,
-        code: PropTypes.string,
-    })),
+    sortListModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
+            isActive: PropTypes.bool,
+            code: PropTypes.string,
+        })),
 
-    SortSelectMaterial = setPropTypes({
+    SortSelectMaterial = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.shape({selectRoot: PropTypes.string}),
         i18nOrdering: immutableI18nOrderingModel,
         sortList: sortListModel,
@@ -71,7 +72,7 @@ const
         )}
     </Select>),
 
-    SortSelectInlined = setPropTypes({
+    SortSelectInlined = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         sortList: sortListModel,
         linkBuilder: PropTypes.func,
         i18nOrdering: immutableI18nOrderingModel,
@@ -89,7 +90,7 @@ const
         </InlinedSelectionList>
     </InlinedSelectionWrap>),
 
-    WrappedButton = setPropTypes({
+    WrappedButton = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.shape({
             link: PropTypes.string,
             buttonRoot: PropTypes.string,
@@ -112,7 +113,7 @@ const
         </Button>
     </Link>),
 
-    NicheControlBar = setPropTypes({
+    NicheControlBar = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.shape({typographyRoot: PropTypes.string}),
         linkBuilder: PropTypes.func,
         archiveLinkBuilder: PropTypes.nullable(PropTypes.func),
@@ -172,7 +173,7 @@ const
         </SortWrapper>
     </Fragment>),
 
-    ArchiveControlBar = setPropTypes({
+    ArchiveControlBar = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,
         i18nButtons: immutableI18nButtonsModel,
         buttonsElements: PropTypes.node,
@@ -224,7 +225,7 @@ const
         />
     </Fragment>),
 
-    FavoriteControlBar = setPropTypes({
+    FavoriteControlBar = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,
         buttonsElements: PropTypes.node,
         i18nButtons: immutableI18nButtonsModel,
@@ -346,7 +347,7 @@ const
 
 export default compose(
     withStyles(muiStyles),
-    setPropTypes({
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
 

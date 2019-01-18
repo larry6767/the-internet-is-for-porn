@@ -334,7 +334,7 @@ export default compose(
         },
     }),
     withStyles(muiStyles),
-    setPropTypes({
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
         i18nButtons: immutableI18nButtonsModel,

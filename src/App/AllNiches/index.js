@@ -118,7 +118,7 @@ export default compose(
         }
     }),
     withStylesProps(muiStyles),
-    setPropTypes({
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         currentBreakpoint: PropTypes.string,
         niches: ImmutablePropTypes.exactRecordOf({
             isLoading: PropTypes.bool,

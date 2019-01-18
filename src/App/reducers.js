@@ -27,18 +27,19 @@ import {immutableLocaleRouterModel, immutableI18nModel} from './models'
 const
     defaultSSR = fromJS({isSSR: false}),
 
-    localePageCodeModel = ImmutablePropTypes.exact({
-        home: PropTypes.string,
-        allNiches: PropTypes.string,
-        niche: PropTypes.string,
-        allMovies: PropTypes.string,
-        pornstars: PropTypes.string,
-        pornstar: PropTypes.string,
-        favorite: PropTypes.string,
-        favoritePornstars: PropTypes.string,
-        video: PropTypes.string,
-        findVideos: PropTypes.string,
-    })
+    localePageCodeModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exact({
+            home: PropTypes.string,
+            allNiches: PropTypes.string,
+            niche: PropTypes.string,
+            allMovies: PropTypes.string,
+            pornstars: PropTypes.string,
+            pornstar: PropTypes.string,
+            favorite: PropTypes.string,
+            favoritePornstars: PropTypes.string,
+            video: PropTypes.string,
+            findVideos: PropTypes.string,
+        })
 
 export default combineReducers({
     home: homeReducer,
@@ -78,23 +79,31 @@ export default combineReducers({
     ssr: (state = defaultSSR) => state,
 
     locale: combineReducers({
-        localeCode: provedHandleActions(PropTypes.string.isOptional, {
-            [g(actions, 'setLocaleCode')]: (state, {payload}) => payload,
-        }, null),
+        localeCode: provedHandleActions(
+            process.env.NODE_ENV === 'production' ? null : PropTypes.string.isOptional,
+            {[g(actions, 'setLocaleCode')]: (state, {payload}) => payload},
+            null
+        ),
 
         // This supposed to be filled at initialization step (depending on current locale).
-        pageCode: provedHandleActions(localePageCodeModel.isOptional, {
-            [g(actions, 'fillLocalePageCodes')]: (state, {payload}) => Map(fromJS(payload)),
-        }, null),
+        pageCode: provedHandleActions(
+            process.env.NODE_ENV === 'production' ? null : localePageCodeModel.isOptional,
+            {[g(actions, 'fillLocalePageCodes')]: (state, {payload}) => Map(fromJS(payload))},
+            null
+        ),
 
         // This supposed to be filled at initialization step (depending on current locale).
-        router: provedHandleActions(immutableLocaleRouterModel.isOptional, {
-            [g(actions, 'fillLocaleRouter')]: (state, {payload}) => Map(fromJS(payload)),
-        }, null),
+        router: provedHandleActions(
+            process.env.NODE_ENV === 'production' ? null : immutableLocaleRouterModel.isOptional,
+            {[g(actions, 'fillLocaleRouter')]: (state, {payload}) => Map(fromJS(payload))},
+            null
+        ),
 
         // This supposed to be filled at initialization step (depending on current locale).
-        i18n: provedHandleActions(immutableI18nModel.isOptional, {
-            [g(actions, 'fillLocaleI18n')]: (state, {payload}) => Map(fromJS(payload)),
-        }, null),
+        i18n: provedHandleActions(
+            process.env.NODE_ENV === 'production' ? null : immutableI18nModel.isOptional,
+            {[g(actions, 'fillLocaleI18n')]: (state, {payload}) => Map(fromJS(payload))},
+            null
+        ),
     }),
 })

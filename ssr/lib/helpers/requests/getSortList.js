@@ -15,20 +15,22 @@ const
         fav_models: 'models',
     }),
 
-    incomingSortModel = PropTypes.shape({ACTIVE: PropTypes.bool}).isOptional,
+    incomingSortModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.shape({ACTIVE: PropTypes.bool}).isOptional,
 
-    orderingIncomingModel = PropTypes.shape(
+    orderingIncomingModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape(
         Object.keys(ordering).reduce((ob, key) => set(ob, key, incomingSortModel), {})
     ),
 
-    favoritesIncomingModel = PropTypes.shape(
+    favoritesIncomingModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape(
         Object.keys(favorites).reduce((ob, key) => set(ob, key, incomingSortModel), {})
     ),
 
-    sortModel = PropTypes.arrayOf(PropTypes.exact({
-        isActive: PropTypes.bool,
-        code: PropTypes.string,
-    }))
+    sortModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.arrayOf(PropTypes.exact({
+            isActive: PropTypes.bool,
+            code: PropTypes.string,
+        }))
 
 export const
     getOrderingSortList = activeNavTabs => {

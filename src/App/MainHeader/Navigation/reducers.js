@@ -10,7 +10,7 @@ import {
 import actions from './actions'
 
 const
-    stateModel = ImmutablePropTypes.exact({
+    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
         currentPath: PropTypes.string,
     })
 

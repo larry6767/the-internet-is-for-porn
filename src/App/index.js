@@ -73,7 +73,7 @@ export default compose(
         },
     }),
 
-    setPropTypes({
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         routerContext: routerContextModel,
 
         // In bare usage of <App> in SSR these are not passed (that's why they're optional).

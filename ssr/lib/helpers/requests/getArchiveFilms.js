@@ -6,7 +6,7 @@ import {archiveIdModel, archiveFilmsModel} from '../../../App/models'
 const
     urlReg = /\/(\d{4})-(\d{2})-archive.html$/,
 
-    incomingModelProps = Object.freeze({
+    incomingModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
         ACTIVE: PropTypes.oneOfType([
             // check whether it's zero number
             (props, propName, componentName) => {
@@ -40,13 +40,16 @@ const
     }),
 
     // {foo: 'foo', bar: 'bar'}
-    incomingModelPropsKeys = Object.freeze(mapValues(incomingModelProps, (x, k) => k)),
+    incomingModelPropsKeys = process.env.NODE_ENV === 'production' ? null :
+        Object.freeze(mapValues(incomingModelProps, (x, k) => k)),
 
     // get incoming property by verified key (which must be presented in the model)
-    getProp = (src, propKey) => g(src, g(incomingModelPropsKeys, propKey)),
+    getProp = process.env.NODE_ENV === 'production' ? g :
+        (src, propKey) => g(src, g(incomingModelPropsKeys, propKey)),
 
     // `shape` instead of `exact` because we may just ignore some of the fields
-    incomingModel = PropTypes.shape(incomingModelProps)
+    incomingModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.shape(incomingModelProps)
 
 export {incomingModel as incomingArchiveFilmsModel}
 

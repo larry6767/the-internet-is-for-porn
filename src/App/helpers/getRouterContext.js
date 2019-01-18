@@ -1,7 +1,7 @@
 import {Record} from 'immutable'
 
 import ig from './immutable/provedGet'
-import {assertPropTypes} from './propTypes'
+import {assertPropTypes} from './propTypes/check'
 import {routerContextModel} from '../models'
 
 const
