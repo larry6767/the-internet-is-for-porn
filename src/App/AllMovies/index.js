@@ -14,6 +14,7 @@ import {
     plainProvedGet as g,
     immutableProvedGet as ig,
     setPropTypes,
+    getHeaderText,
 } from '../helpers'
 
 import {immutableI18nButtonsModel} from '../models'
@@ -24,6 +25,7 @@ import ErrorContent from '../../generic/ErrorContent'
 import Lists from '../../generic/Lists'
 import VideoList from '../../generic/VideoList'
 import {Page, Content, AllMoviesPageWrapper} from './assets'
+import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
@@ -116,7 +118,7 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({search, routerContext, match, allMovies, archiveParams, loadPage}) => {
+    loadPageFlow = ({search, routerContext, allMovies, archiveParams, loadPage, setHeaderText}) => {
         const
             qs = queryString.parse(search),
             ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
@@ -149,6 +151,8 @@ const
             )
         ))
             loadPage(subPageForRequest)
+        else if (ig(allMovies, 'isLoaded'))
+            setHeaderText(getHeaderText(allMovies, true))
     }
 
 export default compose(
@@ -166,6 +170,7 @@ export default compose(
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
             setNewSort: g(actions, 'setNewSort'),
+            setNewText: g(headerActions, 'setNewText'),
         }
     ),
     withProps(props => ({
@@ -177,6 +182,8 @@ export default compose(
     })),
     withHandlers({
         loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+
+        setHeaderText: props => headerText => props.setNewText(headerText),
 
         chooseSort: props => newSortValue => props.setNewSort({
             newSortValue,

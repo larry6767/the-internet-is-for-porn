@@ -3,6 +3,7 @@ import {push} from 'connected-react-router/immutable'
 
 import {
     getPageData,
+    getHeaderText,
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -10,7 +11,7 @@ import {
 
 import {routerGetters} from '../../router-builder'
 import errorActions from '../../generic/ErrorMessage/actions'
-
+import headerActions from '../MainHeader/actions'
 import actions from './actions'
 
 export function* loadAllMoviesPageFlow({payload: subPageForRequest}, ssrContext) {
@@ -27,6 +28,7 @@ export function* loadAllMoviesPageFlow({payload: subPageForRequest}, ssrContext)
         else
             data = yield getPageData(reqData)
 
+        yield put(headerActions.setNewText(getHeaderText(data)))
         yield put(actions.loadPageSuccess({subPageForRequest, data}))
     } catch (err) {
         console.error('loadAllMoviesPageFlow is failed with exception:', err)

@@ -1,4 +1,4 @@
-import {map, concat, sortBy, reduce, find} from 'lodash'
+import {map, concat, sortBy, reduce} from 'lodash'
 
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
 
@@ -50,17 +50,26 @@ const
             thumb_url: PropTypes.string,
         })),
 
-    modelsListModel = process.env.NODE_ENV === 'production' ? null :
-        PropTypes.arrayOf(PropTypes.exact({
+    modelsListModelGetter = process.env.NODE_ENV === 'production' ? null : withLetter => {
+        const props = {
             id: PropTypes.number,
             name: PropTypes.string,
             subPage: PropTypes.string,
             itemsCount: PropTypes.number,
             thumb: PropTypes.string,
-            letter: PropTypes.string,
-        }))
+        }
 
-export default (letters, items) => {
+        if (withLetter)
+            props.letter = PropTypes.string
+
+        return PropTypes.arrayOf(PropTypes.exact(props))
+    },
+
+    modelsListModel = process.env.NODE_ENV === 'production' ? null : modelsListModelGetter(false),
+    modelsListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
+        modelsListModelGetter(true)
+
+export default (letters, items, withLetter = false) => {
     if (process.env.NODE_ENV !== 'production') {
         assertPropTypes(lettersModel, letters, 'getModelsList', 'letters')
         assertPropTypes(itemsModel, items, 'getModelsList', 'original source')
@@ -70,21 +79,32 @@ export default (letters, items) => {
         result = reduce(
             letters,
             (acc, letter, key) => concat(acc, sortBy(
-                map(letter, x => ({
-                    id: Number(g(x, 'id')),
-                    name: g(x, 'name'),
-                    subPage: g(x, 'sub_url'),
-                    itemsCount: Number(g(x, 'items_count')),
-                    thumb: g(items, g(x, 'id'), 'thumb_url'),
-                    letter: g(key, []),
-                })),
+                map(letter, x => {
+                    const model = {
+                        id: Number(g(x, 'id')),
+                        name: g(x, 'name'),
+                        subPage: g(x, 'sub_url'),
+                        itemsCount: Number(g(x, 'items_count')),
+                        thumb: g(items, g(x, 'id'), 'thumb_url'),
+                    }
+
+                    if (withLetter)
+                        model.letter = g(key, [])
+
+                    return model
+                }),
                 o => g(o, 'name')
             )),
             []
         )
 
     if (process.env.NODE_ENV !== 'production')
-        assertPropTypes(modelsListModel, result, 'getModelsList', 'result data')
+        assertPropTypes(
+            withLetter ? modelsListWithLetterModel : modelsListModel,
+            result,
+            'getModelsList',
+            'result data'
+        )
 
     return result
 }

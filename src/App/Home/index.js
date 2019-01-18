@@ -22,14 +22,19 @@ import {
     setPropTypes,
     PropTypes,
     ImmutablePropTypes,
+    getHeaderText,
 } from '../helpers'
 
-import {immutableI18nOrderingModel, routerContextModel} from '../models'
+import {
+    immutableI18nOrderingModel,
+    routerContextModel,
+} from '../models'
 import {routerGetters} from '../../router-builder'
 import ErrorContent from '../../generic/ErrorContent'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import {muiStyles} from './assets/muiStyles'
 import actions from './actions'
+import headerActions from '../MainHeader/actions'
 
 import {
     Page,
@@ -146,17 +151,20 @@ export default compose(
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
+            setNewText: g(headerActions, 'setNewText'),
         }
     ),
     withHandlers({
         loadPage: props => () => props.loadPageRequest(),
+        setHeaderText: props => headerText => props.setNewText(headerText),
     }),
     lifecycle({
         componentDidMount() {
-            if (!ig(this.props.home, 'isLoading') && !ig(this.props.home, 'isLoaded')) {
+            if (!ig(this.props.home, 'isLoading') && !ig(this.props.home, 'isLoaded'))
                 this.props.loadPage()
-            }
-        },
+            else if (ig(this.props.home, 'isLoaded'))
+                this.props.setHeaderText(getHeaderText(g(this, 'props', 'home'), true))
+        }
     }),
     withStylesProps(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {

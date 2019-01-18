@@ -2,6 +2,7 @@ import {put, takeEvery, select} from 'redux-saga/effects'
 import {push} from 'connected-react-router/immutable'
 
 import {
+    getHeaderText,
     getPageData,
     getRouterContext,
     plainProvedGet as g,
@@ -10,7 +11,7 @@ import {
 
 import {routerGetters} from '../../../router-builder'
 import errorActions from '../../../generic/ErrorMessage/actions'
-
+import headerActions from '../../MainHeader/actions'
 import actions from './actions'
 
 export function* loadNichePageFlow({payload: subPageForRequest}, ssrContext) {
@@ -27,6 +28,7 @@ export function* loadNichePageFlow({payload: subPageForRequest}, ssrContext) {
         else
             data = yield getPageData(reqData)
 
+        yield put(headerActions.setNewText(getHeaderText(data)))
         yield put(actions.loadPageSuccess({subPageForRequest, data}))
     } catch (err) {
         console.error('loadNichePageFlow is failed with exception:', err)

@@ -1,8 +1,13 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 
-import {getPageData, immutableProvedGet as ig} from '../helpers'
-import errorActions from '../../generic/ErrorMessage/actions'
+import {
+    getPageData,
+    getHeaderText,
+    immutableProvedGet as ig,
+} from '../helpers'
 
+import errorActions from '../../generic/ErrorMessage/actions'
+import headerActions from '../MainHeader/actions'
 import actions from './actions'
 
 export function* loadHomeFlow(action, ssrContext) {
@@ -18,6 +23,7 @@ export function* loadHomeFlow(action, ssrContext) {
         else
             data = yield getPageData(reqData)
 
+        yield put(headerActions.setNewText(getHeaderText(data)))
         yield put(actions.loadPageSuccess({data}))
     } catch (err) {
         console.error('loadHomeFlow is failed with exception:', err)

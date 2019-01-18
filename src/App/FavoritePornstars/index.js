@@ -7,6 +7,7 @@ import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List} from 'immutable'
 
 import {
+    getHeaderText,
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -24,6 +25,7 @@ import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import PornstarList from '../../generic/PornstarList'
 import {Page, Content, PageWrapper} from './assets'
+import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
@@ -36,7 +38,7 @@ const
         pageText: Map(),
         pagesCount: 1,
         itemsCount: 0,
-        pornstarList: List(),
+        modelsList: List(),
     }),
 
     FavoritePornstars = ({
@@ -61,9 +63,9 @@ const
                             root: g(classes, 'typographyTitle')
                         }}
                     >
-                        {g(ig(favorite, 'pornstarList'), 'size')
+                        {g(ig(favorite, 'modelsList'), 'size')
                             ? `${(ig(favorite, 'pageText', 'listHeader') || '')
-                                .replace(/[0-9]/g, '')}${g(ig(favorite, 'pornstarList'), 'size')}`
+                                .replace(/[0-9]/g, '')}${g(ig(favorite, 'modelsList'), 'size')}`
                             : ig(favorite, 'pageText', 'listHeaderEmpty')
                         }
                     </Typography>
@@ -79,7 +81,7 @@ const
                     />
                     <PornstarList
                         linkBuilder={linkBuilder}
-                        pornstarList={ig(favorite, 'pornstarList')}
+                        pornstarList={ig(favorite, 'modelsList')}
                     />
                 </PageWrapper>
             </Content>
@@ -97,10 +99,13 @@ export default compose(
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
+            setNewText: g(headerActions, 'setNewText'),
         }
     ),
     withHandlers({
         loadPage: props => () => props.loadPageRequest(),
+
+        setHeaderText: props => headerText => props.setNewText(headerText),
 
         controlLinkBuilder: props => qsParams =>
             routerGetters.favoritePornstars.link(g(props, 'routerContext'), {
@@ -116,9 +121,10 @@ export default compose(
     }),
     lifecycle({
         componentDidMount() {
-            if (!ig(this.props.favorite, 'isLoading') && !ig(this.props.favorite, 'isLoaded')) {
+            if (!ig(this.props.favorite, 'isLoading') && !ig(this.props.favorite, 'isLoaded'))
                 this.props.loadPage()
-            }
+            else if (ig(this.props.favorite, 'isLoaded'))
+                this.props.setHeaderText(getHeaderText(g(this, 'props', 'favorite'), true))
         }
     }),
     withStyles(muiStyles),

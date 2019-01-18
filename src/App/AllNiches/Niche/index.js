@@ -8,6 +8,7 @@ import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List, fromJS} from 'immutable'
 
 import {
+    getHeaderText,
     plainProvedGet as g,
     immutableProvedGet as ig,
     localizedGetSubPage,
@@ -27,6 +28,7 @@ import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
 import {Page, Content, PageWrapper} from './assets'
+import headerActions from '../../MainHeader/actions'
 import actions from './actions'
 
 const
@@ -56,7 +58,6 @@ const
 
     Niche = ({
         currentBreakpoint,
-        pageUrl,
         i18nOrdering,
         i18nButtons,
         niche,
@@ -111,7 +112,10 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({search, routerContext, nicheCode, archiveParams, niche, loadPage}) => {
+    loadPageFlow = ({
+        search, routerContext, nicheCode, archiveParams, niche,
+        loadPage, setHeaderText
+    }) => {
         const
             qs = queryString.parse(search),
             ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
@@ -144,6 +148,8 @@ const
             )
         ))
             loadPage(subPageForRequest)
+        else if (ig(niche, 'isLoaded'))
+            setHeaderText(getHeaderText(niche, true))
     }
 
 export default compose(
@@ -153,7 +159,6 @@ export default compose(
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             niche: NicheRecord(ig(state, 'app', 'niches', 'niche')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            pageUrl: ig(state, 'router', 'location', 'pathname'),
             search: ig(state, 'router', 'location', 'search'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
@@ -162,6 +167,7 @@ export default compose(
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
             setNewSort: g(actions, 'setNewSort'),
+            setNewText: g(headerActions, 'setNewText'),
         }
     ),
     withProps(props => ({
@@ -174,6 +180,8 @@ export default compose(
     })),
     withHandlers({
         loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+
+        setHeaderText: props => headerText => props.setNewText(headerText),
 
         chooseSort: props => newSortValue => props.setNewSort({
             newSortValue,

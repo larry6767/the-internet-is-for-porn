@@ -1,12 +1,22 @@
 import React from 'react'
+import {compose, setPropTypes} from 'recompose'
+import {Record} from 'immutable'
+import {Link} from 'react-router-dom'
+import {withStyles} from '@material-ui/core/styles'
+import {Typography} from '@material-ui/core'
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    PropTypes,
+    ImmutablePropTypes,
+} from '../helpers'
 import Niche from './Niche'
 import Navigation from './Navigation'
-import HDSwitch from './HDSwitch'
 import Language from './Language'
 import Search from './Search'
 import BurgerMenu from './BurgerMenu'
 import {connect} from 'react-redux'
-import {toggleSearch} from './actions'
+import actions from './actions'
 import {
     Header,
     Top,
@@ -15,21 +25,42 @@ import {
     NavigationWrapper,
     Logo,
     Icon,
-    BottomInner
+    BottomInner,
+    TextWrapper,
 } from './assets'
+import {muiStyles} from './assets/muiStyles'
 
 const
-    MainHeader = ({isSSR, appUi, mainHeaderUi, toggleSearchAction}) => {
+    MainHeader = ({
+        classes, isSSR, pageUrl, currentBreakpoint,
+        data, toggleSearchAction, pageText
+    }) => {
         const
-            isXSorXXS =
-                appUi.get('currentBreakpoint') === 'xs' ||
-                appUi.get('currentBreakpoint') === 'xxs',
-
-            isSearchShown = mainHeaderUi.get('isSearchShown')
+            isXSorXXS = currentBreakpoint === 'xs' || currentBreakpoint === 'xxs',
+            isSearchShown = ig(data, 'isSearchShown')
 
         return <Header>
             <Top>
                 <TopInner>
+                    <TextWrapper>
+                        <Typography
+                            variant="caption"
+                            gutterBottom
+                            classes={{
+                                root: g(classes, 'typography'),
+                            }}
+                        >
+                            {`${ig(data, 'title')}. `}
+                        </Typography>
+                        <Typography
+                            variant="caption"
+                            classes={{
+                                root: g(classes, 'typography'),
+                            }}
+                        >
+                            {ig(data, 'description')}
+                        </Typography>
+                    </TextWrapper>
                     <SearchWrapper>
                         {
                             isXSorXXS && isSearchShown ? '' :
@@ -37,15 +68,24 @@ const
                         }
                         {
                             isXSorXXS && isSearchShown ? '' :
-                            <Logo src="/img/logo.png" alt="VideoSection logo"/>
+                            <Link
+                                to="/"
+                                className={pageUrl === '/' ? classes.routerLinkSpy : ''}
+                            >
+                                <Logo src="/img/logo.png" alt="VideoSection logo"/>
+                            </Link>
                         }
                         {
                             isXSorXXS
                                 ? <Icon
-                                    type={isXSorXXS && isSearchShown ? 'close' : isXSorXXS ? 'search' : ''}
+                                    type={isXSorXXS && isSearchShown
+                                        ? 'close'
+                                        : isXSorXXS
+                                        ? 'search'
+                                        : ''}
                                     onClick={toggleSearchAction}
                                 />
-                                : ''
+                                : null
                         }
                         {
                             !isXSorXXS ? <Search/> :
@@ -61,23 +101,40 @@ const
                         <BottomInner isSSR={isSSR}>
                             <NavigationWrapper>
                                 <Navigation/>
-                                <HDSwitch/>
+                                {/* <HDSwitch/> */}
                             </NavigationWrapper>
                             <Language/>
                         </BottomInner>
                     </div>
-                    : ''
+                    : null
             }
         </Header>
-    }
+    },
 
-export default connect(
-    state => ({
-        appUi: state.getIn(['app', 'ui']),
-        mainHeaderUi: state.getIn(['app', 'mainHeader', 'ui']),
-        isSSR: state.getIn(['app', 'ssr', 'isSSR']),
-    }),
-    dispatch => ({
-        toggleSearchAction: () => dispatch(toggleSearch())
+    dataRecord = Record({
+        isSearchShown: false,
+        title: '',
+        description: '',
     })
+
+export default compose(
+    connect(
+        state => ({
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            pageUrl: ig(state, 'router', 'location', 'pathname'),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            data: dataRecord(ig(state, 'app', 'mainHeader', 'ui')),
+        }),
+        dispatch => ({
+            toggleSearchAction: () => dispatch(actions.toggleSearch())
+        })
+    ),
+    withStyles(muiStyles),
+    setPropTypes({
+        classes: PropTypes.object,
+        isSSR: PropTypes.bool,
+        pageUrl: PropTypes.string,
+        currentBreakpoint: PropTypes.string,
+        data: ImmutablePropTypes.record,
+    }),
 )(MainHeader)

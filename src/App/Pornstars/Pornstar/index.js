@@ -8,6 +8,7 @@ import {CircularProgress, Typography} from '@material-ui/core'
 import {Record, Map, List} from 'immutable'
 
 import {
+    getHeaderText,
     localizedGetSubPage,
     getRouterContext,
     plainProvedGet as g,
@@ -23,6 +24,7 @@ import VideoList from '../../../generic/VideoList'
 
 import Info from './Info'
 import {Page, Content, PageWrapper} from './assets'
+import headerActions from '../../MainHeader/actions'
 import actions from './actions'
 
 const
@@ -30,7 +32,7 @@ const
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        modelInfoIsOpen: Boolean,
+        modelInfoIsOpen: false,
 
         currentSubPage: '',
         lastSubPageForRequest: '',
@@ -97,7 +99,10 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({search, routerContext, pornstarCode, match, pornstar, loadPage}) => {
+    loadPageFlow = ({
+        search, routerContext, pornstarCode, match, pornstar,
+        loadPage, setHeaderText
+    }) => {
         const
             qs = queryString.parse(search),
             ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
@@ -122,6 +127,8 @@ const
             )
         ))
             loadPage(subPageForRequest)
+        else if (ig(pornstar, 'isLoaded'))
+            setHeaderText(getHeaderText(pornstar, true))
     }
 
 export default compose(
@@ -142,6 +149,7 @@ export default compose(
             loadPageRequest: g(actions, 'loadPageRequest'),
             toggleModelInfo: g(actions, 'toggleModelInfo'),
             setNewSort: g(actions, 'setNewSort'),
+            setNewText: g(headerActions, 'setNewText'),
         }
     ),
     withProps(props => ({
@@ -149,6 +157,9 @@ export default compose(
     })),
     withHandlers({
         loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+
+        setHeaderText: props => headerText => props.setNewText(headerText),
+
         modelInfoHandler: props => state => props.toggleModelInfo(state),
 
         chooseSort: props => newSortValue => props.setNewSort({

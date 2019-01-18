@@ -1,9 +1,13 @@
 import {get} from 'lodash'
 import {put, takeEvery, select} from 'redux-saga/effects'
 import {BACKEND_URL} from '../../config'
-import {getPageData, immutableProvedGet as ig} from '../helpers'
+import {
+    getHeaderText,
+    getPageData,
+    immutableProvedGet as ig,
+} from '../helpers'
 import errorActions from '../../generic/ErrorMessage/actions'
-
+import headerActions from '../MainHeader/actions'
 import actions from './actions'
 
 export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
@@ -33,6 +37,8 @@ export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
             data = yield getPageData(reqData)
             yield put(actions.setTimeAndHrefForReport({href, time}))
         }
+
+        yield put(headerActions.setNewText(getHeaderText(data)))
         yield put(actions.loadPageSuccess({subPageForRequest, data}))
     } catch (err) {
         console.error('loadAllMoviesPageFlow is failed with exception:', err)

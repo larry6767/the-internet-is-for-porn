@@ -1,3 +1,5 @@
+import {Record} from 'immutable'
+
 import {PropTypes, ImmutablePropTypes} from './helpers'
 import {immutableLocaleRouterModel} from '../dev-modules/initialModels'
 
@@ -62,4 +64,25 @@ export const
     archiveFilmsModel = process.env.NODE_ENV === 'production' ? null :
         archiveFilmsModelBuilder(false),
     immutableArchiveFilmsModel = process.env.NODE_ENV === 'production' ? null :
-        archiveFilmsModelBuilder(true)
+        archiveFilmsModelBuilder(true),
+
+    immutablePageTextModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exactRecordOf({
+            description: PropTypes.string,
+            headerDescription: PropTypes.string,
+            headerTitle: PropTypes.nullable(PropTypes.string),
+            keywords: PropTypes.string,
+            listHeader: PropTypes.nullable(PropTypes.string),
+            listHeaderEmpty: PropTypes.nullable(PropTypes.string),
+            title: PropTypes.string,
+        }),
+
+    PageTextRecord = Record({
+        description: '',
+        headerDescription: '',
+        headerTitle: null,
+        keywords: '',
+        listHeader: null,
+        listHeaderEmpty: null,
+        title: '',
+    })

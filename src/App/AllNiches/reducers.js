@@ -9,6 +9,7 @@ import {
 } from '../helpers'
 
 import {nicheItemModel} from './models'
+import {immutablePageTextModel, PageTextRecord} from '../models'
 import actions from './actions'
 import nicheReducer from './Niche/reducers'
 
@@ -18,6 +19,7 @@ const
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
         nichesList: ImmutablePropTypes.listOf(nicheItemModel),
+        pageText: immutablePageTextModel,
     })
 
 export default combineReducers({
@@ -29,23 +31,27 @@ export default combineReducers({
             isLoaded: false,
             isFailed: false,
             nichesList: List(),
+            pageText: PageTextRecord(),
         }),
         [actions.loadPageSuccess]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            nichesList: List(fromJS(g(payload, 'data'))),
+            nichesList: List(fromJS(g(payload, 'data', 'tagList'))),
+            pageText: PageTextRecord(g(payload, 'data', 'pageText')),
         }),
         [actions.loadPageFailure]: (state) => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
             nichesList: List(),
+            pageText: PageTextRecord(),
         }),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
         nichesList: [],
+        pageText: PageTextRecord(),
     }))
 })

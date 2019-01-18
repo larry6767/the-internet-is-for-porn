@@ -1,22 +1,31 @@
-import {handleActions} from 'redux-actions'
-import {fromJS, List, Record} from 'immutable'
+import {fromJS, List} from 'immutable'
 
-import {addToList, removeFromList, plainProvedGet as g} from '../helpers'
+import {
+    addToList,
+    removeFromList,
+    plainProvedGet as g,
+    provedHandleActions,
+    ImmutablePropTypes,
+    PropTypes,
+} from '../helpers'
+import {PageTextRecord, immutablePageTextModel} from '../models'
+import {immutableVideoItemModel} from '../../generic/VideoItem/models'
 import actions from './actions'
 
 const
-    PageTextRecord = Record({
-        description: '',
-        headerDescription: '',
-        headerTitle: null,
-        keywords: '',
-        listHeader: null,
-        listHeaderEmpty: null,
-        title: '',
+    stateModel = ImmutablePropTypes.exact({
+        isLoading: PropTypes.bool,
+        isLoaded: PropTypes.bool,
+        isFailed: PropTypes.bool,
+        pageNumber: PropTypes.number,
+        pageText: immutablePageTextModel,
+        pagesCount: PropTypes.number,
+        itemsCount: PropTypes.number,
+        videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
     })
 
 export default
-    handleActions({
+    provedHandleActions(stateModel, {
         [g(actions, 'loadPageRequest')]: state => state.merge({
             isLoading: true,
             isLoaded: false,

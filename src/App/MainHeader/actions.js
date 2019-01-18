@@ -1,13 +1,8 @@
-import {createAction} from 'redux-actions'
+import {createActions} from '../helpers'
 
-const
-    types = {
-        TOGGLE_SEARCH: 'MAIN_HEADER@TOGGLE_SEARCH'
-    },
+const actions = createActions('MAIN_HEADER', [
+    'TOGGLE_SEARCH',
+    'SET_NEW_TEXT',
+])
 
-    toggleSearch = createAction(types.TOGGLE_SEARCH)
-
-export {
-    toggleSearch,
-    types
-}
+export default actions
