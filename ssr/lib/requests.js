@@ -44,8 +44,8 @@ const
     getHomeMap = x => ({
         nichesList: getTagList(x.page.TAGS_INFO.items),
         pornstarsList: getModelsList(
-            x.page.MODELS_BY_LETTERS.letters,
-            x.page.MODELS_BY_LETTERS_MODELS_INFO.items
+            g(x, 'page', 'MODELS_BY_LETTERS', 'letters'),
+            g(x, 'page', 'MODELS_BY_LETTERS_MODELS_INFO', 'items')
         ),
     }),
 
@@ -167,8 +167,8 @@ const
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
             modelsList: getModelsList(
-                x.page.MODELS_BY_LETTERS.letters,
-                x.page.MODELS_BY_LETTERS_MODELS_INFO.items,
+                g(x, 'page', 'MODELS_BY_LETTERS', 'letters'),
+                g(x, 'page', 'MODELS_BY_LETTERS_MODELS_INFO', 'items')
             ),
             modelInfo: getModelInfo(x.page.MODEL_INFO),
             modelThumb: x.page.MODEL_INFO.thumb_url,
@@ -177,8 +177,8 @@ const
 
     getPornstarsMap = x => {
         return getModelsList(
-            x.page.MODELS_BY_LETTERS.letters,
-            x.page.MODELS_BY_LETTERS_MODELS_INFO.items
+            g(x, 'page', 'MODELS_BY_LETTERS', 'letters'),
+            g(x, 'page', 'MODELS_BY_LETTERS_MODELS_INFO', 'items')
         )
     },
 
@@ -207,12 +207,8 @@ const
                     id: Number(id),
                     name,
                     subPage: sub_url,
-                    itemsCount: items_count,
+                    itemsCount: Number(items_count),
                     thumb: x.page.MODELS_BY_LETTERS_MODELS_INFO.items[id].thumb_url,
-                    sort: x.page.MODELS_BY_LETTERS_MODELS_INFO.items[id].url_galleries.indexOf('latest')
-                        ? '?sort=latest'
-                        : x.page.MODELS_BY_LETTERS_MODELS_INFO.items[id].url_galleries.indexOf('longest')
-                        ? '?sort=longest' : '',
                 })
             )
         }

@@ -4,7 +4,7 @@ import {compose, lifecycle, withHandlers} from 'recompose'
 import {Record, List} from 'immutable'
 import {CircularProgress, Typography} from '@material-ui/core'
 
-import {getRouterContext, plainProvedGet as g} from '../helpers'
+import {getRouterContext, plainProvedGet as g, immutableProvedGet as ig} from '../helpers'
 import {routerGetters} from '../../router-builder'
 import ErrorContent from '../../generic/ErrorContent'
 import PornstarList from '../../generic/PornstarList'
@@ -21,9 +21,9 @@ const
     }),
 
     Pornstars = ({pornstars, linkBuilder}) => <Page>
-        { pornstars.get('isFailed')
+        { ig(pornstars, 'isFailed')
             ? <ErrorContent/>
-            : pornstars.get('isLoading')
+            : ig(pornstars, 'isLoading')
             ? <CircularProgress/>
             : <Content>
                 <PageWrapper>
@@ -32,7 +32,7 @@ const
                     </Typography>
                     <PornstarList
                         linkBuilder={linkBuilder}
-                        pornstarList={pornstars.get('pornstarList')}
+                        pornstarList={ig(pornstars, 'pornstarList')}
                     />
                 </PageWrapper>
             </Content>
@@ -42,7 +42,7 @@ const
 export default compose(
     connect(
         state => ({
-            pornstars: PornstarsRecord(state.getIn(['app', 'pornstars', 'all'])),
+            pornstars: PornstarsRecord(ig(state, 'app', 'pornstars', 'all')),
             routerContext: getRouterContext(state),
         }),
         {
@@ -53,11 +53,14 @@ export default compose(
         loadPage: props => () => props.loadPageRequest(),
 
         linkBuilder: props => child =>
-            routerGetters.pornstar.link(g(props, 'routerContext'), child, null),
+            routerGetters.pornstar.link(g(props, 'routerContext'), g(child, []), null),
     }),
     lifecycle({
         componentDidMount() {
-            if (!this.props.pornstars.get('isLoading') && !this.props.pornstars.get('isLoaded')) {
+            if (
+                !ig(this.props.pornstars, 'isLoading') &&
+                !ig(this.props.pornstars, 'isLoaded')
+            ) {
                 this.props.loadPage()
             }
         }

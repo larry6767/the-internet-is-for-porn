@@ -1,30 +1,87 @@
-import {
-    map,
-    concat,
-    sortBy,
-    reduce,
-} from 'lodash'
+import {map, concat, sortBy, reduce, find} from 'lodash'
 
-export default (letters, items) => reduce(
-    letters,
-    (acc, letter, key) => {
-        const letterItems = sortBy(
-            map(letter, ({id, name, sub_url, items_count}) => ({
-                id: Number(id),
-                name,
-                subPage: sub_url,
-                itemsCount: items_count,
-                thumb: items[id].thumb_url,
-                sort: items[id].url_galleries.indexOf('latest')
-                    ? '?sort=latest'
-                    : items[id].url_galleries.indexOf('longest')
-                    ? '?sort=longest' : '',
-                letter: key,
-            })),
-            o => o.name
+import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
+
+const
+    letterKeyModel = (props, propName, componentName) => {
+        const propValue = props[propName]
+        if (typeof propValue !== 'string')
+            return new Error(
+                `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                `(it's not a string but ${typeof propValue}). Validation failed.`
+            )
+        if (propValue.length !== 1 || propValue !== propValue.toUpperCase())
+            return new Error(
+                `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                `(it must be one uppercase letter). Validation failed.`
+            )
+    },
+
+    letterModel = PropTypes.shape({
+        id: PropTypes.string, // but actually is a number
+        name: PropTypes.string,
+        sub_url: PropTypes.string,
+        items_count: PropTypes.string, // but actually is a number
+    }),
+
+    nestedLettersModel = PropTypes.objectOf(
+        PropTypes.objectOf(letterModel)
+    ),
+
+    // {'A': {'1234': {...}}, 'B': {'4321': {...}}, ...}
+    lettersModel = (props, propName, componentName, ...etc) => {
+        const propValue = props[propName]
+        if (typeof propValue !== 'object')
+            return new Error(
+                `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                `(it's not a object but ${typeof propValue}). Validation failed.`
+            )
+        for (const key of Object.keys(propValue)) {
+            const error = letterKeyModel({[propName]: key}, propName, componentName, ...etc)
+            if (error) return error
+        }
+        return nestedLettersModel(props, propName, componentName, ...etc)
+    },
+
+    // keys are `letters[].id`s
+    itemsModel = PropTypes.objectOf(PropTypes.shape({
+        thumb_url: PropTypes.string,
+    })),
+
+    modelsListModel = PropTypes.arrayOf(PropTypes.exact({
+        id: PropTypes.number,
+        name: PropTypes.string,
+        subPage: PropTypes.string,
+        itemsCount: PropTypes.number,
+        thumb: PropTypes.string,
+        letter: PropTypes.string,
+    }))
+
+export default (letters, items) => {
+    if (process.env.NODE_ENV !== 'production') {
+        assertPropTypes(lettersModel, letters, 'getModelsList', 'letters')
+        assertPropTypes(itemsModel, items, 'getModelsList', 'original source')
+    }
+
+    const
+        result = reduce(
+            letters,
+            (acc, letter, key) => concat(acc, sortBy(
+                map(letter, x => ({
+                    id: Number(g(x, 'id')),
+                    name: g(x, 'name'),
+                    subPage: g(x, 'sub_url'),
+                    itemsCount: Number(g(x, 'items_count')),
+                    thumb: g(items, g(x, 'id'), 'thumb_url'),
+                    letter: g(key, []),
+                })),
+                o => g(o, 'name')
+            )),
+            []
         )
 
-        acc = concat(acc, letterItems)
-        return acc
-    }, []
-)
+    if (process.env.NODE_ENV !== 'production')
+        assertPropTypes(modelsListModel, result, 'getModelsList', 'result data')
+
+    return result
+}

@@ -9,18 +9,21 @@ import favoriteSaga from './Favorite/sagas'
 import favoritePornstarsSaga from './FavoritePornstars/sagas'
 import videoPageSaga from './VideoPage/sagas'
 import findVideosSaga from './FindVideos/sagas'
+
 import {
     getIdsForInitialFavoriteList,
     addIdToCookie,
     removeIdFromCookie,
+    immutableProvedGet as ig,
 } from './helpers'
+
 import actions from './actions'
 import favoriteActions from './Favorite/actions'
 import favoritePornstarsActions from './FavoritePornstars/actions'
 
 export function* addVideoToFavorite({payload: item}) {
     addIdToCookie('mcj_fav', item)
-    yield put(actions.addVideoIdToFavorite(item.get('id')))
+    yield put(actions.addVideoIdToFavorite(ig(item, 'id')))
     yield put(favoriteActions.addToList(item))
 }
 
@@ -36,7 +39,7 @@ export function* getFavoriteVideoList(action, ssrContext) {
 
 export function* addPornstarToFavorite({payload: item}) {
     addIdToCookie('mcj_fav_model', item)
-    yield put(actions.addPornstarIdToFavorite(item.get('id')))
+    yield put(actions.addPornstarIdToFavorite(ig(item, 'id')))
     yield put(favoritePornstarsActions.addToList(item))
 }
 

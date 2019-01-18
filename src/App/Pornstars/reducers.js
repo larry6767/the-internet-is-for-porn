@@ -1,26 +1,49 @@
 import {combineReducers} from 'redux-immutable'
-import {handleActions} from 'redux-actions'
 import {fromJS, List} from 'immutable'
+
+import {
+    PropTypes,
+    ImmutablePropTypes,
+    provedHandleActions,
+    plainProvedGet as g,
+} from '../helpers'
+
 import actions from './actions'
 import pornstarReducer from './Pornstar/reducers'
+
+const
+    allStateModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exact({
+            isLoading: PropTypes.bool,
+            isLoaded: PropTypes.bool,
+            isFailed: PropTypes.bool,
+            pornstarList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
+                id: PropTypes.number,
+                name: PropTypes.string,
+                subPage: PropTypes.string,
+                itemsCount: PropTypes.number,
+                thumb: PropTypes.string,
+                letter: PropTypes.string,
+            })),
+        })
 
 export default combineReducers({
     pornstar: pornstarReducer,
 
-    all: handleActions({
-        [actions.loadPageRequest]: (state) => state.merge({
+    all: provedHandleActions(allStateModel, {
+        [g(actions, 'loadPageRequest')]: state => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
             pornstarList: List(),
         }),
-        [actions.loadPageSuccess]: (state, {payload: {data}}) => state.merge({
+        [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            pornstarList: fromJS(data),
+            pornstarList: List(fromJS(g(payload, 'data'))),
         }),
-        [actions.loadPageFailure]: (state) => state.merge({
+        [g(actions, 'loadPageFailure')]: state => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
@@ -30,15 +53,6 @@ export default combineReducers({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        pornstarList: [
-            /*
-            {
-                id: 0,
-                name: '',
-                subPage: '',
-                itemsCount: 0,
-            }
-            */
-        ]
+        pornstarList: [],
     }))
 })

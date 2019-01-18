@@ -1,10 +1,46 @@
-import {handleActions} from 'redux-actions'
 import {fromJS, List, Record} from 'immutable'
 
-import {addToList, removeFromList, plainProvedGet as g} from '../helpers'
+import {
+    addToList,
+    removeFromList,
+    plainProvedGet as g,
+    PropTypes,
+    ImmutablePropTypes,
+    provedHandleActions,
+} from '../helpers'
+
 import actions from './actions'
 
 const
+    stateModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exact({
+            isLoading: PropTypes.bool,
+            isLoaded: PropTypes.bool,
+            isFailed: PropTypes.bool,
+
+            pageText: ImmutablePropTypes.exactRecordOf({
+                description: PropTypes.string,
+                headerDescription: PropTypes.string,
+                headerTitle: PropTypes.nullable(PropTypes.string),
+                keywords: PropTypes.string,
+                listHeader: PropTypes.nullable(PropTypes.string),
+                listHeaderEmpty: PropTypes.nullable(PropTypes.string),
+                title: PropTypes.string,
+            }),
+
+            pageNumber: PropTypes.number,
+            pagesCount: PropTypes.number,
+            itemsCount: PropTypes.number,
+
+            pornstarList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
+                id: PropTypes.number,
+                name: PropTypes.string,
+                subPage: PropTypes.string,
+                itemsCount: PropTypes.number,
+                thumb: PropTypes.string,
+            })),
+        }),
+
     PageTextRecord = Record({
         description: '',
         headerDescription: '',
@@ -16,13 +52,13 @@ const
     })
 
 export default
-    handleActions({
+    provedHandleActions(stateModel, {
         [g(actions, 'loadPageRequest')]: state => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            pageNumber: 1,
             pageText: PageTextRecord(),
+            pageNumber: 1,
             pagesCount: 1,
             itemsCount: 0,
             pornstarList: List(),
@@ -31,8 +67,8 @@ export default
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            pageNumber: g(payload, 'data', 'pageNumber'),
             pageText: PageTextRecord(g(payload, 'data', 'pageText')),
+            pageNumber: g(payload, 'data', 'pageNumber'),
             pagesCount: g(payload, 'data', 'pagesCount'),
             itemsCount: g(payload, 'data', 'itemsCount'),
             pornstarList: List(fromJS(g(payload, 'data', 'pornstarList'))),
@@ -41,8 +77,8 @@ export default
             isLoading: false,
             isLoaded: false,
             isFailed: true,
-            pageNumber: 1,
             pageText: PageTextRecord(),
+            pageNumber: 1,
             pagesCount: 1,
             itemsCount: 0,
             pornstarList: List(),
@@ -55,22 +91,9 @@ export default
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        currentPage: '',
-        currentNiche: '',
-        pageNumber: 1,
         pageText: PageTextRecord(),
+        pageNumber: 1,
         pagesCount: 1,
         itemsCount: 0,
-        pornstarList: [
-            /*
-            {
-                id: 0,
-                name: '',
-                subPage: '',
-                itemsCount: 0,
-                thumb: '',
-                sort: '',
-            }
-            */
-        ],
+        pornstarList: [],
     }))
