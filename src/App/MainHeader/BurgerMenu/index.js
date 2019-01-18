@@ -6,15 +6,14 @@ import MenuIcon from '@material-ui/icons/Menu'
 import {withStyles} from '@material-ui/core/styles'
 
 import {
-    getValueForNavigation,
     getRouterContext,
     immutableProvedGet as ig,
     plainProvedGet as g,
     PropTypes,
     setPropTypes,
+    getLinkByNavKey,
 } from '../../helpers'
 
-import {routerGetters} from '../../../router-builder'
 import {immutableI18nNavigationModel, routerContextModel} from '../../models'
 import Language from '../Language'
 import actionsNavigation from '../Navigation/actions'
@@ -33,43 +32,38 @@ const
         openModal,
         closeModal,
         goToPath,
-        getLinkByNavKey,
         i18nNav,
-    }) => {
-        const
-            value = getValueForNavigation(getLinkByNavKey)(navMenuOrder, pathname)
-
-        return <Fragment>
-            <IconButton
-                aria-owns={isOpened ? 'burger-menu' : null}
-                aria-label="burger-menu"
-                aria-haspopup="true"
-                onClick={openModal}
-            >
-                <MenuIcon style={menuIconStyle}/>
-            </IconButton>
-            <Menu
-                id="burger-menu"
-                anchorEl={anchorEl}
-                open={isOpened}
-                onClose={closeModal}
-                classes={{
-                    paper: g(classes, 'paper'),
-                }}
-            >
-                {navMenuOrder.map((navKey, index) =>
-                    <MenuItem
-                        key={index /* the order never change */}
-                        selected={navKey === value}
-                        onClick={goToPath(navKey)}
-                    >
-                        {ig(i18nNav, navKey, 'title')}
-                    </MenuItem>
-                )}
-                <Language/>
-            </Menu>
-        </Fragment>
-    }
+        currentSection,
+    }) => <Fragment>
+        <IconButton
+            aria-owns={isOpened ? 'burger-menu' : null}
+            aria-label="burger-menu"
+            aria-haspopup="true"
+            onClick={openModal}
+        >
+            <MenuIcon style={menuIconStyle}/>
+        </IconButton>
+        <Menu
+            id="burger-menu"
+            anchorEl={anchorEl}
+            open={isOpened}
+            onClose={closeModal}
+            classes={{
+                paper: g(classes, 'paper'),
+            }}
+        >
+            {navMenuOrder.map((navKey, index) =>
+                <MenuItem
+                    key={index /* the order never change */}
+                    selected={navKey === currentSection}
+                    onClick={goToPath(navKey)}
+                >
+                    {ig(i18nNav, navKey, 'title')}
+                </MenuItem>
+            )}
+            <Language/>
+        </Menu>
+    </Fragment>
 
 export default compose(
     connect(
@@ -78,6 +72,7 @@ export default compose(
             pathname: ig(state, 'router', 'location', 'pathname'),
             i18nNav: ig(state, 'app', 'locale', 'i18n', 'navigation'),
             routerContext: getRouterContext(state),
+            currentSection: ig(state, 'app', 'mainHeader', 'navigation', 'currentSection'),
         }),
         {
             setNewPath: g(actionsNavigation, 'setNewPath'),
@@ -87,8 +82,7 @@ export default compose(
     ),
     withState('anchorEl', 'setAnchorEl', null),
     withHandlers({
-        getLinkByNavKey: props => navKey =>
-            g(routerGetters, navKey, 'link')(g(props, 'routerContext')),
+        getLinkByNavKey,
 
         openModal: props => event => {
             props.open()
@@ -121,5 +115,6 @@ export default compose(
         openModal: PropTypes.func,
         closeModal: PropTypes.func,
         getLinkByNavKey: PropTypes.func,
+        currentSection: PropTypes.nullable(PropTypes.string),
     })
 )(BurgerMenu)

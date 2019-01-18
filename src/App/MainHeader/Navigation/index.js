@@ -11,9 +11,9 @@ import {
     plainProvedGet as g,
     PropTypes,
     setPropTypes,
+    getLinkByNavKey as getLinkByNavKeyHandler,
 } from '../../helpers'
 
-import {routerGetters} from '../../../router-builder'
 import {immutableI18nNavigationModel, routerContextModel} from '../../models'
 import {muiStyles} from './assets/muiStyles'
 import {Nav} from './assets'
@@ -61,21 +61,7 @@ export default compose(
             setNewPath: g(actions, 'setNewPath'),
         }
     ),
-    withHandlers({
-        getLinkByNavKey: props => navKey => {
-            switch (navKey) {
-                case 'home':
-                case 'allNiches':
-                case 'pornstars':
-                    return g(routerGetters, navKey, 'link')(g(props, 'routerContext'))
-                case 'allMovies':
-                case 'favorite':
-                    return g(routerGetters, navKey, 'link')(g(props, 'routerContext'), null)
-                default:
-                    throw new Error(`Unexpected navigation key: ${JSON.stringify(navKey)}`)
-            }
-        }
-    }),
+    withHandlers({getLinkByNavKey: getLinkByNavKeyHandler}),
     withHandlers({
         goToPath: props => (event, value) => {
             event.preventDefault()
