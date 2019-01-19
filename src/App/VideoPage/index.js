@@ -1,5 +1,6 @@
 // TODO: this page needs refactoring (propTypes, ig, g, etc)
-import {Record, Map, List} from 'immutable'
+import {omit} from 'lodash'
+import {Record, Map, List, fromJS} from 'immutable'
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {compose, lifecycle} from 'recompose'
@@ -94,7 +95,13 @@ const
             classes={{
                 root: classes.buttonRoot
             }}
-            onClick={addVideoToFavoriteHandler.bind(this, data.get('gallery'))}
+            onClick={addVideoToFavoriteHandler.bind(
+                this,
+                Map(fromJS(omit(
+                    data.get('gallery').toJS(),
+                    ['published', 'classId', 'sponsorUrl', 'urlForIframe']
+                )))
+            )}
         >
             <FavoriteBorder
                 classes={{root: classes.favoriteBorderIcon}}
