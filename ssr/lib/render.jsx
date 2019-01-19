@@ -20,6 +20,7 @@ import {App} from '../App'
 import appActions from '../App/actions'
 import languageActions from '../App/MainHeader/Language/actions'
 import navigationActions from '../App/MainHeader/Navigation/actions'
+import orientationActions from '../App/MainHeader/Niche/actions'
 import routerLocales from '../locale-mapping/router'
 import i18n from '../locale-mapping/i18n'
 
@@ -74,6 +75,11 @@ export default (
         if (staticRouterContext.hasOwnProperty('currentSection'))
             store.dispatch(navigationActions.setCurrentSection(
                 g(staticRouterContext, 'currentSection')
+            ))
+
+        if (staticRouterContext.hasOwnProperty('currentOrientation'))
+            store.dispatch(orientationActions.switchOrientation(
+                g(staticRouterContext, 'currentOrientation')
             ))
 
         if (staticRouterContext.saga) {

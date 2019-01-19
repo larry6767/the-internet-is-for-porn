@@ -15,9 +15,10 @@ import {
     setPropTypes,
 } from './App/helpers'
 
-import {routerContextModel} from './App/models'
+import {routerContextModel, orientationCodes, defaultOrientationCode} from './App/models'
 
 import Home from './App/Home'
+import homeActions from './App/Home/actions'
 import {loadHomeFlow} from './App/Home/sagas'
 
 import AllNiches from './App/AllNiches'
@@ -107,8 +108,18 @@ export const
     // The `r` argument is this store branch: `app.locale.router`.
     routerGetters = Object.freeze({
         home: Object.freeze({
-            path: r => '/',
-            link: r => '/',
+            path: (r, orientationCode) => {
+                const orientationPfx = ig(r, 'router', 'orientation', orientationCode)
+                return `${orientationPfx}/`
+            },
+            link: (r, orientationCode = null) => {
+                orientationCode =  orientationCode || defaultOrientationCode
+
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', orientationCode)
+
+                return `${orientationPfx}/`
+            },
         }),
 
         allNiches: Object.freeze({
@@ -311,20 +322,35 @@ if (process.env.NODE_ENV !== 'production')
 // (such as status code, redirect, action to dispatch).
 // The `router` prop is this store branch: `app.locale.router`.
 const RouterBuilder = ({routerContext: r}) => <Switch>
-    <Route exact path={routerGetters.home.path(r)} render={props => {
-        if (ig(r, 'location', 'search') === ig(r, 'router', 'redirects', 'categories', 'search'))
-            return <Redirect to={routerGetters.allNiches.link(r)}/>
+    {orientationCodes.map(orientationCode => <Route
+        exact
+        key={orientationCode}
+        path={routerGetters.home.path(r, orientationCode)}
+        render={props => {
+            if (
+                ig(r, 'location', 'search') ===
+                ig(r, 'router', 'redirects', 'categories', 'search')
+            )
+                return <Redirect to={routerGetters.allNiches.link(r)}/>
 
-        const currentSection = 'home'
+            const
+                currentSection = 'home',
+                action = homeActions.loadPageRequest({orientationCode})
 
-        if (get(props, ['staticContext', 'isPreRouting'])) {
-            props.staticContext.saga = loadHomeFlow.bind(null, null)
-            props.staticContext.statusCodeResolver = status500(['app', 'home', 'isFailed'])
-            props.staticContext.currentSection = currentSection
-            return null
-        } else
-            return <Home {...props} currentSection={currentSection}/>
-    }}/>
+            if (get(props, ['staticContext', 'isPreRouting'])) {
+                props.staticContext.saga = loadHomeFlow.bind(null, action)
+                props.staticContext.statusCodeResolver = status500(['app', 'home', 'isFailed'])
+                props.staticContext.currentOrientation = orientationCode
+                props.staticContext.currentSection = currentSection
+                return null
+            } else
+                return <Home
+                    {...props}
+                    currentSection={currentSection}
+                    orientationCode={orientationCode}
+                />
+        }}
+    />)}
 
     <Route exact path={routerGetters.allNiches.path(r)} render={props => {
         const currentSection = 'allNiches'

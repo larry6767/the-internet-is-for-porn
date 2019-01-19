@@ -25,13 +25,11 @@ import {
     getHeaderText,
 } from '../helpers'
 
-import {
-    immutableI18nOrderingModel,
-    routerContextModel,
-} from '../models'
+import {immutableI18nOrderingModel, routerContextModel, orientationCodes} from '../models'
 import {routerGetters} from '../../router-builder'
 import ErrorContent from '../../generic/ErrorContent'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
+import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import {muiStyles} from './assets/muiStyles'
 import actions from './actions'
 import headerActions from '../MainHeader/actions'
@@ -52,8 +50,7 @@ const
         isLoaded: false,
         isFailed: false,
 
-        currentPage: '',
-        lastSubPageForRequest: '',
+        lastOrientationCode: '',
 
         pageText: Map(),
 
@@ -138,13 +135,28 @@ const
                 </PageWrapper>
             </Content>
         }
-    </Page>
+    </Page>,
+
+    loadPageFlow = ({currentOrientation, home, loadPage, setHeaderText}) => {
+        if (!(
+            ig(home, 'isLoading') ||
+            (
+                (ig(home, 'isLoaded') || ig(home, 'isFailed')) &&
+                currentOrientation === ig(home, 'lastOrientationCode')
+            )
+        ))
+            loadPage()
+        else if (ig(home, 'isLoaded'))
+            setHeaderText(getHeaderText(g(home, []), true))
+   }
 
 export default compose(
+    orientationPortal,
     sectionPortal,
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             home: HomeRecord(ig(state, 'app', 'home')),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
@@ -155,16 +167,19 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => () => props.loadPageRequest(),
+        loadPage: props => () =>
+            props.loadPageRequest({orientationCode: g(props, 'currentOrientation')}),
+
         setHeaderText: props => headerText => props.setNewText(headerText),
     }),
     lifecycle({
         componentDidMount() {
-            if (!ig(this.props.home, 'isLoading') && !ig(this.props.home, 'isLoaded'))
-                this.props.loadPage()
-            else if (ig(this.props.home, 'isLoaded'))
-                this.props.setHeaderText(getHeaderText(g(this, 'props', 'home'), true))
-        }
+            loadPageFlow(this.props)
+        },
+
+        componentWillReceiveProps(nextProps) {
+            loadPageFlow(nextProps)
+        },
     }),
     withStylesProps(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
@@ -178,12 +193,12 @@ export default compose(
             root: PropTypes.string,
         }),
         currentBreakpoint: PropTypes.string,
+        currentOrientation: PropTypes.oneOf(orientationCodes),
         home: ImmutablePropTypes.exactRecordOf({
             isLoading: PropTypes.bool,
             isLoaded: PropTypes.bool,
             isFailed: PropTypes.bool,
-            currentPage: PropTypes.string,
-            lastSubPageForRequest: PropTypes.string,
+            lastOrientationCode: PropTypes.string,
             pageText: ImmutablePropTypes.shape({}), // TODO better type
             nichesList: ImmutablePropTypes.listOf(ImmutablePropTypes.shape({})), // TODO better type
             pornstarsList: ImmutablePropTypes.listOf(ImmutablePropTypes.shape({})), // TODO better type
@@ -192,5 +207,6 @@ export default compose(
         i18nOrdering: immutableI18nOrderingModel,
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
+        setHeaderText: PropTypes.func,
     })
 )(Home)

@@ -1,3 +1,4 @@
+import {find} from 'lodash'
 import React from 'react'
 import {compose, withHandlers} from 'recompose'
 import {connect} from 'react-redux'
@@ -11,10 +12,19 @@ import {
     immutableProvedGet as ig,
     PropTypes,
     setPropTypes,
+    getRouterContext,
 } from '../../helpers'
 
-import {niches} from './fixtures'
+import {
+    orientationCodes,
+    routerContextModel,
+    immutableI18nOrientationModel,
+} from '../../models'
+
+import {routerGetters} from '../../../router-builder'
 import actions from './actions'
+import {muiStyles} from './assets/muiStyles'
+
 import {
     NicheBlock,
     NicheWrapper,
@@ -23,10 +33,26 @@ import {
     NicheMobileItemSelected,
     TextIcon
 } from './assets'
-import {muiStyles} from './assets/muiStyles'
 
 const
-    Niche = ({classes, currentNiche, currentBreakpoint, selectNiche, isSSR}) => <NicheBlock>
+    orientationSymbols = Object.freeze({
+        straight: 9892,
+        gay: 9891,
+        tranny: 9895,
+    }),
+
+    // This is called "niche" but we have another "niche" component and also section/page,
+    // so everywhere else it's going to be "orientation" which stands for "sexual orientation"
+    // to differ this "niche" from another.
+    Niche = ({
+        classes,
+        isSSR,
+        currentOrientation,
+        currentBreakpoint,
+        i18nOrientation,
+        orient,
+        linkBuilder,
+    }) => <NicheBlock>
         {
             /* rendering mobile version for SSR to render links with "href"s for search engines */
             /* TODO FIXME set proper `href` attribute */
@@ -34,25 +60,27 @@ const
             (isSSR || compareCurrentBreakpoint(currentBreakpoint, breakpointXS) <= 0)
 
             ? <NicheMobile>
-                {Object.keys(niches).map(key =>
-                    currentNiche === key
+                {orientationCodes.map(orientationCode =>
+                    currentOrientation === orientationCode
 
                     ? <NicheMobileItemSelected
-                        key={key}
-                        href="/TODO"
-                        onClick={selectNiche}
-                        data-value={key}
+                        key={orientationCode}
+                        href={linkBuilder(orientationCode)}
+                        onClick={orient}
+                        data-value={orientationCode}
                     >
-                        {`${String.fromCharCode(niches[key])} ${key}`}
+                        {`${String.fromCharCode(g(orientationSymbols, orientationCode))
+                            } ${ig(i18nOrientation, orientationCode)}`}
                     </NicheMobileItemSelected>
 
                     : <NicheMobileItem
-                        key={key}
-                        href="/TODO"
-                        onClick={selectNiche}
-                        data-value={key}
+                        key={orientationCode}
+                        href={linkBuilder(orientationCode)}
+                        onClick={orient}
+                        data-value={orientationCode}
                     >
-                        {`${String.fromCharCode(niches[key])} ${key}`}
+                        {`${String.fromCharCode(g(orientationSymbols, orientationCode))
+                            } ${ig(i18nOrientation, orientationCode)}`}
                     </NicheMobileItem>
                 )}
             </NicheMobile>
@@ -64,8 +92,8 @@ const
                             select: g(classes, 'select'),
                             icon: g(classes, 'icon'),
                         }}
-                        value={currentNiche}
-                        onChange={selectNiche}
+                        value={currentOrientation}
+                        onChange={orient}
                         input={
                             <OutlinedInput
                                 classes={{
@@ -75,10 +103,12 @@ const
                             />
                         }
                     >
-                        {Object.keys(niches).map(key =>
-                            <MenuItem key={key} value={key}>
-                                <TextIcon>{String.fromCharCode(niches[key])}</TextIcon>
-                                {key}
+                        {orientationCodes.map(orientationCode =>
+                            <MenuItem key={orientationCode} value={orientationCode}>
+                                <TextIcon>
+                                    {String.fromCharCode(g(orientationSymbols, orientationCode))}
+                                </TextIcon>
+                                {ig(i18nOrientation, orientationCode)}
                             </MenuItem>
                         )}
                     </Select>
@@ -90,19 +120,25 @@ const
 export default compose(
     connect(
         state => ({
-            currentNiche: ig(state, 'app', 'mainHeader', 'niche', 'currentNiche'),
-            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            routerContext: getRouterContext(state),
+            i18nOrientation: ig(state, 'app', 'locale', 'i18n', 'orientation'),
         }),
         {
-            toggleNiche: g(actions, 'toggleNiche'),
+            switchOrientation: g(actions, 'switchOrientation'),
         }
     ),
     withHandlers({
-        selectNiche: props => event => {
+        orient: props => event => {
             event.preventDefault()
-            props.toggleNiche(event.target.value || event.target.dataset.value)
+            const evValue = g(event.target.value || event.target.dataset.value, [])
+            props.switchOrientation(g(find(orientationCodes, code => code === evValue), []))
         },
+
+        linkBuilder: props => orientationCode =>
+            routerGetters.home.link(g(props, 'routerContext'), orientationCode),
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
@@ -112,9 +148,12 @@ export default compose(
             notchedOutline: PropTypes.string,
         }),
         isSSR: PropTypes.bool,
-        currentNiche: PropTypes.string,
+        currentOrientation: PropTypes.oneOf(orientationCodes),
         currentBreakpoint: PropTypes.string,
-        toggleNiche: PropTypes.func,
-        selectNiche: PropTypes.func,
+        routerContext: routerContextModel,
+        i18nOrientation: immutableI18nOrientationModel,
+        switchOrientation: PropTypes.func,
+        orient: PropTypes.func,
+        linkBuilder: PropTypes.func,
     })
 )(Niche)

@@ -4,6 +4,7 @@ import apiLocaleMapping from '../locale-mapping/backend-api'
 import routerLocaleMapping from '../locale-mapping/router'
 import i18n from '../locale-mapping/i18n'
 import {plainProvedGet as g} from '../App/helpers'
+import {orientationCodes} from '../App/models'
 import {getPureDomain, patchSiteLocales} from '../App/helpers/hostLocale'
 import {logRequestError, buildLocalePageCodes} from './helpers'
 
@@ -63,13 +64,14 @@ const
         }).end()
     },
 
-    requestHandler = siteLocales => (req, res, pageCode, withSubPageCode) => {
+    requestHandler = siteLocales => (req, res, pageCode, orientationCode, withSubPageCode) => {
         const
             localeCode = g(req, 'body', 'localeCode'),
 
             params = {
                 headers: proxiedHeaders(siteLocales, localeCode)(req),
                 pageCode,
+                orientationCode,
             }
 
         if (withSubPageCode)
@@ -96,7 +98,7 @@ const
                 }
             )
 
-        if ( ! req.body.localeCode || ! req.body.pageCode)
+        if ( ! req.body.localeCode || ! req.body.pageCode || ! req.body.orientationCode)
             return jsonThrow400(req, res)(
                 'Some required field(s) is not provided in request body',
                 {
@@ -106,6 +108,7 @@ const
                         required: {
                             localeCode: req.body.localeCode,
                             pageCode: req.body.pageCode,
+                            orientationCode: req.body.orientationCode,
                         },
                     },
                 }
@@ -115,13 +118,14 @@ const
             return jsonThrow400(req, res)('Unknown site locale code', {
                 request: {
                     method: g(req, 'method'),
-                    localeCode: g(req, 'body', 'localeCode'),
                     operation: g(req, 'params', 'operation'),
+                    localeCode: g(req, 'body', 'localeCode'),
                 },
             })
 
         const
             currentApiLocale = g(apiLocaleMapping, g(req, 'body', 'localeCode')),
+            orientationCode = g(req, 'body', 'orientationCode'),
 
             matchedPageCode = find(
                 g(currentApiLocale, 'pageCode'),
@@ -138,17 +142,18 @@ const
                     code
                 )
 
-            requestHandler(siteLocales)(req, res, code, withSubPageCode)
+            requestHandler(siteLocales)(req, res, code, orientationCode, withSubPageCode)
         } else
             jsonThrow400(req, res)('Unexpected/unknown "pageCode" value in request body', {
                 request: {
                     method: g(req, 'method'),
                     operation: g(req, 'params', 'operation'),
                     pageCode: g(req, 'body', 'pageCode'),
+                    orientationCode: g(req, 'body', 'orientationCode'),
                 },
             })
     })({
-        validTopLevelKeys: ['localeCode', 'pageCode', 'subPageCode'],
+        validTopLevelKeys: ['localeCode', 'orientationCode', 'pageCode', 'subPageCode'],
     }),
 
     getSiteLocale = (siteLocales, defaultSiteLocaleCode) => (req, res) => {
@@ -188,7 +193,7 @@ const
                 }
             )
 
-        if ( ! req.body.localeCode)
+        if ( ! req.body.localeCode || ! req.body.orientationCode)
             return jsonThrow400(req, res)(
                 'Some required field(s) is not provided in request body',
                 {
@@ -197,6 +202,7 @@ const
                         operation: g(req, 'params', 'operation'),
                         required: {
                             localeCode: req.body.localeCode,
+                            orientationCode: req.body.orientationCode,
                         },
                     },
                 }
@@ -204,6 +210,7 @@ const
 
         const localeCode = g(req, 'body', 'localeCode')
         unset(g(req, 'body'), 'localeCode')
+        unset(g(req, 'body'), 'orientationCode')
         const formData = g(req, 'body')
 
         searchSuggestionsRequest(siteLocales, localeCode)({
@@ -214,7 +221,7 @@ const
         .catch(jsonThrow500(req, res))
     })({
         validTopLevelKeys: [
-            'localeCode', 'classId', 'searchKey',
+            'localeCode', 'orientationCode', 'classId', 'searchKey',
         ],
     }),
 
@@ -234,7 +241,7 @@ const
                 }
             )
 
-        if ( ! req.body.localeCode)
+        if ( ! req.body.localeCode || ! req.body.orientationCode)
             return jsonThrow400(req, res)(
                 'Some required field(s) is not provided in request body',
                 {
@@ -243,6 +250,7 @@ const
                         operation: g(req, 'params', 'operation'),
                         required: {
                             localeCode: req.body.localeCode,
+                            orientationCode: req.body.orientationCode,
                         },
                     },
                 }
@@ -250,6 +258,7 @@ const
 
         const localeCode = g(req, 'body', 'localeCode')
         unset(g(req, 'body'), 'localeCode')
+        unset(g(req, 'body'), 'orientationCode')
         const formData = g(req, 'body')
 
         sendReportRequest(siteLocales, localeCode)({
@@ -260,7 +269,8 @@ const
         .catch(jsonThrow500(req, res))
     })({
         validTopLevelKeys: [
-            'localeCode', 'op', '_cid', '_gid', '_url', 'report-reason', 'report-comment',
+            'localeCode', 'orientationCode',
+            'op', '_cid', '_gid', '_url', 'report-reason', 'report-comment',
         ],
     })
 
@@ -275,6 +285,8 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
                 request: {
                     method: g(req, 'method'),
                     operation: req.params.operation,
+                    localeCode: req.body.localeCode,
+                    orientationCode: req.body.orientationCode,
                     headers: {
                         'Accept': req.headers['accept'],
                         'Content-Type': req.headers['content-type'],
@@ -291,8 +303,9 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
             {
                 request: {
                     method: g(req, 'method'),
-                    localeCode: g(req, 'body', 'localeCode'),
                     operation: req.params.operation,
+                    localeCode: g(req, 'body', 'localeCode'),
+                    orientationCode: req.body.orientationCode,
                     headers: {
                         'Accept': req.headers['accept'],
                         'Content-Type': req.headers['content-type'],
@@ -300,6 +313,18 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
                 },
             }
         )
+    else if (
+        req.body.orientationCode &&
+        !includes(orientationCodes, g(req, 'body', 'orientationCode'))
+    )
+        jsonThrow400(req, res)('Provided orientation code (`orientationCode`) is unknown', {
+            request: {
+                method: g(req, 'method'),
+                operation: req.params.operation,
+                localeCode: req.body.localeCode,
+                orientationCode: g(req, 'body', 'orientationCode'),
+            },
+        })
     else if (g(req, 'method') === 'GET' && req.params.operation === 'get-site-locales')
         getSiteLocales(siteLocales, defaultSiteLocaleCode)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-site-locale-data')
@@ -315,6 +340,8 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
             request: {
                 method: g(req, 'method'),
                 operation: req.params.operation,
+                localeCode: req.body.localeCode,
+                orientationCode: req.body.orientationCode,
             },
         })
 }

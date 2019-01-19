@@ -330,6 +330,7 @@ export const getPageData = (siteLocales, localeCode) => async ({
     headers,
     pageCode,
     subPageCode,
+    orientationCode,
 }) => {
     // To assign it in conditions, done it this way to reduce human-factor mistakes
     // (like you may accidentally write `locale.home.code` in condition
@@ -339,10 +340,12 @@ export const getPageData = (siteLocales, localeCode) => async ({
 
     const
         localeBranch = (...xs) => g(apiLocales, [localeCode, 'pageCode'].concat(xs)),
+        orientationPrefix = g(apiLocales, localeCode, 'orientationPrefixes', orientationCode),
 
         urlFunc = url => url
             .replace(/%PAGE_CODE%/g, pageCode)
-            .replace(/%SUB_PAGE_CODE%/g, subPageCode),
+            .replace(/%SUB_PAGE_CODE%/g, subPageCode)
+            .replace(/%ORIENTATION_PFX%/g, orientationPrefix),
 
         result =
             pageCode === (x = localeBranch('home'), g(x, 'code'))

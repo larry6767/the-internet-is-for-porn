@@ -43,6 +43,11 @@ const
             pagination: exact({
                 qsKey: PropTypes.string,
             }),
+            orientation: exact({
+                straight: PropTypes.string,
+                gay: PropTypes.string,
+                tranny: PropTypes.string,
+            }),
         })
     },
 
@@ -152,6 +157,17 @@ const
         })
     },
 
+    i18nOrientationModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            straight: PropTypes.string,
+            gay: PropTypes.string,
+            tranny: PropTypes.string,
+        })
+    },
+
     i18nSearchModel = i18nSearchModelBuilder(false),
     immutableI18nSearchModel = i18nSearchModelBuilder(true),
 
@@ -173,6 +189,9 @@ const
     i18nReportModel = i18nReportModelBuilder(false),
     immutableI18nReportModel = i18nReportModelBuilder(true),
 
+    i18nOrientationModel = i18nOrientationModelBuilder(false),
+    immutableI18nOrientationModel = i18nOrientationModelBuilder(true),
+
     i18nModelBuilder = isImmutable => {
         const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
@@ -185,6 +204,7 @@ const
             buttons: isImmutable ? immutableI18nButtonsModel : i18nButtonsModel,
             footer: isImmutable ? immutableI18nFooterModel : i18nFooterModel,
             report: isImmutable ? immutableI18nReportModel : i18nReportModel,
+            orientation: isImmutable ? immutableI18nOrientationModel : i18nOrientationModel,
         })
     }
 
@@ -196,6 +216,7 @@ export {
     i18nButtonsModel, immutableI18nButtonsModel,
     i18nFooterModel, immutableI18nFooterModel,
     i18nReportModel, immutableI18nReportModel,
+    i18nOrientationModel, immutableI18nOrientationModel,
 }
 
 export const

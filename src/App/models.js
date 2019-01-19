@@ -12,6 +12,7 @@ export {
     i18nButtonsModel, immutableI18nButtonsModel,
     i18nFooterModel, immutableI18nFooterModel,
     i18nReportModel, immutableI18nReportModel,
+    i18nOrientationModel, immutableI18nOrientationModel,
     i18nModel, immutableI18nModel,
 } from '../dev-modules/initialModels'
 
@@ -46,7 +47,10 @@ export const
                     `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
                     `(it doesn't match proper archive id format). Validation failed.`
                 )
-        }
+        },
+
+    orientationCodes = Object.freeze(['straight', 'gay', 'tranny']),
+    defaultOrientationCode = orientationCodes[0]
 
 const
     archiveFilmsModelBuilder = process.env.NODE_ENV === 'production' ? null : isImmutable => {

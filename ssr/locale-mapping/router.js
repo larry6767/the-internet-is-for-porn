@@ -37,6 +37,11 @@ const
             pagination: {
                 qsKey: 'page',
             },
+            orientation: {
+                straight: '',
+                gay: '/gays',
+                tranny: '/shemales',
+            },
         },
         deu: {
             routes: {
@@ -68,6 +73,11 @@ const
             },
             pagination: {
                 qsKey: 'seite',
+            },
+            orientation: {
+                straight: '',
+                gay: '/gay',
+                tranny: '/transe',
             },
         },
         ita: {
@@ -101,6 +111,11 @@ const
             pagination: {
                 qsKey: 'pagina',
             },
+            orientation: {
+                straight: '',
+                gay: '/gay',
+                tranny: '/transessuale',
+            },
         },
         fra: { // TODO
             routes: {
@@ -132,6 +147,11 @@ const
             },
             pagination: {
                 qsKey: '',
+            },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
             },
         },
         spa: { // TODO
@@ -165,6 +185,11 @@ const
             pagination: {
                 qsKey: '',
             },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
+            },
         },
         por: { // TODO
             routes: {
@@ -196,6 +221,11 @@ const
             },
             pagination: {
                 qsKey: '',
+            },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
             },
         },
         swe: { // TODO
@@ -229,6 +259,11 @@ const
             pagination: {
                 qsKey: '',
             },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
+            },
         },
         nld: { // TODO
             routes: {
@@ -260,6 +295,11 @@ const
             },
             pagination: {
                 qsKey: '',
+            },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
             },
         },
         fin: { // TODO
@@ -293,6 +333,11 @@ const
             pagination: {
                 qsKey: '',
             },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
+            },
         },
         rus: { // TODO
             routes: {
@@ -325,6 +370,11 @@ const
             pagination: {
                 qsKey: '',
             },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
+            },
         },
         tur: { // TODO
             routes: {
@@ -356,6 +406,11 @@ const
             },
             pagination: {
                 qsKey: '',
+            },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
             },
         },
     })

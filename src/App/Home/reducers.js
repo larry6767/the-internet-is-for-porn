@@ -1,26 +1,31 @@
 import {handleActions} from 'redux-actions'
 import {fromJS, List, Map} from 'immutable'
+
+import {defaultOrientationCode} from '../models'
+import {plainProvedGet as g} from '../helpers'
 import actions from './actions'
 
 export default
     handleActions({
-        [actions.loadPageRequest]: (state) => state.merge({
+        [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
+            lastOrientationCode: g(payload, 'orientationCode'),
             pageText: Map(),
             nichesList: List(),
             pornstarsList: List(),
         }),
-        [actions.loadPageSuccess]: (state, {payload: {data}}) => state.merge({
+        [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            pageText: Map(fromJS(data.pageText)),
-            nichesList: List(fromJS(data.nichesList)),
-            pornstarsList: List(fromJS(data.pornstarsList)),
+            lastOrientationCode: g(payload, 'orientationCode'),
+            pageText: Map(fromJS(g(payload, 'data', 'pageText'))),
+            nichesList: List(fromJS(g(payload, 'data', 'nichesList'))),
+            pornstarsList: List(fromJS(g(payload, 'data', 'pornstarsList'))),
         }),
-        [actions.loadPageFailure]: (state) => state.merge({
+        [g(actions, 'loadPageFailure')]: (state) => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
@@ -32,6 +37,7 @@ export default
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+        lastOrientationCode: defaultOrientationCode,
         pageText: {},
         nichesList: [
             /*

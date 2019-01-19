@@ -7,4 +7,5 @@ export const
     i18nButtonsModel = null, immutableI18nButtonsModel = null,
     i18nFooterModel = null, immutableI18nFooterModel = null,
     i18nReportModel = null, immutableI18nReportModel = null,
+    i18nOrientationModel = null, immutableI18nOrientationModel = null,
     i18nModel = null, immutableI18nModel = null
