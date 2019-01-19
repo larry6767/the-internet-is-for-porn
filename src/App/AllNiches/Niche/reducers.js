@@ -11,7 +11,10 @@ import {
     immutableArchiveFilmsModel,
     immutablePageTextModel,
     PageTextRecord,
+    orientationCodes,
+    defaultOrientationCode,
 } from '../../models'
+
 import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
 import actions from './actions'
 
@@ -23,6 +26,7 @@ const
 
         currentPage: PropTypes.string,
         currentSubPage: PropTypes.string,
+        lastOrientationCode: PropTypes.oneOf(orientationCodes),
         lastSubPageForRequest: PropTypes.string,
 
         pageNumber: PropTypes.number,
@@ -75,7 +79,8 @@ export default
             isFailed: false,
             currentPage: '',
             currentSubPage: '',
-            lastSubPageForRequest: payload,
+            lastOrientationCode: g(payload, 'orientationCode'),
+            lastSubPageForRequest: g(payload, 'subPageForRequest'),
             pageNumber: 1,
             pagesCount: 1,
             pageText: PageTextRecord(),
@@ -101,6 +106,7 @@ export default
                 isFailed: false,
                 currentPage: g(payload, 'data', 'currentPage'),
                 currentSubPage: g(payload, 'data', 'currentSubPage'),
+                lastOrientationCode: g(payload, 'orientationCode'),
                 lastSubPageForRequest: g(payload, 'subPageForRequest'),
                 pageNumber: g(payload, 'data', 'pageNumber'),
                 pagesCount: g(payload, 'data', 'pagesCount'),
@@ -143,6 +149,7 @@ export default
         isFailed: false,
         currentPage: '',
         currentSubPage: '',
+        lastOrientationCode: defaultOrientationCode,
         lastSubPageForRequest: '',
         pageNumber: 1,
         pagesCount: 1,

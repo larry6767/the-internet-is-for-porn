@@ -18,6 +18,8 @@ const
 export default provedHandleActions(stateModel, {
     [g(actions, 'switchOrientation')]: (state, action) =>
         state.set('currentOrientation', g(action, 'payload')),
+    [g(actions, 'setOrientation')]: (state, action) =>
+        state.set('currentOrientation', g(action, 'payload')),
 }, fromJS({
     currentOrientation: defaultOrientationCode,
 }))

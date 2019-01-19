@@ -7,8 +7,8 @@ import actions from './actions'
 
 // Helper HOC
 export default compose(
-    connect(null, {switchOrientation: g(actions, 'switchOrientation')}),
-    withHandlers({orient: props => x => props.switchOrientation(x)}),
+    connect(null, {setOrientation: g(actions, 'setOrientation')}),
+    withHandlers({orient: props => x => props.setOrientation(x)}),
     lifecycle({
         componentDidMount() {
             if (this.props.hasOwnProperty('orientationCode'))

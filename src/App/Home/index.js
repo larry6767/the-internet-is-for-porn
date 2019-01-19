@@ -142,7 +142,7 @@ const
             ig(home, 'isLoading') ||
             (
                 (ig(home, 'isLoaded') || ig(home, 'isFailed')) &&
-                currentOrientation === ig(home, 'lastOrientationCode')
+                g(currentOrientation, []) === ig(home, 'lastOrientationCode')
             )
         ))
             loadPage()

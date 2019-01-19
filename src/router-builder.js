@@ -1,4 +1,4 @@
-import {get, padStart} from 'lodash'
+import {get, padStart, flatten} from 'lodash'
 import React from 'react'
 import {Route, Switch, Redirect} from 'react-router-dom'
 import queryString from 'query-string'
@@ -15,13 +15,14 @@ import {
     setPropTypes,
 } from './App/helpers'
 
-import {routerContextModel, orientationCodes, defaultOrientationCode} from './App/models'
+import {routerContextModel, orientationCodes} from './App/models'
 
 import Home from './App/Home'
 import homeActions from './App/Home/actions'
 import {loadHomeFlow} from './App/Home/sagas'
 
 import AllNiches from './App/AllNiches'
+import allNichesActions from './App/AllNiches/actions'
 import {loadAllNichesPageFlow} from './App/AllNiches/sagas'
 
 import Niche from './App/AllNiches/Niche'
@@ -113,55 +114,65 @@ export const
                 return `${orientationPfx}/`
             },
             link: (r, orientationCode = null) => {
-                orientationCode =  orientationCode || defaultOrientationCode
-
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', orientationCode)
-
+                orientationCode = orientationCode || ig(r, 'currentOrientation')
+                const orientationPfx = ig(r, 'router', 'orientation', orientationCode)
                 return `${orientationPfx}/`
             },
         }),
 
         allNiches: Object.freeze({
-            path: r => {
-                const allNiches = ig(r, 'router', 'routes', 'allNiches', 'section')
-                return `/${allNiches}`
+            path: (r, orientationCode) => {
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
+                    allNiches = ig(r, 'router', 'routes', 'allNiches', 'section')
+
+                return `${orientationPfx}/${allNiches}`
             },
             link: r => {
-                const allNiches = ig(r, 'router', 'routes', 'allNiches', 'section')
-                return `/${allNiches}`
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
+                    allNiches = ig(r, 'router', 'routes', 'allNiches', 'section')
+
+                return `${orientationPfx}/${allNiches}`
             },
         }),
         niche: Object.freeze({
-            path: r => {
-                const niche = ig(r, 'router', 'routes', 'niche', 'section')
-                return `/${niche}/:child`
+            path: (r, orientationCode) => {
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
+                    niche = ig(r, 'router', 'routes', 'niche', 'section')
+
+                return `${orientationPfx}/${niche}/:child`
             },
             link: (r, child, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
+                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     niche = ig(r, 'router', 'routes', 'niche', 'section'),
                     qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
 
-                return `/${niche}/${child}${renderQs(qs)}`
+                return `${orientationPfx}/${niche}/${child}${renderQs(qs)}`
             },
         }),
         nicheArchive: Object.freeze({
-            path: r => {
+            path: (r, orientationCode) => {
                 const
+                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
                     niche = ig(r, 'router', 'routes', 'niche', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label')
 
-                return `/${niche}/:child/${archive}/(\\d{4})-(\\d{2})`
+                return `${orientationPfx}/${niche}/:child/${archive}/(\\d{4})-(\\d{2})`
             },
             link: (r, child, year, month, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
+                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     niche = ig(r, 'router', 'routes', 'niche', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label'),
                     qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
 
                 year = padStart(year, 4, '0')
                 month = padStart(month, 2, '0')
-                return `/${niche}/${child}/${archive}/${year}-${month}${renderQs(qs)}`
+                return `${orientationPfx
+                    }/${niche}/${child}/${archive}/${year}-${month}${renderQs(qs)}`
             }
         }),
 
@@ -352,58 +363,98 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         }}
     />)}
 
-    <Route exact path={routerGetters.allNiches.path(r)} render={props => {
-        const currentSection = 'allNiches'
+    {flatten(orientationCodes.map(orientationCode => [
+        <Route
+            key={`${orientationCode}-allNiches`}
+            exact
+            path={routerGetters.allNiches.path(r, orientationCode)}
+            render={props => {
+                const currentSection = 'allNiches'
 
-        if (get(props, ['staticContext', 'isPreRouting'])) {
-            props.staticContext.saga = loadAllNichesPageFlow.bind(null, null)
-            props.staticContext.statusCodeResolver = status500(['app', 'niches', 'all', 'isFailed'])
-            props.staticContext.currentSection = currentSection
-            return null
-        } else
-            return <AllNiches {...props} currentSection={currentSection}/>
-    }}/>
-    <Route path={routerGetters.nicheArchive.path(r)} render={props => {
-        const currentSection = 'allNiches'
+                if (get(props, ['staticContext', 'isPreRouting'])) {
+                    const
+                        {staticContext: x} = props,
+                        action = allNichesActions.loadPageRequest({orientationCode})
 
-        if (get(props, ['staticContext', 'isPreRouting'])) {
-            const
-                qs = queryString.parse(ig(r, 'location', 'search')),
-                {match: {params}, staticContext: x} = props,
-                action = nicheActions.loadPageRequest(localizedGetSubPage(r)(
-                    g(params, 'child'),
-                    get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                    get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
-                    [g(params, 0), g(params, 1)]
-                ))
+                    x.saga = loadAllNichesPageFlow.bind(null, action)
+                    x.statusCodeResolver = status500(['app', 'niches', 'all', 'isFailed'])
+                    x.currentOrientation = orientationCode
+                    x.currentSection = currentSection
+                    return null
+                } else
+                    return <AllNiches
+                        {...props}
+                        currentSection={currentSection}
+                        orientationCode={orientationCode}
+                    />
+            }}
+        />,
+        <Route
+            key={`${orientationCode}-nicheArchive`}
+            path={routerGetters.nicheArchive.path(r, orientationCode)}
+            render={props => {
+                const currentSection = 'allNiches'
 
-            x.saga = loadNichePageFlow.bind(null, action)
-            x.statusCodeResolver = status500(['app', 'niches', 'niche', 'isFailed'])
-            x.currentSection = currentSection
-            return null
-        } else
-            return <Niche {...props} currentSection={currentSection}/>
-    }}/>
-    <Route path={routerGetters.niche.path(r)} render={props => {
-        const currentSection = 'allNiches'
+                if (get(props, ['staticContext', 'isPreRouting'])) {
+                    const
+                        qs = queryString.parse(ig(r, 'location', 'search')),
+                        {match: {params}, staticContext: x} = props,
+                        action = nicheActions.loadPageRequest({
+                            orientationCode,
+                            subPageForRequest: localizedGetSubPage(r)(
+                                g(params, 'child'),
+                                get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
+                                [g(params, 0), g(params, 1)]
+                            ),
+                        })
 
-        if (get(props, ['staticContext', 'isPreRouting'])) {
-            const
-                qs = queryString.parse(ig(r, 'location', 'search')),
-                {match: {params}, staticContext: x} = props,
-                action = nicheActions.loadPageRequest(localizedGetSubPage(r)(
-                    g(params, 'child'),
-                    get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                    get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
-                ))
+                    x.saga = loadNichePageFlow.bind(null, action)
+                    x.statusCodeResolver = status500(['app', 'niches', 'niche', 'isFailed'])
+                    x.currentOrientation = orientationCode
+                    x.currentSection = currentSection
+                    return null
+                } else
+                    return <Niche
+                        {...props}
+                        currentSection={currentSection}
+                        orientationCode={orientationCode}
+                    />
+            }}
+        />,
+        <Route
+            key={`${orientationCode}-niche`}
+            path={routerGetters.niche.path(r, orientationCode)}
+            render={props => {
+                const currentSection = 'allNiches'
 
-            x.saga = loadNichePageFlow.bind(null, action)
-            x.statusCodeResolver = status500(['app', 'niches', 'niche', 'isFailed'])
-            x.currentSection = currentSection
-            return null
-        } else
-            return <Niche {...props} currentSection={currentSection}/>
-    }}/>
+                if (get(props, ['staticContext', 'isPreRouting'])) {
+                    const
+                        qs = queryString.parse(ig(r, 'location', 'search')),
+                        {match: {params}, staticContext: x} = props,
+                        action = nicheActions.loadPageRequest({
+                            orientationCode,
+                            subPageForRequest: localizedGetSubPage(r)(
+                                g(params, 'child'),
+                                get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
+                            ),
+                        })
+
+                    x.saga = loadNichePageFlow.bind(null, action)
+                    x.statusCodeResolver = status500(['app', 'niches', 'niche', 'isFailed'])
+                    x.currentOrientation = orientationCode
+                    x.currentSection = currentSection
+                    return null
+                } else
+                    return <Niche
+                        {...props}
+                        currentSection={currentSection}
+                        orientationCode={orientationCode}
+                    />
+            }}
+        />,
+    ]))}
 
     <Redirect
         exact

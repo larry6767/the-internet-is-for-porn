@@ -8,6 +8,7 @@ const
     RouterContextRecord = Record({
         location: null,
         router: null,
+        currentOrientation: null,
     })
 
 export default state => {
@@ -15,6 +16,7 @@ export default state => {
         result = RouterContextRecord({
             location: ig(state, 'router', 'location'),
             router: ig(state, 'app', 'locale', 'router'),
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
         })
 
     if (process.env.NODE_ENV !== 'production')

@@ -17,21 +17,6 @@ export {
 } from '../dev-modules/initialModels'
 
 export const
-    routerLocationModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exact({
-            hash: PropTypes.string,
-            pathname: PropTypes.string,
-            search: PropTypes.string,
-            state: ImmutablePropTypes.shape({}).isOptional,
-            key: PropTypes.string.isOptional,
-        }),
-
-    routerContextModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exactRecordOf({
-            location: routerLocationModel,
-            router: immutableLocaleRouterModel,
-        }),
-
     // year+month like `201901` where `2019` is year and `01` is month
     archiveIdReg = /^(\d{4})(\d{2})$/,
 
@@ -50,7 +35,23 @@ export const
         },
 
     orientationCodes = Object.freeze(['straight', 'gay', 'tranny']),
-    defaultOrientationCode = orientationCodes[0]
+    defaultOrientationCode = orientationCodes[0],
+
+    routerLocationModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exact({
+            hash: PropTypes.string,
+            pathname: PropTypes.string,
+            search: PropTypes.string,
+            state: ImmutablePropTypes.shape({}).isOptional,
+            key: PropTypes.string.isOptional,
+        }),
+
+    routerContextModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exactRecordOf({
+            location: routerLocationModel,
+            router: immutableLocaleRouterModel,
+            currentOrientation: PropTypes.oneOf(orientationCodes),
+        })
 
 const
     archiveFilmsModelBuilder = process.env.NODE_ENV === 'production' ? null : isImmutable => {
