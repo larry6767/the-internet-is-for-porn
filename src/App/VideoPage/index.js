@@ -11,6 +11,7 @@ import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
 
 import {
+    getHeaderText,
     immutableProvedGet as ig,
     PropTypes,
     getSubPage,
@@ -23,6 +24,7 @@ import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
 import ReportDialog from './ReportDialog'
 
+import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import appActions from '../actions'
 import {muiStyles} from './assets/muiStyles'
@@ -265,7 +267,7 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({match, data, loadPage}) => {
+    loadPageFlow = ({match, data, loadPage, setHeaderText}) => {
         const
             subPageForRequest = getSubPage(`${match.params.child}/${match.params.name}`)
 
@@ -286,6 +288,8 @@ const
             )
         ))
             loadPage(subPageForRequest)
+        else if (ig(data, 'isLoaded'))
+            setHeaderText(getHeaderText(data, true, false))
     }
 
 export default compose(
@@ -308,6 +312,7 @@ export default compose(
         }),
         dispatch => ({
             loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
+            setHeaderText: headerText => dispatch(headerActions.setNewText(headerText)),
             closeAdvertisementHandler: () => dispatch(actions.closeAdvertisement()),
             toggleReportDialogHandler: () => dispatch(actions.toggleReportDialog()),
             addVideoToFavoriteHandler: (video, e) => {

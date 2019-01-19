@@ -38,7 +38,7 @@ export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
             yield put(actions.setTimeAndHrefForReport({href, time}))
         }
 
-        yield put(headerActions.setNewText(getHeaderText(data)))
+        yield put(headerActions.setNewText(getHeaderText(data, false, false)))
         yield put(actions.loadPageSuccess({subPageForRequest, data}))
     } catch (err) {
         console.error('loadAllMoviesPageFlow is failed with exception:', err)
