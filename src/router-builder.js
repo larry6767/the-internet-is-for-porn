@@ -625,6 +625,13 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     ]))}
 
     {/* favorite */}
+    {/*
+        Favorite pages are shared for all orientations, so no need for orientation routes.
+        We could implement in the future filters such as "all favorie pornstars/videos" and
+        "straight/gay/tranny favorite pornstars/videos" on frontend side only if we refactor that
+        cookies for favorites by replacing them with `window.localStorage` while simulating cookies
+        for backend (converting passed values in request body in to cookie header).
+    */}
     <Redirect
         exact
         from={ig(r, 'router', 'redirects', 'favorite', 'from')}
@@ -646,9 +653,14 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             )
             x.statusCodeResolver = status500(['app', 'favorite', 'isFailed'])
             x.currentSection = currentSection
+            // x.currentOrientation = orientationCode
             return null
         } else
-            return <Favorite {...props} currentSection={currentSection}/>
+            return <Favorite
+                {...props}
+                currentSection={currentSection}
+                /*orientationCode={orientationCode}*/
+            />
     }}/>
     <Redirect
         exact
@@ -666,9 +678,14 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             )
             x.statusCodeResolver = status500(['app', 'favorite', 'isFailed'])
             x.currentSection = currentSection
+            // x.currentOrientation = orientationCode
             return null
         } else
-            return <FavoritePornstars {...props} currentSection={currentSection}/>
+            return <FavoritePornstars
+                {...props}
+                currentSection={currentSection}
+                /*orientationCode={orientationCode}*/
+            />
     }}/>
 
     {/* video */}

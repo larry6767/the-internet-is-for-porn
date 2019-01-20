@@ -11,15 +11,18 @@ import {
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
+    PropTypes,
     setPropTypes,
 } from '../helpers'
 
 import {
     immutableI18nButtonsModel,
-    routerContextModel
+    routerContextModel,
+    orientationCodes,
 } from '../models'
 
 import {routerGetters} from '../../router-builder'
+import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
@@ -89,9 +92,11 @@ const
     </Page>
 
 export default compose(
+    orientationPortal,
     sectionPortal,
     connect(
         state => ({
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
@@ -103,7 +108,9 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => () => props.loadPageRequest(),
+        loadPage: props => () => props.loadPageRequest({
+            orientationCode: g(props, 'currentOrientation'),
+        }),
 
         setHeaderText: props => headerText => props.setNewText(headerText),
 
@@ -129,6 +136,7 @@ export default compose(
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        currentOrientation: PropTypes.oneOf(orientationCodes),
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
     }),
