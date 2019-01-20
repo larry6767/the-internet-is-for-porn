@@ -12,6 +12,8 @@ import {
     immutablePageTextModel,
     PageTextRecord,
     immutableModelsListWithLetterModel,
+    orientationCodes,
+    defaultOrientationCode,
 } from '../../models'
 
 import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
@@ -25,6 +27,7 @@ const
         isFailed: PropTypes.bool,
         modelInfoIsOpen: PropTypes.bool,
         currentSubPage: PropTypes.string,
+        lastOrientationCode: PropTypes.oneOf(orientationCodes),
         lastSubPageForRequest: PropTypes.string,
         pageNumber: PropTypes.number,
         pageText: immutablePageTextModel,
@@ -49,7 +52,8 @@ export default
             isFailed: false,
             modelInfoIsOpen: false,
             currentSubPage: '',
-            lastSubPageForRequest: payload,
+            lastOrientationCode: g(payload, 'orientationCode'),
+            lastSubPageForRequest: g(payload, 'subPageForRequest'),
             pageNumber: 1,
             pageText: PageTextRecord(),
             pagesCount: 1,
@@ -67,6 +71,7 @@ export default
             isFailed: false,
             modelInfoIsOpen: false,
             currentSubPage: g(payload, 'data', 'currentSubPage'),
+            lastOrientationCode: g(payload, 'orientationCode'),
             lastSubPageForRequest: g(payload, 'subPageForRequest'),
             pageNumber: g(payload, 'data', 'pageNumber'),
             pageText: PageTextRecord(g(payload, 'data', 'pageText')),
@@ -106,6 +111,7 @@ export default
         isFailed: false,
         modelInfoIsOpen: false,
         currentSubPage: '',
+        lastOrientationCode: defaultOrientationCode,
         lastSubPageForRequest: '',
         pageNumber: 1,
         pageText: PageTextRecord(),

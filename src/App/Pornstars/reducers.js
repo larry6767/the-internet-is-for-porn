@@ -7,7 +7,15 @@ import {
     provedHandleActions,
     plainProvedGet as g,
 } from '../helpers'
-import {immutablePageTextModel, PageTextRecord, immutableModelsListModel} from '../models'
+
+import {
+    immutablePageTextModel,
+    PageTextRecord,
+    immutableModelsListModel,
+    orientationCodes,
+    defaultOrientationCode,
+} from '../models'
+
 import actions from './actions'
 import pornstarReducer from './Pornstar/reducers'
 
@@ -17,6 +25,7 @@ const
             isLoading: PropTypes.bool,
             isLoaded: PropTypes.bool,
             isFailed: PropTypes.bool,
+            lastOrientationCode: PropTypes.oneOf(orientationCodes),
             pageText: immutablePageTextModel,
             modelsList: immutableModelsListModel,
         })
@@ -25,10 +34,11 @@ export default combineReducers({
     pornstar: pornstarReducer,
 
     all: provedHandleActions(allStateModel, {
-        [g(actions, 'loadPageRequest')]: state => state.merge({
+        [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
+            lastOrientationCode: g(payload, 'orientationCode'),
             modelsList: List(),
             pageText: PageTextRecord(),
         }),
@@ -36,6 +46,7 @@ export default combineReducers({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
+            lastOrientationCode: g(payload, 'orientationCode'),
             modelsList: List(fromJS(g(payload, 'data', 'modelsList'))),
             pageText: PageTextRecord(g(payload, 'data', 'pageText')),
         }),
@@ -50,6 +61,7 @@ export default combineReducers({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+        lastOrientationCode: defaultOrientationCode,
         modelsList: [],
         pageText: PageTextRecord(),
     }))
