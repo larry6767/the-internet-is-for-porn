@@ -508,6 +508,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadAllMoviesPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
+                    x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
                 } else
@@ -540,6 +541,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadAllMoviesPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
+                    x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
                 } else
@@ -577,6 +579,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadPornstarsPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'pornstars', 'all', 'isFailed'])
+                    x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
                 } else
@@ -608,6 +611,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadPornstarPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'pornstars', 'pornstar', 'isFailed'])
+                    x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
                 } else
