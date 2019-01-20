@@ -44,15 +44,17 @@ const
             <Top>
                 <TopInner>
                     <TextWrapper>
-                        <Typography
-                            variant="caption"
-                            gutterBottom
-                            classes={{
-                                root: g(classes, 'typography'),
-                            }}
-                        >
-                            {`${ig(data, 'title')}. `}
-                        </Typography>
+                        {ig(data, 'title')
+                            ? <Typography
+                                variant="caption"
+                                gutterBottom
+                                classes={{
+                                    root: g(classes, 'typography'),
+                                }}
+                            >
+                                {`${ig(data, 'title')}. `}
+                            </Typography>
+                            : null}
                         <Typography
                             variant="caption"
                             classes={{

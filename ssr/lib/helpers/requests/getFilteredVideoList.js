@@ -87,7 +87,7 @@ export default (ids, items) => map(getOrderedVideoList(ids, items), x => {
             thumb: getProp(x, 'thumb_url'),
             thumbMask: getProp(x, 'thumb_url_mask'),
             thumbs: getProp(x, 'thumbs').map(x => Number(x)),
-            favorite: Number(getProp(x, 'thumb_top')),
+            firstThumb: Number(getProp(x, 'thumb_top')),
 
             title: getProp(x, 'title'),
             sponsorId: getProp(x, 'id_sponsor'),

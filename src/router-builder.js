@@ -252,7 +252,7 @@ export const
             },
             link: (r, videoId, title) => {
                 const videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
-                return `/${videoPfx}${videoId}/${title.replace(/ /g, '-')}`
+                return `/${videoPfx}${videoId}/${title.replace(/ /g, '-').replace(/\./g, '')}`
             },
         }),
 

@@ -1,14 +1,14 @@
 import {immutableProvedGet as ig, plainProvedGet as g} from './'
 
-export default (data, isImmutable = false) => {
+export default (data, isImmutable = false, withTitle = true) => {
     if (isImmutable)
         return {
-            title: ig(data, 'pageText', 'headerTitle'),
+            title: withTitle ? ig(data, 'pageText', 'headerTitle') : null,
             description: ig(data, 'pageText', 'headerDescription'),
         }
     else
         return {
-            title: g(data, 'pageText', 'headerTitle'),
+            title: withTitle ? g(data, 'pageText', 'headerTitle') : null,
             description: g(data, 'pageText', 'headerDescription'),
         }
 }

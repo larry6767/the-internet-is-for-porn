@@ -1,18 +1,28 @@
 // TODO: this page needs propTypes
 import React from 'react'
+import {get} from 'lodash'
 import {Record, Map, List} from 'immutable'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
-import {compose, lifecycle} from 'recompose'
+import {compose, lifecycle, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
 
-import {immutableProvedGet as ig} from '../helpers'
+import {
+    getHeaderText,
+    getRouterContext,
+    localizedGetSubPage,
+    immutableProvedGet as ig,
+    plainProvedGet as g,
+} from '../helpers'
+
+import {routerGetters} from '../../router-builder'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
 import {Page, Content, PageWrapper} from './assets'
+import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
@@ -21,31 +31,28 @@ const
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-
         lastSubPageForRequest: '',
-
         pageNumber: 1,
         pageText: Map(),
         pagesCount: 1,
-
         sortList: List(),
         currentSort: null,
         itemsCount: 0,
         videoList: List(),
-
-        lastSubPage: '',
     }),
 
     FindVideos = ({
         classes,
         i18nOrdering,
+        i18nButtons,
         findVideos,
         chooseSort,
         isSSR,
+        controlLinkBuilder,
     }) => <Page>
-        { findVideos.get('isFailed')
+        { ig(findVideos, 'isFailed')
             ? <ErrorContent/>
-            : findVideos.get('isLoading')
+            : ig(findVideos, 'isLoading')
             ? <CircularProgress/>
             : <Content>
                 <PageWrapper>
@@ -60,41 +67,39 @@ const
                     </Typography>
                     <ControlBar
                         i18nOrdering={i18nOrdering}
+                        i18nButtons={i18nButtons}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        pagesCount={findVideos.get('pagesCount')}
-                        pageNumber={findVideos.get('pageNumber')}
-                        itemsCount={findVideos.get('itemsCount')}
-                        sortList={findVideos.get('sortList')}
-                        currentSort={findVideos.get('currentSort')}
-                        archiveFilms={findVideos.get('archiveFilms')}
-                        tagArchiveListOlder={findVideos.get('tagArchiveListOlder')}
-                        tagArchiveListNewer={findVideos.get('tagArchiveListNewer')}
+                        pagesCount={ig(findVideos, 'pagesCount')}
+                        pageNumber={ig(findVideos, 'pageNumber')}
+                        itemsCount={ig(findVideos, 'itemsCount')}
+                        sortList={ig(findVideos, 'sortList')}
+                        currentSort={ig(findVideos, 'currentSort')}
+                        archiveFilms={null}
+                        tagArchiveListOlder={null}
+                        tagArchiveListNewer={null}
+                        linkBuilder={controlLinkBuilder}
+                        archiveLinkBuilder={null}
                     />
                     <VideoList
-                        videoList={findVideos.get('videoList')}
+                        videoList={ig(findVideos, 'videoList')}
                     />
                 </PageWrapper>
             </Content>
         }
     </Page>,
 
-    loadPageFlow = ({search, findVideos, loadPage}) => {
+    loadPageFlow = ({
+        search, routerContext, findVideos,
+        loadPage, setHeaderText,
+    }) => {
         const
-            {sort, page, key} = queryString.parse(search)
-
-        let // !== relevant - because relevant by default, without postfix '-relevant'
-            subPageForRequest = sort && sort !== 'relevant'
-                ? `-${sort}`
-                : ''
-
-            subPageForRequest = key
-                ? `${subPageForRequest}?q=${key}`
-                : subPageForRequest
-
-            subPageForRequest = page > 0
-                ? `${subPageForRequest}&p=${page}`
-                : subPageForRequest
+            qs = queryString.parse(search),
+            ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
+            pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
+            searchQuery = get(qs, [ig(routerContext, 'router', 'searchQuery', 'qsKey')], null),
+            getSubPage = localizedGetSubPage(routerContext),
+            subPageForRequest = getSubPage(null, ordering, pagination, null, searchQuery)
 
         if (typeof subPageForRequest !== 'string')
             throw new Error(
@@ -106,13 +111,15 @@ const
         // "unless" condition.
         // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
         if (!(
-            findVideos.get('isLoading') ||
+            ig(findVideos, 'isLoading') ||
             (
-                (findVideos.get('isLoaded') || findVideos.get('isFailed')) &&
-                subPageForRequest === findVideos.get('lastSubPageForRequest')
+                (ig(findVideos, 'isLoaded') || ig(findVideos, 'isFailed')) &&
+                subPageForRequest === ig(findVideos, 'lastSubPageForRequest')
             )
         ))
             loadPage(subPageForRequest)
+        else if (ig(findVideos, 'isLoaded'))
+            setHeaderText(getHeaderText(findVideos, true))
     }
 
 export default compose(
@@ -123,16 +130,28 @@ export default compose(
             findVideos: FindVideosRecord(ig(state, 'app', 'findVideos')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             search: ig(state, 'router', 'location', 'search'),
+            routerContext: getRouterContext(state),
+            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
         }),
-        dispatch => ({
-            loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
-            chooseSort: (newSortValue, stringifiedQS) => dispatch(actions.setNewSort({
-                newSortValue: newSortValue,
-                stringifiedQS: stringifiedQS
-            }))
-        })
+        {
+            loadPageRequest: g(actions, 'loadPageRequest'),
+            setNewSort: g(actions, 'setNewSort'),
+            setNewText: g(headerActions, 'setNewText'),
+        }
     ),
+    withHandlers({
+        loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+
+        setHeaderText: props => headerText => props.setNewText(headerText),
+
+        chooseSort: props => newSortValue => props.setNewSort({newSortValue}),
+
+        controlLinkBuilder: props => qsParams => routerGetters.findVideos.link(
+            g(props, 'routerContext'),
+            qsParams
+        ),
+    }),
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)

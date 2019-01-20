@@ -53,14 +53,14 @@ const
         isSSR, modelInfoHandler, modelInfoIsOpen,
         controlLinkBuilder, modelLinkBuilder,
     }) => <Page>
-        { pornstar.get('isFailed')
+        { ig(pornstar, 'isFailed')
             ? <ErrorContent/>
-            : pornstar.get('isLoading')
+            : ig(pornstar, 'isLoading')
             ? <CircularProgress/>
             : <Content>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
-                    modelsList={pornstar.get('modelsList')}
+                    modelsList={ig(pornstar, 'modelsList')}
                     modelLinkBuilder={modelLinkBuilder}
                 />
                 <PageWrapper>
@@ -68,8 +68,8 @@ const
                         {pornstar.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <Info
-                        modelThumb={pornstar.get('modelThumb')}
-                        modelInfo={pornstar.get('modelInfo')}
+                        modelThumb={ig(pornstar, 'modelThumb')}
+                        modelInfo={ig(pornstar, 'modelInfo')}
                         modelInfoHandler={modelInfoHandler}
                         modelInfoIsOpen={modelInfoIsOpen}
                         currentBreakpoint={currentBreakpoint}
@@ -80,11 +80,11 @@ const
                         i18nButtons={i18nButtons}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        pagesCount={pornstar.get('pagesCount')}
-                        pageNumber={pornstar.get('pageNumber')}
-                        itemsCount={pornstar.get('itemsCount')}
-                        sortList={pornstar.get('sortList')}
-                        currentSort={pornstar.get('currentSort')}
+                        pagesCount={ig(pornstar, 'pagesCount')}
+                        pageNumber={ig(pornstar, 'pageNumber')}
+                        itemsCount={ig(pornstar, 'itemsCount')}
+                        sortList={ig(pornstar, 'sortList')}
+                        currentSort={ig(pornstar, 'currentSort')}
                         archiveFilms={null}
                         tagArchiveListOlder={null}
                         tagArchiveListNewer={null}
@@ -92,7 +92,7 @@ const
                         archiveLinkBuilder={null}
                     />
                     <VideoList
-                        videoList={pornstar.get('videoList')}
+                        videoList={ig(pornstar, 'videoList')}
                     />
                 </PageWrapper>
             </Content>
@@ -100,7 +100,7 @@ const
     </Page>,
 
     loadPageFlow = ({
-        search, routerContext, pornstarCode, match, pornstar,
+        search, routerContext, pornstarCode, pornstar,
         loadPage, setHeaderText
     }) => {
         const
@@ -120,10 +120,10 @@ const
         // "unless" condition.
         // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
         if (!(
-            pornstar.get('isLoading') ||
+            ig(pornstar, 'isLoading') ||
             (
-                (pornstar.get('isLoaded') || pornstar.get('isFailed')) &&
-                subPageForRequest === pornstar.get('lastSubPageForRequest')
+                (ig(pornstar, 'isLoaded') || ig(pornstar, 'isFailed')) &&
+                subPageForRequest === ig(pornstar, 'lastSubPageForRequest')
             )
         ))
             loadPage(subPageForRequest)

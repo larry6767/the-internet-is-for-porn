@@ -1,56 +1,42 @@
-import {fromJS, List, Map} from 'immutable'
+import {fromJS, List} from 'immutable'
 
 import {ImmutablePropTypes, PropTypes, provedHandleActions, plainProvedGet as g} from '../helpers'
+
+import {
+    immutablePageTextModel,
+    PageTextRecord,
+} from '../models'
+
 import {immutableVideoItemModel} from '../../generic/VideoItem/models'
 import actions from './actions'
 
 const
-    model = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
+    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
         lastSubPageForRequest: PropTypes.string,
         pageNumber: PropTypes.number,
-        pageText: ImmutablePropTypes.exact({
-            description: PropTypes.string,
-            headerDescription: PropTypes.string,
-            headerTitle: PropTypes.string,
-            keywords: PropTypes.string,
-            listHeader: PropTypes.string,
-            listHeaderEmpty: PropTypes.string,
-            title: PropTypes.string,
-            galleryTitle: PropTypes.string.isOptional,
-        }),
+        pageText: immutablePageTextModel,
         pagesCount: PropTypes.number,
         sortList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
             isActive: PropTypes.bool,
             code: PropTypes.string,
         })),
-        currentSort: PropTypes.string.isOptional, // may be `null`
+        currentSort: PropTypes.nullable(PropTypes.string),
         itemsCount: PropTypes.number,
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
-    }),
-
-    emptyPageText = fromJS({
-        description: '',
-        headerDescription: '',
-        headerTitle: '',
-        keywords: '',
-        listHeader: '',
-        listHeaderEmpty: '',
-        title: '',
-        galleryTitle: null,
     })
 
 export default
-    provedHandleActions(model, {
+    provedHandleActions(stateModel, {
         [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
             lastSubPageForRequest: payload,
             pageNumber: 1,
-            pageText: emptyPageText,
+            pageText: PageTextRecord(),
             pagesCount: 1,
             sortList: List(),
             currentSort: null,
@@ -63,7 +49,7 @@ export default
             isFailed: false,
             lastSubPageForRequest: subPageForRequest,
             pageNumber: data.pageNumber,
-            pageText: Map(fromJS(g(data, 'pageText'))),
+            pageText: PageTextRecord(g(data, 'pageText')),
             pagesCount: data.pagesCount,
             sortList: List(fromJS(g(data, 'sortList'))),
             currentSort: g(data, 'currentSort'),
@@ -75,7 +61,7 @@ export default
             isLoaded: false,
             isFailed: true,
             pageNumber: 1,
-            pageText: emptyPageText,
+            pageText: PageTextRecord(),
             pagesCount: 1,
             sortList: List(),
             currentSort: null,
@@ -90,7 +76,7 @@ export default
         isFailed: false,
         lastSubPageForRequest: '',
         pageNumber: 1,
-        pageText: emptyPageText,
+        pageText: PageTextRecord(),
         pagesCount: 1,
         sortList: [],
         currentSort: null,
