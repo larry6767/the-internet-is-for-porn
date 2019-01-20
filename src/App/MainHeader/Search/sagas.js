@@ -11,6 +11,7 @@ export function* loadSuggestionsFlow({payload: formData}) {
         const
             reqData = yield select(x => ({
                 localeCode: ig(x, 'app', 'locale', 'localeCode'),
+                orientationCode: ig(x, 'app', 'mainHeader', 'niche', 'currentOrientation'),
                 ...formData
             })),
 

@@ -2,7 +2,15 @@ import {fromJS, List, Map} from 'immutable'
 
 import {ImmutablePropTypes, PropTypes, provedHandleActions, plainProvedGet as g} from '../helpers'
 import {immutableVideoItemModel} from '../../generic/VideoItem/models'
-import {immutableArchiveFilmsModel, immutablePageTextModel, PageTextRecord} from '../models'
+
+import {
+    immutableArchiveFilmsModel,
+    immutablePageTextModel,
+    PageTextRecord,
+    orientationCodes,
+    defaultOrientationCode,
+} from '../models'
+
 import actions from './actions'
 
 const
@@ -11,6 +19,7 @@ const
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
         currentPage: PropTypes.string,
+        lastOrientationCode: PropTypes.oneOf(orientationCodes),
         lastSubPageForRequest: PropTypes.string,
         pageNumber: PropTypes.number,
         pageText: immutablePageTextModel,
@@ -54,7 +63,8 @@ export default
             isLoaded: false,
             isFailed: false,
             currentPage: '',
-            lastSubPageForRequest: payload,
+            lastOrientationCode: g(payload, 'orientationCode'),
+            lastSubPageForRequest: g(payload, 'subPageForRequest'),
             pageNumber: 1,
             pageText: PageTextRecord(),
             pagesCount: 1,
@@ -79,6 +89,7 @@ export default
                 isLoaded: true,
                 isFailed: false,
                 currentPage: g(payload, 'data', 'currentPage'),
+                lastOrientationCode: g(payload, 'orientationCode'),
                 lastSubPageForRequest: g(payload, 'subPageForRequest'),
                 pageNumber: g(payload, 'data', 'pageNumber'),
                 pageText: PageTextRecord(g(payload, 'data', 'pageText')),
@@ -119,6 +130,7 @@ export default
         isLoaded: false,
         isFailed: false,
         currentPage: '',
+        lastOrientationCode: defaultOrientationCode,
         lastSubPageForRequest: '',
         pageNumber: 1,
         pageText: PageTextRecord(),

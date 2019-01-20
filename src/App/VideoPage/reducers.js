@@ -1,37 +1,42 @@
 import {handleActions} from 'redux-actions'
 import {fromJS, List, Map} from 'immutable'
+
+import {plainProvedGet as g} from '../helpers'
+import {defaultOrientationCode} from '../models'
 import actions from './actions'
 
 export default
     handleActions({
-        [actions.loadPageRequest]: (state, {payload}) => state.merge({
+        [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            lastSubPageForRequest: payload,
+            lastOrientationCode: g(payload, 'orientationCode'),
+            lastSubPageForRequest: g(payload, 'subPageForRequest'),
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
             pageText: Map(),
             gallery: Map(),
             videoList: List(),
         }),
-        [actions.loadPageSuccess]: (state, {payload: {data, subPageForRequest}}) => state.merge({
+        [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            lastSubPageForRequest: subPageForRequest,
+            lastOrientationCode: g(payload, 'orientationCode'),
+            lastSubPageForRequest: g(payload, 'subPageForRequest'),
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
-            pageText: Map(fromJS(data.pageText)),
-            gallery: Map(fromJS(data.gallery)),
-            videoList: List(fromJS(data.videoList)),
+            pageText: Map(fromJS(g(payload, 'data', 'pageText'))),
+            gallery: Map(fromJS(g(payload, 'data', 'gallery'))),
+            videoList: List(fromJS(g(payload, 'data', 'videoList'))),
 
             // clearing report state for new content
             reportIsSending: false,
             reportIsSent: false,
             reportIsNotSent: false,
         }),
-        [actions.loadPageFailure]: state => state.merge({
+        [g(actions, 'loadPageFailure')]: state => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
@@ -41,25 +46,26 @@ export default
             gallery: Map(),
             videoList: List(),
         }),
-        [actions.sendReportRequest]: state => state.merge({
+        [g(actions, 'sendReportRequest')]: state => state.merge({
             reportIsSending: true,
             reportIsSent: false,
             reportIsNotSent: false,
         }),
-        [actions.sendReportSuccess]: state => state.merge({
+        [g(actions, 'sendReportSuccess')]: state => state.merge({
             reportIsSending: false,
             reportIsSent: true,
             reportIsNotSent: false,
         }),
-        [actions.sendReportFailure]: state => state.merge({
+        [g(actions, 'sendReportFailure')]: state => state.merge({
             reportIsSending: false,
             reportIsSent: false,
             reportIsNotSent: true,
         }),
-        [actions.closeAdvertisement]: state => state.set('inlineAdvertisementIsShowed', false),
-        [actions.toggleReportDialog]: state =>
+        [g(actions, 'closeAdvertisement')]: state =>
+            state.set('inlineAdvertisementIsShowed', false),
+        [g(actions, 'toggleReportDialog')]: state =>
             state.set('reportDialogIsOpen', !state.get('reportDialogIsOpen')),
-        [actions.setTimeAndHrefForReport]: (state, {payload: {href, time}}) =>
+        [g(actions, 'setTimeAndHrefForReport')]: (state, {payload: {href, time}}) =>
             state.merge({
                 currentHref: href,
                 currentTime: time,
@@ -71,6 +77,7 @@ export default
         reportIsSending: false,
         reportIsSent: false,
         reportIsNotSent: false,
+        lastOrientationCode: defaultOrientationCode,
         lastSubPageForRequest: '',
         inlineAdvertisementIsShowed: true,
         reportDialogIsOpen: false,

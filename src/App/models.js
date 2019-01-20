@@ -12,10 +12,34 @@ export {
     i18nButtonsModel, immutableI18nButtonsModel,
     i18nFooterModel, immutableI18nFooterModel,
     i18nReportModel, immutableI18nReportModel,
+    i18nOrientationModel, immutableI18nOrientationModel,
     i18nModel, immutableI18nModel,
 } from '../dev-modules/initialModels'
 
 export const
+    pageKeys = Object.freeze([
+        'home',
+        'allNiches',
+        'niche',
+        'allMovies',
+        'pornstars',
+        'pornstar',
+        'favorite',
+        'favoritePornstars',
+        'video',
+        'findVideos',
+    ]),
+
+    orientationCodes = Object.freeze(['straight', 'gay', 'tranny']),
+    defaultOrientationCode = orientationCodes[0],
+
+    legacyOrientationPrefixesModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exact({
+            straight: PropTypes.string,
+            gay: PropTypes.string,
+            tranny: PropTypes.string,
+        }),
+
     routerLocationModel = process.env.NODE_ENV === 'production' ? null :
         ImmutablePropTypes.exact({
             hash: PropTypes.string,
@@ -29,6 +53,8 @@ export const
         ImmutablePropTypes.exactRecordOf({
             location: routerLocationModel,
             router: immutableLocaleRouterModel,
+            currentOrientation: PropTypes.oneOf(orientationCodes),
+            legacyOrientationPrefixes: legacyOrientationPrefixesModel,
         }),
 
     // year+month like `201901` where `2019` is year and `01` is month

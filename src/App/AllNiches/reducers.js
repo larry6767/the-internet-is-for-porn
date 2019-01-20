@@ -8,6 +8,7 @@ import {
     plainProvedGet as g,
 } from '../helpers'
 
+import {orientationCodes, defaultOrientationCode} from '../models'
 import {nicheItemModel} from './models'
 import {immutablePageTextModel, PageTextRecord} from '../models'
 import actions from './actions'
@@ -18,6 +19,7 @@ const
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
+        lastOrientationCode: PropTypes.oneOf(orientationCodes),
         nichesList: ImmutablePropTypes.listOf(nicheItemModel),
         pageText: immutablePageTextModel,
     })
@@ -26,21 +28,23 @@ export default combineReducers({
     niche: nicheReducer,
 
     all: provedHandleActions(allStateModel, {
-        [actions.loadPageRequest]: (state) => state.merge({
+        [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
+            lastOrientationCode: g(payload, 'orientationCode'),
             nichesList: List(),
             pageText: PageTextRecord(),
         }),
-        [actions.loadPageSuccess]: (state, {payload}) => state.merge({
+        [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
+            lastOrientationCode: g(payload, 'orientationCode'),
             nichesList: List(fromJS(g(payload, 'data', 'tagList'))),
             pageText: PageTextRecord(g(payload, 'data', 'pageText')),
         }),
-        [actions.loadPageFailure]: (state) => state.merge({
+        [g(actions, 'loadPageFailure')]: (state) => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
@@ -51,6 +55,7 @@ export default combineReducers({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+        lastOrientationCode: defaultOrientationCode,
         nichesList: [],
         pageText: PageTextRecord(),
     }))

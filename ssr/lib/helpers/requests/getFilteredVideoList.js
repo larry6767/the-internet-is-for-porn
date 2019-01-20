@@ -5,7 +5,7 @@ import {videoItemModel} from '../../../generic/VideoItem/models'
 import {getOrderedVideoList} from './index'
 
 const
-    internalLinkReg = /^\/vid-(\d+)\/[^\/]+.htm$/,
+    internalLinkReg = /^(\/[^\/]+)?\/vid-(\d+)\/[^\/]+.htm$/,
     externalLinkReg = /^http/,
 
     incomingModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
@@ -104,7 +104,7 @@ export default (ids, items) => map(getOrderedVideoList(ids, items), x => {
                 length % 60 < 10 ? '0' + length % 60 : length % 60
             }`,
 
-            videoPageRef: internalUrlMatches !== null ? Number(g(internalUrlMatches, 1)) : url,
+            videoPageRef: internalUrlMatches !== null ? Number(g(internalUrlMatches, 2)) : url,
         }
 
     if (process.env.NODE_ENV !== 'production')

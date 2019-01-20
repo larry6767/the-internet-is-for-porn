@@ -1,22 +1,27 @@
 import {get} from 'lodash'
 import {put, takeEvery, select} from 'redux-saga/effects'
-import {BACKEND_URL} from '../../config'
+
 import {
+    getProvedPageKey,
     getHeaderText,
     getPageData,
+    plainProvedGet as g,
     immutableProvedGet as ig,
 } from '../helpers'
+
+import {BACKEND_URL} from '../../config'
 import errorActions from '../../generic/ErrorMessage/actions'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
 
-export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
+export function* loadVideoPageFlow(action, ssrContext) {
     try {
         const
             reqData = yield select(x => ({
                 localeCode: ig(x, 'app', 'locale', 'localeCode'),
-                pageCode: ig(x, 'app', 'locale', 'pageCode', 'video'),
-                subPageCode: subPageForRequest,
+                orientationCode: g(action, 'payload', 'orientationCode'),
+                page: getProvedPageKey('video'),
+                subPageCode: g(action, 'payload', 'subPageForRequest'),
             }))
 
         let data
@@ -39,7 +44,11 @@ export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
         }
 
         yield put(headerActions.setNewText(getHeaderText(data, false, false)))
-        yield put(actions.loadPageSuccess({subPageForRequest, data}))
+        yield put(actions.loadPageSuccess({
+            orientationCode: g(reqData, 'orientationCode'),
+            subPageForRequest: g(reqData, 'subPageCode'),
+            data,
+        }))
     } catch (err) {
         console.error('loadAllMoviesPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())
@@ -52,6 +61,7 @@ export function* sendReportFlow({payload: formData}) {
         const
             reqData = yield select(x => ({
                 localeCode: ig(x, 'app', 'locale', 'localeCode'),
+                orientationCode: ig(x, 'app', 'mainHeader', 'niche', 'currentOrientation'),
                 ...formData.toJS()
             })),
 

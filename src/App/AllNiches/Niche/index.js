@@ -5,7 +5,7 @@ import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {CircularProgress, Typography} from '@material-ui/core'
-import {Record, Map, List, fromJS} from 'immutable'
+import {Record, List} from 'immutable'
 
 import {
     getHeaderText,
@@ -14,14 +14,18 @@ import {
     localizedGetSubPage,
     getRouterContext,
     setPropTypes,
+    PropTypes,
 } from '../../helpers'
 
 import {
     immutableI18nButtonsModel,
-    routerContextModel
+    routerContextModel,
+    orientationCodes,
+    PageTextRecord,
 } from '../../models'
 
 import {routerGetters} from '../../../router-builder'
+import orientationPortal from '../../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
@@ -40,18 +44,19 @@ const
         currentPage: '',
         currentSubPage: '',
         lastSubPageForRequest: '',
+        lastOrientationCode: '',
 
         pageNumber: 1,
-        pageText: Map(),
+        pageText: PageTextRecord(),
         pagesCount: 1,
 
         tagList: List(),
         tagArchiveList: List(),
         sortList: List(),
         currentSort: null,
-        archiveFilms: Map(),
-        tagArchiveListOlder: fromJS(),
-        tagArchiveListNewer: fromJS(),
+        archiveFilms: null,
+        tagArchiveListOlder: null,
+        tagArchiveListNewer: null,
         itemsCount: 0,
         videoList: List(),
     }),
@@ -114,7 +119,7 @@ const
 
     loadPageFlow = ({
         search, routerContext, nicheCode, archiveParams, niche,
-        loadPage, setHeaderText
+        loadPage, setHeaderText, currentOrientation,
     }) => {
         const
             qs = queryString.parse(search),
@@ -144,19 +149,22 @@ const
             ig(niche, 'isLoading') ||
             (
                 (ig(niche, 'isLoaded') || ig(niche, 'isFailed')) &&
+                g(currentOrientation, []) === ig(niche, 'lastOrientationCode') &&
                 subPageForRequest === ig(niche, 'lastSubPageForRequest')
             )
         ))
             loadPage(subPageForRequest)
         else if (ig(niche, 'isLoaded'))
-            setHeaderText(getHeaderText(niche, true))
+            setHeaderText(getHeaderText(g(niche, []), true))
     }
 
 export default compose(
+    orientationPortal,
     sectionPortal,
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             niche: NicheRecord(ig(state, 'app', 'niches', 'niche')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             search: ig(state, 'router', 'location', 'search'),
@@ -179,7 +187,10 @@ export default compose(
             },
     })),
     withHandlers({
-        loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+        loadPage: props => subPageForRequest => props.loadPageRequest({
+            orientationCode: g(props, 'currentOrientation'),
+            subPageForRequest,
+        }),
 
         setHeaderText: props => headerText => props.setNewText(headerText),
 
@@ -240,5 +251,6 @@ export default compose(
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
+        currentOrientation: PropTypes.oneOf(orientationCodes),
     }),
 )(Niche)

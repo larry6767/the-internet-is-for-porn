@@ -27,11 +27,12 @@ import {
 
 import ErrorContent from '../../generic/ErrorContent'
 import {routerGetters} from '../../router-builder'
-import {immutableI18nAllNichesModel, immutablePageTextModel} from '../models'
+import {immutableI18nAllNichesModel, immutablePageTextModel, orientationCodes} from '../models'
 import {nicheItemModel} from './models'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
+import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import {AllNichesPage, Content, PageWrapper} from './assets'
 import {muiStyles} from './assets/muiStyles'
 
@@ -40,6 +41,8 @@ const
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+
+        lastOrientationCode: '',
 
         nichesList: List(),
         pageText: Map(),
@@ -93,13 +96,28 @@ const
                 </PageWrapper>
             </Content>
         }
-    </AllNichesPage>
+    </AllNichesPage>,
+
+    loadPageFlow = ({currentOrientation, niches, loadPage, setHeaderText}) => {
+        if (!(
+            ig(niches, 'isLoading') ||
+            (
+                (ig(niches, 'isLoaded') || ig(niches, 'isFailed')) &&
+                g(currentOrientation, []) === ig(niches, 'lastOrientationCode')
+            )
+        ))
+            loadPage()
+        else if (ig(niches, 'isLoaded'))
+            setHeaderText(getHeaderText(g(niches, []), true))
+   }
 
 export default compose(
+    orientationPortal,
     sectionPortal,
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             niches: NichesRecord(ig(state, 'app', 'niches', 'all')),
             i18nAllNiches: ig(state, 'app', 'locale', 'i18n', 'allNiches'),
             routerContext: getRouterContext(state),
@@ -110,28 +128,31 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => () => props.loadPageRequest(),
+        loadPage: props => () =>
+            props.loadPageRequest({orientationCode: g(props, 'currentOrientation')}),
+
         setHeaderText: props => headerText => props.setNewText(headerText),
         getChildLink: props => child => routerGetters.niche.link(g(props, 'routerContext'), child),
     }),
     lifecycle({
         componentDidMount() {
-            const
-                niches = g(this, 'props', 'niches')
+            loadPageFlow(this.props)
+        },
 
-            if (!ig(niches, 'isLoading') && !ig(niches, 'isLoaded'))
-                this.props.loadPage()
-            else if (ig(niches, 'isLoaded'))
-                this.props.setHeaderText(getHeaderText(niches, true))
-        }
+        componentWillReceiveProps(nextProps) {
+            loadPageFlow(nextProps)
+        },
     }),
     withStylesProps(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         currentBreakpoint: PropTypes.string,
+        currentOrientation: PropTypes.oneOf(orientationCodes),
         niches: ImmutablePropTypes.exactRecordOf({
             isLoading: PropTypes.bool,
             isLoaded: PropTypes.bool,
             isFailed: PropTypes.bool,
+
+            lastOrientationCode: PropTypes.oneOf(orientationCodes),
 
             nichesList: ImmutablePropTypes.listOf(nicheItemModel),
             pageText: immutablePageTextModel,

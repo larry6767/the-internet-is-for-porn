@@ -2,7 +2,7 @@
 import {Record, Map, List} from 'immutable'
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {compose, lifecycle} from 'recompose'
+import {compose, lifecycle, withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, reset as resetForm} from 'redux-form/immutable'
 import {withStyles} from '@material-ui/core'
@@ -12,13 +12,15 @@ import Favorite from '@material-ui/icons/Favorite'
 
 import {
     getHeaderText,
+    plainProvedGet as g,
     immutableProvedGet as ig,
     PropTypes,
     getSubPage,
     setPropTypes,
 } from '../helpers'
 
-import {immutableI18nButtonsModel} from '../models'
+import {immutableI18nButtonsModel, orientationCodes} from '../models'
+import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ErrorContent from '../../generic/ErrorContent'
 import VideoList from '../../generic/VideoList'
@@ -61,6 +63,7 @@ const
         reportIsSent: false,
         reportIsNotSent: false,
 
+        lastOrientationCode: '',
         lastSubPageForRequest: '',
         inlineAdvertisementIsShowed: true,
         reportDialogIsOpen: false,
@@ -269,7 +272,7 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({match, data, loadPage, setHeaderText}) => {
+    loadPageFlow = ({match, data, loadPage, setHeaderText, currentOrientation}) => {
         const
             subPageForRequest = getSubPage(`${match.params.child}/${match.params.name}`)
 
@@ -286,15 +289,17 @@ const
             data.get('isLoading') ||
             (
                 (data.get('isLoaded') || data.get('isFailed')) &&
-                subPageForRequest === data.get('lastSubPageForRequest')
+                g(currentOrientation, []) === ig(data, 'lastOrientationCode') &&
+                subPageForRequest === ig(data, 'lastSubPageForRequest')
             )
         ))
             loadPage(subPageForRequest)
         else if (ig(data, 'isLoaded'))
-            setHeaderText(getHeaderText(data, true, false))
+            setHeaderText(getHeaderText(g(data, []), true, false))
     }
 
 export default compose(
+    orientationPortal,
     sectionPortal,
     connect(
         state => ({
@@ -310,23 +315,36 @@ export default compose(
                 'report-reason': 'reason_nothing',
             },
             currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
         }),
-        dispatch => ({
-            loadPage: subPageForRequest => dispatch(actions.loadPageRequest(subPageForRequest)),
-            setHeaderText: headerText => dispatch(headerActions.setNewText(headerText)),
-            closeAdvertisementHandler: () => dispatch(actions.closeAdvertisement()),
-            toggleReportDialogHandler: () => dispatch(actions.toggleReportDialog()),
-            addVideoToFavoriteHandler: (video, e) => {
-                e.preventDefault()
-                dispatch(appActions.addVideoToFavorite(video))
-            },
-            removeVideoFromFavoriteHandler: (id, e) => {
-                e.preventDefault()
-                dispatch(appActions.removeVideoFromFavorite(id))
-            },
-        })
+        {
+            loadPageRequest: g(actions, 'loadPageRequest'),
+            setNewText: g(headerActions, 'setNewText'),
+            closeAdvertisement: g(actions, 'closeAdvertisement'),
+            toggleReportDialog: g(actions, 'toggleReportDialog'),
+            addVideoToFavorite: g(appActions, 'addVideoToFavorite'),
+            removeVideoFromFavorite: g(appActions, 'removeVideoFromFavorite'),
+        }
     ),
+    withHandlers({
+        loadPage: props => subPageForRequest => props.loadPageRequest({
+            orientationCode: g(props, 'currentOrientation'),
+            subPageForRequest: g(subPageForRequest, []),
+        }),
+
+        setHeaderText: props => headerText => props.setNewText(g(headerText, [])),
+        closeAdvertisementHandler: props => () => props.closeAdvertisement(),
+        toggleReportDialogHandler: props => () => props.toggleReportDialog(),
+        addVideoToFavoriteHandler: props => (video, e) => {
+            e.preventDefault()
+            props.addVideoToFavorite(video)
+        },
+        removeVideoFromFavoriteHandler: props => (id, e) => {
+            e.preventDefault()
+            props.removeVideoFromFavorite(id)
+        },
+    }),
     reduxForm({
         form: 'reportForm',
         enableReinitialize: true,
@@ -347,5 +365,6 @@ export default compose(
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
         i18nButtons: immutableI18nButtonsModel,
+        currentOrientation: PropTypes.oneOf(orientationCodes),
     })
 )(VideoPage)

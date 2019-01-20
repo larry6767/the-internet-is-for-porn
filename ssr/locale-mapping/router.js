@@ -40,6 +40,11 @@ const
             searchQuery: {
                 qsKey: 'query'
             },
+            orientation: {
+                straight: '',
+                gay: '/gays',
+                tranny: '/shemales',
+            },
         },
         deu: {
             routes: {
@@ -74,6 +79,11 @@ const
             },
             searchQuery: {
                 qsKey: 'abfrage'
+            },
+            orientation: {
+                straight: '',
+                gay: '/gay',
+                tranny: '/transe',
             },
         },
         ita: {
@@ -110,6 +120,11 @@ const
             searchQuery: {
                 qsKey: 'domanda'
             },
+            orientation: {
+                straight: '',
+                gay: '/gay',
+                tranny: '/transessuale',
+            },
         },
         fra: { // TODO
             routes: {
@@ -144,6 +159,11 @@ const
             },
             searchQuery: {
                 qsKey: ''
+            },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
             },
         },
         spa: { // TODO
@@ -180,6 +200,11 @@ const
             searchQuery: {
                 qsKey: ''
             },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
+            },
         },
         por: { // TODO
             routes: {
@@ -214,6 +239,11 @@ const
             },
             searchQuery: {
                 qsKey: ''
+            },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
             },
         },
         swe: { // TODO
@@ -250,6 +280,11 @@ const
             searchQuery: {
                 qsKey: ''
             },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
+            },
         },
         nld: { // TODO
             routes: {
@@ -284,6 +319,11 @@ const
             },
             searchQuery: {
                 qsKey: ''
+            },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
             },
         },
         fin: { // TODO
@@ -320,6 +360,11 @@ const
             searchQuery: {
                 qsKey: ''
             },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
+            },
         },
         rus: { // TODO
             routes: {
@@ -355,6 +400,11 @@ const
             searchQuery: {
                 qsKey: ''
             },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
+            },
         },
         tur: { // TODO
             routes: {
@@ -389,6 +439,11 @@ const
             },
             searchQuery: {
                 qsKey: ''
+            },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
             },
         },
     })

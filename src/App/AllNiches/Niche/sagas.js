@@ -2,6 +2,7 @@ import {put, takeEvery, select} from 'redux-saga/effects'
 import {push} from 'connected-react-router/immutable'
 
 import {
+    getProvedPageKey,
     getHeaderText,
     getPageData,
     getRouterContext,
@@ -14,12 +15,13 @@ import errorActions from '../../../generic/ErrorMessage/actions'
 import headerActions from '../../MainHeader/actions'
 import actions from './actions'
 
-export function* loadNichePageFlow({payload: subPageForRequest}, ssrContext) {
+export function* loadNichePageFlow(action, ssrContext) {
     try {
         const reqData = yield select(x => ({
             localeCode: ig(x, 'app', 'locale', 'localeCode'),
-            pageCode: ig(x, 'app', 'locale', 'pageCode', 'niche'),
-            subPageCode: subPageForRequest,
+            orientationCode: g(action, 'payload', 'orientationCode'),
+            page: getProvedPageKey('niche'),
+            subPageCode: g(action, 'payload', 'subPageForRequest'),
         }))
 
         let data
@@ -29,7 +31,11 @@ export function* loadNichePageFlow({payload: subPageForRequest}, ssrContext) {
             data = yield getPageData(reqData)
 
         yield put(headerActions.setNewText(getHeaderText(data)))
-        yield put(actions.loadPageSuccess({subPageForRequest, data}))
+        yield put(actions.loadPageSuccess({
+            orientationCode: g(reqData, 'orientationCode'),
+            subPageForRequest: g(reqData, 'subPageCode'),
+            data,
+        }))
     } catch (err) {
         console.error('loadNichePageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())

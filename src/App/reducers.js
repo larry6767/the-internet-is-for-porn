@@ -7,7 +7,6 @@ import {
     addIdToFavoriteList,
     removeIdFromFavoriteList,
     plainProvedGet as g,
-    ImmutablePropTypes,
     PropTypes,
     provedHandleActions,
 } from './helpers'
@@ -22,24 +21,15 @@ import favoritePornstarsReducer from './FavoritePornstars/reducers'
 import videoPageReducer from './VideoPage/reducers'
 import findVideosReducer from './FindVideos/reducers'
 import actions from './actions'
-import {immutableLocaleRouterModel, immutableI18nModel} from './models'
+
+import {
+    immutableLocaleRouterModel,
+    immutableI18nModel,
+    legacyOrientationPrefixesModel,
+} from './models'
 
 const
-    defaultSSR = fromJS({isSSR: false}),
-
-    localePageCodeModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exact({
-            home: PropTypes.string,
-            allNiches: PropTypes.string,
-            niche: PropTypes.string,
-            allMovies: PropTypes.string,
-            pornstars: PropTypes.string,
-            pornstar: PropTypes.string,
-            favorite: PropTypes.string,
-            favoritePornstars: PropTypes.string,
-            video: PropTypes.string,
-            findVideos: PropTypes.string,
-        })
+    defaultSSR = fromJS({isSSR: false})
 
 export default combineReducers({
     home: homeReducer,
@@ -80,29 +70,32 @@ export default combineReducers({
 
     locale: combineReducers({
         localeCode: provedHandleActions(
-            process.env.NODE_ENV === 'production' ? null : PropTypes.string.isOptional,
+            process.env.NODE_ENV === 'production' ? null : PropTypes.nullable(PropTypes.string),
             {[g(actions, 'setLocaleCode')]: (state, {payload}) => payload},
             null
         ),
 
         // This supposed to be filled at initialization step (depending on current locale).
-        pageCode: provedHandleActions(
-            process.env.NODE_ENV === 'production' ? null : localePageCodeModel.isOptional,
-            {[g(actions, 'fillLocalePageCodes')]: (state, {payload}) => Map(fromJS(payload))},
-            null
-        ),
-
-        // This supposed to be filled at initialization step (depending on current locale).
         router: provedHandleActions(
-            process.env.NODE_ENV === 'production' ? null : immutableLocaleRouterModel.isOptional,
+            process.env.NODE_ENV === 'production' ? null :
+                PropTypes.nullable(immutableLocaleRouterModel),
             {[g(actions, 'fillLocaleRouter')]: (state, {payload}) => Map(fromJS(payload))},
             null
         ),
 
         // This supposed to be filled at initialization step (depending on current locale).
         i18n: provedHandleActions(
-            process.env.NODE_ENV === 'production' ? null : immutableI18nModel.isOptional,
+            process.env.NODE_ENV === 'production' ? null : PropTypes.nullable(immutableI18nModel),
             {[g(actions, 'fillLocaleI18n')]: (state, {payload}) => Map(fromJS(payload))},
+            null
+        ),
+
+        // This supposed to be filled at initialization step (depending on current locale).
+        legacyOrientationPrefixes: provedHandleActions(
+            process.env.NODE_ENV === 'production' ? null :
+                PropTypes.nullable(legacyOrientationPrefixesModel),
+            {[g(actions, 'fillLocaleLegacyOrientationPrefixes')]:
+                (state, {payload}) => Map(fromJS(payload))},
             null
         ),
     }),

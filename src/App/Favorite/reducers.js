@@ -8,6 +8,7 @@ import {
     ImmutablePropTypes,
     PropTypes,
 } from '../helpers'
+
 import {PageTextRecord, immutablePageTextModel} from '../models'
 import {immutableVideoItemModel} from '../../generic/VideoItem/models'
 import actions from './actions'

@@ -12,7 +12,7 @@ import {createGenerateClassName} from '@material-ui/core/styles'
 
 import {plainProvedGet as g, immutableProvedGet as ig, getRouterContext} from '../App/helpers'
 import {getPureDomain} from '../App/helpers/hostLocale'
-import {buildLocalePageCodes, logRequestError} from './helpers'
+import {buildLocalePageCodes, getLegacyOrientationPrefixes, logRequestError} from './helpers'
 import {getPageData as requestPageData} from './requests'
 import {proxiedHeaders} from './backend-proxy'
 import RouterBuilder from '../router-builder'
@@ -20,6 +20,7 @@ import {App} from '../App'
 import appActions from '../App/actions'
 import languageActions from '../App/MainHeader/Language/actions'
 import navigationActions from '../App/MainHeader/Navigation/actions'
+import orientationActions from '../App/MainHeader/Niche/actions'
 import routerLocales from '../locale-mapping/router'
 import i18n from '../locale-mapping/i18n'
 
@@ -53,9 +54,11 @@ export default (
 
         // WARNING! see also `src/index` to keep this up to date
         store.dispatch(appActions.setLocaleCode(localeCode))
-        store.dispatch(appActions.fillLocalePageCodes(buildLocalePageCodes(localeCode)))
         store.dispatch(appActions.fillLocaleRouter(g(routerLocales, localeCode)))
         store.dispatch(appActions.fillLocaleI18n(g(i18n, localeCode)))
+        store.dispatch(appActions.fillLocaleLegacyOrientationPrefixes(
+            getLegacyOrientationPrefixes(localeCode)
+        ))
         store.dispatch(languageActions.setNewLanguage(localeCode))
 
         const
@@ -74,6 +77,11 @@ export default (
         if (staticRouterContext.hasOwnProperty('currentSection'))
             store.dispatch(navigationActions.setCurrentSection(
                 g(staticRouterContext, 'currentSection')
+            ))
+
+        if (staticRouterContext.hasOwnProperty('currentOrientation'))
+            store.dispatch(orientationActions.switchOrientation(
+                g(staticRouterContext, 'currentOrientation')
             ))
 
         if (staticRouterContext.saga) {

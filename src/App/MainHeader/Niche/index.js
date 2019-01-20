@@ -1,13 +1,30 @@
+import {find} from 'lodash'
 import React from 'react'
-import {compose} from 'recompose'
+import {compose, withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 import {Select, MenuItem, FormControl, OutlinedInput} from '@material-ui/core'
 
-import {compareCurrentBreakpoint, breakpointXS} from '../../helpers'
+import {
+    compareCurrentBreakpoint,
+    breakpointXS,
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    PropTypes,
+    setPropTypes,
+    getRouterContext,
+} from '../../helpers'
 
-import {niches} from './fixtures'
+import {
+    orientationCodes,
+    routerContextModel,
+    immutableI18nOrientationModel,
+} from '../../models'
+
+import {routerGetters} from '../../../router-builder'
 import actions from './actions'
+import {muiStyles} from './assets/muiStyles'
+
 import {
     NicheBlock,
     NicheWrapper,
@@ -16,10 +33,26 @@ import {
     NicheMobileItemSelected,
     TextIcon
 } from './assets'
-import {muiStyles} from './assets/muiStyles'
 
 const
-    Niche = ({classes, currentNiche, currentBreakpoint, selectNiche, isSSR}) => <NicheBlock>
+    orientationSymbols = Object.freeze({
+        straight: 9892,
+        gay: 9891,
+        tranny: 9895,
+    }),
+
+    // This is called "niche" but we have another "niche" component and also section/page,
+    // so everywhere else it's going to be "orientation" which stands for "sexual orientation"
+    // to differ this "niche" from another.
+    Niche = ({
+        classes,
+        isSSR,
+        currentOrientation,
+        currentBreakpoint,
+        i18nOrientation,
+        orient,
+        linkBuilder,
+    }) => <NicheBlock>
         {
             /* rendering mobile version for SSR to render links with "href"s for search engines */
             /* TODO FIXME set proper `href` attribute */
@@ -27,25 +60,27 @@ const
             (isSSR || compareCurrentBreakpoint(currentBreakpoint, breakpointXS) <= 0)
 
             ? <NicheMobile>
-                {Object.keys(niches).map(key =>
-                    currentNiche === key
+                {orientationCodes.map(orientationCode =>
+                    currentOrientation === orientationCode
 
                     ? <NicheMobileItemSelected
-                        key={key}
-                        href="/TODO"
-                        onClick={selectNiche}
-                        data-value={key}
+                        key={orientationCode}
+                        href={linkBuilder(orientationCode)}
+                        onClick={orient}
+                        data-value={orientationCode}
                     >
-                        {`${String.fromCharCode(niches[key])} ${key}`}
+                        {`${String.fromCharCode(g(orientationSymbols, orientationCode))
+                            } ${ig(i18nOrientation, orientationCode)}`}
                     </NicheMobileItemSelected>
 
                     : <NicheMobileItem
-                        key={key}
-                        href="/TODO"
-                        onClick={selectNiche}
-                        data-value={key}
+                        key={orientationCode}
+                        href={linkBuilder(orientationCode)}
+                        onClick={orient}
+                        data-value={orientationCode}
                     >
-                        {`${String.fromCharCode(niches[key])} ${key}`}
+                        {`${String.fromCharCode(g(orientationSymbols, orientationCode))
+                            } ${ig(i18nOrientation, orientationCode)}`}
                     </NicheMobileItem>
                 )}
             </NicheMobile>
@@ -54,29 +89,26 @@ const
                 <FormControl variant="outlined">
                     <Select
                         classes={{
-                            select: classes.select,
-                            icon: classes.icon
+                            select: g(classes, 'select'),
+                            icon: g(classes, 'icon'),
                         }}
-                        value={currentNiche}
-                        onChange={selectNiche}
+                        value={currentOrientation}
+                        onChange={orient}
                         input={
                             <OutlinedInput
                                 classes={{
-                                    notchedOutline: classes.notchedOutline
+                                    notchedOutline: g(classes, 'notchedOutline'),
                                 }}
                                 labelWidth={0}
-                                name="niche"
-                                id="niche"
                             />
                         }
                     >
-                        {Object.keys(niches).map(key =>
-                            <MenuItem
-                                key={key}
-                                value={key}
-                            >
-                                <TextIcon>{String.fromCharCode(niches[key])}</TextIcon>
-                                {key}
+                        {orientationCodes.map(orientationCode =>
+                            <MenuItem key={orientationCode} value={orientationCode}>
+                                <TextIcon>
+                                    {String.fromCharCode(g(orientationSymbols, orientationCode))}
+                                </TextIcon>
+                                {ig(i18nOrientation, orientationCode)}
                             </MenuItem>
                         )}
                     </Select>
@@ -88,16 +120,41 @@ const
 export default compose(
     connect(
         state => ({
-            currentNiche: state.getIn(['app', 'mainHeader', 'niche', 'currentNiche']),
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            routerContext: getRouterContext(state),
+            i18nOrientation: ig(state, 'app', 'locale', 'i18n', 'orientation'),
         }),
-        dispatch => ({
-            selectNiche: event => {
-                event.preventDefault()
-                dispatch(actions.toggleNiche(event.target.value || event.target.dataset.value))
-            }
-        })
+        {
+            switchOrientation: g(actions, 'switchOrientation'),
+        }
     ),
-    withStyles(muiStyles)
+    withHandlers({
+        orient: props => event => {
+            event.preventDefault()
+            const evValue = g(event.target.value || event.target.dataset.value, [])
+            props.switchOrientation(g(find(orientationCodes, code => code === evValue), []))
+        },
+
+        linkBuilder: props => orientationCode => routerGetters.home.link(
+            g(props, 'routerContext').set('currentOrientation', g(orientationCode, []))
+        ),
+    }),
+    withStyles(muiStyles),
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        classes: PropTypes.shape({
+            select: PropTypes.string,
+            icon: PropTypes.string,
+            notchedOutline: PropTypes.string,
+        }),
+        isSSR: PropTypes.bool,
+        currentOrientation: PropTypes.oneOf(orientationCodes),
+        currentBreakpoint: PropTypes.string,
+        routerContext: routerContextModel,
+        i18nOrientation: immutableI18nOrientationModel,
+        switchOrientation: PropTypes.func,
+        orient: PropTypes.func,
+        linkBuilder: PropTypes.func,
+    })
 )(Niche)

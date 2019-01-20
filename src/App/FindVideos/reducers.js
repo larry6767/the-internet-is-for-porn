@@ -5,6 +5,8 @@ import {ImmutablePropTypes, PropTypes, provedHandleActions, plainProvedGet as g}
 import {
     immutablePageTextModel,
     PageTextRecord,
+    orientationCodes,
+    defaultOrientationCode,
 } from '../models'
 
 import {immutableVideoItemModel} from '../../generic/VideoItem/models'
@@ -15,6 +17,7 @@ const
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
+        lastOrientationCode: PropTypes.oneOf(orientationCodes),
         lastSubPageForRequest: PropTypes.string,
         pageNumber: PropTypes.number,
         pageText: immutablePageTextModel,
@@ -34,7 +37,8 @@ export default
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            lastSubPageForRequest: payload,
+            lastOrientationCode: g(payload, 'orientationCode'),
+            lastSubPageForRequest: g(payload, 'subPageForRequest'),
             pageNumber: 1,
             pageText: PageTextRecord(),
             pagesCount: 1,
@@ -43,18 +47,19 @@ export default
             itemsCount: 0,
             videoList: List(),
         }),
-        [g(actions, 'loadPageSuccess')]: (state, {payload: {data, subPageForRequest}}) => state.merge({
+        [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            lastSubPageForRequest: subPageForRequest,
-            pageNumber: data.pageNumber,
-            pageText: PageTextRecord(g(data, 'pageText')),
-            pagesCount: data.pagesCount,
-            sortList: List(fromJS(g(data, 'sortList'))),
-            currentSort: g(data, 'currentSort'),
-            itemsCount: data.itemsCount,
-            videoList: List(fromJS(g(data, 'videoList'))),
+            lastOrientationCode: g(payload, 'orientationCode'),
+            lastSubPageForRequest: g(payload, 'subPageForRequest'),
+            pageNumber: g(payload, 'data', 'pageNumber'),
+            pageText: PageTextRecord(g(payload, 'data', 'pageText')),
+            pagesCount: g(payload, 'data', 'pagesCount'),
+            sortList: List(fromJS(g(payload, 'data', 'sortList'))),
+            currentSort: g(payload, 'data', 'currentSort'),
+            itemsCount: g(payload, 'data', 'itemsCount'),
+            videoList: List(fromJS(g(payload, 'data', 'videoList'))),
         }),
         [g(actions, 'loadPageFailure')]: state => state.merge({
             isLoading: false,
@@ -74,6 +79,7 @@ export default
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+        lastOrientationCode: defaultOrientationCode,
         lastSubPageForRequest: '',
         pageNumber: 1,
         pageText: PageTextRecord(),

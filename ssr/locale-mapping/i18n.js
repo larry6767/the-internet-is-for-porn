@@ -84,6 +84,11 @@ const
                 commentLabel: 'Comment',
                 commentPlaceholder: 'Describe the problem',
             },
+            orientation: {
+                straight: 'Straight',
+                gay: 'Gays',
+                tranny: 'Shemales',
+            },
         },
         deu: {
             search: {
@@ -164,6 +169,11 @@ const
                 commentLabel: 'Kommentar',
                 commentPlaceholder: 'Beschreibe das Problem',
             },
+            orientation: {
+                straight: 'Hetero',
+                gay: 'Gay',
+                tranny: 'Transe',
+            },
         },
         ita: {
             search: {
@@ -242,6 +252,11 @@ const
                 commentLabel: 'Commento',
                 commentPlaceholder: 'Descrivi il problema',
             },
+            orientation: {
+                straight: 'Straight',
+                gay: 'Gay',
+                tranny: 'Transessuale',
+            },
         },
         fra: { // TODO
             search: {
@@ -306,6 +321,11 @@ const
                 failureText: '',
                 commentLabel: '',
                 commentPlaceholder: '',
+            },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
             },
         },
         spa: { // TODO
@@ -372,6 +392,11 @@ const
                 commentLabel: '',
                 commentPlaceholder: '',
             },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
+            },
         },
         por: { // TODO
             search: {
@@ -436,6 +461,11 @@ const
                 failureText: '',
                 commentLabel: '',
                 commentPlaceholder: '',
+            },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
             },
         },
         swe: { // TODO
@@ -502,6 +532,11 @@ const
                 commentLabel: '',
                 commentPlaceholder: '',
             },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
+            },
         },
         nld: { // TODO
             search: {
@@ -566,6 +601,11 @@ const
                 failureText: '',
                 commentLabel: '',
                 commentPlaceholder: '',
+            },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
             },
         },
         fin: { // TODO
@@ -632,6 +672,11 @@ const
                 commentLabel: '',
                 commentPlaceholder: '',
             },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
+            },
         },
         rus: { // TODO
             search: {
@@ -697,6 +742,11 @@ const
                 commentLabel: '',
                 commentPlaceholder: '',
             },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
+            },
         },
         tur: { // TODO
             search: {
@@ -761,6 +811,11 @@ const
                 failureText: '',
                 commentLabel: '',
                 commentPlaceholder: '',
+            },
+            orientation: {
+                straight: '',
+                gay: '',
+                tranny: '',
             },
         },
     })
