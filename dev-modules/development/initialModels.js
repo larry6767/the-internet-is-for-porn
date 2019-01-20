@@ -1,57 +1,60 @@
+import {set} from 'lodash'
+
 import {PropTypes} from './propTypes'
 import {ImmutablePropTypes} from './propTypes/immutable'
 
 const
-    localeRouterModelBuilder = isImmutable => {
+    localeRouterModelBuilder = (isImmutable, isSSR) => {
         const
-            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
 
-        return exact({
-            routes: exact({
-                archive: exact({label: PropTypes.string}),
-                allNiches: exact({section: PropTypes.string}),
-                niche: exact({section: PropTypes.string}),
-                allMovies: exact({section: PropTypes.string}),
-                pornstars: exact({section: PropTypes.string}),
-                pornstar: exact({section: PropTypes.string}),
-                favorite: exact({section: PropTypes.string}),
-                favoritePornstars: exact({section: PropTypes.string}),
-                video: exact({sectionPfx: PropTypes.string}),
-                findVideos: exact({section: PropTypes.string}),
-            }),
-            redirects: exact({
-                categories: exact({search: PropTypes.string}),
-                allMovies: exact({from: PropTypes.string}),
-                pornstars: exact({from: PropTypes.string}),
-                favorite: exact({
-                    from: PropTypes.string,
-                    fromMovies: PropTypes.string,
+            props = {
+                routes: exact({
+                    archive: exact({label: PropTypes.string}),
+                    allNiches: exact({section: PropTypes.string}),
+                    niche: exact({section: PropTypes.string}),
+                    allMovies: exact({section: PropTypes.string}),
+                    pornstars: exact({section: PropTypes.string}),
+                    pornstar: exact({section: PropTypes.string}),
+                    favorite: exact({section: PropTypes.string}),
+                    favoritePornstars: exact({section: PropTypes.string}),
+                    video: exact({sectionPfx: PropTypes.string}),
+                    findVideos: exact({section: PropTypes.string}),
                 }),
-                favoritePornstars: exact({from: PropTypes.string}),
-                video: exact({
-                    fromPfx: PropTypes.string,
-                    fromExt: PropTypes.string,
+                ordering: exact({
+                    qsKey: PropTypes.string,
+                    byDate: exact({qsValue: PropTypes.string}),
+                    byDuration: exact({qsValue: PropTypes.string}),
+                    byPopularity: exact({qsValue: PropTypes.string}),
+                    byRelevant: exact({qsValue: PropTypes.string}),
                 }),
+                pagination: exact({
+                    qsKey: PropTypes.string,
+                }),
+                searchQuery: exact({
+                    qsKey: PropTypes.string,
+                }),
+                orientation: exact({
+                    straight: PropTypes.string,
+                    gay: PropTypes.string,
+                    tranny: PropTypes.string,
+                }),
+            }
+
+        return exact(!isSSR ? props : set(props, 'redirects', exact({
+            categories: exact({search: PropTypes.string}),
+            allMovies: exact({from: PropTypes.string}),
+            pornstars: exact({from: PropTypes.string}),
+            favorite: exact({
+                from: PropTypes.string,
+                fromMovies: PropTypes.string,
             }),
-            ordering: exact({
-                qsKey: PropTypes.string,
-                byDate: exact({qsValue: PropTypes.string}),
-                byDuration: exact({qsValue: PropTypes.string}),
-                byPopularity: exact({qsValue: PropTypes.string}),
-                byRelevant: exact({qsValue: PropTypes.string}),
+            favoritePornstars: exact({from: PropTypes.string}),
+            video: exact({
+                fromPfx: PropTypes.string,
+                fromExt: PropTypes.string,
             }),
-            pagination: exact({
-                qsKey: PropTypes.string,
-            }),
-            searchQuery: exact({
-                qsKey: PropTypes.string,
-            }),
-            orientation: exact({
-                straight: PropTypes.string,
-                gay: PropTypes.string,
-                tranny: PropTypes.string,
-            }),
-        })
+        })))
     },
 
     i18nSearchModelBuilder = isImmutable => {
@@ -223,8 +226,10 @@ export {
 }
 
 export const
-    localeRouterModel = localeRouterModelBuilder(false),
-    immutableLocaleRouterModel = localeRouterModelBuilder(true),
+    localeRouterModel = localeRouterModelBuilder(false, false),
+    immutableLocaleRouterModel = localeRouterModelBuilder(true, false),
+    ssrLocaleRouterModel = localeRouterModelBuilder(false, true),
+    ssrImmutableLocaleRouterModel = localeRouterModelBuilder(true, true),
 
     i18nModel = i18nModelBuilder(false),
     immutableI18nModel = i18nModelBuilder(true)

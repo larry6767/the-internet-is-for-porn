@@ -15,13 +15,14 @@ import {getPureDomain} from '../App/helpers/hostLocale'
 import {buildLocalePageCodes, getLegacyOrientationPrefixes, logRequestError} from './helpers'
 import {getPageData as requestPageData} from './requests'
 import {proxiedHeaders} from './backend-proxy'
+import LegacyRedirectsRouterBuilder from './legacy-redirects'
 import RouterBuilder from '../router-builder'
 import {App} from '../App'
 import appActions from '../App/actions'
 import languageActions from '../App/MainHeader/Language/actions'
 import navigationActions from '../App/MainHeader/Navigation/actions'
 import orientationActions from '../App/MainHeader/Niche/actions'
-import routerLocales from '../locale-mapping/router'
+import backRouterLocaleMapping, {frontRouterLocaleMapping} from '../locale-mapping/router'
 import i18n from '../locale-mapping/i18n'
 
 const getPageData =
@@ -54,7 +55,7 @@ export default (
 
         // WARNING! see also `src/index` to keep this up to date
         store.dispatch(appActions.setLocaleCode(localeCode))
-        store.dispatch(appActions.fillLocaleRouter(g(routerLocales, localeCode)))
+        store.dispatch(appActions.fillLocaleRouter(g(frontRouterLocaleMapping, localeCode)))
         store.dispatch(appActions.fillLocaleI18n(g(i18n, localeCode)))
         store.dispatch(appActions.fillLocaleLegacyOrientationPrefixes(
             getLegacyOrientationPrefixes(localeCode)
@@ -66,13 +67,38 @@ export default (
             state = store.getState(),
             routerContext = getRouterContext(state)
 
+        {
+            const
+                redirectsRouterContext =
+                    getRouterContext(state, g(backRouterLocaleMapping, localeCode)),
+
+                staticLegacyRedirectsRouterContext = {}
+
+            // just to obtain redirect and
+            renderToString(
+                <StaticRouter location={g(req, 'url')} context={staticLegacyRedirectsRouterContext}>
+                    <LegacyRedirectsRouterBuilder routerContext={redirectsRouterContext}/>
+                </StaticRouter>
+            )
+
+            if (staticLegacyRedirectsRouterContext.hasOwnProperty('url')) {
+                res.writeHead(302, {'Location': g(staticLegacyRedirectsRouterContext, 'url')})
+                return res.end()
+            }
+        }
+
         // just filling `staticRouterContext` with meta info,
         // not really rendering anything.
         renderToString(
-            <StaticRouter location={req.url} context={staticRouterContext}>
+            <StaticRouter location={g(req, 'url')} context={staticRouterContext}>
                 <RouterBuilder routerContext={routerContext}/>
             </StaticRouter>
         )
+
+        if (staticRouterContext.hasOwnProperty('url')) {
+            res.writeHead(302, {'Location': g(staticRouterContext, 'url')})
+            return res.end()
+        }
 
         if (staticRouterContext.hasOwnProperty('currentSection'))
             store.dispatch(navigationActions.setCurrentSection(
@@ -103,11 +129,6 @@ export default (
 
         if (staticRouterContext.statusCodeResolver)
             res.status(staticRouterContext.statusCodeResolver(store.getState()))
-
-        if (staticRouterContext.url) {
-            res.writeHead(302, {'Location': staticRouterContext.url})
-            return res.end()
-        }
 
         const
             serverStyleSheet = new ServerStyleSheet(),

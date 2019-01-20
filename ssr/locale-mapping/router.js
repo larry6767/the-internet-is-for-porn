@@ -1,7 +1,7 @@
-import {set} from 'lodash'
+import {set, includes} from 'lodash'
 
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../App/helpers'
-import {localeRouterModel} from '../App/models'
+import {ssrLocaleRouterModel} from '../App/models'
 import deepFreeze from '../lib/helpers/deepFreeze'
 
 const
@@ -446,7 +446,29 @@ const
                 tranny: '',
             },
         },
-    })
+    }),
+
+    frontRouterLocaleKeys = Object.freeze([
+        'routes', 'ordering', 'pagination', 'searchQuery', 'orientation',
+    ])
+
+export const
+    // localized router data with only needed branches for frontend
+    frontRouterLocaleMapping =
+        deepFreeze(Object.keys(mapping).reduce(
+            (root, localeCode) => {
+                const
+                    branch = g(mapping, localeCode),
+
+                    filteredBranch =
+                        Object.keys(branch)
+                        .filter(k => includes(frontRouterLocaleKeys, k))
+                        .reduce((locale, k) => set(locale, k, g(branch, k)), {})
+
+                return set(root, localeCode, filteredBranch)
+            },
+            {}
+        ))
 
 /*
     A helper which could be used during application initialization to validate locales from server
@@ -455,7 +477,7 @@ const
 export const validate = siteLocales => {
     // generating model of every language code received from backend
     const mappingModel = PropTypes.exact(
-        siteLocales.reduce((obj, x) => set(obj, g(x, 'code'), localeRouterModel), {})
+        siteLocales.reduce((obj, x) => set(obj, g(x, 'code'), g(ssrLocaleRouterModel, [])), {})
     )
 
     assertPropTypes(mappingModel, mapping, 'router-locale-mapping', 'validate')
