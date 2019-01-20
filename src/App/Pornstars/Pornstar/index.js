@@ -17,6 +17,7 @@ import {
 
 import {routerGetters} from '../../../router-builder'
 import sectionPortal from '../../MainHeader/Navigation/sectionPortal'
+import orientationPortal from '../../MainHeader/Niche/orientationPortal'
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
 import Lists from '../../../generic/Lists'
@@ -34,7 +35,7 @@ const
         isFailed: false,
         modelInfoIsOpen: false,
 
-        currentSubPage: '',
+        lastOrientationCode: '',
         lastSubPageForRequest: '',
         pageNumber: 1,
         pageText: Map(),
@@ -101,7 +102,7 @@ const
 
     loadPageFlow = ({
         search, routerContext, pornstarCode, pornstar,
-        loadPage, setHeaderText
+        loadPage, setHeaderText, currentOrientation,
     }) => {
         const
             qs = queryString.parse(search),
@@ -123,7 +124,8 @@ const
             ig(pornstar, 'isLoading') ||
             (
                 (ig(pornstar, 'isLoaded') || ig(pornstar, 'isFailed')) &&
-                subPageForRequest === ig(pornstar, 'lastSubPageForRequest')
+                subPageForRequest === ig(pornstar, 'lastSubPageForRequest') &&
+                g(currentOrientation, []) === ig(pornstar, 'lastOrientationCode')
             )
         ))
             loadPage(subPageForRequest)
@@ -132,9 +134,11 @@ const
     }
 
 export default compose(
+    orientationPortal,
     sectionPortal,
     connect(
         state => ({
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             pornstar: PornstarRecord(ig(state, 'app', 'pornstars', 'pornstar')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
@@ -156,7 +160,10 @@ export default compose(
         pornstarCode: g(props, 'match', 'params', 'child'),
     })),
     withHandlers({
-        loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+        loadPage: props => subPageForRequest => props.loadPageRequest({
+            orientationCode: g(props, 'currentOrientation'),
+            subPageForRequest,
+        }),
 
         setHeaderText: props => headerText => props.setNewText(headerText),
 

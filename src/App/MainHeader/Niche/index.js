@@ -137,8 +137,9 @@ export default compose(
             props.switchOrientation(g(find(orientationCodes, code => code === evValue), []))
         },
 
-        linkBuilder: props => orientationCode =>
-            routerGetters.home.link(g(props, 'routerContext'), orientationCode),
+        linkBuilder: props => orientationCode => routerGetters.home.link(
+            g(props, 'routerContext').set('currentOrientation', g(orientationCode, []))
+        ),
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {

@@ -10,8 +10,10 @@ import {
     plainProvedGet as g,
     immutableProvedGet as ig,
 } from '../helpers'
+
 import {PageTextRecord} from '../models'
 import {routerGetters} from '../../router-builder'
+import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ErrorContent from '../../generic/ErrorContent'
 import PornstarList from '../../generic/PornstarList'
@@ -24,6 +26,8 @@ const
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+
+        lastOrientationCode: '',
 
         modelsList: List(),
         pageText: PageTextRecord(),
@@ -46,12 +50,27 @@ const
                 </PageWrapper>
             </Content>
         }
-    </Page>
+    </Page>,
+
+    loadPageFlow = ({pornstars, routerContext, loadPage, setHeaderText, currentOrientation}) => {
+        if (!(
+            ig(pornstars, 'isLoading') ||
+            (
+                (ig(pornstars, 'isLoaded') || ig(pornstars, 'isFailed')) &&
+                g(currentOrientation, []) === ig(pornstars, 'lastOrientationCode')
+            )
+        ))
+            loadPage()
+        else if (ig(pornstars, 'isLoaded'))
+            setHeaderText(getHeaderText(g(pornstars, []), true))
+    }
 
 export default compose(
+    orientationPortal,
     sectionPortal,
     connect(
         state => ({
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             pornstars: PornstarsRecord(ig(state, 'app', 'pornstars', 'all')),
             routerContext: getRouterContext(state),
         }),
@@ -61,7 +80,9 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => () => props.loadPageRequest(),
+        loadPage: props => () => props.loadPageRequest({
+            orientationCode: g(props, 'currentOrientation'),
+        }),
 
         setHeaderText: props => headerText => props.setNewText(headerText),
 
@@ -70,10 +91,11 @@ export default compose(
     }),
     lifecycle({
         componentDidMount() {
-            if (!ig(this.props.pornstars, 'isLoading') && !ig(this.props.pornstars, 'isLoaded'))
-                this.props.loadPage()
-            else if (ig(this.props.pornstars, 'isLoaded'))
-                this.props.setHeaderText(getHeaderText(g(this, 'props', 'pornstars'), true))
-        }
+            loadPageFlow(this.props)
+        },
+
+        componentWillReceiveProps(nextProps) {
+            loadPageFlow(nextProps)
+        },
     })
 )(Pornstars)

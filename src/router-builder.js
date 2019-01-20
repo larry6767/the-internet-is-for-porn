@@ -34,6 +34,7 @@ import allMoviesActions from './App/AllMovies/actions'
 import {loadAllMoviesPageFlow} from './App/AllMovies/sagas'
 
 import Pornstars from './App/Pornstars'
+import pornstarsActions from './App/Pornstars/actions'
 import {loadPornstarsPageFlow} from './App/Pornstars/sagas'
 
 import Pornstar from './App/Pornstars/Pornstar'
@@ -215,26 +216,36 @@ export const
         }),
 
         pornstars: Object.freeze({
-            path: r => {
-                const pornstars = ig(r, 'router', 'routes', 'pornstars', 'section')
-                return `/${pornstars}`
+            path: (r, orientationCode) => {
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
+                    pornstars = ig(r, 'router', 'routes', 'pornstars', 'section')
+
+                return `${orientationPfx}/${pornstars}`
             },
             link: r => {
-                const pornstars = ig(r, 'router', 'routes', 'pornstars', 'section')
-                return `/${pornstars}`
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
+                    pornstars = ig(r, 'router', 'routes', 'pornstars', 'section')
+
+                return `${orientationPfx}/${pornstars}`
             },
         }),
         pornstar: Object.freeze({
-            path: r => {
-                const pornstar = ig(r, 'router', 'routes', 'pornstar', 'section')
-                return `/${pornstar}/:child`
+            path: (r, orientationCode) => {
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
+                    pornstar = ig(r, 'router', 'routes', 'pornstar', 'section')
+
+                return `${orientationPfx}/${pornstar}/:child`
             },
             link: (r, child, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
+                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     pornstar = ig(r, 'router', 'routes', 'pornstar', 'section'),
                     qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
 
-                return `/${pornstar}/${child}${renderQs(qs)}`
+                return `${orientationPfx}/${pornstar}/${child}${renderQs(qs)}`
             },
         }),
 
@@ -338,6 +349,7 @@ if (process.env.NODE_ENV !== 'production')
 // (such as status code, redirect, action to dispatch).
 // The `router` prop is this store branch: `app.locale.router`.
 const RouterBuilder = ({routerContext: r}) => <Switch>
+    {/* home */}
     {orientationCodes.map(orientationCode => <Route
         exact
         key={orientationCode}
@@ -349,11 +361,12 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             )
                 return <Redirect to={routerGetters.allNiches.link(r)}/>
 
-            const
-                currentSection = 'home',
-                action = homeActions.loadPageRequest({orientationCode})
+            const currentSection = 'home'
 
             if (get(props, ['staticContext', 'isPreRouting'])) {
+                const
+                    action = homeActions.loadPageRequest({orientationCode})
+
                 props.staticContext.saga = loadHomeFlow.bind(null, action)
                 props.staticContext.statusCodeResolver = status500(['app', 'home', 'isFailed'])
                 props.staticContext.currentOrientation = orientationCode
@@ -368,6 +381,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         }}
     />)}
 
+    {/* all niches */}
     {flatten(orientationCodes.map(orientationCode => [
         <Route
             key={`${orientationCode}-allNiches`}
@@ -461,6 +475,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         />,
     ]))}
 
+    {/* all movies */}
     {flatten(orientationCodes.map(orientationCode => [
         <Redirect
             key={`${orientationCode}-allMovies-redirect`}
@@ -493,6 +508,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadAllMoviesPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
+                    x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
                 } else
@@ -525,6 +541,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadAllMoviesPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
+                    x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
                 } else
@@ -537,44 +554,77 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         />,
     ]))}
 
-    <Redirect
-        exact
-        from={ig(r, 'router', 'redirects', 'pornstars', 'from')}
-        to={routerGetters.pornstars.link(r)}
-    />
-    <Route exact path={routerGetters.pornstars.path(r)} render={props => {
-        const currentSection = 'pornstars'
+    {/* pornstars */}
+    {flatten(orientationCodes.map(orientationCode => [
+        <Redirect
+            key={`${orientationCode}-pornstars-redirect`}
+            exact
+            from={
+                ig(r, 'legacyOrientationPrefixes', orientationCode) +
+                ig(r, 'router', 'redirects', 'pornstars', 'from')
+            }
+            to={routerGetters.pornstars.link(r)}
+        />,
+        <Route
+            key={`${orientationCode}-pornstars`}
+            exact
+            path={routerGetters.pornstars.path(r, orientationCode)}
+            render={props => {
+                const currentSection = 'pornstars'
 
-        if (get(props, ['staticContext', 'isPreRouting'])) {
-            const {staticContext: x} = props
-            x.saga = loadPornstarsPageFlow.bind(null, null)
-            x.statusCodeResolver = status500(['app', 'pornstars', 'all', 'isFailed'])
-            x.currentSection = currentSection
-            return null
-        } else
-            return <Pornstars {...props} currentSection={currentSection}/>
-    }}/>
-    <Route path={routerGetters.pornstar.path(r)} render={props => {
-        const currentSection = 'pornstars'
+                if (get(props, ['staticContext', 'isPreRouting'])) {
+                    const
+                        {staticContext: x} = props,
+                        action = pornstarsActions.loadPageRequest({orientationCode})
 
-        if (get(props, ['staticContext', 'isPreRouting'])) {
-            const
-                qs = queryString.parse(ig(r, 'location', 'search')),
-                {match: {params}, staticContext: x} = props,
-                action = pornstarActions.loadPageRequest(localizedGetSubPage(r)(
-                    g(params, 'child'),
-                    get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                    get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
-                ))
+                    x.saga = loadPornstarsPageFlow.bind(null, action)
+                    x.statusCodeResolver = status500(['app', 'pornstars', 'all', 'isFailed'])
+                    x.currentOrientation = orientationCode
+                    x.currentSection = currentSection
+                    return null
+                } else
+                    return <Pornstars
+                        {...props}
+                        currentSection={currentSection}
+                        orientationCode={orientationCode}
+                    />
+            }}
+        />,
+        <Route
+            key={`${orientationCode}-pornstar`}
+            path={routerGetters.pornstar.path(r, orientationCode)}
+            render={props => {
+                const currentSection = 'pornstars'
 
-            x.saga = loadPornstarPageFlow.bind(null, action)
-            x.statusCodeResolver = status500(['app', 'pornstars', 'pornstar', 'isFailed'])
-            x.currentSection = currentSection
-            return null
-        } else
-            return <Pornstar {...props} currentSection={currentSection}/>
-    }}/>
+                if (get(props, ['staticContext', 'isPreRouting'])) {
+                    const
+                        qs = queryString.parse(ig(r, 'location', 'search')),
+                        {match: {params}, staticContext: x} = props,
+                        action = pornstarActions.loadPageRequest({
+                            orientationCode,
+                            subPageForRequest: localizedGetSubPage(r)(
+                                g(params, 'child'),
+                                get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
+                            ),
+                        })
 
+                    x.saga = loadPornstarPageFlow.bind(null, action)
+                    x.statusCodeResolver = status500(['app', 'pornstars', 'pornstar', 'isFailed'])
+                    x.currentOrientation = orientationCode
+                    x.currentSection = currentSection
+                    return null
+                } else
+                    return <Pornstar
+                        {...props}
+                        currentSection={currentSection}
+                        orientationCode={orientationCode}
+                    />
+            }}
+        />,
+    ]))}
+
+    {/* favorite */}
     <Redirect
         exact
         from={ig(r, 'router', 'redirects', 'favorite', 'from')}
@@ -600,7 +650,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         } else
             return <Favorite {...props} currentSection={currentSection}/>
     }}/>
-
     <Redirect
         exact
         from={ig(r, 'router', 'redirects', 'favoritePornstars', 'from')}
@@ -622,6 +671,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             return <FavoritePornstars {...props} currentSection={currentSection}/>
     }}/>
 
+    {/* video */}
     <Redirect
         exact
         from={routerGetters.video.redirectFrom(r)}
@@ -645,6 +695,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             return <VideoPage {...props} currentSection={currentSection}/>
     }}/>
 
+    {/* search */}
     <Route exact path={routerGetters.findVideos.path(r)} render={props => {
         const currentSection = 'allMovies'
 
@@ -665,6 +716,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             return <FindVideos {...props} currentSection={currentSection}/>
     }}/>
 
+    {/* 404 */}
     <Route render={props => {
         const currentSection = null
 

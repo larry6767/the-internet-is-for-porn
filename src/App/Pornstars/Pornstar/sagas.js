@@ -15,12 +15,13 @@ import errorActions from '../../../generic/ErrorMessage/actions'
 import headerActions from '../../MainHeader/actions'
 import actions from './actions'
 
-export function* loadPornstarPageFlow({payload: subPageForRequest}, ssrContext) {
+export function* loadPornstarPageFlow(action, ssrContext) {
     try {
         const reqData = yield select(x => ({
             localeCode: ig(x, 'app', 'locale', 'localeCode'),
+            orientationCode: g(action, 'payload', 'orientationCode'),
             page: getProvedPageKey('pornstar'),
-            subPageCode: subPageForRequest,
+            subPageCode: g(action, 'payload', 'subPageForRequest'),
         }))
 
         let data
@@ -30,7 +31,11 @@ export function* loadPornstarPageFlow({payload: subPageForRequest}, ssrContext) 
             data = yield getPageData(reqData)
 
         yield put(headerActions.setNewText(getHeaderText(data)))
-        yield put(actions.loadPageSuccess({subPageForRequest, data}))
+        yield put(actions.loadPageSuccess({
+            orientationCode: g(reqData, 'orientationCode'),
+            subPageForRequest: g(reqData, 'subPageCode'),
+            data,
+        }))
     } catch (err) {
         console.error('loadPornstarPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())
