@@ -17,6 +17,7 @@ import {
 } from '../helpers'
 
 import {routerGetters} from '../../router-builder'
+import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
@@ -31,6 +32,7 @@ const
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+        lastOrientationCode: '',
         lastSubPageForRequest: '',
         pageNumber: 1,
         pageText: Map(),
@@ -91,7 +93,7 @@ const
 
     loadPageFlow = ({
         search, routerContext, findVideos,
-        loadPage, setHeaderText,
+        loadPage, setHeaderText, currentOrientation,
     }) => {
         const
             qs = queryString.parse(search),
@@ -99,7 +101,7 @@ const
             pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
             searchQuery = get(qs, [ig(routerContext, 'router', 'searchQuery', 'qsKey')], null),
             getSubPage = localizedGetSubPage(routerContext),
-            subPageForRequest = getSubPage(null, ordering, pagination, null, searchQuery)
+            subPageForRequest = getSubPage(null, ordering, pagination, [], searchQuery)
 
         if (typeof subPageForRequest !== 'string')
             throw new Error(
@@ -114,18 +116,21 @@ const
             ig(findVideos, 'isLoading') ||
             (
                 (ig(findVideos, 'isLoaded') || ig(findVideos, 'isFailed')) &&
+                g(currentOrientation, []) === ig(findVideos, 'lastOrientationCode') &&
                 subPageForRequest === ig(findVideos, 'lastSubPageForRequest')
             )
         ))
             loadPage(subPageForRequest)
         else if (ig(findVideos, 'isLoaded'))
-            setHeaderText(getHeaderText(findVideos, true))
+            setHeaderText(getHeaderText(g(findVideos, []), true))
     }
 
 export default compose(
+    orientationPortal,
     sectionPortal,
     connect(
         state => ({
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             findVideos: FindVideosRecord(ig(state, 'app', 'findVideos')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
@@ -141,7 +146,10 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+        loadPage: props => subPageForRequest => props.loadPageRequest({
+            orientationCode: g(props, 'currentOrientation'),
+            subPageForRequest: g(subPageForRequest, []),
+        }),
 
         setHeaderText: props => headerText => props.setNewText(headerText),
 

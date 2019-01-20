@@ -303,16 +303,20 @@ export const
         }),
 
         findVideos: Object.freeze({
-            path: r => {
-                const findVideos = ig(r, 'router', 'routes', 'findVideos', 'section')
-                return `/${findVideos}`
+            path: (r, orientationCode) => {
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
+                    findVideos = ig(r, 'router', 'routes', 'findVideos', 'section')
+
+                return `${orientationPfx}/${findVideos}`
             },
             link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
+                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     findVideos = ig(r, 'router', 'routes', 'findVideos', 'section'),
                     qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
 
-                return `/${findVideos}${renderQs(qs)}`
+                return `${orientationPfx}/${findVideos}${renderQs(qs)}`
             },
         }),
     })
@@ -746,25 +750,41 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     ]))}
 
     {/* search */}
-    <Route exact path={routerGetters.findVideos.path(r)} render={props => {
-        const currentSection = 'allMovies'
+    {orientationCodes.map(orientationCode =>
+        <Route
+            key={orientationCode}
+            exact
+            path={routerGetters.findVideos.path(r, orientationCode)}
+            render={props => {
+                const currentSection = 'allMovies'
 
-        if (get(props, ['staticContext', 'isPreRouting'])) {
-            const
-                qs = queryString.parse(ig(r, 'location', 'search')),
-                action = findVideosActions.loadPageRequest(localizedGetSubPage(r)(
-                    null,
-                    get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                    get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
-                ))
+                if (get(props, ['staticContext', 'isPreRouting'])) {
+                    const
+                        qs = queryString.parse(ig(r, 'location', 'search')),
+                        {staticContext: x} = props,
+                        action = findVideosActions.loadPageRequest({
+                            orientationCode,
+                            subPageForRequest: localizedGetSubPage(r)(
+                                null,
+                                get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
+                            ),
+                        })
 
-            props.staticContext.saga = loadFindVideosPageFlow.bind(null, action)
-            props.staticContext.statusCodeResolver = status500(['app', 'findVideos', 'isFailed'])
-            props.staticContext.currentSection = currentSection
-            return null
-        } else
-            return <FindVideos {...props} currentSection={currentSection}/>
-    }}/>
+                    x.saga = loadFindVideosPageFlow.bind(null, action)
+                    x.statusCodeResolver = status500(['app', 'findVideos', 'isFailed'])
+                    x.currentOrientation = orientationCode
+                    x.currentSection = currentSection
+                    return null
+                } else
+                    return <FindVideos
+                        {...props}
+                        currentSection={currentSection}
+                        orientationCode={orientationCode}
+                    />
+            }}
+        />
+    )}
 
     {/* 404 */}
     <Route render={props => {
