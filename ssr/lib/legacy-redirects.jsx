@@ -17,6 +17,8 @@ const
     }
 
 const
+    // TODO redirects supposed to be splitted for specific orientations (see mapping module),
+    //      see page codes mapping in backend-api mapping module to see how it could be done.
     LegacyRedirectsRouterBuilder = ({routerContext: r}) => <Switch>
         {orientationCodes.map(orientationCode => [
             <Route

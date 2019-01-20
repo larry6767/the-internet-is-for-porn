@@ -19,7 +19,7 @@ const
                 video: {sectionPfx: 'video-'},
                 findVideos: {section: 'find-videos'},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: '?categories'},
                 allMovies: {from: '/all-movies.html'},
                 pornstars: {from: '/porn-stars.html'},
@@ -59,7 +59,7 @@ const
                 video: {sectionPfx: 'video-'},
                 findVideos: {section: 'finde-videos'},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: '?categories'},
                 allMovies: {from: '/alle-vids.html'},
                 pornstars: {from: '/porn-stars.html'},
@@ -99,7 +99,7 @@ const
                 video: {sectionPfx: 'film-'},
                 findVideos: {section: 'trova-video'},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: '?categories'},
                 allMovies: {from: '/tutti-i-film.html'},
                 pornstars: {from: '/porn-stars.html'},
@@ -139,7 +139,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -179,7 +179,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -219,7 +219,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -259,7 +259,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -299,7 +299,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -339,7 +339,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -379,7 +379,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -419,7 +419,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
