@@ -6,7 +6,7 @@ import i18n from '../locale-mapping/i18n'
 import {plainProvedGet as g} from '../App/helpers'
 import {orientationCodes} from '../App/models'
 import {getPureDomain, patchSiteLocales} from '../App/helpers/hostLocale'
-import {logRequestError, buildLocalePageCodes} from './helpers'
+import {logRequestError, buildLocalePageCodes, getLegacyOrientationPrefixes} from './helpers'
 
 import {
     getPageData as requestPageData,
@@ -170,6 +170,7 @@ const
             pageCodes: buildLocalePageCodes(localeCode),
             router: g(routerLocaleMapping, localeCode),
             i18n: g(i18n, localeCode),
+            legacyOrientationPrefixes: getLegacyOrientationPrefixes(localeCode),
         }).end()
     },
 

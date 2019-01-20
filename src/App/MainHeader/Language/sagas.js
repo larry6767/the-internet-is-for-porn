@@ -60,4 +60,3 @@ export default function* saga() {
     yield takeEvery(g(actions, 'loadSiteLocalesRequest'), loadSiteLocalesFlow)
     yield takeEvery(g(actions, 'setNewLanguage'), setNewLanguageFlow)
 }
-

@@ -37,6 +37,13 @@ export const
     orientationCodes = Object.freeze(['straight', 'gay', 'tranny']),
     defaultOrientationCode = orientationCodes[0],
 
+    legacyOrientationPrefixesModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exact({
+            straight: PropTypes.string,
+            gay: PropTypes.string,
+            tranny: PropTypes.string,
+        }),
+
     routerLocationModel = process.env.NODE_ENV === 'production' ? null :
         ImmutablePropTypes.exact({
             hash: PropTypes.string,
@@ -51,6 +58,7 @@ export const
             location: routerLocationModel,
             router: immutableLocaleRouterModel,
             currentOrientation: PropTypes.oneOf(orientationCodes),
+            legacyOrientationPrefixes: legacyOrientationPrefixesModel,
         })
 
 const

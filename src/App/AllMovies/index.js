@@ -1,7 +1,7 @@
 // TODO: this page needs propTypes
 import {get} from 'lodash'
 import React from 'react'
-import {Record, Map, List, fromJS} from 'immutable'
+import {Record, List} from 'immutable'
 import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, withProps} from 'recompose'
@@ -13,12 +13,14 @@ import {
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
+    PropTypes,
     setPropTypes,
     getHeaderText,
 } from '../helpers'
 
-import {immutableI18nButtonsModel} from '../models'
+import {immutableI18nButtonsModel, orientationCodes, PageTextRecord} from '../models'
 import {routerGetters} from '../../router-builder'
+import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
@@ -37,22 +39,21 @@ const
 
         currentPage: '',
         lastSubPageForRequest: '',
+        lastOrientationCode: '',
 
         pageNumber: 1,
-        pageText: Map(),
+        pageText: PageTextRecord,
         pagesCount: 1,
 
         tagList: List(),
         tagArchiveList: List(),
         sortList: List(),
         currentSort: null,
-        archiveFilms: Map(),
-        tagArchiveListOlder: fromJS(),
-        tagArchiveListNewer: fromJS(),
+        archiveFilms: null,
+        tagArchiveListOlder: null,
+        tagArchiveListNewer: null,
         itemsCount: 0,
         videoList: List(),
-
-        lastSubPage: '',
     }),
 
     AllMovies = ({
@@ -118,7 +119,10 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({search, routerContext, allMovies, archiveParams, loadPage, setHeaderText}) => {
+    loadPageFlow = ({
+        search, routerContext, allMovies, archiveParams,
+        loadPage, setHeaderText, currentOrientation,
+    }) => {
         const
             qs = queryString.parse(search),
             ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
@@ -147,18 +151,21 @@ const
             ig(allMovies, 'isLoading') ||
             (
                 (ig(allMovies, 'isLoaded') || ig(allMovies, 'isFailed')) &&
+                g(currentOrientation, []) === ig(allMovies, 'lastOrientationCode') &&
                 subPageForRequest === ig(allMovies, 'lastSubPageForRequest')
             )
         ))
             loadPage(subPageForRequest)
         else if (ig(allMovies, 'isLoaded'))
-            setHeaderText(getHeaderText(allMovies, true))
+            setHeaderText(getHeaderText(g(allMovies, []), true))
     }
 
 export default compose(
+    orientationPortal,
     sectionPortal,
     connect(
         state => ({
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             allMovies: AllMoviesRecord(ig(state, 'app', 'allMovies')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
@@ -181,7 +188,10 @@ export default compose(
             },
     })),
     withHandlers({
-        loadPage: props => subPageForRequest => props.loadPageRequest(subPageForRequest),
+        loadPage: props => subPageForRequest => props.loadPageRequest({
+            orientationCode: g(props, 'currentOrientation'),
+            subPageForRequest,
+        }),
 
         setHeaderText: props => headerText => props.setNewText(headerText),
 
@@ -229,5 +239,6 @@ export default compose(
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         i18nButtons: immutableI18nButtonsModel,
+        currentOrientation: PropTypes.oneOf(orientationCodes),
     }),
 )(AllMovies)

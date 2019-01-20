@@ -5,7 +5,7 @@ import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {CircularProgress, Typography} from '@material-ui/core'
-import {Record, Map, List, fromJS} from 'immutable'
+import {Record, List} from 'immutable'
 
 import {
     getHeaderText,
@@ -21,6 +21,7 @@ import {
     immutableI18nButtonsModel,
     routerContextModel,
     orientationCodes,
+    PageTextRecord,
 } from '../../models'
 
 import {routerGetters} from '../../../router-builder'
@@ -46,16 +47,16 @@ const
         lastOrientationCode: '',
 
         pageNumber: 1,
-        pageText: Map(),
+        pageText: PageTextRecord(),
         pagesCount: 1,
 
         tagList: List(),
         tagArchiveList: List(),
         sortList: List(),
         currentSort: null,
-        archiveFilms: Map(),
-        tagArchiveListOlder: fromJS(),
-        tagArchiveListNewer: fromJS(),
+        archiveFilms: null,
+        tagArchiveListOlder: null,
+        tagArchiveListNewer: null,
         itemsCount: 0,
         videoList: List(),
     }),

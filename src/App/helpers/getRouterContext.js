@@ -9,6 +9,7 @@ const
         location: null,
         router: null,
         currentOrientation: null,
+        legacyOrientationPrefixes: null,
     })
 
 export default state => {
@@ -17,6 +18,7 @@ export default state => {
             location: ig(state, 'router', 'location'),
             router: ig(state, 'app', 'locale', 'router'),
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
+            legacyOrientationPrefixes: ig(state, 'app', 'locale', 'legacyOrientationPrefixes'),
         })
 
     if (process.env.NODE_ENV !== 'production')

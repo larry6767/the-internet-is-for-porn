@@ -60,7 +60,7 @@ import NotFound from './App/NotFound'
 
 const
     getQs = r => queryString.parse(ig(r, 'location', 'search')),
-    renderQs = qs => g(Object.keys(qs), 'length') > 0 ? '?' + queryString.stringify(qs) : '',
+    renderQs = qs => g(Object.keys(qs), 'length') > 0 ? `?${queryString.stringify(qs)}` : '',
 
     orderingAndPaginationQsParamsModel = process.env.NODE_ENV === 'production' ? null :
         PropTypes.exact({
@@ -177,35 +177,41 @@ export const
         }),
 
         allMovies: Object.freeze({
-            path: r => {
-                const allMovies = ig(r, 'router', 'routes', 'allMovies', 'section')
-                return `/${allMovies}`
+            path: (r, orientationCode) => {
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
+                    allMovies = ig(r, 'router', 'routes', 'allMovies', 'section')
+
+                return `${orientationPfx}/${allMovies}`
             },
             link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
+                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
                     qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
 
-                return `/${allMovies}${renderQs(qs)}`
+                return `${orientationPfx}/${allMovies}${renderQs(qs)}`
             },
         }),
         allMoviesArchive: Object.freeze({
-            path: r => {
+            path: (r, orientationCode) => {
                 const
+                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
                     allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label')
 
-                return `/${allMovies}/${archive}/(\\d{4})-(\\d{2})`
+                return `${orientationPfx}/${allMovies}/${archive}/(\\d{4})-(\\d{2})`
             },
             link: (r, year, month, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
+                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label'),
                     qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
 
                 year = padStart(year, 4, '0')
                 month = padStart(month, 2, '0')
-                return `/${allMovies}/${archive}/${year}-${month}${renderQs(qs)}`
+                return `${orientationPfx}/${allMovies}/${archive}/${year}-${month}${renderQs(qs)}`
             },
         }),
 
@@ -456,51 +462,75 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         />,
     ]))}
 
-    <Redirect
-        exact
-        from={ig(r, 'router', 'redirects', 'allMovies', 'from')}
-        to={routerGetters.allMovies.link(r)}
-    />
-    <Route exact path={routerGetters.allMovies.path(r)} render={props => {
-        const currentSection = 'allMovies'
+    {flatten(orientationCodes.map(orientationCode => [
+        <Redirect
+            key={`${orientationCode}-allMovies-redirect`}
+            exact
+            from={
+                ig(r, 'legacyOrientationPrefixes', orientationCode) +
+                ig(r, 'router', 'redirects', 'allMovies', 'from')
+            }
+            to={routerGetters.allMovies.link(r)}
+        />,
+        <Route
+            key={`${orientationCode}-allMovies`}
+            exact
+            path={routerGetters.allMovies.path(r, orientationCode)}
+            render={props => {
+                const currentSection = 'allMovies'
 
-        if (get(props, ['staticContext', 'isPreRouting'])) {
-            const
-                qs = queryString.parse(ig(r, 'location', 'search')),
-                action = allMoviesActions.loadPageRequest(localizedGetSubPage(r)(
-                    null,
-                    get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                    get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
-                ))
+                if (get(props, ['staticContext', 'isPreRouting'])) {
+                    const
+                        qs = queryString.parse(ig(r, 'location', 'search')),
+                        {staticContext: x} = props,
+                        action = allMoviesActions.loadPageRequest(localizedGetSubPage(r)(
+                            null,
+                            get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                            get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
+                        ))
 
-            props.staticContext.saga = loadAllMoviesPageFlow.bind(null, action)
-            props.staticContext.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
-            props.staticContext.currentSection = currentSection
-            return null
-        } else
-            return <AllMovies {...props} currentSection={currentSection}/>
-    }}/>
-    <Route path={routerGetters.allMoviesArchive.path(r)} render={props => {
-        const currentSection = 'allMovies'
+                    x.saga = loadAllMoviesPageFlow.bind(null, action)
+                    x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
+                    x.currentSection = currentSection
+                    return null
+                } else
+                    return <AllMovies
+                        {...props}
+                        currentSection={currentSection}
+                        orientationCode={orientationCode}
+                    />
+            }}
+        />,
+        <Route
+            key={`${orientationCode}-allMovies-archive`}
+            path={routerGetters.allMoviesArchive.path(r, orientationCode)}
+            render={props => {
+                const currentSection = 'allMovies'
 
-        if (get(props, ['staticContext', 'isPreRouting'])) {
-            const
-                qs = queryString.parse(ig(r, 'location', 'search')),
-                {match: {params}, staticContext: x} = props,
-                action = allMoviesActions.loadPageRequest(localizedGetSubPage(r)(
-                    null,
-                    get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                    get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
-                    [g(params, 0), g(params, 1)]
-                ))
+                if (get(props, ['staticContext', 'isPreRouting'])) {
+                    const
+                        qs = queryString.parse(ig(r, 'location', 'search')),
+                        {match: {params}, staticContext: x} = props,
+                        action = allMoviesActions.loadPageRequest(localizedGetSubPage(r)(
+                            null,
+                            get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                            get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
+                            [g(params, 0), g(params, 1)]
+                        ))
 
-            x.saga = loadAllMoviesPageFlow.bind(null, action)
-            x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
-            x.currentSection = currentSection
-            return null
-        } else
-            return <AllMovies {...props} currentSection={currentSection}/>
-    }}/>
+                    x.saga = loadAllMoviesPageFlow.bind(null, action)
+                    x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
+                    x.currentSection = currentSection
+                    return null
+                } else
+                    return <AllMovies
+                        {...props}
+                        currentSection={currentSection}
+                        orientationCode={orientationCode}
+                    />
+            }}
+        />,
+    ]))}
 
     <Redirect
         exact
