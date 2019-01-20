@@ -2,6 +2,7 @@ import {put, takeEvery, select} from 'redux-saga/effects'
 import {push} from 'connected-react-router/immutable'
 
 import {
+    getProvedPageKey,
     getHeaderText,
     getPageData,
     getRouterContext,
@@ -19,7 +20,7 @@ export function* loadNichePageFlow(action, ssrContext) {
         const reqData = yield select(x => ({
             localeCode: ig(x, 'app', 'locale', 'localeCode'),
             orientationCode: g(action, 'payload', 'orientationCode'),
-            pageCode: ig(x, 'app', 'locale', 'pageCode', 'niche'),
+            page: getProvedPageKey('niche'),
             subPageCode: g(action, 'payload', 'subPageForRequest'),
         }))
 

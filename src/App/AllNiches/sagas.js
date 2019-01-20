@@ -1,6 +1,7 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 
 import {
+    getProvedPageKey,
     getPageData,
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -17,7 +18,7 @@ export function* loadAllNichesPageFlow(action, ssrContext) {
         const reqData = yield select(x => ({
             localeCode: ig(x, 'app', 'locale', 'localeCode'),
             orientationCode: g(action, 'payload', 'orientationCode'),
-            pageCode: ig(x, 'app', 'locale', 'pageCode', 'allNiches'),
+            page: getProvedPageKey('allNiches'),
         }))
 
         let data

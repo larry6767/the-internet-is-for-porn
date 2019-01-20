@@ -6,7 +6,7 @@ import i18n from '../locale-mapping/i18n'
 import {plainProvedGet as g} from '../App/helpers'
 import {orientationCodes} from '../App/models'
 import {getPureDomain, patchSiteLocales} from '../App/helpers/hostLocale'
-import {logRequestError, buildLocalePageCodes, getLegacyOrientationPrefixes} from './helpers'
+import {logRequestError, getLegacyOrientationPrefixes} from './helpers'
 
 import {
     getPageData as requestPageData,
@@ -64,14 +64,14 @@ const
         }).end()
     },
 
-    requestHandler = siteLocales => (req, res, pageCode, orientationCode, withSubPageCode) => {
+    requestHandler = siteLocales => (req, res, page, orientationCode, withSubPageCode) => {
         const
             localeCode = g(req, 'body', 'localeCode'),
 
             params = {
                 headers: proxiedHeaders(siteLocales, localeCode)(req),
-                pageCode,
                 orientationCode,
+                page,
             }
 
         if (withSubPageCode)
@@ -82,78 +82,74 @@ const
         .catch(jsonThrow500(req, res))
     },
 
+    pageKeysWithSubPageCode =
+        Object.freeze(['niche', 'allMovies', 'pornstar', 'video', 'findVideos']),
+
     getPageData = siteLocales => (({validTopLevelKeys}) => (req, res) => {
         const
-            invalidKeys = Object.keys(req.body).filter(x => !includes(validTopLevelKeys, x))
+            invalidKeys = Object.keys(req.body).filter(x => !includes(validTopLevelKeys, x)),
+            operation = g(req, 'params', 'operation'),
+            method = g(req, 'method')
 
         if (invalidKeys.length !== 0)
             return jsonThrow400(req, res)(
                 'Found unexpected/unknown top-level keys in request body',
                 {
                     request: {
-                        method: g(req, 'method'),
-                        operation: g(req, 'params', 'operation'),
+                        method,
+                        operation,
                         invalidTopLevelKeys: invalidKeys,
                     },
                 }
             )
 
-        if ( ! req.body.localeCode || ! req.body.pageCode || ! req.body.orientationCode)
+        if ( ! req.body.localeCode || ! req.body.page || ! req.body.orientationCode)
             return jsonThrow400(req, res)(
                 'Some required field(s) is not provided in request body',
                 {
                     request: {
-                        method: g(req, 'method'),
-                        operation: g(req, 'params', 'operation'),
+                        method,
+                        operation,
                         required: {
                             localeCode: req.body.localeCode,
-                            pageCode: req.body.pageCode,
+                            page: req.body.page,
                             orientationCode: req.body.orientationCode,
                         },
                     },
                 }
             )
 
-        if ( ! apiLocaleMapping.hasOwnProperty(g(req, 'body', 'localeCode')))
+        const
+            localeCode = g(req, 'body', 'localeCode'),
+            orientationCode = g(req, 'body', 'orientationCode'),
+            page = g(req, 'body', 'page')
+
+        if ( ! apiLocaleMapping.hasOwnProperty(localeCode))
             return jsonThrow400(req, res)('Unknown site locale code', {
                 request: {
-                    method: g(req, 'method'),
-                    operation: g(req, 'params', 'operation'),
-                    localeCode: g(req, 'body', 'localeCode'),
+                    method,
+                    operation,
+                    localeCode,
+                    orientationCode,
+                    page,
                 },
             })
 
-        const
-            currentApiLocale = g(apiLocaleMapping, g(req, 'body', 'localeCode')),
-            orientationCode = g(req, 'body', 'orientationCode'),
-
-            matchedPageCode = find(
-                g(currentApiLocale, 'pageCode'),
-                x => g(x, 'code') === g(req, 'body', 'pageCode')
-            )
-
-        if (matchedPageCode) {
-            const
-                code = g(matchedPageCode, 'code'),
-
-                withSubPageCode = includes(
-                    ['niche', 'allMovies', 'pornstar', 'video', 'findVideos']
-                        .map(x => g(currentApiLocale, 'pageCode', x, 'code')),
-                    code
-                )
-
-            requestHandler(siteLocales)(req, res, code, orientationCode, withSubPageCode)
+        if (g(apiLocaleMapping, localeCode, 'pageCode').hasOwnProperty(page)) {
+            const withSubPageCode = includes(pageKeysWithSubPageCode, page)
+            requestHandler(siteLocales)(req, res, page, orientationCode, withSubPageCode)
         } else
-            jsonThrow400(req, res)('Unexpected/unknown "pageCode" value in request body', {
+            jsonThrow400(req, res)('Unexpected/unknown "page" value in request body', {
                 request: {
-                    method: g(req, 'method'),
-                    operation: g(req, 'params', 'operation'),
-                    pageCode: g(req, 'body', 'pageCode'),
-                    orientationCode: g(req, 'body', 'orientationCode'),
+                    method,
+                    operation,
+                    localeCode,
+                    orientationCode,
+                    page,
                 },
             })
     })({
-        validTopLevelKeys: ['localeCode', 'orientationCode', 'pageCode', 'subPageCode'],
+        validTopLevelKeys: ['localeCode', 'orientationCode', 'page', 'subPageCode'],
     }),
 
     getSiteLocale = (siteLocales, defaultSiteLocaleCode) => (req, res) => {
@@ -167,7 +163,6 @@ const
 
         res.json({
             localeCode,
-            pageCodes: buildLocalePageCodes(localeCode),
             router: g(routerLocaleMapping, localeCode),
             i18n: g(i18n, localeCode),
             legacyOrientationPrefixes: getLegacyOrientationPrefixes(localeCode),

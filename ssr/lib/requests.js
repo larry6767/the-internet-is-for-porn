@@ -1,13 +1,9 @@
-import {pick, map, find, omit, compact, get} from 'lodash'
+import {pick, map, find, omit, compact, get, set} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 
-import {
-    plainProvedGet as g,
-    PropTypes,
-    assertPropTypes,
-} from '../App/helpers'
-
+import {plainProvedGet as g, PropTypes, assertPropTypes} from '../App/helpers'
+import {pageKeys} from '../App/models'
 import {defaultHostToFetchSiteLocalesFrom} from '../config'
 import apiLocales from '../locale-mapping/backend-api'
 import {backendUrl, backendUrlForReport, backendUrlForSearch} from './helpers/backendUrl'
@@ -290,21 +286,24 @@ const
         }
     },
 
-    getPageDataParamsModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
-        url: PropTypes.string,
-        options: PropTypes.shape({
-            blocks: PropTypes.exact({
-                allTagsBlock: PropTypes.number.isOptional,
-                modelsABCBlockText: PropTypes.number.isOptional,
-                modelsABCBlockThumbs: PropTypes.number.isOptional,
-            }).isOptional,
+    getPageDataParamsOptionsModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
+        // for now it is the only option we use
+        blocks: PropTypes.exact({
+            allTagsBlock: PropTypes.number.isOptional,
+            modelsABCBlockText: PropTypes.number.isOptional,
+            modelsABCBlockThumbs: PropTypes.number.isOptional,
         }).isOptional,
     }),
 
+    getPageDataParamsModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
+        url: PropTypes.string,
+        options: getPageDataParamsOptionsModel.isOptional,
+    }),
+
     getPageDataResultModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exactTuple([
-        getPageDataParamsModel,
-        PropTypes.func,
-    ]).isOptional,
+        PropTypes.nullable(getPageDataParamsOptionsModel),
+        PropTypes.func, // raw backend response to proper and filtered data map function
+    ]),
 
     getPageDataReqBodyModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         operation: PropTypes.string,
@@ -321,83 +320,82 @@ const
             )
 
         return response.json()
+    },
+
+    getPageDataPageMappingModel = PropTypes.exact(
+        pageKeys.reduce((o, k) => set(o, k, getPageDataResultModel), {})
+    ),
+
+    getPageDataPageMapping = Object.freeze({
+        home: [
+            {blocks: {allTagsBlock: 1, modelsABCBlockText: 1, modelsABCBlockThumbs: 1}},
+            getHomeMap,
+        ],
+        allNiches: [{blocks: {allTagsBlock: 1}}, getAllNichesMap],
+        niche: [{blocks: {allTagsBlock: 1}}, getNicheMap],
+        allMovies: [{blocks: {allTagsBlock: 1}}, getAllMoviesMap],
+        pornstars: [null, getPornstarsMap],
+        pornstar: [
+            {blocks: {modelsABCBlockText: 1, modelsABCBlockThumbs: 1}},
+            getPornstarMap,
+        ],
+        favorite: [null, getFavoriteMap],
+        favoritePornstars: [
+            {blocks: {modelsABCBlockThumbs: 1}},
+            getFavoritePornstarsMap,
+        ],
+        video: [null, getVideoPageMap],
+        findVideos: [null, getFindVideosMap],
+    }),
+
+    getPageDataUrlBuilder = (localeCode, orientationCode, page, subPageCode) => {
+        const
+            pageCodeBranch = g(apiLocales, localeCode, 'pageCode', page),
+            orientationPrefix = g(apiLocales, localeCode, 'orientationPrefixes', orientationCode),
+            {code} = pageCodeBranch
+
+        let
+            url = g(pageCodeBranch, 'url')
+
+        if (pageCodeBranch.hasOwnProperty('code'))
+            url = url.replace(/%PAGE_CODE%/g, g(pageCodeBranch, 'code', orientationCode))
+
+        if (subPageCode !== null)
+            url = url.replace(/%SUB_PAGE_CODE%/g, subPageCode)
+
+        return url.replace(/%ORIENTATION_PFX%/g, orientationPrefix)
     }
+
+if (process.env.NODE_ENV !== 'production')
+    assertPropTypes(
+        getPageDataPageMappingModel,
+        getPageDataPageMapping,
+        'requests',
+        'getPageDataPageMapping'
+    )
 
 /*
     Generic helper to obtain data from backend for specific "page".
 */
 export const getPageData = (siteLocales, localeCode) => async ({
     headers,
-    pageCode,
-    subPageCode,
     orientationCode,
+    page,
+    subPageCode = null, // optional
 }) => {
-    // To assign it in conditions, done it this way to reduce human-factor mistakes
-    // (like you may accidentally write `locale.home.code` in condition
-    // and `urlFunc(locale.niche.url)` for url
-    // and with this variable you assign page code branch only once).
-    let x
-
     const
-        localeBranch = (...xs) => g(apiLocales, [localeCode, 'pageCode'].concat(xs)),
-        orientationPrefix = g(apiLocales, localeCode, 'orientationPrefixes', orientationCode),
-
-        urlFunc = url => url
-            .replace(/%PAGE_CODE%/g, pageCode)
-            .replace(/%SUB_PAGE_CODE%/g, subPageCode)
-            .replace(/%ORIENTATION_PFX%/g, orientationPrefix),
-
-        result =
-            pageCode === (x = localeBranch('home'), g(x, 'code'))
-            ? [{url: urlFunc(g(x, 'url')), options: {blocks: {
-                allTagsBlock: 1,
-                modelsABCBlockText: 1,
-                modelsABCBlockThumbs: 1,
-            }}}, getHomeMap]
-
-            : pageCode === (x = localeBranch('allNiches'), g(x, 'code'))
-            ? [{url: urlFunc(g(x, 'url')), options: {blocks: {allTagsBlock: 1}}}, getAllNichesMap]
-
-            : pageCode === (x = localeBranch('niche'), g(x, 'code'))
-            ? [{url: urlFunc(g(x, 'url')), options: {blocks: {allTagsBlock: 1}}}, getNicheMap]
-
-            : pageCode === (x = localeBranch('allMovies'), g(x, 'code'))
-            ? [{url: urlFunc(g(x, 'url')), options: {blocks: {allTagsBlock: 1}}}, getAllMoviesMap]
-
-            : pageCode === (x = localeBranch('pornstars'), g(x, 'code'))
-            ? [{url: urlFunc(g(x, 'url'))}, getPornstarsMap]
-
-            : pageCode === (x = localeBranch('pornstar'), g(x, 'code'))
-            ? [{url: urlFunc(g(x, 'url')), options: {blocks: {
-                modelsABCBlockText: 1,
-                modelsABCBlockThumbs: 1,
-            }}}, getPornstarMap]
-
-            : pageCode === (x = localeBranch('favorite'), g(x, 'code'))
-            ? [{url: urlFunc(g(x, 'url'))}, getFavoriteMap]
-
-            : pageCode === (x = localeBranch('favoritePornstars'), g(x, 'code'))
-            ? [{url: urlFunc(g(x, 'url')), options: {blocks: {
-                modelsABCBlockThumbs: 1,
-            }}}, getFavoritePornstarsMap]
-
-            : pageCode === (x = localeBranch('video'), g(x, 'code'))
-            ? [{url: urlFunc(g(x, 'url'))}, getVideoPageMap]
-
-            : pageCode === (x = localeBranch('findVideos'), g(x, 'code'))
-            ? [{url: urlFunc(g(x, 'url'))}, getFindVideosMap]
-
-            : null
+        url = getPageDataUrlBuilder(localeCode, orientationCode, page, subPageCode),
+        result = g(getPageDataPageMapping, page)
 
     if (process.env.NODE_ENV !== 'production')
         assertPropTypes(getPageDataResultModel, result, 'requests', 'getPageData')
 
-    if (result === null)
-        throw new Error(`Unexpected page code: "${pageCode}"`)
-
     const
-        [params, mapFn] = result,
-        body = {operation: 'getPageDataByUrl', params}
+        [options, mapFn] = result,
+        body = {operation: 'getPageDataByUrl', params: {url}}
+
+    if (options !== null)
+        body.params.options = options
 
     if (process.env.NODE_ENV !== 'production')
         assertPropTypes(getPageDataReqBodyModel, body, 'requests', 'getPageData')

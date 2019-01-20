@@ -18,8 +18,8 @@ if (process.env.NODE_ENV === 'production')
     runFrontEnd()
 else {
     // For development react server only,
-    // on production it supposed to be filled by `window.storePreset`.
-    if (ig(store.getState(), 'app', 'locale', 'pageCode'))
+    // with production mode it supposed to be filled by `window.storePreset`.
+    if (ig(store.getState(), 'app', 'locale', 'localeCode'))
         runFrontEnd()
     else
         fetch(`${BACKEND_URL}/get-site-locale-data`, {
@@ -39,7 +39,6 @@ else {
         }).then(x => {
             // WARNING! see also `ssr/lib/render` to keep this up to date
             store.dispatch(appActions.setLocaleCode(g(x, 'localeCode')))
-            store.dispatch(appActions.fillLocalePageCodes(g(x, 'pageCodes')))
             store.dispatch(appActions.fillLocaleRouter(g(x, 'router')))
             store.dispatch(appActions.fillLocaleI18n(g(x, 'i18n')))
             store.dispatch(

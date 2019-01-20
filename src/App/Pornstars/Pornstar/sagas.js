@@ -2,6 +2,7 @@ import {put, takeEvery, select} from 'redux-saga/effects'
 import {push} from 'connected-react-router/immutable'
 
 import {
+    getProvedPageKey,
     getHeaderText,
     getPageData,
     getRouterContext,
@@ -18,7 +19,7 @@ export function* loadPornstarPageFlow({payload: subPageForRequest}, ssrContext) 
     try {
         const reqData = yield select(x => ({
             localeCode: ig(x, 'app', 'locale', 'localeCode'),
-            pageCode: ig(x, 'app', 'locale', 'pageCode', 'pornstar'),
+            page: getProvedPageKey('pornstar'),
             subPageCode: subPageForRequest,
         }))
 

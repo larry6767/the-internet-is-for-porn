@@ -483,11 +483,14 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                     const
                         qs = queryString.parse(ig(r, 'location', 'search')),
                         {staticContext: x} = props,
-                        action = allMoviesActions.loadPageRequest(localizedGetSubPage(r)(
-                            null,
-                            get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                            get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
-                        ))
+                        action = allMoviesActions.loadPageRequest({
+                            orientationCode,
+                            subPageForRequest: localizedGetSubPage(r)(
+                                null,
+                                get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
+                            ),
+                        })
 
                     x.saga = loadAllMoviesPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
@@ -511,12 +514,15 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                     const
                         qs = queryString.parse(ig(r, 'location', 'search')),
                         {match: {params}, staticContext: x} = props,
-                        action = allMoviesActions.loadPageRequest(localizedGetSubPage(r)(
-                            null,
-                            get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                            get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
-                            [g(params, 0), g(params, 1)]
-                        ))
+                        action = allMoviesActions.loadPageRequest({
+                            orientationCode,
+                            subPageForRequest: localizedGetSubPage(r)(
+                                null,
+                                get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
+                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
+                                [g(params, 0), g(params, 1)]
+                            ),
+                        })
 
                     x.saga = loadAllMoviesPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])

@@ -54,7 +54,6 @@ export default (
 
         // WARNING! see also `src/index` to keep this up to date
         store.dispatch(appActions.setLocaleCode(localeCode))
-        store.dispatch(appActions.fillLocalePageCodes(buildLocalePageCodes(localeCode)))
         store.dispatch(appActions.fillLocaleRouter(g(routerLocales, localeCode)))
         store.dispatch(appActions.fillLocaleI18n(g(i18n, localeCode)))
         store.dispatch(appActions.fillLocaleLegacyOrientationPrefixes(

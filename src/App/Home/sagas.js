@@ -1,6 +1,7 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 
 import {
+    getProvedPageKey,
     getPageData,
     getHeaderText,
     plainProvedGet as g,
@@ -16,7 +17,7 @@ export function* loadHomeFlow(action, ssrContext) {
         const reqData = yield select(x => ({
             localeCode: ig(x, 'app', 'locale', 'localeCode'),
             orientationCode: g(action, 'payload', 'orientationCode'),
-            pageCode: ig(x, 'app', 'locale', 'pageCode', 'home'),
+            page: getProvedPageKey('home'),
         }))
 
         let data

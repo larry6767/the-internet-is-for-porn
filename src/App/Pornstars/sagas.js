@@ -1,6 +1,7 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 
 import {
+    getProvedPageKey,
     getHeaderText,
     getPageData,
     immutableProvedGet as ig,
@@ -14,7 +15,7 @@ export function* loadPornstarsPageFlow(action, ssrContext) {
     try {
         const reqData = yield select(x => ({
             localeCode: ig(x, 'app', 'locale', 'localeCode'),
-            pageCode: ig(x, 'app', 'locale', 'pageCode', 'pornstars'),
+            page: getProvedPageKey('pornstars'),
         }))
 
         let data

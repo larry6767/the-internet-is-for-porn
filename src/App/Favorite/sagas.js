@@ -1,6 +1,7 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 
 import {
+    getProvedPageKey,
     getPageData,
     immutableProvedGet as ig,
     getHeaderText,
@@ -14,7 +15,7 @@ export function* loadFavoritePageFlow(action, ssrContext) {
     try {
         const reqData = yield select(x => ({
             localeCode: ig(x, 'app', 'locale', 'localeCode'),
-            pageCode: ig(x, 'app', 'locale', 'pageCode', 'favorite'),
+            page: getProvedPageKey('favorite'),
         }))
 
         let data

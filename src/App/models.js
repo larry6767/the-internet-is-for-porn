@@ -17,22 +17,18 @@ export {
 } from '../dev-modules/initialModels'
 
 export const
-    // year+month like `201901` where `2019` is year and `01` is month
-    archiveIdReg = /^(\d{4})(\d{2})$/,
-
-    archiveIdModel = process.env.NODE_ENV === 'production' ? null :
-        (props, propName, componentName) => {
-            if (typeof props[propName] !== 'number')
-                return new Error(
-                    `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
-                    `(it's not a number but ${typeof props[propName]}). Validation failed.`
-                )
-            if (!archiveIdReg.test(String(props[propName])))
-                return new Error(
-                    `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
-                    `(it doesn't match proper archive id format). Validation failed.`
-                )
-        },
+    pageKeys = Object.freeze([
+        'home',
+        'allNiches',
+        'niche',
+        'allMovies',
+        'pornstars',
+        'pornstar',
+        'favorite',
+        'favoritePornstars',
+        'video',
+        'findVideos',
+    ]),
 
     orientationCodes = Object.freeze(['straight', 'gay', 'tranny']),
     defaultOrientationCode = orientationCodes[0],
@@ -59,7 +55,24 @@ export const
             router: immutableLocaleRouterModel,
             currentOrientation: PropTypes.oneOf(orientationCodes),
             legacyOrientationPrefixes: legacyOrientationPrefixesModel,
-        })
+        }),
+
+    // year+month like `201901` where `2019` is year and `01` is month
+    archiveIdReg = /^(\d{4})(\d{2})$/,
+
+    archiveIdModel = process.env.NODE_ENV === 'production' ? null :
+        (props, propName, componentName) => {
+            if (typeof props[propName] !== 'number')
+                return new Error(
+                    `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                    `(it's not a number but ${typeof props[propName]}). Validation failed.`
+                )
+            if (!archiveIdReg.test(String(props[propName])))
+                return new Error(
+                    `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
+                    `(it doesn't match proper archive id format). Validation failed.`
+                )
+        }
 
 const
     archiveFilmsModelBuilder = process.env.NODE_ENV === 'production' ? null : isImmutable => {

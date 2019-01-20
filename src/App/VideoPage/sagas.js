@@ -1,11 +1,14 @@
 import {get} from 'lodash'
 import {put, takeEvery, select} from 'redux-saga/effects'
-import {BACKEND_URL} from '../../config'
+
 import {
+    getProvedPageKey,
     getHeaderText,
     getPageData,
     immutableProvedGet as ig,
 } from '../helpers'
+
+import {BACKEND_URL} from '../../config'
 import errorActions from '../../generic/ErrorMessage/actions'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
@@ -15,7 +18,7 @@ export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
         const
             reqData = yield select(x => ({
                 localeCode: ig(x, 'app', 'locale', 'localeCode'),
-                pageCode: ig(x, 'app', 'locale', 'pageCode', 'video'),
+                page: getProvedPageKey('video'),
                 subPageCode: subPageForRequest,
             }))
 

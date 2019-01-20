@@ -7,7 +7,6 @@ import {
     addIdToFavoriteList,
     removeIdFromFavoriteList,
     plainProvedGet as g,
-    ImmutablePropTypes,
     PropTypes,
     provedHandleActions,
 } from './helpers'
@@ -30,21 +29,7 @@ import {
 } from './models'
 
 const
-    defaultSSR = fromJS({isSSR: false}),
-
-    localePageCodeModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exact({
-            home: PropTypes.string,
-            allNiches: PropTypes.string,
-            niche: PropTypes.string,
-            allMovies: PropTypes.string,
-            pornstars: PropTypes.string,
-            pornstar: PropTypes.string,
-            favorite: PropTypes.string,
-            favoritePornstars: PropTypes.string,
-            video: PropTypes.string,
-            findVideos: PropTypes.string,
-        })
+    defaultSSR = fromJS({isSSR: false})
 
 export default combineReducers({
     home: homeReducer,
@@ -87,13 +72,6 @@ export default combineReducers({
         localeCode: provedHandleActions(
             process.env.NODE_ENV === 'production' ? null : PropTypes.nullable(PropTypes.string),
             {[g(actions, 'setLocaleCode')]: (state, {payload}) => payload},
-            null
-        ),
-
-        // This supposed to be filled at initialization step (depending on current locale).
-        pageCode: provedHandleActions(
-            process.env.NODE_ENV === 'production' ? null : PropTypes.nullable(localePageCodeModel),
-            {[g(actions, 'fillLocalePageCodes')]: (state, {payload}) => Map(fromJS(payload))},
             null
         ),
 
