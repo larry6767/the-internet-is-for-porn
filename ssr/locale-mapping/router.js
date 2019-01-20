@@ -37,6 +37,9 @@ const
             pagination: {
                 qsKey: 'page',
             },
+            searchQuery: {
+                qsKey: 'query'
+            },
         },
         deu: {
             routes: {
@@ -68,6 +71,9 @@ const
             },
             pagination: {
                 qsKey: 'seite',
+            },
+            searchQuery: {
+                qsKey: 'abfrage'
             },
         },
         ita: {
@@ -101,6 +107,9 @@ const
             pagination: {
                 qsKey: 'pagina',
             },
+            searchQuery: {
+                qsKey: 'domanda'
+            },
         },
         fra: { // TODO
             routes: {
@@ -132,6 +141,9 @@ const
             },
             pagination: {
                 qsKey: '',
+            },
+            searchQuery: {
+                qsKey: ''
             },
         },
         spa: { // TODO
@@ -165,6 +177,9 @@ const
             pagination: {
                 qsKey: '',
             },
+            searchQuery: {
+                qsKey: ''
+            },
         },
         por: { // TODO
             routes: {
@@ -196,6 +211,9 @@ const
             },
             pagination: {
                 qsKey: '',
+            },
+            searchQuery: {
+                qsKey: ''
             },
         },
         swe: { // TODO
@@ -229,6 +247,9 @@ const
             pagination: {
                 qsKey: '',
             },
+            searchQuery: {
+                qsKey: ''
+            },
         },
         nld: { // TODO
             routes: {
@@ -260,6 +281,9 @@ const
             },
             pagination: {
                 qsKey: '',
+            },
+            searchQuery: {
+                qsKey: ''
             },
         },
         fin: { // TODO
@@ -293,6 +317,9 @@ const
             pagination: {
                 qsKey: '',
             },
+            searchQuery: {
+                qsKey: ''
+            },
         },
         rus: { // TODO
             routes: {
@@ -325,6 +352,9 @@ const
             pagination: {
                 qsKey: '',
             },
+            searchQuery: {
+                qsKey: ''
+            },
         },
         tur: { // TODO
             routes: {
@@ -356,6 +386,9 @@ const
             },
             pagination: {
                 qsKey: '',
+            },
+            searchQuery: {
+                qsKey: ''
             },
         },
     })
