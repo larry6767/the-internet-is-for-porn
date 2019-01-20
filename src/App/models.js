@@ -1,7 +1,11 @@
 import {Record} from 'immutable'
 
 import {PropTypes, ImmutablePropTypes} from './helpers'
-import {immutableLocaleRouterModel} from '../dev-modules/initialModels'
+
+import {
+    immutableLocaleRouterModel,
+    ssrImmutableLocaleRouterModel,
+} from '../dev-modules/initialModels'
 
 export {
     localeRouterModel, immutableLocaleRouterModel,
@@ -14,7 +18,17 @@ export {
     i18nReportModel, immutableI18nReportModel,
     i18nOrientationModel, immutableI18nOrientationModel,
     i18nModel, immutableI18nModel,
+    ssrLocaleRouterModel, ssrImmutableLocaleRouterModel,
 } from '../dev-modules/initialModels'
+
+const
+    routerContextModelBuilder = process.env.NODE_ENV === 'production' ? null : isSSR =>
+        ImmutablePropTypes.exactRecordOf({
+            location: routerLocationModel,
+            router: isSSR ? ssrImmutableLocaleRouterModel : immutableLocaleRouterModel,
+            currentOrientation: PropTypes.oneOf(orientationCodes),
+            legacyOrientationPrefixes: legacyOrientationPrefixesModel,
+        })
 
 export const
     pageKeys = Object.freeze([
@@ -50,12 +64,9 @@ export const
         }),
 
     routerContextModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exactRecordOf({
-            location: routerLocationModel,
-            router: immutableLocaleRouterModel,
-            currentOrientation: PropTypes.oneOf(orientationCodes),
-            legacyOrientationPrefixes: legacyOrientationPrefixesModel,
-        }),
+        routerContextModelBuilder(false),
+    ssrRouterContextModel = process.env.NODE_ENV === 'production' ? null :
+        routerContextModelBuilder(true),
 
     // year+month like `201901` where `2019` is year and `01` is month
     archiveIdReg = /^(\d{4})(\d{2})$/,

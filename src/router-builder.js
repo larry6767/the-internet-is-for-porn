@@ -1,6 +1,6 @@
 import {get, padStart, flatten} from 'lodash'
 import React from 'react'
-import {Route, Switch, Redirect} from 'react-router-dom'
+import {Route, Switch} from 'react-router-dom'
 import queryString from 'query-string'
 import {compose} from 'recompose'
 
@@ -278,13 +278,6 @@ export const
         }),
 
         video: Object.freeze({
-            redirectFrom: r => {
-                const
-                    videoPfx = ig(r, 'router', 'redirects', 'video', 'fromPfx'),
-                    ext = ig(r, 'router', 'redirects', 'video', 'fromExt')
-
-                return `/${videoPfx}:child/:name${ext}`
-            },
             path: (r, orientationCode) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', orientationCode),
@@ -343,11 +336,7 @@ const
         favorite: getterModel,
         favoritePornstars: getterModel,
 
-        video: PropTypes.exact({
-            redirectFrom: PropTypes.func,
-            path: PropTypes.func,
-            link: PropTypes.func,
-        }),
+        video: getterModel,
 
         findVideos: getterModel,
     })
@@ -358,22 +347,14 @@ if (process.env.NODE_ENV !== 'production')
 // `staticContext` is for only for Server-Side Rendering here.
 // `staticContext.isPreRouting` means we don't need to render any component
 // (using just `null` plugs) but to just prepare meta info for SSR
-// (such as status code, redirect, action to dispatch).
-// The `router` prop is this store branch: `app.locale.router`.
-// TODO fix redirects `to` destinations
+// (such as status code, action to dispatch).
 const RouterBuilder = ({routerContext: r}) => <Switch>
     {/* home */}
     {orientationCodes.map(orientationCode => <Route
+        key={`${orientationCode}-home`}
         exact
-        key={orientationCode}
         path={routerGetters.home.path(r, orientationCode)}
         render={props => {
-            if (
-                ig(r, 'location', 'search') ===
-                ig(r, 'router', 'redirects', 'categories', 'search')
-            )
-                return <Redirect to={routerGetters.allNiches.link(r)}/>
-
             const currentSection = 'home'
 
             if (get(props, ['staticContext', 'isPreRouting'])) {
@@ -490,15 +471,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
     {/* all movies */}
     {flatten(orientationCodes.map(orientationCode => [
-        <Redirect
-            key={`${orientationCode}-allMovies-redirect`}
-            exact
-            from={
-                ig(r, 'legacyOrientationPrefixes', orientationCode) +
-                ig(r, 'router', 'redirects', 'allMovies', 'from')
-            }
-            to={routerGetters.allMovies.link(r)}
-        />,
         <Route
             key={`${orientationCode}-allMovies`}
             exact
@@ -569,15 +541,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
     {/* pornstars */}
     {flatten(orientationCodes.map(orientationCode => [
-        <Redirect
-            key={`${orientationCode}-pornstars-redirect`}
-            exact
-            from={
-                ig(r, 'legacyOrientationPrefixes', orientationCode) +
-                ig(r, 'router', 'redirects', 'pornstars', 'from')
-            }
-            to={routerGetters.pornstars.link(r)}
-        />,
         <Route
             key={`${orientationCode}-pornstars`}
             exact
@@ -638,17 +601,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     ]))}
 
     {/* favorite */}
-    {/* TODO redirects for orientations */}
-    <Redirect
-        exact
-        from={ig(r, 'router', 'redirects', 'favorite', 'from')}
-        to={routerGetters.favorite.link(r)}
-    />
-    <Redirect
-        exact
-        from={ig(r, 'router', 'redirects', 'favorite', 'fromMovies')}
-        to={routerGetters.favorite.link(r)}
-    />
     {/*
         Favorite pages are shared for all orientations, so no need for orientation routes.
         We could implement in the future filters such as "all favorie pornstars/videos" and
@@ -676,11 +628,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                 /*orientationCode={orientationCode}*/
             />
     }}/>
-    <Redirect
-        exact
-        from={ig(r, 'router', 'redirects', 'favoritePornstars', 'from')}
-        to={routerGetters.favoritePornstars.link(r)}
-    />
     <Route path={routerGetters.favoritePornstars.path(r)} render={props => {
         const currentSection = 'favorite'
 
@@ -703,22 +650,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     }}/>
 
     {/* video */}
-    {flatten(orientationCodes.map(orientationCode => [
-        <Redirect
-            key={`${orientationCode}-video-redirect`}
-            exact
-            from={
-                ig(r, 'legacyOrientationPrefixes', orientationCode) +
-                routerGetters.video.redirectFrom(r)
-            }
-            to={
-                /*
-                    it must be `path` here, not `link`
-                    (to automatically fill the route masks)!
-                */
-                routerGetters.video.path(r, orientationCode)
-            }
-        />,
+    {orientationCodes.map(orientationCode =>
         <Route
             key={`${orientationCode}-video`}
             path={routerGetters.video.path(r, orientationCode)}
@@ -746,13 +678,13 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                         orientationCode={orientationCode}
                     />
             }}
-        />,
-    ]))}
+        />
+    )}
 
     {/* search */}
     {orientationCodes.map(orientationCode =>
         <Route
-            key={orientationCode}
+            key={`${orientationCode}-findVideos`}
             exact
             path={routerGetters.findVideos.path(r, orientationCode)}
             render={props => {

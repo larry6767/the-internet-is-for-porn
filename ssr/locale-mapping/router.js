@@ -1,7 +1,7 @@
-import {set} from 'lodash'
+import {set, includes} from 'lodash'
 
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../App/helpers'
-import {localeRouterModel} from '../App/models'
+import {ssrLocaleRouterModel} from '../App/models'
 import deepFreeze from '../lib/helpers/deepFreeze'
 
 const
@@ -19,7 +19,7 @@ const
                 video: {sectionPfx: 'video-'},
                 findVideos: {section: 'find-videos'},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: '?categories'},
                 allMovies: {from: '/all-movies.html'},
                 pornstars: {from: '/porn-stars.html'},
@@ -59,7 +59,7 @@ const
                 video: {sectionPfx: 'video-'},
                 findVideos: {section: 'finde-videos'},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: '?categories'},
                 allMovies: {from: '/alle-vids.html'},
                 pornstars: {from: '/porn-stars.html'},
@@ -99,7 +99,7 @@ const
                 video: {sectionPfx: 'film-'},
                 findVideos: {section: 'trova-video'},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: '?categories'},
                 allMovies: {from: '/tutti-i-film.html'},
                 pornstars: {from: '/porn-stars.html'},
@@ -139,7 +139,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -179,7 +179,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -219,7 +219,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -259,7 +259,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -299,7 +299,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -339,7 +339,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -379,7 +379,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -419,7 +419,7 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: {
+            redirects: { // TODO split redirects for specific orientations
                 categories: {search: ''},
                 allMovies: {from: ''},
                 pornstars: {from: ''},
@@ -446,7 +446,29 @@ const
                 tranny: '',
             },
         },
-    })
+    }),
+
+    frontRouterLocaleKeys = Object.freeze([
+        'routes', 'ordering', 'pagination', 'searchQuery', 'orientation',
+    ])
+
+export const
+    // localized router data with only needed branches for frontend
+    frontRouterLocaleMapping =
+        deepFreeze(Object.keys(mapping).reduce(
+            (root, localeCode) => {
+                const
+                    branch = g(mapping, localeCode),
+
+                    filteredBranch =
+                        Object.keys(branch)
+                        .filter(k => includes(frontRouterLocaleKeys, k))
+                        .reduce((locale, k) => set(locale, k, g(branch, k)), {})
+
+                return set(root, localeCode, filteredBranch)
+            },
+            {}
+        ))
 
 /*
     A helper which could be used during application initialization to validate locales from server
@@ -455,7 +477,7 @@ const
 export const validate = siteLocales => {
     // generating model of every language code received from backend
     const mappingModel = PropTypes.exact(
-        siteLocales.reduce((obj, x) => set(obj, g(x, 'code'), localeRouterModel), {})
+        siteLocales.reduce((obj, x) => set(obj, g(x, 'code'), g(ssrLocaleRouterModel, [])), {})
     )
 
     assertPropTypes(mappingModel, mapping, 'router-locale-mapping', 'validate')

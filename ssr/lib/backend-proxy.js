@@ -1,7 +1,7 @@
 import {cloneDeep, find, includes, unset, get} from 'lodash'
 
 import apiLocaleMapping from '../locale-mapping/backend-api'
-import routerLocaleMapping from '../locale-mapping/router'
+import {frontRouterLocaleMapping} from '../locale-mapping/router'
 import i18n from '../locale-mapping/i18n'
 import {plainProvedGet as g} from '../App/helpers'
 import {orientationCodes} from '../App/models'
@@ -149,10 +149,10 @@ const
                 },
             })
     })({
-        validTopLevelKeys: ['localeCode', 'orientationCode', 'page', 'subPageCode'],
+        validTopLevelKeys: Object.freeze(['localeCode', 'orientationCode', 'page', 'subPageCode']),
     }),
 
-    getSiteLocale = (siteLocales, defaultSiteLocaleCode) => (req, res) => {
+    getSiteLocaleData = (siteLocales, defaultSiteLocaleCode) => (req, res) => {
         const
             // see also ssr/lib/render
             domain = getPureDomain(req.get('host')),
@@ -163,7 +163,7 @@ const
 
         res.json({
             localeCode,
-            router: g(routerLocaleMapping, localeCode),
+            router: g(frontRouterLocaleMapping, localeCode),
             i18n: g(i18n, localeCode),
             legacyOrientationPrefixes: getLegacyOrientationPrefixes(localeCode),
         }).end()
@@ -216,9 +216,7 @@ const
         .then(x => res.json(x).end())
         .catch(jsonThrow500(req, res))
     })({
-        validTopLevelKeys: [
-            'localeCode', 'orientationCode', 'classId', 'searchKey',
-        ],
+        validTopLevelKeys: Object.freeze(['localeCode', 'orientationCode', 'classId', 'searchKey']),
     }),
 
     sendReport = siteLocales => (({validTopLevelKeys}) => (req, res) => {
@@ -264,10 +262,10 @@ const
         .then(x => res.json(x).end())
         .catch(jsonThrow500(req, res))
     })({
-        validTopLevelKeys: [
+        validTopLevelKeys: Object.freeze([
             'localeCode', 'orientationCode',
             'op', '_cid', '_gid', '_url', 'report-reason', 'report-comment',
-        ],
+        ]),
     })
 
 export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
@@ -324,7 +322,7 @@ export default (siteLocales, defaultSiteLocaleCode) => (req, res) => {
     else if (g(req, 'method') === 'GET' && req.params.operation === 'get-site-locales')
         getSiteLocales(siteLocales, defaultSiteLocaleCode)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-site-locale-data')
-        getSiteLocale(siteLocales, defaultSiteLocaleCode)(req, res)
+        getSiteLocaleData(siteLocales, defaultSiteLocaleCode)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-page-data')
         getPageData(siteLocales)(req, res)
     else if (g(req, 'method') === 'POST' && req.params.operation === 'get-search-suggestions')
