@@ -15,6 +15,7 @@ const
 
         thumb_url: PropTypes.string,
         thumbs: PropTypes.arrayOf(PropTypes.string), // but actually an array of numbers
+        thumb_top: PropTypes.string,
 
         tags: PropTypes.arrayOf(PropTypes.string),
     }),
@@ -58,12 +59,13 @@ export const
         thumb: PropTypes.string,
         thumbMask: PropTypes.string,
         thumbs: PropTypes.arrayOf(PropTypes.number),
+        firstThumb: PropTypes.number,
 
         tags: PropTypes.arrayOf(PropTypes.string),
         tagsShort: PropTypes.string,
 
-        url: PropTypes.string,
         duration: PropTypes.string,
+        videoPageRef: PropTypes.number,
     })
 
 const
@@ -156,6 +158,7 @@ export default (data, pageUrl, publishedTemplate) => {
             thumb: getProp(data, 'thumb_url'),
             thumbMask: getProp(data, 'thumb_url').replace(/-\d+.jpg/, '-{num}.jpg'),
             thumbs: getProp(data, 'thumbs').map(x => Number(x)),
+            firstThumb: Number(getProp(data, 'thumb_top')),
             tags: getProp(data, 'tags'),
             // This is for very small string under a video preview,
             // it's usually only one single tag.
@@ -163,13 +166,14 @@ export default (data, pageUrl, publishedTemplate) => {
                 const newAcc = acc === '' ? tag : `${acc}, ${tag}`
                 return g(newAcc, 'length') <= 22 ? newAcc : acc
             }, ''),
-            url: pageUrl.slice(0, pageUrl.indexOf('.htm')),
 
             duration: `${
                 Math.floor(length / 60)
             }:${
                 length % 60 < 10 ? '0' + length % 60 : length % 60
             }`,
+
+            videoPageRef: Number(pageUrl.match(/\/vid-(\d+)\//)[1]),
         }
 
     if (process.env.NODE_ENV !== 'production')

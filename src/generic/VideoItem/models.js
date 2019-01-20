@@ -12,7 +12,7 @@ const
             thumb: PropTypes.string, // an URL
             thumbMask: PropTypes.string, // an URL with "{num}" placeholder
             thumbs: list(PropTypes.number),
-            favorite: PropTypes.number,
+            firstThumb: PropTypes.number,
 
             title: PropTypes.string,
             sponsorId: PropTypes.string,

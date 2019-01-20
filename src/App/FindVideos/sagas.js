@@ -5,8 +5,12 @@ import {
     getProvedPageKey,
     getHeaderText,
     getPageData,
+    getRouterContext,
     immutableProvedGet as ig,
+    plainProvedGet as g,
 } from '../helpers'
+
+import {routerGetters} from '../../router-builder'
 import errorActions from '../../generic/ErrorMessage/actions'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
@@ -35,7 +39,16 @@ export function* loadFindVideosPageFlow({payload: subPageForRequest}, ssrContext
 }
 
 function* setNewSort({payload}) {
-    yield put(push(payload.stringifiedQS))
+    const
+        routerContext = yield select(state => getRouterContext(state)),
+        newSortValue = g(payload, 'newSortValue')
+
+    yield put(push(
+        routerGetters.findVideos.link(
+            routerContext,
+            {ordering: newSortValue, pagination: null}
+        )
+    ))
 }
 
 export default function* saga() {

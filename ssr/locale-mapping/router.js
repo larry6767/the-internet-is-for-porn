@@ -37,6 +37,9 @@ const
             pagination: {
                 qsKey: 'page',
             },
+            searchQuery: {
+                qsKey: 'query'
+            },
             orientation: {
                 straight: '',
                 gay: '/gays',
@@ -73,6 +76,9 @@ const
             },
             pagination: {
                 qsKey: 'seite',
+            },
+            searchQuery: {
+                qsKey: 'abfrage'
             },
             orientation: {
                 straight: '',
@@ -111,6 +117,9 @@ const
             pagination: {
                 qsKey: 'pagina',
             },
+            searchQuery: {
+                qsKey: 'domanda'
+            },
             orientation: {
                 straight: '',
                 gay: '/gay',
@@ -147,6 +156,9 @@ const
             },
             pagination: {
                 qsKey: '',
+            },
+            searchQuery: {
+                qsKey: ''
             },
             orientation: {
                 straight: '',
@@ -185,6 +197,9 @@ const
             pagination: {
                 qsKey: '',
             },
+            searchQuery: {
+                qsKey: ''
+            },
             orientation: {
                 straight: '',
                 gay: '',
@@ -221,6 +236,9 @@ const
             },
             pagination: {
                 qsKey: '',
+            },
+            searchQuery: {
+                qsKey: ''
             },
             orientation: {
                 straight: '',
@@ -259,6 +277,9 @@ const
             pagination: {
                 qsKey: '',
             },
+            searchQuery: {
+                qsKey: ''
+            },
             orientation: {
                 straight: '',
                 gay: '',
@@ -295,6 +316,9 @@ const
             },
             pagination: {
                 qsKey: '',
+            },
+            searchQuery: {
+                qsKey: ''
             },
             orientation: {
                 straight: '',
@@ -333,6 +357,9 @@ const
             pagination: {
                 qsKey: '',
             },
+            searchQuery: {
+                qsKey: ''
+            },
             orientation: {
                 straight: '',
                 gay: '',
@@ -370,6 +397,9 @@ const
             pagination: {
                 qsKey: '',
             },
+            searchQuery: {
+                qsKey: ''
+            },
             orientation: {
                 straight: '',
                 gay: '',
@@ -406,6 +436,9 @@ const
             },
             pagination: {
                 qsKey: '',
+            },
+            searchQuery: {
+                qsKey: ''
             },
             orientation: {
                 straight: '',

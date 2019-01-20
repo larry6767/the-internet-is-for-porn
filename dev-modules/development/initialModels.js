@@ -43,6 +43,9 @@ const
             pagination: exact({
                 qsKey: PropTypes.string,
             }),
+            searchQuery: exact({
+                qsKey: PropTypes.string,
+            }),
             orientation: exact({
                 straight: PropTypes.string,
                 gay: PropTypes.string,
