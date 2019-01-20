@@ -4,7 +4,7 @@ import {render} from 'react-dom'
 import Root from './root'
 import store from './store'
 import saga from './sagas'
-import {plainProvedGet as g, immutableProvedGet as ig, getCookie} from './App/helpers'
+import {plainProvedGet as g, immutableProvedGet as ig} from './App/helpers'
 import appActions from './App/actions'
 import {BACKEND_URL} from './config'
 
@@ -29,7 +29,7 @@ else {
                 'Accept': 'application/json',
             },
             body: JSON.stringify({
-                localeCode: getCookie('development-locale-code') || null,
+                localeCode: window.localStorage.getItem('development-locale-code'),
             }),
         }).then(response => {
             if ( ! response.ok)

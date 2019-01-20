@@ -1,7 +1,7 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 
 import {BACKEND_URL} from '../../../config'
-import {plainProvedGet as g, immutableProvedGet as ig, setCookie} from '../../helpers'
+import {plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
 import errorActions from '../../../generic/ErrorMessage/actions'
 import actions from './actions'
 
@@ -51,8 +51,12 @@ export function* setNewLanguageFlow({payload: localeCode}) {
         const host = ig(matchedLocale, 'host')
         window.location = `//${host}`
     } else {
-        setCookie('development-locale-code', ig(matchedLocale, 'code'), 3600)
-        window.location.reload()
+        window.localStorage.setItem('development-locale-code', ig(matchedLocale, 'code'))
+
+        if (window.location.pathname !== '/')
+            window.location = '/'
+        else
+            window.location.reload()
     }
 }
 
