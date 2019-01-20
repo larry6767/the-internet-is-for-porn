@@ -249,6 +249,7 @@ export const
             },
         }),
 
+        // there's no routes for specific orientations for favorite pages for now
         favorite: Object.freeze({
             path: r => {
                 const favorite = ig(r, 'router', 'routes', 'favorite', 'section')
@@ -284,13 +285,20 @@ export const
 
                 return `/${videoPfx}:child/:name${ext}`
             },
-            path: r => {
-                const videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
-                return `/${videoPfx}:child/:name`
+            path: (r, orientationCode) => {
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
+                    videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
+
+                return `${orientationPfx}/${videoPfx}:child/:name`
             },
             link: (r, videoId, title) => {
-                const videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
-                return `/${videoPfx}${videoId}/${title.replace(/ /g, '-').replace(/\./g, '')}`
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
+                    videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
+
+                return `${orientationPfx
+                    }/${videoPfx}${videoId}/${title.replace(/ /g, '-').replace(/\./g, '')}`
             },
         }),
 
@@ -348,6 +356,7 @@ if (process.env.NODE_ENV !== 'production')
 // (using just `null` plugs) but to just prepare meta info for SSR
 // (such as status code, redirect, action to dispatch).
 // The `router` prop is this store branch: `app.locale.router`.
+// TODO fix redirects `to` destinations
 const RouterBuilder = ({routerContext: r}) => <Switch>
     {/* home */}
     {orientationCodes.map(orientationCode => <Route
@@ -625,13 +634,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     ]))}
 
     {/* favorite */}
-    {/*
-        Favorite pages are shared for all orientations, so no need for orientation routes.
-        We could implement in the future filters such as "all favorie pornstars/videos" and
-        "straight/gay/tranny favorite pornstars/videos" on frontend side only if we refactor that
-        cookies for favorites by replacing them with `window.localStorage` while simulating cookies
-        for backend (converting passed values in request body in to cookie header).
-    */}
+    {/* TODO redirects for orientations */}
     <Redirect
         exact
         from={ig(r, 'router', 'redirects', 'favorite', 'from')}
@@ -642,6 +645,13 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         from={ig(r, 'router', 'redirects', 'favorite', 'fromMovies')}
         to={routerGetters.favorite.link(r)}
     />
+    {/*
+        Favorite pages are shared for all orientations, so no need for orientation routes.
+        We could implement in the future filters such as "all favorie pornstars/videos" and
+        "straight/gay/tranny favorite pornstars/videos" on frontend side only if we refactor that
+        cookies for favorites by replacing them with `window.localStorage` while simulating cookies
+        for backend (converting passed values in request body in to cookie header).
+    */}
     <Route exact path={routerGetters.favorite.path(r)} render={props => {
         const currentSection = 'favorite'
 
@@ -689,28 +699,51 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     }}/>
 
     {/* video */}
-    <Redirect
-        exact
-        from={routerGetters.video.redirectFrom(r)}
-        to={routerGetters.video.path(r) /* it must be `path` here, not `link`! */}
-    />
-    <Route path={routerGetters.video.path(r)} render={props => {
-        const currentSection = 'allMovies'
+    {flatten(orientationCodes.map(orientationCode => [
+        <Redirect
+            key={`${orientationCode}-video-redirect`}
+            exact
+            from={
+                ig(r, 'legacyOrientationPrefixes', orientationCode) +
+                routerGetters.video.redirectFrom(r)
+            }
+            to={
+                /*
+                    it must be `path` here, not `link`
+                    (to automatically fill the route masks)!
+                */
+                routerGetters.video.path(r, orientationCode)
+            }
+        />,
+        <Route
+            key={`${orientationCode}-video`}
+            path={routerGetters.video.path(r, orientationCode)}
+            render={props => {
+                const currentSection = 'allMovies'
 
-        if (get(props, ['staticContext', 'isPreRouting'])) {
-            const
-                {match: {params}, staticContext: x} = props,
-                action = videoPageActions.loadPageRequest(
-                    localizedGetSubPage(r)(`${params.child}/${params.name}`)
-                )
+                if (get(props, ['staticContext', 'isPreRouting'])) {
+                    const
+                        {match: {params}, staticContext: x} = props,
+                        action = videoPageActions.loadPageRequest({
+                            orientationCode,
+                            subPageForRequest:
+                                localizedGetSubPage(r)(`${params.child}/${params.name}`),
+                        })
 
-            x.saga = loadVideoPageFlow.bind(null, action)
-            x.statusCodeResolver = status500(['app', 'videoPage', 'isFailed'])
-            x.currentSection = currentSection
-            return null
-        } else
-            return <VideoPage {...props} currentSection={currentSection}/>
-    }}/>
+                    x.saga = loadVideoPageFlow.bind(null, action)
+                    x.statusCodeResolver = status500(['app', 'videoPage', 'isFailed'])
+                    x.currentOrientation = orientationCode
+                    x.currentSection = currentSection
+                    return null
+                } else
+                    return <VideoPage
+                        {...props}
+                        currentSection={currentSection}
+                        orientationCode={orientationCode}
+                    />
+            }}
+        />,
+    ]))}
 
     {/* search */}
     <Route exact path={routerGetters.findVideos.path(r)} render={props => {
