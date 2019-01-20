@@ -113,9 +113,8 @@ export const
                 const orientationPfx = ig(r, 'router', 'orientation', orientationCode)
                 return `${orientationPfx}/`
             },
-            link: (r, orientationCode = null) => {
-                orientationCode = orientationCode || ig(r, 'currentOrientation')
-                const orientationPfx = ig(r, 'router', 'orientation', orientationCode)
+            link: r => {
+                const orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation'))
                 return `${orientationPfx}/`
             },
         }),

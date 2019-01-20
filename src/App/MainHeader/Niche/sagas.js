@@ -9,7 +9,9 @@ function* switchOrientationFlow(action) {
     const
         routerContext = yield select(x => getRouterContext(x))
 
-    yield put(push(routerGetters.home.link(routerContext, g(action, 'payload'))))
+    yield put(push(routerGetters.home.link(
+        routerContext.set('currentOrientation', g(action, 'payload'))
+    )))
 }
 
 export default function* saga() {
