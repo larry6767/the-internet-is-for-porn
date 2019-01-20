@@ -15,7 +15,7 @@ import {
     setPropTypes,
 } from './App/helpers'
 
-import {routerContextModel, orientationCodes} from './App/models'
+import {routerContextModel, orientationCodes, defaultOrientationCode} from './App/models'
 
 import Home from './App/Home'
 import homeActions from './App/Home/actions'
@@ -663,7 +663,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             const {staticContext: x} = props
             x.saga = loadFavoritePageFlow.bind(
                 null,
-                favoriteActions.loadPageRequest()
+                favoriteActions.loadPageRequest({orientationCode: defaultOrientationCode})
             )
             x.statusCodeResolver = status500(['app', 'favorite', 'isFailed'])
             x.currentSection = currentSection
@@ -688,7 +688,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             const {staticContext: x} = props
             x.saga = loadFavoritePornstarsPageFlow.bind(
                 null,
-                favoritePornstarsActions.loadPageRequest()
+                favoritePornstarsActions.loadPageRequest({orientationCode: defaultOrientationCode})
             )
             x.statusCodeResolver = status500(['app', 'favorite', 'isFailed'])
             x.currentSection = currentSection

@@ -27,7 +27,10 @@ export function* loadFavoritePornstarsPageFlow(action, ssrContext) {
             data = yield getPageData(reqData)
 
         yield put(headerActions.setNewText(getHeaderText(data)))
-        yield put(actions.loadPageSuccess({data, orientationCode: g(reqData, 'orientationCode')}))
+        yield put(actions.loadPageSuccess({
+            orientationCode: g(reqData, 'orientationCode'),
+            data: g(data, []),
+        }))
     } catch (err) {
         console.error('loadFavoritePornstarsPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())
