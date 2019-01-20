@@ -156,7 +156,6 @@ const
             sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS'))
 
         return {
-            currentSubPage: x.page.TAG_URL_NAME,
             pageNumber: x.page.PAGE_NUMBER,
             pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,

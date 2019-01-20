@@ -9,9 +9,17 @@ import {
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
+    setPropTypes,
+    PropTypes,
 } from '../helpers'
 
-import {PageTextRecord} from '../models'
+import {
+    orientationCodes,
+    PageTextRecord,
+    routerContextModel,
+} from '../models'
+
+import {dataModel} from './models'
 import {routerGetters} from '../../router-builder'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
@@ -22,7 +30,26 @@ import actions from './actions'
 import {Page, Content, PageWrapper} from './assets'
 
 const
-    PornstarsRecord = Record({
+    Pornstars = ({data, linkBuilder}) => <Page>
+        { ig(data, 'isFailed')
+            ? <ErrorContent/>
+            : ig(data, 'isLoading')
+            ? <CircularProgress/>
+            : <Content>
+                <PageWrapper>
+                    <Typography variant="h4" gutterBottom>
+                        Top Rated Straight Pornstars
+                    </Typography>
+                    <PornstarList
+                        linkBuilder={linkBuilder}
+                        pornstarList={ig(data, 'modelsList')}
+                    />
+                </PageWrapper>
+            </Content>
+        }
+    </Page>,
+
+    DataRecord = Record({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
@@ -33,36 +60,17 @@ const
         pageText: PageTextRecord(),
     }),
 
-    Pornstars = ({pornstars, linkBuilder}) => <Page>
-        { ig(pornstars, 'isFailed')
-            ? <ErrorContent/>
-            : ig(pornstars, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <PageWrapper>
-                    <Typography variant="h4" gutterBottom>
-                        Top Rated Straight Pornstars
-                    </Typography>
-                    <PornstarList
-                        linkBuilder={linkBuilder}
-                        pornstarList={ig(pornstars, 'modelsList')}
-                    />
-                </PageWrapper>
-            </Content>
-        }
-    </Page>,
-
-    loadPageFlow = ({pornstars, routerContext, loadPage, setHeaderText, currentOrientation}) => {
+    loadPageFlow = ({data, loadPage, setHeaderText, currentOrientation}) => {
         if (!(
-            ig(pornstars, 'isLoading') ||
+            ig(data, 'isLoading') ||
             (
-                (ig(pornstars, 'isLoaded') || ig(pornstars, 'isFailed')) &&
-                g(currentOrientation, []) === ig(pornstars, 'lastOrientationCode')
+                (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
+                g(currentOrientation, []) === ig(data, 'lastOrientationCode')
             )
         ))
             loadPage()
-        else if (ig(pornstars, 'isLoaded'))
-            setHeaderText(getHeaderText(g(pornstars, []), true))
+        else if (ig(data, 'isLoaded'))
+            setHeaderText(getHeaderText(g(data, []), true))
     }
 
 export default compose(
@@ -71,7 +79,7 @@ export default compose(
     connect(
         state => ({
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
-            pornstars: PornstarsRecord(ig(state, 'app', 'pornstars', 'all')),
+            data: DataRecord(ig(state, 'app', 'pornstars', 'all')),
             routerContext: getRouterContext(state),
         }),
         {
@@ -97,5 +105,16 @@ export default compose(
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
         },
-    })
+    }),
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        currentOrientation: PropTypes.oneOf(orientationCodes),
+        data: dataModel,
+        routerContext: routerContextModel,
+
+        loadPageRequest: PropTypes.func,
+        loadPage: PropTypes.func,
+        setNewText: PropTypes.func,
+        setHeaderText: PropTypes.func,
+        linkBuilder: PropTypes.func,
+    }),
 )(Pornstars)

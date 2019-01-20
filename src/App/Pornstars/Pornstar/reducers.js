@@ -1,48 +1,17 @@
 import {fromJS, List} from 'immutable'
 
 import {
-    ImmutablePropTypes,
-    PropTypes,
     provedHandleActions,
     plainProvedGet as g,
     immutableProvedGet as ig
 } from '../../helpers'
 
 import {
-    immutablePageTextModel,
     PageTextRecord,
-    immutableModelsListWithLetterModel,
-    orientationCodes,
     defaultOrientationCode,
 } from '../../models'
-
-import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
-import {modelInfoModel} from '../models'
+import {stateModel} from './models'
 import actions from './actions'
-
-const
-    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
-        isLoading: PropTypes.bool,
-        isLoaded: PropTypes.bool,
-        isFailed: PropTypes.bool,
-        modelInfoIsOpen: PropTypes.bool,
-        currentSubPage: PropTypes.string,
-        lastOrientationCode: PropTypes.oneOf(orientationCodes),
-        lastSubPageForRequest: PropTypes.string,
-        pageNumber: PropTypes.number,
-        pageText: immutablePageTextModel,
-        pagesCount: PropTypes.number,
-        sortList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
-            isActive: PropTypes.bool,
-            code: PropTypes.string,
-        })),
-        currentSort: PropTypes.nullable(PropTypes.string),
-        itemsCount: PropTypes.number,
-        videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
-        modelsList: immutableModelsListWithLetterModel,
-        modelInfo: ImmutablePropTypes.listOf(modelInfoModel),
-        modelThumb: PropTypes.string,
-    })
 
 export default
     provedHandleActions(stateModel, {
@@ -51,7 +20,6 @@ export default
             isLoaded: false,
             isFailed: false,
             modelInfoIsOpen: false,
-            currentSubPage: '',
             lastOrientationCode: g(payload, 'orientationCode'),
             lastSubPageForRequest: g(payload, 'subPageForRequest'),
             pageNumber: 1,
@@ -70,7 +38,6 @@ export default
             isLoaded: true,
             isFailed: false,
             modelInfoIsOpen: false,
-            currentSubPage: g(payload, 'data', 'currentSubPage'),
             lastOrientationCode: g(payload, 'orientationCode'),
             lastSubPageForRequest: g(payload, 'subPageForRequest'),
             pageNumber: g(payload, 'data', 'pageNumber'),
@@ -89,7 +56,6 @@ export default
             isLoaded: false,
             isFailed: true,
             modelInfoIsOpen: false,
-            currentSubPage: '',
             pageNumber: 1,
             pageText: PageTextRecord(),
             pagesCount: 1,
@@ -110,7 +76,6 @@ export default
         isLoaded: false,
         isFailed: false,
         modelInfoIsOpen: false,
-        currentSubPage: '',
         lastOrientationCode: defaultOrientationCode,
         lastSubPageForRequest: '',
         pageNumber: 1,

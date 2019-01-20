@@ -1,4 +1,3 @@
-// TODO: this page needs propTypes
 import {get} from 'lodash'
 import React from 'react'
 import queryString from 'query-string'
@@ -12,9 +11,19 @@ import {
     localizedGetSubPage,
     getRouterContext,
     plainProvedGet as g,
-    immutableProvedGet as ig
+    immutableProvedGet as ig,
+    setPropTypes,
+    PropTypes,
 } from '../../helpers'
 
+import {
+    orientationCodes,
+    routerContextModel,
+    immutableI18nOrderingModel,
+    immutableI18nButtonsModel,
+} from '../../models'
+
+import {dataModel} from './models'
 import {routerGetters} from '../../../router-builder'
 import sectionPortal from '../../MainHeader/Navigation/sectionPortal'
 import orientationPortal from '../../MainHeader/Niche/orientationPortal'
@@ -29,7 +38,58 @@ import headerActions from '../../MainHeader/actions'
 import actions from './actions'
 
 const
-    PornstarRecord = Record({
+    Pornstar = ({
+        currentBreakpoint, i18nOrdering, i18nButtons, data, chooseSort,
+        isSSR, modelInfoHandler, modelInfoIsOpen,
+        controlLinkBuilder, modelLinkBuilder,
+    }) => <Page>
+        { ig(data, 'isFailed')
+            ? <ErrorContent/>
+            : ig(data, 'isLoading')
+            ? <CircularProgress/>
+            : <Content>
+                <Lists
+                    currentBreakpoint={currentBreakpoint}
+                    modelsList={ig(data, 'modelsList')}
+                    modelLinkBuilder={modelLinkBuilder}
+                />
+                <PageWrapper>
+                    <Typography variant="h4" gutterBottom>
+                        {data.getIn(['pageText', 'listHeader'])}
+                    </Typography>
+                    <Info
+                        modelThumb={ig(data, 'modelThumb')}
+                        modelInfo={ig(data, 'modelInfo')}
+                        modelInfoHandler={modelInfoHandler}
+                        modelInfoIsOpen={modelInfoIsOpen}
+                        currentBreakpoint={currentBreakpoint}
+                        isSSR={isSSR}
+                    />
+                    <ControlBar
+                        i18nOrdering={i18nOrdering}
+                        i18nButtons={i18nButtons}
+                        chooseSort={chooseSort}
+                        isSSR={isSSR}
+                        pagesCount={ig(data, 'pagesCount')}
+                        pageNumber={ig(data, 'pageNumber')}
+                        itemsCount={ig(data, 'itemsCount')}
+                        sortList={ig(data, 'sortList')}
+                        currentSort={ig(data, 'currentSort')}
+                        archiveFilms={null}
+                        tagArchiveListOlder={null}
+                        tagArchiveListNewer={null}
+                        linkBuilder={controlLinkBuilder}
+                        archiveLinkBuilder={null}
+                    />
+                    <VideoList
+                        videoList={ig(data, 'videoList')}
+                    />
+                </PageWrapper>
+            </Content>
+        }
+    </Page>,
+
+    DataRecord = Record({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
@@ -49,59 +109,8 @@ const
         modelThumb: '',
     }),
 
-    Pornstar = ({
-        currentBreakpoint, i18nOrdering, i18nButtons, pornstar, chooseSort,
-        isSSR, modelInfoHandler, modelInfoIsOpen,
-        controlLinkBuilder, modelLinkBuilder,
-    }) => <Page>
-        { ig(pornstar, 'isFailed')
-            ? <ErrorContent/>
-            : ig(pornstar, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <Lists
-                    currentBreakpoint={currentBreakpoint}
-                    modelsList={ig(pornstar, 'modelsList')}
-                    modelLinkBuilder={modelLinkBuilder}
-                />
-                <PageWrapper>
-                    <Typography variant="h4" gutterBottom>
-                        {pornstar.getIn(['pageText', 'listHeader'])}
-                    </Typography>
-                    <Info
-                        modelThumb={ig(pornstar, 'modelThumb')}
-                        modelInfo={ig(pornstar, 'modelInfo')}
-                        modelInfoHandler={modelInfoHandler}
-                        modelInfoIsOpen={modelInfoIsOpen}
-                        currentBreakpoint={currentBreakpoint}
-                        isSSR={isSSR}
-                    />
-                    <ControlBar
-                        i18nOrdering={i18nOrdering}
-                        i18nButtons={i18nButtons}
-                        chooseSort={chooseSort}
-                        isSSR={isSSR}
-                        pagesCount={ig(pornstar, 'pagesCount')}
-                        pageNumber={ig(pornstar, 'pageNumber')}
-                        itemsCount={ig(pornstar, 'itemsCount')}
-                        sortList={ig(pornstar, 'sortList')}
-                        currentSort={ig(pornstar, 'currentSort')}
-                        archiveFilms={null}
-                        tagArchiveListOlder={null}
-                        tagArchiveListNewer={null}
-                        linkBuilder={controlLinkBuilder}
-                        archiveLinkBuilder={null}
-                    />
-                    <VideoList
-                        videoList={ig(pornstar, 'videoList')}
-                    />
-                </PageWrapper>
-            </Content>
-        }
-    </Page>,
-
     loadPageFlow = ({
-        search, routerContext, pornstarCode, pornstar,
+        search, routerContext, pornstarCode, data,
         loadPage, setHeaderText, currentOrientation,
     }) => {
         const
@@ -121,16 +130,16 @@ const
         // "unless" condition.
         // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
         if (!(
-            ig(pornstar, 'isLoading') ||
+            ig(data, 'isLoading') ||
             (
-                (ig(pornstar, 'isLoaded') || ig(pornstar, 'isFailed')) &&
-                subPageForRequest === ig(pornstar, 'lastSubPageForRequest') &&
-                g(currentOrientation, []) === ig(pornstar, 'lastOrientationCode')
+                (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
+                subPageForRequest === ig(data, 'lastSubPageForRequest') &&
+                g(currentOrientation, []) === ig(data, 'lastOrientationCode')
             )
         ))
             loadPage(subPageForRequest)
-        else if (ig(pornstar, 'isLoaded'))
-            setHeaderText(getHeaderText(pornstar, true))
+        else if (ig(data, 'isLoaded'))
+            setHeaderText(getHeaderText(data, true))
     }
 
 export default compose(
@@ -140,9 +149,8 @@ export default compose(
         state => ({
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            pornstar: PornstarRecord(ig(state, 'app', 'pornstars', 'pornstar')),
+            data: DataRecord(ig(state, 'app', 'pornstars', 'pornstar')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            pageUrl: ig(state, 'router', 'location', 'pathname'),
             search: ig(state, 'router', 'location', 'search'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
@@ -191,5 +199,27 @@ export default compose(
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
         },
-    })
+    }),
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        currentOrientation: PropTypes.oneOf(orientationCodes),
+        currentBreakpoint: PropTypes.string,
+        data: dataModel,
+        isSSR: PropTypes.bool,
+        search: PropTypes.string,
+        routerContext: routerContextModel,
+        i18nOrdering: immutableI18nOrderingModel,
+        i18nButtons: immutableI18nButtonsModel,
+        modelInfoIsOpen: PropTypes.bool,
+
+        loadPageRequest: PropTypes.func,
+        loadPage: PropTypes.func,
+        toggleModelInfo: PropTypes.func,
+        modelInfoHandler: PropTypes.func,
+        setNewText: PropTypes.func,
+        setHeaderText: PropTypes.func,
+        setNewSort: PropTypes.func,
+        chooseSort: PropTypes.func,
+        controlLinkBuilder: PropTypes.func,
+        modelLinkBuilder: PropTypes.func,
+    }),
 )(Pornstar)
