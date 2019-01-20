@@ -15,12 +15,13 @@ import errorActions from '../../generic/ErrorMessage/actions'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
 
-export function* loadFindVideosPageFlow({payload: subPageForRequest}, ssrContext) {
+export function* loadFindVideosPageFlow(action, ssrContext) {
     try {
         const reqData = yield select(x => ({
             localeCode: ig(x, 'app', 'locale', 'localeCode'),
+            orientationCode: g(action, 'payload', 'orientationCode'),
             page: getProvedPageKey('findVideos'),
-            subPageCode: subPageForRequest,
+            subPageCode: g(action, 'payload', 'subPageForRequest'),
         }))
 
         let data
@@ -30,7 +31,11 @@ export function* loadFindVideosPageFlow({payload: subPageForRequest}, ssrContext
             data = yield getPageData(reqData)
 
         yield put(headerActions.setNewText(getHeaderText(data)))
-        yield put(actions.loadPageSuccess({subPageForRequest, data}))
+        yield put(actions.loadPageSuccess({
+            orientationCode: g(reqData, 'orientationCode'),
+            subPageForRequest: g(reqData, 'subPageCode'),
+            data: g(data, []),
+        }))
     } catch (err) {
         console.error('loadFindVideosPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())

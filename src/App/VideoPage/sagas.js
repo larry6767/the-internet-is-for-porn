@@ -5,6 +5,7 @@ import {
     getProvedPageKey,
     getHeaderText,
     getPageData,
+    plainProvedGet as g,
     immutableProvedGet as ig,
 } from '../helpers'
 
@@ -13,13 +14,14 @@ import errorActions from '../../generic/ErrorMessage/actions'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
 
-export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
+export function* loadVideoPageFlow(action, ssrContext) {
     try {
         const
             reqData = yield select(x => ({
                 localeCode: ig(x, 'app', 'locale', 'localeCode'),
+                orientationCode: g(action, 'payload', 'orientationCode'),
                 page: getProvedPageKey('video'),
-                subPageCode: subPageForRequest,
+                subPageCode: g(action, 'payload', 'subPageForRequest'),
             }))
 
         let data
@@ -42,7 +44,11 @@ export function* loadVideoPageFlow({payload: subPageForRequest}, ssrContext) {
         }
 
         yield put(headerActions.setNewText(getHeaderText(data, false, false)))
-        yield put(actions.loadPageSuccess({subPageForRequest, data}))
+        yield put(actions.loadPageSuccess({
+            orientationCode: g(reqData, 'orientationCode'),
+            subPageForRequest: g(reqData, 'subPageCode'),
+            data,
+        }))
     } catch (err) {
         console.error('loadAllMoviesPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())

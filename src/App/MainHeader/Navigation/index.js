@@ -1,6 +1,6 @@
 import {includes} from 'lodash'
 import React from 'react'
-import {compose, withHandlers} from 'recompose'
+import {compose, withHandlers, withPropsOnChange} from 'recompose'
 import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 import {Tabs, Tab} from '@material-ui/core'
@@ -21,16 +21,18 @@ import actions from './actions'
 import {navMenuOrder} from './models'
 
 const
-    Navigation = ({classes, isSSR, i18nNav, goToPath, getLinkByNavKey, currentSection}) => <Nav>
+    Navigation = ({
+        classes, isSSR, i18nNav, goToPath, getLinkByNavKey, currentSection, navMenuItems
+    }) => <Nav>
         <Tabs
-            value={includes(navMenuOrder, currentSection) ? currentSection : false}
+            value={includes(navMenuItems, currentSection) ? currentSection : false}
             onChange={goToPath}
             indicatorColor="primary"
             textColor="primary"
             variant={isSSR ? null : 'scrollable'}
             scrollButtons="off"
         >
-            {navMenuOrder.map((navKey, index) => {
+            {navMenuItems.map((navKey, index) => {
                 const
                     link = getLinkByNavKey(navKey)
 
@@ -68,6 +70,15 @@ export default compose(
             props.setNewPath(props.getLinkByNavKey(value))
         },
     }),
+
+    // never updates because `isSSR` is static
+    withPropsOnChange([], props => ({
+        navMenuItems: g(props, 'isSSR')
+            // favorites don't work on SSR side, we can't like anything on SSR side.
+            ? Object.freeze(navMenuOrder.filter(x => x !== 'favorite'))
+            : navMenuOrder,
+    })),
+
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,
@@ -77,5 +88,6 @@ export default compose(
         goToPath: PropTypes.func,
         getLinkByNavKey: PropTypes.func,
         currentSection: PropTypes.nullable(PropTypes.string),
+        navMenuItems: PropTypes.arrayOf(PropTypes.string),
     })
 )(Navigation)

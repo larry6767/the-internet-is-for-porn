@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
-import {Record, Map, List} from 'immutable'
+import {Record, List} from 'immutable'
 
 import {
     getHeaderText,
@@ -16,8 +16,15 @@ import {
     setPropTypes,
 } from '../helpers'
 
-import {immutableI18nButtonsModel, routerContextModel} from '../models'
+import {
+    immutableI18nButtonsModel,
+    routerContextModel,
+    orientationCodes,
+    PageTextRecord,
+} from '../models'
+
 import {routerGetters} from '../../router-builder'
+import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
@@ -33,7 +40,7 @@ const
         isLoaded: false,
         isFailed: false,
         pageNumber: 1,
-        pageText: Map(),
+        pageText: PageTextRecord(),
         pagesCount: 1,
         itemsCount: 0,
         videoList: List(),
@@ -85,14 +92,15 @@ const
     </Page>
 
 export default compose(
+    orientationPortal,
     sectionPortal,
     connect(
         state => ({
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             favorite: FavoriteRecord(ig(state, 'app', 'favorite')),
-            pageUrl: ig(state, 'router', 'location', 'pathname'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -100,7 +108,9 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => pageUrl => props.loadPageRequest(pageUrl),
+        loadPage: props => () => props.loadPageRequest({
+            orientationCode: g(props, 'currentOrientation'),
+        }),
 
         setHeaderText: props => headerText => props.setNewText(headerText),
 
@@ -123,10 +133,10 @@ export default compose(
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        currentOrientation: PropTypes.oneOf(orientationCodes),
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
-        pageUrl: PropTypes.string,
         favorite: ImmutablePropTypes.record, // TODO better type
         controlLinkBuilder: PropTypes.func,
         controlFavoriteLinkBuilder: PropTypes.func,
