@@ -1,10 +1,16 @@
 import React from 'react'
+import {map} from 'lodash'
 import {Switch, Redirect, Route} from 'react-router-dom'
 import {compose} from 'recompose'
 
-import {immutableProvedGet as ig, setPropTypes} from '../App/helpers'
+import {
+    immutableProvedGet as ig,
+    plainProvedGet as g,
+    setPropTypes,
+} from '../App/helpers'
 import {ssrRouterContextModel, orientationCodes} from '../App/models'
 import {routerGetters} from '../router-builder'
+import nichesRedirects from '../fixtures/legacy-redirects/niches-redirects.json'
 
 const
     videoRedirectFrom = r => {
@@ -16,13 +22,13 @@ const
     },
 
     getFrom = (r, orientationCode, section, field = 'from') =>
-        ig(r, 'legacyOrientationPrefixes', orientationCode) +
+        ig(r, 'ssr', 'legacyOrientationPrefixes', orientationCode) +
         ig(r, 'router', 'redirects', section, field),
 
     // TODO temporary solution, because we have different redirects only for AllMovies,
     // and we have more important tasks now
     getFromForAllMovies = (r, orientationCode, section, field = 'from') =>
-        ig(r, 'legacyOrientationPrefixes', orientationCode) +
+        ig(r, 'ssr', 'legacyOrientationPrefixes', orientationCode) +
         ig(r, 'router', 'redirects', section, field, orientationCode)
 
 const
@@ -31,13 +37,20 @@ const
     LegacyRedirectsRouterBuilder = ({routerContext: r}) => <Switch>
         {orientationCodes.map(orientationCode => {
             const
-                orientedR = r.set('currentOrientation', orientationCode)
+                orientedR = r.set('currentOrientation', orientationCode),
+                nichesBranch = g(nichesRedirects, ig(r, 'ssr', 'localeCode'), orientationCode),
+                nichesRedirectsList = map(nichesBranch, (to, from) => <Redirect
+                    key={`${orientationCode}-${to}-niche`}
+                    exact
+                    from={from}
+                    to={routerGetters.niche.link(orientedR, to)}
+                />)
 
-            return [
+            return nichesRedirectsList.concat([
                 <Route
                     key={`${orientationCode}-allNiches`}
                     exact
-                    path={`${ig(r, 'legacyOrientationPrefixes', orientationCode)}/`}
+                    path={`${ig(r, 'ssr', 'legacyOrientationPrefixes', orientationCode)}/`}
                     render={props =>
                         (
                             ig(r, 'location', 'search') !==
@@ -66,7 +79,7 @@ const
                     key={`${orientationCode}-video-redirect`}
                     exact
                     from={
-                        ig(r, 'legacyOrientationPrefixes', orientationCode) +
+                        ig(r, 'ssr', 'legacyOrientationPrefixes', orientationCode) +
                         videoRedirectFrom(r)
                     }
                     to={
@@ -94,7 +107,7 @@ const
                     from={getFrom(r, orientationCode, 'favoritePornstars')}
                     to={routerGetters.favoritePornstars.link(orientedR)}
                 />,
-            ]
+            ])
         })}
     </Switch>
 

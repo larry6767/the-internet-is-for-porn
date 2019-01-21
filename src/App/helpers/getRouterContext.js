@@ -9,7 +9,12 @@ const
         location: null,
         router: null,
         currentOrientation: null,
+        ssr: null,
+    }),
+
+    SsrContextRecord = Record({
         legacyOrientationPrefixes: null,
+        localeCode: null,
     })
 
 export default (state, ssrRouterLocaleMapping = null, ssrLegacyOrientationPrefixes = null) => {
@@ -24,10 +29,12 @@ export default (state, ssrRouterLocaleMapping = null, ssrLegacyOrientationPrefix
 
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
 
-            legacyOrientationPrefixes:
-                ssrLegacyOrientationPrefixes === null
-                    ? null
-                    : fromJS(ssrLegacyOrientationPrefixes),
+            ssr: ssrLegacyOrientationPrefixes === null
+                ? null
+                : SsrContextRecord({
+                    legacyOrientationPrefixes: fromJS(ssrLegacyOrientationPrefixes),
+                    localeCode: ig(state, 'app', 'locale', 'localeCode'),
+                })
         })
 
     if (process.env.NODE_ENV !== 'production')
