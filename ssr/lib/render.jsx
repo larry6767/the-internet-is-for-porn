@@ -1,3 +1,4 @@
+import {parse, format} from 'url'
 import {find, includes} from 'lodash'
 import React from 'react'
 import {Provider} from 'react-redux'
@@ -25,12 +26,20 @@ import orientationActions from '../App/MainHeader/Niche/actions'
 import backRouterLocaleMapping, {frontRouterLocaleMapping} from '../locale-mapping/router'
 import i18n from '../locale-mapping/i18n'
 
-const getPageData =
-    (req, siteLocales, localeCode) => etc =>
-        requestPageData(siteLocales, localeCode)({
-            headers: proxiedHeaders(siteLocales, localeCode)(req),
-            ...etc
-        })
+const
+    getPageData =
+        (req, siteLocales, localeCode) => etc =>
+            requestPageData(siteLocales, localeCode)({
+                headers: proxiedHeaders(siteLocales, localeCode)(req),
+                ...etc
+            }),
+
+    // to fix redirects with unicode symbols
+    escapeURL = url => {
+        const x = parse(url)
+        x.pathname = x.pathname.split(/\//).map(x => encodeURIComponent(x)).join('/')
+        return format(x)
+    }
 
 // renders a page and makes a proper response for express.js
 export default (
@@ -82,7 +91,8 @@ export default (
             )
 
             if (staticLegacyRedirectsRouterContext.hasOwnProperty('url')) {
-                res.writeHead(302, {'Location': g(staticLegacyRedirectsRouterContext, 'url')})
+                const url = g(escapeURL(g(staticLegacyRedirectsRouterContext, 'url')), [])
+                res.writeHead(302, {'Location': url})
                 return res.end()
             }
         }
@@ -96,7 +106,8 @@ export default (
         )
 
         if (staticRouterContext.hasOwnProperty('url')) {
-            res.writeHead(302, {'Location': g(staticRouterContext, 'url')})
+            const url = g(escapeURL(g(staticRouterContext, 'url')), [])
+            res.writeHead(302, {'Location': url})
             return res.end()
         }
 
@@ -139,7 +150,7 @@ export default (
             html = renderToString(serverStyleSheet.collectStyles(
                 <JssProvider registry={jssSheetsRegistry} generateClassName={generateClassName}>
                     <Provider store={store}>
-                        <StaticRouter location={req.url} context={{}}>
+                        <StaticRouter location={g(req, 'url')} context={{}}>
                             <App sheetsManager={sheetsManager} routerContext={routerContext}>
                                 {RouterBuilder}
                             </App>

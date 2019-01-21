@@ -39,10 +39,11 @@ const
             const
                 orientedR = r.set('currentOrientation', orientationCode),
                 nichesBranch = g(nichesRedirects, ig(r, 'ssr', 'localeCode'), orientationCode),
+
                 nichesRedirectsList = map(nichesBranch, (to, from) => <Redirect
                     key={`${orientationCode}-${to}-niche`}
                     exact
-                    from={from}
+                    from={decodeURIComponent(from)}
                     to={routerGetters.niche.link(orientedR, to)}
                 />)
 
