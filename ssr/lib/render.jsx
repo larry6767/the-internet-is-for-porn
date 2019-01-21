@@ -57,9 +57,6 @@ export default (
         store.dispatch(appActions.setLocaleCode(localeCode))
         store.dispatch(appActions.fillLocaleRouter(g(frontRouterLocaleMapping, localeCode)))
         store.dispatch(appActions.fillLocaleI18n(g(i18n, localeCode)))
-        store.dispatch(appActions.fillLocaleLegacyOrientationPrefixes(
-            getLegacyOrientationPrefixes(localeCode)
-        ))
         store.dispatch(languageActions.setNewLanguage(localeCode))
 
         const
@@ -69,10 +66,13 @@ export default (
 
         {
             const
-                redirectsRouterContext =
-                    getRouterContext(state, g(backRouterLocaleMapping, localeCode)),
+                staticLegacyRedirectsRouterContext = {},
 
-                staticLegacyRedirectsRouterContext = {}
+                redirectsRouterContext = getRouterContext(
+                    state,
+                    g(backRouterLocaleMapping, localeCode),
+                    getLegacyOrientationPrefixes(localeCode)
+                )
 
             // just to obtain redirect and
             renderToString(

@@ -12,7 +12,7 @@ const
         legacyOrientationPrefixes: null,
     })
 
-export default (state, ssrRouterLocaleMapping = null) => {
+export default (state, ssrRouterLocaleMapping = null, ssrLegacyOrientationPrefixes = null) => {
     const
         result = RouterContextRecord({
             location: ig(state, 'router', 'location'),
@@ -23,7 +23,11 @@ export default (state, ssrRouterLocaleMapping = null) => {
                     : fromJS(ssrRouterLocaleMapping),
 
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
-            legacyOrientationPrefixes: ig(state, 'app', 'locale', 'legacyOrientationPrefixes'),
+
+            legacyOrientationPrefixes:
+                ssrLegacyOrientationPrefixes === null
+                    ? null
+                    : fromJS(ssrLegacyOrientationPrefixes),
         })
 
     if (process.env.NODE_ENV !== 'production')

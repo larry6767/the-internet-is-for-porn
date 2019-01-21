@@ -27,7 +27,7 @@ const
             location: routerLocationModel,
             router: isSSR ? ssrImmutableLocaleRouterModel : immutableLocaleRouterModel,
             currentOrientation: PropTypes.oneOf(orientationCodes),
-            legacyOrientationPrefixes: legacyOrientationPrefixesModel,
+            legacyOrientationPrefixes: isSSR ? legacyOrientationPrefixesModel : PropTypes.null,
         })
 
 export const
