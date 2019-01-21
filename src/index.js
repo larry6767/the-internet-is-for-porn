@@ -41,9 +41,6 @@ else {
             store.dispatch(appActions.setLocaleCode(g(x, 'localeCode')))
             store.dispatch(appActions.fillLocaleRouter(g(x, 'router')))
             store.dispatch(appActions.fillLocaleI18n(g(x, 'i18n')))
-            store.dispatch(
-                appActions.fillLocaleLegacyOrientationPrefixes(g(x, 'legacyOrientationPrefixes'))
-            )
             runFrontEnd()
         }).catch(err => {
             console.error('Application initialization is failed with exception:', err)

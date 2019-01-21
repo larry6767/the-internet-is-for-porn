@@ -21,12 +21,7 @@ import favoritePornstarsReducer from './FavoritePornstars/reducers'
 import videoPageReducer from './VideoPage/reducers'
 import findVideosReducer from './FindVideos/reducers'
 import actions from './actions'
-
-import {
-    immutableLocaleRouterModel,
-    immutableI18nModel,
-    legacyOrientationPrefixesModel,
-} from './models'
+import {immutableLocaleRouterModel, immutableI18nModel} from './models'
 
 const
     defaultSSR = fromJS({isSSR: false})
@@ -87,15 +82,6 @@ export default combineReducers({
         i18n: provedHandleActions(
             process.env.NODE_ENV === 'production' ? null : PropTypes.nullable(immutableI18nModel),
             {[g(actions, 'fillLocaleI18n')]: (state, {payload}) => Map(fromJS(payload))},
-            null
-        ),
-
-        // This supposed to be filled at initialization step (depending on current locale).
-        legacyOrientationPrefixes: provedHandleActions(
-            process.env.NODE_ENV === 'production' ? null :
-                PropTypes.nullable(legacyOrientationPrefixesModel),
-            {[g(actions, 'fillLocaleLegacyOrientationPrefixes')]:
-                (state, {payload}) => Map(fromJS(payload))},
             null
         ),
     }),

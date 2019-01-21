@@ -675,6 +675,14 @@ const createNullableTypeChecker = typeChecker => {
 // type checker.
 ReactPropTypes.nullable = createNullableTypeChecker
 
+ReactPropTypes.null = (props, propName, componentName, location, propFullName) => {
+    if (props[propName] !== null)
+        return new PropTypeError(
+            `Invalid ${location} \`${propFullName}\` of type \`${getPropType(props[propName])}\` ` +
+            `supplied to \`${componentName}\`, expected \`null\`.`
+        )
+}
+
 // END: own custom prop types
 
 export default ReactPropTypes
