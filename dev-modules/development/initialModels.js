@@ -43,7 +43,13 @@ const
 
         return exact(!isSSR ? props : set(props, 'redirects', exact({
             categories: exact({search: PropTypes.string}),
-            allMovies: exact({from: PropTypes.string}),
+            allMovies: exact({
+                from: exact({
+                    straight: PropTypes.string,
+                    gay: PropTypes.string,
+                    tranny: PropTypes.string,
+                }),
+            }),
             pornstars: exact({from: PropTypes.string}),
             favorite: exact({
                 from: PropTypes.string,

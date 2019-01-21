@@ -1,5 +1,4 @@
 import React from 'react'
-import {flatten} from 'lodash'
 import {Switch, Redirect, Route} from 'react-router-dom'
 import {compose} from 'recompose'
 
@@ -18,7 +17,13 @@ const
 
     getFrom = (r, orientationCode, section, field = 'from') =>
         ig(r, 'legacyOrientationPrefixes', orientationCode) +
-        ig(r, 'router', 'redirects', section, field)
+        ig(r, 'router', 'redirects', section, field),
+
+    // TODO temporary solution, because we have different redirects only for AllMovies,
+    // and we have more important tasks now
+    getFromForAllMovies = (r, orientationCode, section, field = 'from') =>
+        ig(r, 'legacyOrientationPrefixes', orientationCode) +
+        ig(r, 'router', 'redirects', section, field, orientationCode)
 
 const
     // TODO redirects supposed to be splitted for specific orientations (see mapping module),
@@ -46,7 +51,7 @@ const
                 <Redirect
                     key={`${orientationCode}-allMovies`}
                     exact
-                    from={getFrom(r, orientationCode, 'allMovies')}
+                    from={getFromForAllMovies(r, orientationCode, 'allMovies')}
                     to={routerGetters.allMovies.link(orientedR)}
                 />,
 

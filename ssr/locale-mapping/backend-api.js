@@ -14,7 +14,11 @@ const
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
                 allMovies: {
-                    code: {straight: 'all-movies', gay: 'all-movies', tranny: 'all-movies'},
+                    code: {
+                        straight: 'all-movies',
+                        gay: 'all-movies',
+                        tranny: 'all-movies',
+                    },
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
                 },
                 pornstars: {
@@ -157,7 +161,7 @@ const
                     code: {
                         straight: 'tout-les-tubes',
                         gay: 'toutes-les-vidéos-gays',
-                        tranny: 'tous-les-clips-trans'
+                        tranny: 'tous-les-clips-trans',
                     },
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
                 },
@@ -177,7 +181,7 @@ const
                     code: {
                         straight: 'favorite-porn-stars',
                         gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars'
+                        tranny: 'favorite-porn-stars',
                     },
                     url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
                 },
@@ -205,7 +209,7 @@ const
                     code: {
                         straight: 'todas-películas',
                         gay: 'todas-películas',
-                        tranny: 'todas-películas'
+                        tranny: 'todas-películas',
                     },
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
                 },
@@ -225,7 +229,7 @@ const
                     code: {
                         straight: 'favorite-porn-stars',
                         gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars'
+                        tranny: 'favorite-porn-stars',
                     },
                     url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
                 },
@@ -250,7 +254,11 @@ const
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
                 allMovies: {
-                    code: {straight: 'todas-as-cenas', gay: 'todos-os-vids-tube', tranny: 'cenas'},
+                    code: {
+                        straight: 'todas-as-cenas',
+                        gay: 'todos-os-vids-tube',
+                        tranny: 'cenas',
+                    },
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
                 },
                 pornstars: {
@@ -269,7 +277,7 @@ const
                     code: {
                         straight: 'favorite-porn-stars',
                         gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars'
+                        tranny: 'favorite-porn-stars',
                     },
                     url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
                 },
@@ -294,7 +302,11 @@ const
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
                 allMovies: {
-                    code: {straight: 'alla-tubevideor', gay: 'videor', tranny: 'filmer'},
+                    code: {
+                        straight: 'alla-tubevideor',
+                        gay: 'videor',
+                        tranny: 'filmer',
+                    },
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
                 },
                 pornstars: {
@@ -313,7 +325,7 @@ const
                     code: {
                         straight: 'favorite-porn-stars',
                         gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars'
+                        tranny: 'favorite-porn-stars',
                     },
                     url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
                 },
@@ -338,7 +350,11 @@ const
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
                 allMovies: {
-                    code: {straight: 'alle-scenes', gay: 'clips', tranny: 'alle-videos'},
+                    code: {
+                        straight: 'alle-scenes',
+                        gay: 'clips',
+                        tranny: 'alle-videos',
+                    },
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
                 },
                 pornstars: {
@@ -357,7 +373,7 @@ const
                     code: {
                         straight: 'favorite-porn-stars',
                         gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars'
+                        tranny: 'favorite-porn-stars',
                     },
                     url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
                 },
@@ -382,7 +398,11 @@ const
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
                 allMovies: {
-                    code: {straight: 'leffat', gay: 'kaikki-klipit', tranny: 'filmit'},
+                    code: {
+                        straight: 'leffat',
+                        gay: 'kaikki-klipit',
+                        tranny: 'filmit',
+                    },
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
                 },
                 pornstars: {
@@ -401,7 +421,7 @@ const
                     code: {
                         straight: 'favorite-porn-stars',
                         gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars'
+                        tranny: 'favorite-porn-stars',
                     },
                     url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
                 },
@@ -426,7 +446,11 @@ const
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
                 allMovies: {
-                    code: {straight: 'фильмы', gay: 'все-эпизоды', tranny: 'сцены'},
+                    code: {
+                        straight: 'фильмы',
+                        gay: 'все-эпизоды',
+                        tranny: 'сцены',
+                    },
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
                 },
                 pornstars: {
@@ -445,7 +469,7 @@ const
                     code: {
                         straight: 'favorite-porn-stars',
                         gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars'
+                        tranny: 'favorite-porn-stars',
                     },
                     url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
                 },
@@ -470,7 +494,11 @@ const
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
                 allMovies: {
-                    code: {straight: 'tüm-kanal-videoları', gay: 'filmler', tranny: 'sahneler'},
+                    code: {
+                        straight: 'tüm-kanal-videoları',
+                        gay: 'filmler',
+                        tranny: 'sahneler',
+                    },
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
                 },
                 pornstars: {
@@ -489,7 +517,7 @@ const
                     code: {
                         straight: 'favorite-porn-stars',
                         gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars'
+                        tranny: 'favorite-porn-stars',
                     },
                     url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
                 },

@@ -19,9 +19,15 @@ const
                 video: {sectionPfx: 'video-'},
                 findVideos: {section: 'find-videos'},
             },
-            redirects: { // TODO split redirects for specific orientations
+            redirects: {
                 categories: {search: '?categories'},
-                allMovies: {from: '/all-movies.html'},
+                allMovies: {
+                    from: {
+                        straight: '/all-movies.html',
+                        gay: '/all-movies.html',
+                        tranny: '/all-movies.html',
+                    }
+                },
                 pornstars: {from: '/porn-stars.html'},
                 favorite: {from: '/your-favorite.html', fromMovies: '/your-favorite-movs.html'},
                 favoritePornstars: {from: '/your-favorite-porn-stars.html'},
@@ -59,9 +65,15 @@ const
                 video: {sectionPfx: 'video-'},
                 findVideos: {section: 'finde-videos'},
             },
-            redirects: { // TODO split redirects for specific orientations
+            redirects: {
                 categories: {search: '?categories'},
-                allMovies: {from: '/alle-vids.html'},
+                allMovies: {
+                    from: {
+                        straight: '/alle-vids.html',
+                        gay: '/alle-videos.html',
+                        tranny: '/alle-shemale-videos.html',
+                    }
+                },
                 pornstars: {from: '/porn-stars.html'},
                 favorite: {from: '/your-favorite.html', fromMovies: '/your-favorite-movs.html'},
                 favoritePornstars: {from: '/your-favorite-porn-stars.html'},
@@ -99,9 +111,15 @@ const
                 video: {sectionPfx: 'film-'},
                 findVideos: {section: 'trova-video'},
             },
-            redirects: { // TODO split redirects for specific orientations
+            redirects: {
                 categories: {search: '?categories'},
-                allMovies: {from: '/tutti-i-film.html'},
+                allMovies: {
+                    from: {
+                        straight: '/tutti-i-film.html',
+                        gay: '/tutti-i-film-gay.html',
+                        tranny: '/tutti-trans-film.html',
+                    }
+                },
                 pornstars: {from: '/porn-stars.html'},
                 favorite: {from: '/your-favorite.html', fromMovies: '/your-favorite-movs.html'},
                 favoritePornstars: {from: '/your-favorite-porn-stars.html'},
@@ -139,9 +157,15 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: { // TODO split redirects for specific orientations
+            redirects: {
                 categories: {search: ''},
-                allMovies: {from: ''},
+                allMovies: {
+                    from: {
+                        straight: '/tout-les-tubes.html',
+                        gay: '/toutes-les-vidéos-gays.html',
+                        tranny: '/tous-les-clips-trans.html',
+                    }
+                },
                 pornstars: {from: ''},
                 favorite: {from: '', fromMovies: ''},
                 favoritePornstars: {from: ''},
@@ -179,9 +203,15 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: { // TODO split redirects for specific orientations
+            redirects: {
                 categories: {search: ''},
-                allMovies: {from: ''},
+                allMovies: {
+                    from: {
+                        straight: '/todas-películas.html',
+                        gay: '/todas-películas.html',
+                        tranny: '/todas-películas.html',
+                    }
+                },
                 pornstars: {from: ''},
                 favorite: {from: '', fromMovies: ''},
                 favoritePornstars: {from: ''},
@@ -219,9 +249,15 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: { // TODO split redirects for specific orientations
+            redirects: {
                 categories: {search: ''},
-                allMovies: {from: ''},
+                allMovies: {
+                    from: {
+                        straight: '/todas-as-cenas.html',
+                        gay: '/todos-os-vids-tube.html',
+                        tranny: '/cenas.html',
+                    }
+                },
                 pornstars: {from: ''},
                 favorite: {from: '', fromMovies: ''},
                 favoritePornstars: {from: ''},
@@ -259,9 +295,15 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: { // TODO split redirects for specific orientations
+            redirects: {
                 categories: {search: ''},
-                allMovies: {from: ''},
+                allMovies: {
+                    from: {
+                        straight: '/alla-tubevideor.html',
+                        gay: '/videor.html',
+                        tranny: '/filmer.html',
+                    }
+                },
                 pornstars: {from: ''},
                 favorite: {from: '', fromMovies: ''},
                 favoritePornstars: {from: ''},
@@ -299,9 +341,15 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: { // TODO split redirects for specific orientations
+            redirects: {
                 categories: {search: ''},
-                allMovies: {from: ''},
+                allMovies: {
+                    from: {
+                        straight: '/alle-scenes.html',
+                        gay: '/clips.html',
+                        tranny: '/alle-videos.html',
+                    }
+                },
                 pornstars: {from: ''},
                 favorite: {from: '', fromMovies: ''},
                 favoritePornstars: {from: ''},
@@ -339,9 +387,15 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: { // TODO split redirects for specific orientations
+            redirects: {
                 categories: {search: ''},
-                allMovies: {from: ''},
+                allMovies: {
+                    from: {
+                        straight: '/leffat.html',
+                        gay: '/kaikki-klipit.html',
+                        tranny: '/filmit.html',
+                    }
+                },
                 pornstars: {from: ''},
                 favorite: {from: '', fromMovies: ''},
                 favoritePornstars: {from: ''},
@@ -379,9 +433,15 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: { // TODO split redirects for specific orientations
+            redirects: {
                 categories: {search: ''},
-                allMovies: {from: ''},
+                allMovies: {
+                    from: {
+                        straight: '/фильмы.html',
+                        gay: '/все-эпизоды.html',
+                        tranny: '/сцены.html',
+                    }
+                },
                 pornstars: {from: ''},
                 favorite: {from: '', fromMovies: ''},
                 favoritePornstars: {from: ''},
@@ -419,9 +479,15 @@ const
                 video: {sectionPfx: ''},
                 findVideos: {section: ''},
             },
-            redirects: { // TODO split redirects for specific orientations
+            redirects: {
                 categories: {search: ''},
-                allMovies: {from: ''},
+                allMovies: {
+                    from: {
+                        straight: '/tüm-kanal-videoları.html',
+                        gay: '/filmler.html',
+                        tranny: '/sahneler.html',
+                    }
+                },
                 pornstars: {from: ''},
                 favorite: {from: '', fromMovies: ''},
                 favoritePornstars: {from: ''},
