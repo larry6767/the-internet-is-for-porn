@@ -10,7 +10,7 @@ import {
 } from '../models'
 
 const
-    model = {
+    model = process.env.NODE_ENV === 'production' ? null : {
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
@@ -20,7 +20,8 @@ const
     },
 
     stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact(model),
-    dataModel = ImmutablePropTypes.exactRecordOf(model)
+    dataModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exactRecordOf(model)
 
 export {
     stateModel,
