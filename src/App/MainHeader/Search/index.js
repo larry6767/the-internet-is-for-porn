@@ -1,6 +1,8 @@
 import React from 'react'
+import queryString from 'query-string'
+import {get} from 'lodash'
 import {Record, List} from 'immutable'
-import {compose} from 'recompose'
+import {compose, withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, Field, formValueSelector} from 'redux-form/immutable'
 import Autosuggest from 'react-autosuggest'
@@ -15,6 +17,7 @@ import {
     PropTypes,
     ImmutablePropTypes,
     setPropTypes,
+    getRouterContext,
 } from '../../helpers'
 
 import {immutableI18nSearchModel} from '../../models'
@@ -26,11 +29,6 @@ import {muiStyles} from './assets/muiStyles'
 import actions from './actions'
 
 const
-    renderHiddenField = ({
-        input,
-        type,
-    }) => <input {...input} type={type}/>,
-
     renderInputComponent = ({classes, ref, i18nSearch, ...input}) => <TextField
         fullWidth
         placeholder={ig(i18nSearch, 'inputPlaceholder')}
@@ -67,23 +65,19 @@ const
         </MenuItem>
     },
 
-    getSuggestionValue = (change, suggestion) => {
-        change('searchKey', suggestion)
-    },
-
     renderAutosuggest = ({
-        classes, i18nSearch, search, input, change,
-        suggestionsFetchRequestHandler, suggestionsClearRequestHandler,
-        suggestionSelectedHandler, classId,
+        classes, i18nSearch, search, input,
+        suggestionsFetchRequest, suggestionsClearRequest,
+        onSubmitHandler, getSuggestionValue,
     }) => <Autosuggest
         renderInputComponent={renderInputComponent}
         suggestions={ig(search, 'suggestions').toJS()}
-        getSuggestionValue={getSuggestionValue.bind(this, change)}
+        getSuggestionValue={getSuggestionValue}
         renderSuggestion={renderSuggestion}
 
-        onSuggestionsFetchRequested={suggestionsFetchRequestHandler.bind(this, classId)}
-        onSuggestionsClearRequested={suggestionsClearRequestHandler}
-        onSuggestionSelected={suggestionSelectedHandler.bind(this, change)}
+        onSuggestionsFetchRequested={suggestionsFetchRequest}
+        onSuggestionsClearRequested={suggestionsClearRequest}
+        onSuggestionSelected={onSubmitHandler}
         inputProps={{
             classes,
             i18nSearch,
@@ -105,24 +99,18 @@ const
     />,
 
     Search = props => {
-        const {handleSubmit, i18nSearch} = props
+        const {onSubmitHandler, i18nSearch} = props
 
-        return <SearchForm
-            onSubmit={handleSubmit}
-        >
+        return <SearchForm>
             <Field
-                name="classId"
-                type="hidden"
-                component={renderHiddenField}
-            />
-            <Field
-                name="searchKey"
+                name="searchQuery"
                 type="text"
                 props={props}
                 component={renderAutosuggest}
             />
             <SearchButton
                 type="submit"
+                onClick={onSubmitHandler}
                 title={ig(i18nSearch, 'buttonTitle')}
             />
         </SearchForm>
@@ -136,34 +124,66 @@ const
 export default compose(
     connect(
         state => ({
-            initialValues: { // Setting default form values. redux-form creates keys in store for this
-                classId: '1', // ig(state, ['app', 'videoPage', 'gallery', 'classId']),
-                searchKey: '',
-            },
             search: SearchRecord(ig(state, ['app', 'mainHeader', 'search'])),
             i18nSearch: ig(state, 'app', 'locale', 'i18n', 'search'),
-            classId: formValueSelector('searchForm')(state, 'classId'),
-        }),
-        dispatch => ({
-            suggestionsFetchRequestHandler: (classId, {value, reason}) => {
-                dispatch(actions.suggestionsFetchRequest({
-                    classId,
-                    searchKey: value,
-                }))
+            searchQuery: formValueSelector('searchForm')(state, 'searchQuery'),
+            routerContext: getRouterContext(state),
+            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
+            initialValues: {
+                searchQuery: get(
+                    (console.log(queryString.parse(ig(state, 'router', 'location', 'search'))), queryString.parse(ig(state, 'router', 'location', 'search'))),
+                    [ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')],
+                    null
+                ),
             },
-            suggestionsClearRequestHandler: () => dispatch(actions.setEmptySuggestions()),
-            suggestionSelectedHandler: (change, event, {suggestion, method}) => {
-                if (method === 'enter')
-                    change('searchKey', suggestion)
-
-                dispatch(actions.runSearch(suggestion))
-            }
-        })
+        }),
+        {
+            runSearch: g(actions, 'runSearch'),
+            setEmptySuggestions: g(actions, 'setEmptySuggestions'),
+            suggestionsFetchRequest: g(actions, 'suggestionsFetchRequest'),
+        }
     ),
     reduxForm({
         form: 'searchForm',
         enableReinitialize: true,
-        onSubmit: (values, dispatch) => dispatch(actions.runSearch(ig(values, 'searchKey')))
+    }),
+    withHandlers({
+        getSuggestionValue: props => (suggestion) => {
+            props.change('searchQuery', suggestion)
+        },
+
+        suggestionsClearRequest: props => () => props.setEmptySuggestions(),
+
+        suggestionsFetchRequest: props => ({value, reason}) => {
+            props.suggestionsFetchRequest({
+                searchQuery: value,
+            })
+        },
+        // parameters are needed for the case when the handler below
+        // is called upon the event 'onSuggestionSelected'
+        onSubmitHandler: props => (event, parameters) => {
+            event.preventDefault()
+
+            const
+                routerContext = g(props, 'routerContext'),
+                currentOrientation = g(props, 'currentOrientation'),
+                orientation = ig(routerContext, 'router', 'orientation', currentOrientation),
+                localizedPath = ig(
+                    g(props, 'routerContext'),
+                    ['router', 'routes', 'findVideos', 'section']
+                ),
+                localizedKey = ig(g(props, 'routerContext'), 'router', 'searchQuery', 'qsKey'),
+                query = parameters
+                    ? g(parameters, 'suggestion')
+                    : g(props, 'searchQuery')
+
+            if (parameters && parameters.method === 'enter')
+                props.change('searchQuery', query)
+
+            props.runSearch({
+                path: `${orientation}/${localizedPath}?${localizedKey}=${query.replace(/ /g, '+')}`
+            })
+        }
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {

@@ -27,6 +27,7 @@ export {default as setPropTypes} from './setPropTypes'
 export {default as getLinkByNavKey} from './getLinkByNavKey'
 export {default as getHeaderText} from './getHeaderText'
 export {default as getProvedPageKey} from './getProvedPageKey'
+export {default as getClassId} from './getClassId'
 
 // favorite pages helpers
 export {default as addToList} from './favoritePages/addToList'

@@ -203,19 +203,21 @@ const
                 }
             )
 
-        const localeCode = g(req, 'body', 'localeCode')
+        const
+            localeCode = g(req, 'body', 'localeCode'),
+            orientationCode = g(req, 'body', 'orientationCode')
         unset(g(req, 'body'), 'localeCode')
         unset(g(req, 'body'), 'orientationCode')
         const formData = g(req, 'body')
 
-        searchSuggestionsRequest(siteLocales, localeCode)({
+        searchSuggestionsRequest(siteLocales, localeCode, orientationCode)({
             headers: proxiedHeaders(siteLocales, localeCode)(req),
             formData,
         })
         .then(x => res.json(x).end())
         .catch(jsonThrow500(req, res))
     })({
-        validTopLevelKeys: Object.freeze(['localeCode', 'orientationCode', 'classId', 'searchKey']),
+        validTopLevelKeys: Object.freeze(['localeCode', 'orientationCode', 'searchQuery']),
     }),
 
     sendReport = siteLocales => (({validTopLevelKeys}) => (req, res) => {

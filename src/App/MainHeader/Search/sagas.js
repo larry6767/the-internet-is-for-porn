@@ -37,8 +37,8 @@ export function* loadSuggestionsFlow({payload: formData}) {
     }
 }
 
-export function* runSearchFlow({payload: searchKey}) {
-    yield put(push(`/find-videos?key=${searchKey}`))
+export function* runSearchFlow({payload: {path}}) {
+    yield put(push(path))
 }
 
 export default function* saga() {
