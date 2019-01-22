@@ -20,7 +20,10 @@ import {
     getRouterContext,
 } from '../../helpers'
 
-import {immutableI18nSearchModel} from '../../models'
+import {
+    immutableI18nSearchModel,
+    routerContextModel,
+} from '../../models'
 import {
     SearchForm,
     SearchButton
@@ -67,7 +70,7 @@ const
 
     renderAutosuggest = ({
         classes, i18nSearch, search, input,
-        suggestionsFetchRequest, suggestionsClearRequest,
+        loadSuggestions, clearSuggestions,
         onSubmitHandler, getSuggestionValue,
     }) => <Autosuggest
         renderInputComponent={renderInputComponent}
@@ -75,8 +78,8 @@ const
         getSuggestionValue={getSuggestionValue}
         renderSuggestion={renderSuggestion}
 
-        onSuggestionsFetchRequested={suggestionsFetchRequest}
-        onSuggestionsClearRequested={suggestionsClearRequest}
+        onSuggestionsFetchRequested={loadSuggestions}
+        onSuggestionsClearRequested={clearSuggestions}
         onSuggestionSelected={onSubmitHandler}
         inputProps={{
             classes,
@@ -126,7 +129,7 @@ export default compose(
         state => ({
             search: SearchRecord(ig(state, ['app', 'mainHeader', 'search'])),
             i18nSearch: ig(state, 'app', 'locale', 'i18n', 'search'),
-            searchQuery: formValueSelector('searchForm')(state, 'searchQuery'),
+            searchQuery: formValueSelector('searchForm')(state, 'searchQuery') || null,
             routerContext: getRouterContext(state),
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             initialValues: {
@@ -148,16 +151,16 @@ export default compose(
         enableReinitialize: true,
     }),
     withHandlers({
-        getSuggestionValue: props => (suggestion) => {
-            props.change('searchQuery', suggestion)
-        },
-
-        suggestionsClearRequest: props => () => props.setEmptySuggestions(),
-
-        suggestionsFetchRequest: props => ({value, reason}) => {
+        loadSuggestions: props => ({value, reason}) => {
             props.suggestionsFetchRequest({
                 searchQuery: encodeURIComponent(value),
             })
+        },
+
+        clearSuggestions: props => () => props.setEmptySuggestions(),
+
+        getSuggestionValue: props => (suggestion) => {
+            props.change('searchQuery', suggestion)
         },
         // parameters are needed for the case when the handler below
         // is called upon the event 'onSuggestionSelected'
@@ -192,7 +195,20 @@ export default compose(
             suggestions: ImmutablePropTypes.list,
         }),
         i18nSearch: immutableI18nSearchModel,
+        searchQuery: PropTypes.nullable(PropTypes.string),
+        routerContext: routerContextModel,
         handleSubmit: PropTypes.func,
         change: PropTypes.func,
+        currentOrientation: PropTypes.string,
+        initialValues: PropTypes.object,
+
+        runSearch: PropTypes.func,
+        setEmptySuggestions: PropTypes.func,
+        suggestionsFetchRequest: PropTypes.func,
+
+        loadSuggestions: PropTypes.func,
+        clearSuggestions: PropTypes.func,
+        getSuggestionValue: PropTypes.func,
+        onSubmitHandler: PropTypes.func,
     })
 )(Search)
