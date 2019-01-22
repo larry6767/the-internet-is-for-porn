@@ -20,10 +20,7 @@ import {
     getRouterContext,
 } from '../../helpers'
 
-import {
-    immutableI18nSearchModel,
-    routerContextModel,
-} from '../../models'
+import {immutableI18nSearchModel} from '../../models'
 import {
     SearchForm,
     SearchButton
@@ -104,9 +101,11 @@ const
     Search = props => {
         const {onSubmitHandler, i18nSearch} = props
 
-        return <SearchForm>
+        return <SearchForm
+            action={`${g(props, 'orientation')}/${g(props, 'localizedPath')}`} // for SSR
+        >
             <Field
-                name="searchQuery"
+                name={g(props, 'localizedKey')}
                 type="text"
                 props={props}
                 component={renderAutosuggest}
@@ -129,11 +128,18 @@ export default compose(
         state => ({
             search: SearchRecord(ig(state, ['app', 'mainHeader', 'search'])),
             i18nSearch: ig(state, 'app', 'locale', 'i18n', 'search'),
-            searchQuery: formValueSelector('searchForm')(state, 'searchQuery') || null,
-            routerContext: getRouterContext(state),
-            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
+            searchQuery: formValueSelector('searchForm')(
+                state,
+                ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')
+            ) || null,
+            orientation: ig(getRouterContext(state), 'router', 'orientation', ig(
+                state,
+                ['app', 'mainHeader', 'niche', 'currentOrientation']
+            )),
+            localizedPath: ig(getRouterContext(state), 'router', 'routes', 'findVideos', 'section'),
+            localizedKey: ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey'),
             initialValues: {
-                searchQuery: get(
+                [ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')]: get( // for SSR
                     queryString.parse(ig(state, 'router', 'location', 'search')),
                     [ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')],
                     null
@@ -160,7 +166,7 @@ export default compose(
         clearSuggestions: props => () => props.setEmptySuggestions(),
 
         getSuggestionValue: props => (suggestion) => {
-            props.change('searchQuery', suggestion)
+            props.change(g(props, 'localizedKey'), suggestion)
         },
         // parameters are needed for the case when the handler below
         // is called upon the event 'onSuggestionSelected'
@@ -168,23 +174,22 @@ export default compose(
             event.preventDefault()
 
             const
-                routerContext = g(props, 'routerContext'),
-                currentOrientation = g(props, 'currentOrientation'),
-                orientation = ig(routerContext, 'router', 'orientation', currentOrientation),
-                localizedPath = ig(
-                    g(props, 'routerContext'),
-                    ['router', 'routes', 'findVideos', 'section']
-                ),
-                localizedKey = ig(g(props, 'routerContext'), 'router', 'searchQuery', 'qsKey'),
+                orientation = g(props, 'orientation'),
+                localizedPath = g(props, 'localizedPath'),
+                localizedKey = g(props, 'localizedKey')
+
+            let
                 query = parameters
                     ? g(parameters, 'suggestion')
                     : g(props, 'searchQuery')
 
+            query = query ? query.replace(/ /g, '+') : ''
+
             if (parameters && parameters.method === 'enter')
-                props.change('searchQuery', query)
+                props.change(g(props, 'localizedKey'), query)
 
             props.runSearch({
-                path: `${orientation}/${localizedPath}?${localizedKey}=${query.replace(/ /g, '+')}`
+                path: `${orientation}/${localizedPath}?${localizedKey}=${query}`
             })
         }
     }),
@@ -196,11 +201,11 @@ export default compose(
         }),
         i18nSearch: immutableI18nSearchModel,
         searchQuery: PropTypes.nullable(PropTypes.string),
-        routerContext: routerContextModel,
-        handleSubmit: PropTypes.func,
-        change: PropTypes.func,
-        currentOrientation: PropTypes.string,
+        orientation: PropTypes.string,
+        localizedPath: PropTypes.string,
+        localizedKey: PropTypes.string,
         initialValues: PropTypes.object,
+        change: PropTypes.func,
 
         runSearch: PropTypes.func,
         setEmptySuggestions: PropTypes.func,

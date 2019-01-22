@@ -699,7 +699,9 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                             subPageForRequest: localizedGetSubPage(r)(
                                 null,
                                 get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
+                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
+                                [],
+                                get(qs, [ig(r, 'router', 'searchQuery', 'qsKey')], null)
                             ),
                         })
 
