@@ -20,7 +20,11 @@ import {
     getRouterContext,
 } from '../../helpers'
 
-import {immutableI18nSearchModel} from '../../models'
+import {
+    immutableI18nSearchModel,
+    immutableLocaleRouterModel,
+} from '../../models'
+import {routerGetters} from '../../../router-builder'
 import {
     SearchForm,
     SearchButton
@@ -98,25 +102,21 @@ const
         }
     />,
 
-    Search = props => {
-        const {onSubmitHandler, i18nSearch} = props
-
-        return <SearchForm
-            action={`${g(props, 'orientation')}/${g(props, 'localizedPath')}`} // for SSR
-        >
-            <Field
-                name={g(props, 'localizedKey')}
-                type="text"
-                props={props}
-                component={renderAutosuggest}
-            />
-            <SearchButton
-                type="submit"
-                onClick={onSubmitHandler}
-                title={ig(i18nSearch, 'buttonTitle')}
-            />
-        </SearchForm>
-    },
+    Search = props => <SearchForm
+        action={routerGetters.findVideos.link(g(props, 'routerContext'))} // for SSR
+    >
+        <Field
+            name={g(props, 'localizedKey')}
+            type="text"
+            props={props}
+            component={renderAutosuggest}
+        />
+        <SearchButton
+            type="submit"
+            onClick={g(props, 'onSubmitHandler')}
+            title={ig(g(props, 'i18nSearch'), 'buttonTitle')}
+        />
+    </SearchForm>,
 
     SearchRecord = Record({
         suggestions: List(),
@@ -128,15 +128,11 @@ export default compose(
         state => ({
             search: SearchRecord(ig(state, ['app', 'mainHeader', 'search'])),
             i18nSearch: ig(state, 'app', 'locale', 'i18n', 'search'),
+            routerContext: getRouterContext(state),
             searchQuery: formValueSelector('searchForm')(
                 state,
                 ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')
             ) || null,
-            orientation: ig(getRouterContext(state), 'router', 'orientation', ig(
-                state,
-                ['app', 'mainHeader', 'niche', 'currentOrientation']
-            )),
-            localizedPath: ig(getRouterContext(state), 'router', 'routes', 'findVideos', 'section'),
             localizedKey: ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey'),
             initialValues: {
                 [ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')]: get( // for SSR
@@ -173,11 +169,6 @@ export default compose(
         onSubmitHandler: props => (event, parameters) => {
             event.preventDefault()
 
-            const
-                orientation = g(props, 'orientation'),
-                localizedPath = g(props, 'localizedPath'),
-                localizedKey = g(props, 'localizedKey')
-
             let
                 query = parameters
                     ? g(parameters, 'suggestion')
@@ -189,7 +180,10 @@ export default compose(
                 props.change(g(props, 'localizedKey'), query)
 
             props.runSearch({
-                path: `${orientation}/${localizedPath}?${localizedKey}=${query}`
+                path: routerGetters.findVideos.link(g(props, 'routerContext'), {
+                    searchQuery: query,
+                    pagination: null,
+                })
             })
         }
     }),
@@ -200,9 +194,8 @@ export default compose(
             suggestions: ImmutablePropTypes.list,
         }),
         i18nSearch: immutableI18nSearchModel,
+        routerContext: immutableLocaleRouterModel,
         searchQuery: PropTypes.nullable(PropTypes.string),
-        orientation: PropTypes.string,
-        localizedPath: PropTypes.string,
         localizedKey: PropTypes.string,
         initialValues: PropTypes.object,
         change: PropTypes.func,

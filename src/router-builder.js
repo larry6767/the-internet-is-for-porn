@@ -61,20 +61,22 @@ import NotFound from './App/NotFound'
 
 const
     getQs = r => queryString.parse(ig(r, 'location', 'search')),
-    renderQs = qs => g(Object.keys(qs), 'length') > 0 ? `?${queryString.stringify(qs)}` : '',
+    renderQs = qs => g(Object.keys(qs), 'length') > 0 ? `?${
+        queryString.stringify(qs).replace(/%2B/g, '+').replace(/%20/g, '+')}` : '',
 
-    orderingAndPaginationQsParamsModel = process.env.NODE_ENV === 'production' ? null :
+    prepareQsParamsModel = process.env.NODE_ENV === 'production' ? null :
         PropTypes.exact({
             ordering: PropTypes.string.isOptional,
             pagination: PropTypes.number.isOptional,
+            searchQuery: PropTypes.string.isOptional,
         }),
 
-    orderingAndPaginationQs = (r, qsParams) => {
+    prepareQs = (r, qsParams) => {
         if (process.env.NODE_ENV !== 'production')
             assertPropTypes(
-                orderingAndPaginationQsParamsModel,
+                prepareQsParamsModel,
                 qsParams,
-                'orderingAndPaginationQs',
+                'prepareQs',
                 'qsParams'
             )
 
@@ -101,6 +103,17 @@ const
                 delete qs[qsKey]
             else
                 qs[qsKey] = pagination
+        }
+
+        if (qsParams.hasOwnProperty('searchQuery')) {
+            const
+                searchQuery = g(qsParams, 'searchQuery'),
+                qsKey = ig(r, 'router', 'searchQuery', 'qsKey')
+
+            if (searchQuery === null) // `null` means we need to reset searchQuery if it's set
+                delete qs[qsKey]
+            else
+                qs[qsKey] = searchQuery
         }
 
         return qs
@@ -148,7 +161,7 @@ export const
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     niche = ig(r, 'router', 'routes', 'niche', 'section'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
 
                 return `${orientationPfx}/${niche}/${child}${renderQs(qs)}`
             },
@@ -167,7 +180,7 @@ export const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     niche = ig(r, 'router', 'routes', 'niche', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
 
                 year = padStart(year, 4, '0')
                 month = padStart(month, 2, '0')
@@ -188,7 +201,7 @@ export const
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
 
                 return `${orientationPfx}/${allMovies}${renderQs(qs)}`
             },
@@ -207,7 +220,7 @@ export const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
 
                 year = padStart(year, 4, '0')
                 month = padStart(month, 2, '0')
@@ -243,7 +256,7 @@ export const
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     pornstar = ig(r, 'router', 'routes', 'pornstar', 'section'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
 
                 return `${orientationPfx}/${pornstar}/${child}${renderQs(qs)}`
             },
@@ -258,7 +271,7 @@ export const
             link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
                     favorite = ig(r, 'router', 'routes', 'favorite', 'section'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
 
                 return `/${favorite}${renderQs(qs)}`
             },
@@ -271,7 +284,7 @@ export const
             link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
                 const
                     favoritePornstars = ig(r, 'router', 'routes', 'favoritePornstars', 'section'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
 
                 return `/${favoritePornstars}${renderQs(qs)}`
             },
@@ -303,11 +316,11 @@ export const
 
                 return `${orientationPfx}/${findVideos}`
             },
-            link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, qsParams={/*ordering:'…', pagination:1, searchQuery:''*/}) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     findVideos = ig(r, 'router', 'routes', 'findVideos', 'section'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
 
                 return `${orientationPfx}/${findVideos}${renderQs(qs)}`
             },
