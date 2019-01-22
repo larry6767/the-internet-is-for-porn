@@ -131,7 +131,7 @@ export default compose(
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             initialValues: {
                 searchQuery: get(
-                    (console.log(queryString.parse(ig(state, 'router', 'location', 'search'))), queryString.parse(ig(state, 'router', 'location', 'search'))),
+                    queryString.parse(ig(state, 'router', 'location', 'search')),
                     [ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')],
                     null
                 ),
@@ -156,7 +156,7 @@ export default compose(
 
         suggestionsFetchRequest: props => ({value, reason}) => {
             props.suggestionsFetchRequest({
-                searchQuery: value,
+                searchQuery: encodeURIComponent(value),
             })
         },
         // parameters are needed for the case when the handler below
