@@ -290,8 +290,8 @@ export const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
 
-                return `${orientationPfx
-                    }/${videoPfx}${videoId}/${title.replace(/ /g, '-').replace(/\./g, '')}`
+                return `${orientationPfx}/${videoPfx}${videoId
+                    }/${title.replace(/ /g, '-').replace(/\./g, '').replace(/%/g, '')}`
             },
         }),
 
