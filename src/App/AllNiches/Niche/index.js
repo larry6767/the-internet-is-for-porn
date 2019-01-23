@@ -202,13 +202,19 @@ export default compose(
 
         controlLinkBuilder: props => qsParams =>
             g(props, 'archiveParams') === null
-            ? routerGetters.niche.link(g(props, 'routerContext'), g(props, 'nicheCode'), qsParams)
+            ? routerGetters.niche.link(
+                g(props, 'routerContext'),
+                g(props, 'nicheCode'),
+                qsParams,
+                ['ordering', 'pagination']
+            )
             : routerGetters.nicheArchive.link(
                 g(props, 'routerContext'),
                 g(props, 'nicheCode'),
                 g(props, 'archiveParams', 'year'),
                 g(props, 'archiveParams', 'month'),
-                qsParams
+                qsParams,
+                ['pagination']
             ),
 
         controlArchiveLinkBuilder: props => (year, month) =>

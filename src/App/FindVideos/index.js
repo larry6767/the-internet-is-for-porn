@@ -158,7 +158,7 @@ export default compose(
         controlLinkBuilder: props => qsParams => routerGetters.findVideos.link(
             g(props, 'routerContext'),
             qsParams,
-            ['ordering', 'pagination', 'searchQuery'],
+            ['ordering', 'pagination', 'searchQuery']
         ),
     }),
     lifecycle({

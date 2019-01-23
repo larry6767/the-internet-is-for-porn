@@ -181,11 +181,10 @@ export default compose(
         }
     ),
     withProps(props => ({
-        archiveParams:
-            !(props.match.params[0] && props.match.params[1]) ? null : {
-                year: g(props, 'match', 'params', 0),
-                month: g(props, 'match', 'params', 1),
-            },
+        archiveParams: !(props.match.params[0] && props.match.params[1]) ? null : {
+            year: g(props, 'match', 'params', 0),
+            month: g(props, 'match', 'params', 1),
+        },
     })),
     withHandlers({
         loadPage: props => subPageForRequest => props.loadPageRequest({
@@ -202,12 +201,17 @@ export default compose(
 
         controlLinkBuilder: props => qsParams =>
             g(props, 'archiveParams') === null
-            ? routerGetters.allMovies.link(g(props, 'routerContext'), qsParams)
+            ? routerGetters.allMovies.link(
+                g(props, 'routerContext'),
+                qsParams,
+                ['ordering', 'pagination']
+            )
             : routerGetters.allMoviesArchive.link(
                 g(props, 'routerContext'),
                 g(props, 'archiveParams', 'year'),
                 g(props, 'archiveParams', 'month'),
-                qsParams
+                qsParams,
+                ['pagination']
             ),
 
         controlArchiveLinkBuilder: props => (year, month) =>

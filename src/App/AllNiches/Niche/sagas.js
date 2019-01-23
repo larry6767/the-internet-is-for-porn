@@ -55,14 +55,16 @@ function* setNewSort({payload}) {
         ? routerGetters.niche.link(
             routerContext,
             nicheCode,
-            {ordering: newSortValue, pagination: null}
+            {ordering: newSortValue},
+            ['ordering']
         )
         : routerGetters.nicheArchive.link(
             routerContext,
             nicheCode,
             g(archiveParams, 'year'),
             g(archiveParams, 'month'),
-            {ordering: newSortValue, pagination: null}
+            {ordering: newSortValue},
+            ['ordering']
         )
     ))
 }

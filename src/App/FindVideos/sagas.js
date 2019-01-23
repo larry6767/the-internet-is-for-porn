@@ -52,7 +52,7 @@ function* setNewSort({payload}) {
         routerGetters.findVideos.link(
             routerContext,
             {ordering: newSortValue},
-            ['ordering', 'searchQuery'],
+            ['ordering', 'searchQuery']
         )
     ))
 }

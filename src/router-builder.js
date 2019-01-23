@@ -179,11 +179,11 @@ export const
 
                 return `${orientationPfx}/${niche}/:child`
             },
-            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     niche = ig(r, 'router', 'routes', 'niche', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 return `${orientationPfx}/${niche}/${child}${renderQs(qs)}`
             },
@@ -197,12 +197,14 @@ export const
 
                 return `${orientationPfx}/${niche}/:child/${archive}/(\\d{4})-(\\d{2})`
             },
-            link: (r, child, year, month, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (
+                r, child, year, month, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys
+            ) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     niche = ig(r, 'router', 'routes', 'niche', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 year = padStart(year, 4, '0')
                 month = padStart(month, 2, '0')
@@ -219,11 +221,11 @@ export const
 
                 return `${orientationPfx}/${allMovies}`
             },
-            link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 return `${orientationPfx}/${allMovies}${renderQs(qs)}`
             },
@@ -237,12 +239,12 @@ export const
 
                 return `${orientationPfx}/${allMovies}/${archive}/(\\d{4})-(\\d{2})`
             },
-            link: (r, year, month, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, year, month, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 year = padStart(year, 4, '0')
                 month = padStart(month, 2, '0')
@@ -274,11 +276,11 @@ export const
 
                 return `${orientationPfx}/${pornstar}/:child`
             },
-            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     pornstar = ig(r, 'router', 'routes', 'pornstar', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 return `${orientationPfx}/${pornstar}/${child}${renderQs(qs)}`
             },
@@ -290,10 +292,10 @@ export const
                 const favorite = ig(r, 'router', 'routes', 'favorite', 'section')
                 return `/${favorite}`
             },
-            link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
                 const
                     favorite = ig(r, 'router', 'routes', 'favorite', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 return `/${favorite}${renderQs(qs)}`
             },
@@ -303,10 +305,10 @@ export const
                 const favoritePornstars = ig(r, 'router', 'routes', 'favoritePornstars', 'section')
                 return `/${favoritePornstars}`
             },
-            link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
                 const
                     favoritePornstars = ig(r, 'router', 'routes', 'favoritePornstars', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 return `/${favoritePornstars}${renderQs(qs)}`
             },

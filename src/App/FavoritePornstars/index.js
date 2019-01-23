@@ -115,10 +115,11 @@ export default compose(
         setHeaderText: props => headerText => props.setNewText(headerText),
 
         controlLinkBuilder: props => qsParams =>
-            routerGetters.favoritePornstars.link(g(props, 'routerContext'), {
-                ordering: null,
-                ...qsParams,
-            }),
+            routerGetters.favoritePornstars.link(
+                g(props, 'routerContext'),
+                {...qsParams},
+                ['pagination']
+            ),
 
         controlFavoriteLinkBuilder: props => section =>
             g(routerGetters, section).link(g(props, 'routerContext'), null),
