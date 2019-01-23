@@ -22,7 +22,7 @@ import {
 
 import {
     immutableI18nSearchModel,
-    immutableLocaleRouterModel,
+    routerContextModel,
 } from '../../models'
 import {routerGetters} from '../../../router-builder'
 import {
@@ -180,10 +180,11 @@ export default compose(
                 props.change(g(props, 'localizedKey'), query)
 
             props.runSearch({
-                path: routerGetters.findVideos.link(g(props, 'routerContext'), {
-                    searchQuery: query,
-                    pagination: null,
-                })
+                path: routerGetters.findVideos.link(
+                    g(props, 'routerContext'),
+                    {searchQuery: query},
+                    ['ordering', 'searchQuery'],
+                )
             })
         }
     }),
@@ -194,7 +195,7 @@ export default compose(
             suggestions: ImmutablePropTypes.list,
         }),
         i18nSearch: immutableI18nSearchModel,
-        routerContext: immutableLocaleRouterModel,
+        routerContext: routerContextModel,
         searchQuery: PropTypes.nullable(PropTypes.string),
         localizedKey: PropTypes.string,
         initialValues: PropTypes.object,

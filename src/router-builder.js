@@ -1,4 +1,4 @@
-import {get, padStart, flatten} from 'lodash'
+import {get, padStart, flatten, difference} from 'lodash'
 import React from 'react'
 import {Route, Switch} from 'react-router-dom'
 import queryString from 'query-string'
@@ -71,27 +71,55 @@ const
             searchQuery: PropTypes.string.isOptional,
         }),
 
-    prepareQs = (r, qsParams) => {
-        if (process.env.NODE_ENV !== 'production')
+    allowedQsKeysModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.oneOf(['ordering', 'pagination', 'searchQuery']),
+
+    prepareQs = (r, qsParams, allowedQsKeys = []) => {
+        if (process.env.NODE_ENV !== 'production') {
+            allowedQsKeys.forEach(k => {
+                assertPropTypes(
+                    allowedQsKeysModel,
+                    k,
+                    'prepareQs',
+                    'allowedQsKeys'
+                )
+            })
             assertPropTypes(
                 prepareQsParamsModel,
                 qsParams,
                 'prepareQs',
                 'qsParams'
             )
+        }
 
         const
-            qs = getQs(r)
+            notAllowedQsKeys = difference(Object.keys(qsParams), allowedQsKeys)
+
+        if (notAllowedQsKeys.length) console.error(
+            'function "prepareQs" received an object: ' + JSON.stringify(qsParams, null, 4) +
+            ', but keys of this object are not on the allowed list: ' +
+            JSON.stringify(allowedQsKeys, null, 4) + 'you must specify allowed keys'
+        )
+
+        notAllowedQsKeys.forEach(x => {
+            delete qsParams[x]
+        })
+
+        const
+            qs = getQs(r),
+            localizedAllowedQsKeys = allowedQsKeys.map(x => ig(r, 'router', x, 'qsKey')),
+            localizedNotAllowedQsKeys = difference(Object.keys(qs), localizedAllowedQsKeys)
+
+        localizedNotAllowedQsKeys.forEach(x => {
+            delete qs[x]
+        })
 
         if (qsParams.hasOwnProperty('ordering')) {
             const
                 ordering = g(qsParams, 'ordering'),
                 qsKey = ig(r, 'router', 'ordering', 'qsKey')
 
-            if (ordering === null) // `null` means we need to reset ordering if it's set
-                delete qs[qsKey]
-            else
-                qs[qsKey] = ig(r, 'router', 'ordering', ordering, 'qsValue')
+            qs[qsKey] = ig(r, 'router', 'ordering', ordering, 'qsValue')
         }
 
         if (qsParams.hasOwnProperty('pagination')) {
@@ -99,10 +127,7 @@ const
                 pagination = g(qsParams, 'pagination'),
                 qsKey = ig(r, 'router', 'pagination', 'qsKey')
 
-            if (pagination === null) // `null` means we need to reset pagination if it's set
-                delete qs[qsKey]
-            else
-                qs[qsKey] = pagination
+            qs[qsKey] = pagination
         }
 
         if (qsParams.hasOwnProperty('searchQuery')) {
@@ -110,10 +135,7 @@ const
                 searchQuery = g(qsParams, 'searchQuery'),
                 qsKey = ig(r, 'router', 'searchQuery', 'qsKey')
 
-            if (searchQuery === null) // `null` means we need to reset searchQuery if it's set
-                delete qs[qsKey]
-            else
-                qs[qsKey] = searchQuery
+            qs[qsKey] = searchQuery
         }
 
         return qs
@@ -316,11 +338,11 @@ export const
 
                 return `${orientationPfx}/${findVideos}`
             },
-            link: (r, qsParams={/*ordering:'…', pagination:1, searchQuery:''*/}) => {
+            link: (r, qsParams={/*ordering:'…', pagination:1, searchQuery:''*/}, allowedQsKeys) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     findVideos = ig(r, 'router', 'routes', 'findVideos', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 return `${orientationPfx}/${findVideos}${renderQs(qs)}`
             },
