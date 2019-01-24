@@ -60,9 +60,9 @@ const
             ? <CircularProgress/>
             : <Content>
                 <Head
-                    title={g(favorite, 'pageText', 'title')}
-                    description={g(favorite, 'pageText', 'description')}
-                    keywords={g(favorite, 'pageText', 'keywords')}
+                    title={ig(favorite, 'pageText', 'title')}
+                    description={ig(favorite, 'pageText', 'description')}
+                    keywords={ig(favorite, 'pageText', 'keywords')}
                 />
                 <PageWrapper>
                     <Typography

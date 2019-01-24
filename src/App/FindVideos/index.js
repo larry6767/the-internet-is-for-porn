@@ -59,9 +59,9 @@ const
             ? <CircularProgress/>
             : <Content>
                 <Head
-                    title={g(findVideos, 'pageText', 'title')}
-                    description={g(findVideos, 'pageText', 'description')}
-                    keywords={g(findVideos, 'pageText', 'keywords')}
+                    title={ig(findVideos, 'pageText', 'title')}
+                    description={ig(findVideos, 'pageText', 'description')}
+                    keywords={ig(findVideos, 'pageText', 'keywords')}
                 />
                 <PageWrapper>
                     <Typography

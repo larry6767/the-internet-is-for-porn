@@ -37,31 +37,6 @@ import headerActions from '../../MainHeader/actions'
 import actions from './actions'
 
 const
-    NicheRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
-
-        currentPage: '',
-        currentSubPage: '',
-        lastSubPageForRequest: '',
-        lastOrientationCode: '',
-
-        pageNumber: 1,
-        pageText: PageTextRecord(),
-        pagesCount: 1,
-
-        tagList: List(),
-        tagArchiveList: List(),
-        sortList: List(),
-        currentSort: null,
-        archiveFilms: null,
-        tagArchiveListOlder: null,
-        tagArchiveListNewer: null,
-        itemsCount: 0,
-        videoList: List(),
-    }),
-
     Niche = ({
         currentBreakpoint,
         i18nOrdering,
@@ -81,9 +56,9 @@ const
             ? <CircularProgress/>
             : <Content>
                 <Head
-                    title={g(niche, 'pageText', 'title')}
-                    description={g(niche, 'pageText', 'description')}
-                    keywords={g(niche, 'pageText', 'keywords')}
+                    title={ig(niche, 'pageText', 'title')}
+                    description={ig(niche, 'pageText', 'description')}
+                    keywords={ig(niche, 'pageText', 'keywords')}
                 />
                 <Lists
                     currentBreakpoint={currentBreakpoint}
@@ -122,6 +97,31 @@ const
             </Content>
         }
     </Page>,
+
+    NicheRecord = Record({
+        isLoading: false,
+        isLoaded: false,
+        isFailed: false,
+
+        currentPage: '',
+        currentSubPage: '',
+        lastSubPageForRequest: '',
+        lastOrientationCode: '',
+
+        pageNumber: 1,
+        pageText: PageTextRecord(),
+        pagesCount: 1,
+
+        tagList: List(),
+        tagArchiveList: List(),
+        sortList: List(),
+        currentSort: null,
+        archiveFilms: null,
+        tagArchiveListOlder: null,
+        tagArchiveListNewer: null,
+        itemsCount: 0,
+        videoList: List(),
+    }),
 
     loadPageFlow = ({
         search, routerContext, nicheCode, archiveParams, niche,
