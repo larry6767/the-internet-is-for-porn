@@ -77,9 +77,9 @@ const
             ? <CircularProgress/>
             : <Content>
                 <Head
-                    title={g(allMovies, 'pageText', 'title')}
-                    description={g(allMovies, 'pageText', 'description')}
-                    keywords={g(allMovies, 'pageText', 'keywords')}
+                    title={ig(allMovies, 'pageText', 'title')}
+                    description={ig(allMovies, 'pageText', 'description')}
+                    keywords={ig(allMovies, 'pageText', 'keywords')}
                 />
                 <Lists
                     currentBreakpoint={currentBreakpoint}
