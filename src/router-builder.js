@@ -13,6 +13,7 @@ import {
     PropTypes,
     assertPropTypes,
     setPropTypes,
+    get404PageText,
 } from './App/helpers'
 
 import {routerContextModel, orientationCodes, defaultOrientationCode} from './App/models'
@@ -773,6 +774,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         // making real 404 status response on server-side rendering
         if (get(props, ['staticContext', 'isPreRouting'])) {
             props.staticContext.statusCodeResolver = () => 404
+            // TODO: this page needs video list from backend
+            props.staticContext.pageTextResolver = () => get404PageText()
             props.staticContext.currentSection = currentSection
             return null
         } else
