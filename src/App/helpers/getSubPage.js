@@ -1,3 +1,4 @@
+// TODO: need to transfer this logic to backend; need to generate path using query-string module
 import {find} from 'lodash'
 
 import g from './plain/provedGet'
