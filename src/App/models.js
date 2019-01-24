@@ -118,6 +118,25 @@ const
                 props.letter = PropTypes.string
 
             return listOf(exact(props))
+        },
+
+    nichesListModelBuilder = process.env.NODE_ENV === 'production' ? null :
+        (isImmutable, withThumb) => {
+            const
+                exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
+                listOf = isImmutable ? ImmutablePropTypes.listOf : PropTypes.arrayOf,
+
+                props = {
+                    id: PropTypes.number,
+                    name: PropTypes.string,
+                    subPage: PropTypes.string,
+                    itemsCount: PropTypes.number,
+                }
+
+            if (withThumb)
+                props.thumb = PropTypes.string
+
+            return listOf(exact(props))
         }
 
 export const
@@ -154,4 +173,13 @@ export const
     immutableModelsListModel = process.env.NODE_ENV === 'production' ? null :
         modelsListModelBuilder(true, false),
     immutableModelsListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
-        modelsListModelBuilder(true, true)
+        modelsListModelBuilder(true, true),
+
+    nichesListModel = process.env.NODE_ENV === 'production' ? null :
+        nichesListModelBuilder(false, false),
+    nichesListWithThumbModel = process.env.NODE_ENV === 'production' ? null :
+        nichesListModelBuilder(false, true),
+    immutableNichesListModel = process.env.NODE_ENV === 'production' ? null :
+        nichesListModelBuilder(true, false),
+    immutableNichesListWithThumbModel = process.env.NODE_ENV === 'production' ? null :
+        nichesListModelBuilder(true, true)

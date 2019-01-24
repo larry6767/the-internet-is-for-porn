@@ -24,6 +24,7 @@ import {routerGetters} from '../../router-builder'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ErrorContent from '../../generic/ErrorContent'
+import PageTextHelmet from '../../generic/PageTextHelmet'
 import PornstarList from '../../generic/PornstarList'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
@@ -36,6 +37,7 @@ const
             : ig(data, 'isLoading')
             ? <CircularProgress/>
             : <Content>
+                <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
                         Top Rated Straight Pornstars

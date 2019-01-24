@@ -1,10 +1,12 @@
-export const muiStyles = (theme, {home, currentBreakpoint}) => {
+import {immutableProvedGet as ig} from '../../helpers'
+
+export const muiStyles = (theme, {data, currentBreakpoint}) => {
     const
-        pornstarsList = home.get('pornstarsList')
+        pornstarsList = ig(data, 'pornstarsList')
 
     return {
         root: {
-            width: home.get('isLoading') ? 'auto' : '100%',
+            width: ig(data, 'isLoading') ? 'auto' : '100%',
             display: 'grid',
             gridAutoFlow: 'column',
             gridTemplateRows:

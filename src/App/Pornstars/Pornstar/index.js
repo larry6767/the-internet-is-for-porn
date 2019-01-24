@@ -29,6 +29,7 @@ import sectionPortal from '../../MainHeader/Navigation/sectionPortal'
 import orientationPortal from '../../MainHeader/Niche/orientationPortal'
 import ControlBar from '../../../generic/ControlBar'
 import ErrorContent from '../../../generic/ErrorContent'
+import PageTextHelmet from '../../../generic/PageTextHelmet'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
 
@@ -48,6 +49,7 @@ const
             : ig(data, 'isLoading')
             ? <CircularProgress/>
             : <Content>
+                <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
                     modelsList={ig(data, 'modelsList')}

@@ -4,9 +4,10 @@ import {
 } from '../helpers'
 
 import {
-    immutablePageTextModel,
-    immutableNichesListModel,
     orientationCodes,
+    immutablePageTextModel,
+    immutableNichesListWithThumbModel,
+    immutableModelsListWithLetterModel,
 } from '../models'
 
 const
@@ -16,7 +17,8 @@ const
         isFailed: PropTypes.bool,
         lastOrientationCode: PropTypes.oneOf(orientationCodes),
         pageText: immutablePageTextModel,
-        nichesList: immutableNichesListModel,
+        nichesList: immutableNichesListWithThumbModel,
+        pornstarsList: immutableModelsListWithLetterModel,
     },
 
     stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact(model),

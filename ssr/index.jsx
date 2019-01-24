@@ -60,10 +60,16 @@ const initApp = async () => {
         robotsTxtFilePath =
             join(__dirname, '..', 'robots', (isRC ? 'rc' : 'production'), 'robots.txt'),
 
-        render = renderPage(siteLocales, defaultSiteLocaleCode, (result => ({
-            pre: `${result[0]}<div id="root">`,
-            post: `</div>${result[1]}`,
-        }))(
+        render = renderPage(siteLocales, defaultSiteLocaleCode, (result => {
+            const
+                split = result[0].split('<title>The internet is for pOOOrn</title>')
+
+            return {
+                pre: `${split[0]}`,
+                middle: `${split[1]}<div id="root">`,
+                post: `</div>${result[1]}`
+            }
+        })(
             readFileSync(join(publicDir, 'index.html'))
                 .toString()
                 .replace(/%PUBLIC_URL%/g, '')

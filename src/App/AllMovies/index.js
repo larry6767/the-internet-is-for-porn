@@ -24,6 +24,7 @@ import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
+import PageTextHelmet from '../../generic/PageTextHelmet'
 import Lists from '../../generic/Lists'
 import VideoList from '../../generic/VideoList'
 import {Page, Content, AllMoviesPageWrapper} from './assets'
@@ -75,6 +76,7 @@ const
             : allMovies.get('isLoading')
             ? <CircularProgress/>
             : <Content>
+                <PageTextHelmet pageText={ig(allMovies, 'pageText')}/>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
 

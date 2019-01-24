@@ -1,18 +1,26 @@
-import {handleActions} from 'redux-actions'
-import {fromJS, List, Map} from 'immutable'
+import {fromJS, List} from 'immutable'
 
-import {defaultOrientationCode} from '../models'
-import {plainProvedGet as g} from '../helpers'
+import {
+    plainProvedGet as g,
+    provedHandleActions,
+} from '../helpers'
+
+import {
+    PageTextRecord,
+    defaultOrientationCode,
+} from '../models'
+
+import {stateModel} from './models'
 import actions from './actions'
 
 export default
-    handleActions({
+    provedHandleActions(stateModel, {
         [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
             lastOrientationCode: g(payload, 'orientationCode'),
-            pageText: Map(),
+            pageText: PageTextRecord(),
             nichesList: List(),
             pornstarsList: List(),
         }),
@@ -21,7 +29,7 @@ export default
             isLoaded: true,
             isFailed: false,
             lastOrientationCode: g(payload, 'orientationCode'),
-            pageText: Map(fromJS(g(payload, 'data', 'pageText'))),
+            pageText: PageTextRecord(g(payload, 'data', 'pageText')),
             nichesList: List(fromJS(g(payload, 'data', 'nichesList'))),
             pornstarsList: List(fromJS(g(payload, 'data', 'pornstarsList'))),
         }),
@@ -29,7 +37,7 @@ export default
             isLoading: false,
             isLoaded: false,
             isFailed: true,
-            pageText: Map(),
+            pageText: PageTextRecord(),
             nichesList: List(),
             pornstarsList: List(),
         }),
@@ -38,25 +46,7 @@ export default
         isLoaded: false,
         isFailed: false,
         lastOrientationCode: defaultOrientationCode,
-        pageText: {},
-        nichesList: [
-            /*
-            {
-                id: 0,
-                name: '',
-                subPage: '',
-                itemsCount: 0,
-            }
-            */
-        ],
-        pornstarsList: [
-            /*
-            {
-                id: 0,
-                name: '',
-                subPage: '',
-                itemsCount: 0,
-            }
-            */
-        ]
+        pageText: PageTextRecord(),
+        nichesList: [],
+        pornstarsList: []
     }))

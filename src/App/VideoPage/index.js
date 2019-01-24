@@ -23,6 +23,7 @@ import {immutableI18nButtonsModel, orientationCodes} from '../models'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ErrorContent from '../../generic/ErrorContent'
+import PageTextHelmet from '../../generic/PageTextHelmet'
 import VideoList from '../../generic/VideoList'
 import ReportDialog from './ReportDialog'
 
@@ -127,6 +128,7 @@ const
             : data.get('isLoading')
             ? <CircularProgress/>
             : <Content>
+                <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <PageWrapper>
                     <PlayerSection>
                         <Typography

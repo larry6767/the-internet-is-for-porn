@@ -11,7 +11,12 @@ import {SheetsRegistry} from 'jss'
 import JssProvider from 'react-jss/lib/JssProvider'
 import {createGenerateClassName} from '@material-ui/core/styles'
 
-import {plainProvedGet as g, immutableProvedGet as ig, getRouterContext} from '../App/helpers'
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    getRouterContext,
+    getPageTextToHeadTags,
+} from '../App/helpers'
 import {getPureDomain} from '../App/helpers/hostLocale'
 import {buildLocalePageCodes, getLegacyOrientationPrefixes, logRequestError} from './helpers'
 import {getPageData as requestPageData} from './requests'
@@ -45,7 +50,7 @@ const
 export default (
     siteLocales,
     defaultSiteLocaleCode,
-    {pre, post} // <- pre-bound layout template object
+    layout, // <- pre-bound layout template object
 ) => async (req, res, store) => {
     try {
         const
@@ -142,6 +147,10 @@ export default (
             res.status(staticRouterContext.statusCodeResolver(store.getState()))
 
         const
+            pageText = staticRouterContext.pageTextResolver(store.getState()),
+            headTags = getPageTextToHeadTags(pageText).map(x => renderToString(x)).join('\n')
+
+        const
             serverStyleSheet = new ServerStyleSheet(),
             jssSheetsRegistry = new SheetsRegistry(),
             generateClassName = createGenerateClassName(),
@@ -172,12 +181,14 @@ export default (
                 )}
             </script>`
 
-        return res.end(`${pre}
+        return res.end(`${g(layout, 'pre')}
+            ${headTags}
+            ${g(layout, 'middle')}
             ${html}
             ${styledComponentsStyles}
             ${jssStyles}
             ${storePresetHtml}
-        ${post}`)
+        ${g(layout, 'post')}`)
     } catch (e) {
         res.status(500).end('Internal Server Error')
         logRequestError(req)(e)

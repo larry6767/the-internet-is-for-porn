@@ -1,75 +1,16 @@
 import {fromJS, List, Map} from 'immutable'
 
 import {
-    ImmutablePropTypes,
-    PropTypes,
     provedHandleActions,
     plainProvedGet as g,
 } from '../../helpers'
 
 import {
-    immutableArchiveFilmsModel,
-    immutablePageTextModel,
     PageTextRecord,
-    orientationCodes,
     defaultOrientationCode,
 } from '../../models'
-
-import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
+import {stateModel} from './models'
 import actions from './actions'
-
-const
-    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
-        isLoading: PropTypes.bool,
-        isLoaded: PropTypes.bool,
-        isFailed: PropTypes.bool,
-
-        currentPage: PropTypes.string,
-        currentSubPage: PropTypes.string,
-        lastOrientationCode: PropTypes.oneOf(orientationCodes),
-        lastSubPageForRequest: PropTypes.string,
-
-        pageNumber: PropTypes.number,
-        pagesCount: PropTypes.number,
-
-        pageText: immutablePageTextModel,
-
-        tagList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
-            id: PropTypes.number,
-            name: PropTypes.string,
-            subPage: PropTypes.string,
-            itemsCount: PropTypes.number,
-        })),
-
-        tagArchiveList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
-            archiveDate: PropTypes.number,
-            year: PropTypes.number,
-            month: PropTypes.string,
-            monthNumber: PropTypes.number,
-            itemsCount: PropTypes.number,
-            url: PropTypes.string,
-        })),
-
-        sortList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
-            isActive: PropTypes.bool,
-            code: PropTypes.string,
-        })),
-
-        currentSort: PropTypes.nullable(PropTypes.string),
-
-        archiveFilms: PropTypes.nullable(immutableArchiveFilmsModel),
-        tagArchiveListOlder: PropTypes.nullable(ImmutablePropTypes.exact({
-            month: PropTypes.string,
-            year: PropTypes.string,
-        })),
-        tagArchiveListNewer: PropTypes.nullable(ImmutablePropTypes.exact({
-            month: PropTypes.string,
-            year: PropTypes.string,
-        })),
-
-        itemsCount: PropTypes.number,
-        videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
-    })
 
 export default
     provedHandleActions(stateModel, {
