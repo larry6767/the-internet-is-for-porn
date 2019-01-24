@@ -18,12 +18,14 @@ import {
 } from '../../helpers'
 
 import {
+    immutableI18nOrderingModel,
     immutableI18nButtonsModel,
     routerContextModel,
     orientationCodes,
     PageTextRecord,
 } from '../../models'
 
+import {dataModel} from './models'
 import {routerGetters} from '../../../router-builder'
 import orientationPortal from '../../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../../MainHeader/Navigation/sectionPortal'
@@ -41,7 +43,7 @@ const
         currentBreakpoint,
         i18nOrdering,
         i18nButtons,
-        niche,
+        data,
         chooseSort,
         isSSR,
         controlLinkBuilder,
@@ -50,28 +52,28 @@ const
         listsTagLinkBuilder,
         listsArchiveLinkBuilder,
     }) => <Page>
-        { ig(niche, 'isFailed')
+        { ig(data, 'isFailed')
             ? <ErrorContent/>
-            : ig(niche, 'isLoading')
+            : ig(data, 'isLoading')
             ? <CircularProgress/>
             : <Content>
                 <Head
-                    title={ig(niche, 'pageText', 'title')}
-                    description={ig(niche, 'pageText', 'description')}
-                    keywords={ig(niche, 'pageText', 'keywords')}
+                    title={ig(data, 'pageText', 'title')}
+                    description={ig(data, 'pageText', 'description')}
+                    keywords={ig(data, 'pageText', 'keywords')}
                 />
                 <Lists
                     currentBreakpoint={currentBreakpoint}
 
-                    tagList={ig(niche, 'tagList')}
+                    tagList={ig(data, 'tagList')}
                     tagLinkBuilder={listsTagLinkBuilder}
 
-                    tagArchiveList={ig(niche, 'tagArchiveList')}
+                    tagArchiveList={ig(data, 'tagArchiveList')}
                     archiveLinkBuilder={listsArchiveLinkBuilder}
                 />
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
-                        {ig(niche, 'pageText', 'listHeader')}
+                        {ig(data, 'pageText', 'listHeader')}
                     </Typography>
                     <ControlBar
                         linkBuilder={controlLinkBuilder}
@@ -81,24 +83,24 @@ const
                         i18nButtons={i18nButtons}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        pagesCount={ig(niche, 'pagesCount')}
-                        pageNumber={ig(niche, 'pageNumber')}
-                        itemsCount={ig(niche, 'itemsCount')}
-                        sortList={ig(niche, 'sortList')}
-                        currentSort={ig(niche, 'currentSort')}
-                        archiveFilms={ig(niche, 'archiveFilms')}
-                        tagArchiveListOlder={ig(niche, 'tagArchiveListOlder')}
-                        tagArchiveListNewer={ig(niche, 'tagArchiveListNewer')}
+                        pagesCount={ig(data, 'pagesCount')}
+                        pageNumber={ig(data, 'pageNumber')}
+                        itemsCount={ig(data, 'itemsCount')}
+                        sortList={ig(data, 'sortList')}
+                        currentSort={ig(data, 'currentSort')}
+                        archiveFilms={ig(data, 'archiveFilms')}
+                        tagArchiveListOlder={ig(data, 'tagArchiveListOlder')}
+                        tagArchiveListNewer={ig(data, 'tagArchiveListNewer')}
                     />
                     <VideoList
-                        videoList={ig(niche, 'videoList')}
+                        videoList={ig(data, 'videoList')}
                     />
                 </PageWrapper>
             </Content>
         }
     </Page>,
 
-    NicheRecord = Record({
+    DataRecord = Record({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
@@ -124,7 +126,7 @@ const
     }),
 
     loadPageFlow = ({
-        search, routerContext, nicheCode, archiveParams, niche,
+        search, routerContext, nicheCode, archiveParams, data,
         loadPage, setHeaderText, currentOrientation,
     }) => {
         const
@@ -152,16 +154,16 @@ const
         // "unless" condition.
         // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
         if (!(
-            ig(niche, 'isLoading') ||
+            ig(data, 'isLoading') ||
             (
-                (ig(niche, 'isLoaded') || ig(niche, 'isFailed')) &&
-                g(currentOrientation, []) === ig(niche, 'lastOrientationCode') &&
-                subPageForRequest === ig(niche, 'lastSubPageForRequest')
+                (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
+                g(currentOrientation, []) === ig(data, 'lastOrientationCode') &&
+                subPageForRequest === ig(data, 'lastSubPageForRequest')
             )
         ))
             loadPage(subPageForRequest)
-        else if (ig(niche, 'isLoaded'))
-            setHeaderText(getHeaderText(g(niche, []), true))
+        else if (ig(data, 'isLoaded'))
+            setHeaderText(getHeaderText(g(data, []), true))
     }
 
 export default compose(
@@ -171,7 +173,7 @@ export default compose(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
-            niche: NicheRecord(ig(state, 'app', 'niches', 'niche')),
+            data: DataRecord(ig(state, 'app', 'niches', 'niche')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             search: ig(state, 'router', 'location', 'search'),
             routerContext: getRouterContext(state),
@@ -261,8 +263,25 @@ export default compose(
         },
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        routerContext: routerContextModel,
-        i18nButtons: immutableI18nButtonsModel,
+        currentBreakpoint: PropTypes.string,
         currentOrientation: PropTypes.oneOf(orientationCodes),
+        data: dataModel,
+        isSSR: PropTypes.bool,
+        search: PropTypes.string,
+        routerContext: routerContextModel,
+        i18nOrdering: immutableI18nOrderingModel,
+        i18nButtons: immutableI18nButtonsModel,
+
+        loadPageRequest: PropTypes.func,
+        loadPage: PropTypes.func,
+        setNewText: PropTypes.func,
+        setHeaderText: PropTypes.func,
+        setNewSort: PropTypes.func,
+        chooseSort: PropTypes.func,
+        controlLinkBuilder: PropTypes.func,
+        controlArchiveLinkBuilder: PropTypes.func,
+        controlBackFromArchiveLinkBuilder: PropTypes.func,
+        listsTagLinkBuilder: PropTypes.func,
+        listsArchiveLinkBuilder: PropTypes.func,
     }),
 )(Niche)
