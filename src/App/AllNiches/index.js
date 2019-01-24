@@ -28,6 +28,7 @@ import {
     immutableI18nAllNichesModel,
     orientationCodes,
     PageTextRecord,
+    routerContextModel,
 } from '../models'
 
 import {dataModel} from './models'
