@@ -60,16 +60,20 @@ const initApp = async () => {
         robotsTxtFilePath =
             join(__dirname, '..', 'robots', (isRC ? 'rc' : 'production'), 'robots.txt'),
 
-        render = renderPage(siteLocales, defaultSiteLocaleCode, (result => ({
-            pre: `${result[0]}`,
-            middle: `${result[1]}<div id="root">`,
-            post: `</div>${result[2].replace('<div id="root"></div>', '')}`,
-        }))(
+        render = renderPage(siteLocales, defaultSiteLocaleCode, (result => {
+            const
+                split = result[0].split('<title>The internet is for pOOOrn</title>')
+
+            return {
+                pre: `${split[0]}`,
+                middle: `${split[1]}<div id="root">`,
+                post: `</div>${result[1]}`
+            }
+        })(
             readFileSync(join(publicDir, 'index.html'))
                 .toString()
                 .replace(/%PUBLIC_URL%/g, '')
-                // .split('<div id="root"></div>')
-                .split('<!-- SSR use this comment as separator! -->')
+                .split('<div id="root"></div>')
         )),
 
         app = express()

@@ -9,7 +9,7 @@ const
         <meta name="keywords" content={keywords}/>
     </Helmet>
 
-export default setPropTypes({
+export default setPropTypes(process.env.NODE_ENV === 'production' ? null : {
     title: PropTypes.string,
     description: PropTypes.string,
     keywords: PropTypes.string,
