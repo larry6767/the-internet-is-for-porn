@@ -50,7 +50,7 @@ const
 export default (
     siteLocales,
     defaultSiteLocaleCode,
-    {pre, middle, post} // <- pre-bound layout template object
+    layout, // <- pre-bound layout template object
 ) => async (req, res, store) => {
     try {
         const
@@ -181,14 +181,14 @@ export default (
                 )}
             </script>`
 
-        return res.end(`${pre}
+        return res.end(`${g(layout, 'pre')}
             ${headTags}
-            ${middle}
+            ${g(layout, 'middle')}
             ${html}
             ${styledComponentsStyles}
             ${jssStyles}
             ${storePresetHtml}
-        ${post}`)
+        ${g(layout, 'post')}`)
     } catch (e) {
         res.status(500).end('Internal Server Error')
         logRequestError(req)(e)
