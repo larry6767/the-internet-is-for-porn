@@ -72,18 +72,26 @@ const
         }),
 
     allowedQsKeysModel = process.env.NODE_ENV === 'production' ? null :
-        PropTypes.oneOf(['ordering', 'pagination', 'searchQuery']),
+        PropTypes.arrayOf(PropTypes.oneOf(['ordering', 'pagination', 'searchQuery'])),
 
     prepareQs = (r, qsParams, allowedQsKeys = []) => {
+        const
+            customAllowedQsKeysModel = process.env.NODE_ENV === 'production' ? null :
+                PropTypes.arrayOf(PropTypes.oneOf(allowedQsKeys))
+
         if (process.env.NODE_ENV !== 'production') {
-            allowedQsKeys.forEach(k => {
-                assertPropTypes(
-                    allowedQsKeysModel,
-                    k,
-                    'prepareQs',
-                    'allowedQsKeys'
-                )
-            })
+            assertPropTypes(
+                customAllowedQsKeysModel,
+                Object.keys(qsParams),
+                'prepareQs',
+                'qsParams'
+            )
+            assertPropTypes(
+                allowedQsKeysModel,
+                allowedQsKeys,
+                'prepareQs',
+                'allowedQsKeys'
+            )
             assertPropTypes(
                 prepareQsParamsModel,
                 qsParams,
@@ -91,19 +99,6 @@ const
                 'qsParams'
             )
         }
-
-        const
-            notAllowedQsKeys = difference(Object.keys(qsParams), allowedQsKeys)
-
-        if (notAllowedQsKeys.length) console.error(
-            'function "prepareQs" received an object: ' + JSON.stringify(qsParams, null, 4) +
-            ', but keys of this object are not on the allowed list: ' +
-            JSON.stringify(allowedQsKeys, null, 4) + 'you must specify allowed keys'
-        )
-
-        notAllowedQsKeys.forEach(x => {
-            delete qsParams[x]
-        })
 
         const
             qs = getQs(r),
