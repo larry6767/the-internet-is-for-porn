@@ -185,7 +185,8 @@ export default compose(
         controlLinkBuilder: props => qsParams => routerGetters.pornstar.link(
             g(props, 'routerContext'),
             g(props, 'pornstarCode'),
-            qsParams
+            qsParams,
+            ['ordering', 'pagination']
         ),
 
         modelLinkBuilder: props => child =>

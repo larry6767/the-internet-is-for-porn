@@ -1,4 +1,4 @@
-import {get, padStart, flatten} from 'lodash'
+import {get, padStart, flatten, difference} from 'lodash'
 import React from 'react'
 import {Route, Switch} from 'react-router-dom'
 import queryString from 'query-string'
@@ -61,35 +61,60 @@ import NotFound from './App/NotFound'
 
 const
     getQs = r => queryString.parse(ig(r, 'location', 'search')),
-    renderQs = qs => g(Object.keys(qs), 'length') > 0 ? `?${queryString.stringify(qs)}` : '',
+    renderQs = qs => g(Object.keys(qs), 'length') > 0 ? `?${
+        queryString.stringify(qs).replace(/%2B/g, '+').replace(/%20/g, '+')}` : '',
 
-    orderingAndPaginationQsParamsModel = process.env.NODE_ENV === 'production' ? null :
+    prepareQsParamsModel = process.env.NODE_ENV === 'production' ? null :
         PropTypes.exact({
             ordering: PropTypes.string.isOptional,
             pagination: PropTypes.number.isOptional,
+            searchQuery: PropTypes.string.isOptional,
         }),
 
-    orderingAndPaginationQs = (r, qsParams) => {
-        if (process.env.NODE_ENV !== 'production')
+    allowedQsKeysModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.arrayOf(PropTypes.oneOf(['ordering', 'pagination', 'searchQuery'])),
+
+    prepareQs = (r, qsParams, allowedQsKeys = []) => {
+        const
+            customAllowedQsKeysModel = process.env.NODE_ENV === 'production' ? null :
+                PropTypes.arrayOf(PropTypes.oneOf(allowedQsKeys))
+
+        if (process.env.NODE_ENV !== 'production') {
             assertPropTypes(
-                orderingAndPaginationQsParamsModel,
-                qsParams,
-                'orderingAndPaginationQs',
+                customAllowedQsKeysModel,
+                Object.keys(qsParams),
+                'prepareQs',
                 'qsParams'
             )
+            assertPropTypes(
+                allowedQsKeysModel,
+                allowedQsKeys,
+                'prepareQs',
+                'allowedQsKeys'
+            )
+            assertPropTypes(
+                prepareQsParamsModel,
+                qsParams,
+                'prepareQs',
+                'qsParams'
+            )
+        }
 
         const
-            qs = getQs(r)
+            qs = getQs(r),
+            localizedAllowedQsKeys = allowedQsKeys.map(x => ig(r, 'router', x, 'qsKey')),
+            localizedNotAllowedQsKeys = difference(Object.keys(qs), localizedAllowedQsKeys)
+
+        localizedNotAllowedQsKeys.forEach(x => {
+            delete qs[x]
+        })
 
         if (qsParams.hasOwnProperty('ordering')) {
             const
                 ordering = g(qsParams, 'ordering'),
                 qsKey = ig(r, 'router', 'ordering', 'qsKey')
 
-            if (ordering === null) // `null` means we need to reset ordering if it's set
-                delete qs[qsKey]
-            else
-                qs[qsKey] = ig(r, 'router', 'ordering', ordering, 'qsValue')
+            qs[qsKey] = ig(r, 'router', 'ordering', ordering, 'qsValue')
         }
 
         if (qsParams.hasOwnProperty('pagination')) {
@@ -97,10 +122,15 @@ const
                 pagination = g(qsParams, 'pagination'),
                 qsKey = ig(r, 'router', 'pagination', 'qsKey')
 
-            if (pagination === null) // `null` means we need to reset pagination if it's set
-                delete qs[qsKey]
-            else
-                qs[qsKey] = pagination
+            qs[qsKey] = pagination
+        }
+
+        if (qsParams.hasOwnProperty('searchQuery')) {
+            const
+                searchQuery = g(qsParams, 'searchQuery'),
+                qsKey = ig(r, 'router', 'searchQuery', 'qsKey')
+
+            qs[qsKey] = searchQuery
         }
 
         return qs
@@ -144,11 +174,11 @@ export const
 
                 return `${orientationPfx}/${niche}/:child`
             },
-            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     niche = ig(r, 'router', 'routes', 'niche', 'section'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 return `${orientationPfx}/${niche}/${child}${renderQs(qs)}`
             },
@@ -162,12 +192,14 @@ export const
 
                 return `${orientationPfx}/${niche}/:child/${archive}/(\\d{4})-(\\d{2})`
             },
-            link: (r, child, year, month, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (
+                r, child, year, month, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys
+            ) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     niche = ig(r, 'router', 'routes', 'niche', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 year = padStart(year, 4, '0')
                 month = padStart(month, 2, '0')
@@ -184,11 +216,11 @@ export const
 
                 return `${orientationPfx}/${allMovies}`
             },
-            link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 return `${orientationPfx}/${allMovies}${renderQs(qs)}`
             },
@@ -202,12 +234,12 @@ export const
 
                 return `${orientationPfx}/${allMovies}/${archive}/(\\d{4})-(\\d{2})`
             },
-            link: (r, year, month, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, year, month, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
                     archive = ig(r, 'router', 'routes', 'archive', 'label'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 year = padStart(year, 4, '0')
                 month = padStart(month, 2, '0')
@@ -239,11 +271,11 @@ export const
 
                 return `${orientationPfx}/${pornstar}/:child`
             },
-            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     pornstar = ig(r, 'router', 'routes', 'pornstar', 'section'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 return `${orientationPfx}/${pornstar}/${child}${renderQs(qs)}`
             },
@@ -255,10 +287,10 @@ export const
                 const favorite = ig(r, 'router', 'routes', 'favorite', 'section')
                 return `/${favorite}`
             },
-            link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
                 const
                     favorite = ig(r, 'router', 'routes', 'favorite', 'section'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 return `/${favorite}${renderQs(qs)}`
             },
@@ -268,10 +300,10 @@ export const
                 const favoritePornstars = ig(r, 'router', 'routes', 'favoritePornstars', 'section')
                 return `/${favoritePornstars}`
             },
-            link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
                 const
                     favoritePornstars = ig(r, 'router', 'routes', 'favoritePornstars', 'section'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 return `/${favoritePornstars}${renderQs(qs)}`
             },
@@ -290,8 +322,8 @@ export const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
 
-                return `${orientationPfx
-                    }/${videoPfx}${videoId}/${title.replace(/ /g, '-').replace(/\./g, '')}`
+                return `${orientationPfx}/${videoPfx}${videoId
+                    }/${title.replace(/ /g, '-').replace(/\./g, '').replace(/%/g, '')}`
             },
         }),
 
@@ -303,11 +335,11 @@ export const
 
                 return `${orientationPfx}/${findVideos}`
             },
-            link: (r, qsParams={/*ordering:'…', pagination:1*/}) => {
+            link: (r, qsParams={/*ordering:'…', pagination:1, searchQuery:''*/}, allowedQsKeys) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     findVideos = ig(r, 'router', 'routes', 'findVideos', 'section'),
-                    qs = qsParams === null ? {} : orderingAndPaginationQs(r, qsParams)
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 
                 return `${orientationPfx}/${findVideos}${renderQs(qs)}`
             },
@@ -699,7 +731,9 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                             subPageForRequest: localizedGetSubPage(r)(
                                 null,
                                 get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
+                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
+                                [],
+                                get(qs, [ig(r, 'router', 'searchQuery', 'qsKey')], null)
                             ),
                         })
 

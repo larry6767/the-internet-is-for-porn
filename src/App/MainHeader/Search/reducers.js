@@ -1,9 +1,19 @@
-import {handleActions} from 'redux-actions'
 import {fromJS, List} from 'immutable'
-import {plainProvedGet as g} from '../../helpers'
+
+import {
+    provedHandleActions,
+    plainProvedGet as g,
+    ImmutablePropTypes,
+} from '../../helpers'
+
 import actions from './actions'
 
-export default handleActions({
+const
+    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
+        suggestions: ImmutablePropTypes.list
+    })
+
+export default provedHandleActions(stateModel, {
         [g(actions, 'setNewSuggestions')]: (state, {payload: suggestions}) => state.merge({
             suggestions: List(suggestions),
         }),

@@ -2,7 +2,7 @@ import {pick, map, find, omit, compact, get, set} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 
-import {plainProvedGet as g, PropTypes, assertPropTypes} from '../App/helpers'
+import {plainProvedGet as g, PropTypes, assertPropTypes, getClassId} from '../App/helpers'
 import {pageKeys} from '../App/models'
 import {defaultHostToFetchSiteLocalesFrom} from '../config'
 import apiLocales from '../locale-mapping/backend-api'
@@ -468,16 +468,18 @@ export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => 
     }
 ).then(fetchResponseExtractor(() => new Error().stack))
 
-export const getSearchSuggestions = (siteLocales, localeCode) => async ({headers, formData}) => {
-    const
-        prepareData = x => compact(x) // 'compact' is for array with a single empty value, like ['']
+export const getSearchSuggestions = (siteLocales, localeCode, orientationCode) =>
+    async ({headers, formData}) => {
+        const
+            prepareData = x => compact(x), // 'compact' is for array with a single empty value, like ['']
+            classId = getClassId(orientationCode)
 
-    return prepareData(await fetch(
-        `${backendUrlForSearch(siteLocales, localeCode)}?c=${
-            g(formData, 'classId')}&t=${g(formData, 'searchKey')}`,
-        {
-            method: 'GET',
-            headers,
-        }
-    ).then(fetchResponseExtractor(() => new Error().stack)))
+        return prepareData(await fetch(
+            `${backendUrlForSearch(siteLocales, localeCode)}?c=${
+                classId}&t=${g(formData, 'searchQuery')}`,
+            {
+                method: 'GET',
+                headers,
+            }
+        ).then(fetchResponseExtractor(() => new Error().stack)))
 }

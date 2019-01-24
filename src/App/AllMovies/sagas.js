@@ -53,13 +53,15 @@ function* setNewSort({payload}) {
         archiveParams === null
         ? routerGetters.allMovies.link(
             routerContext,
-            {ordering: newSortValue, pagination: null}
+            {ordering: newSortValue},
+            ['ordering']
         )
         : routerGetters.allMoviesArchive.link(
             routerContext,
             g(archiveParams, 'year'),
             g(archiveParams, 'month'),
-            {ordering: newSortValue, pagination: null}
+            {ordering: newSortValue},
+            ['ordering']
         )
     ))
 }

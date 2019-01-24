@@ -51,7 +51,8 @@ function* setNewSort({payload}) {
     yield put(push(
         routerGetters.findVideos.link(
             routerContext,
-            {ordering: newSortValue, pagination: null}
+            {ordering: newSortValue},
+            ['ordering', 'searchQuery']
         )
     ))
 }

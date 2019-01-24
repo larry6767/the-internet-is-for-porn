@@ -1,6 +1,8 @@
 import React from 'react'
+import queryString from 'query-string'
+import {get} from 'lodash'
 import {Record, List} from 'immutable'
-import {compose} from 'recompose'
+import {compose, withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, Field, formValueSelector} from 'redux-form/immutable'
 import Autosuggest from 'react-autosuggest'
@@ -15,9 +17,14 @@ import {
     PropTypes,
     ImmutablePropTypes,
     setPropTypes,
+    getRouterContext,
 } from '../../helpers'
 
-import {immutableI18nSearchModel} from '../../models'
+import {
+    immutableI18nSearchModel,
+    routerContextModel,
+} from '../../models'
+import {routerGetters} from '../../../router-builder'
 import {
     SearchForm,
     SearchButton
@@ -26,11 +33,6 @@ import {muiStyles} from './assets/muiStyles'
 import actions from './actions'
 
 const
-    renderHiddenField = ({
-        input,
-        type,
-    }) => <input {...input} type={type}/>,
-
     renderInputComponent = ({classes, ref, i18nSearch, ...input}) => <TextField
         fullWidth
         placeholder={ig(i18nSearch, 'inputPlaceholder')}
@@ -67,23 +69,19 @@ const
         </MenuItem>
     },
 
-    getSuggestionValue = (change, suggestion) => {
-        change('searchKey', suggestion)
-    },
-
     renderAutosuggest = ({
-        classes, i18nSearch, search, input, change,
-        suggestionsFetchRequestHandler, suggestionsClearRequestHandler,
-        suggestionSelectedHandler, classId,
+        classes, i18nSearch, search, input,
+        loadSuggestions, clearSuggestions,
+        onSubmitHandler, getSuggestionValue,
     }) => <Autosuggest
         renderInputComponent={renderInputComponent}
         suggestions={ig(search, 'suggestions').toJS()}
-        getSuggestionValue={getSuggestionValue.bind(this, change)}
+        getSuggestionValue={getSuggestionValue}
         renderSuggestion={renderSuggestion}
 
-        onSuggestionsFetchRequested={suggestionsFetchRequestHandler.bind(this, classId)}
-        onSuggestionsClearRequested={suggestionsClearRequestHandler}
-        onSuggestionSelected={suggestionSelectedHandler.bind(this, change)}
+        onSuggestionsFetchRequested={loadSuggestions}
+        onSuggestionsClearRequested={clearSuggestions}
+        onSuggestionSelected={onSubmitHandler}
         inputProps={{
             classes,
             i18nSearch,
@@ -104,29 +102,21 @@ const
         }
     />,
 
-    Search = props => {
-        const {handleSubmit, i18nSearch} = props
-
-        return <SearchForm
-            onSubmit={handleSubmit}
-        >
-            <Field
-                name="classId"
-                type="hidden"
-                component={renderHiddenField}
-            />
-            <Field
-                name="searchKey"
-                type="text"
-                props={props}
-                component={renderAutosuggest}
-            />
-            <SearchButton
-                type="submit"
-                title={ig(i18nSearch, 'buttonTitle')}
-            />
-        </SearchForm>
-    },
+    Search = props => <SearchForm
+        action={routerGetters.findVideos.link(g(props, 'routerContext'))} // for SSR
+    >
+        <Field
+            name={g(props, 'localizedKey')}
+            type="text"
+            props={props}
+            component={renderAutosuggest}
+        />
+        <SearchButton
+            type="submit"
+            onClick={g(props, 'onSubmitHandler')}
+            title={ig(g(props, 'i18nSearch'), 'buttonTitle')}
+        />
+    </SearchForm>,
 
     SearchRecord = Record({
         suggestions: List(),
@@ -136,34 +126,67 @@ const
 export default compose(
     connect(
         state => ({
-            initialValues: { // Setting default form values. redux-form creates keys in store for this
-                classId: '1', // ig(state, ['app', 'videoPage', 'gallery', 'classId']),
-                searchKey: '',
-            },
             search: SearchRecord(ig(state, ['app', 'mainHeader', 'search'])),
             i18nSearch: ig(state, 'app', 'locale', 'i18n', 'search'),
-            classId: formValueSelector('searchForm')(state, 'classId'),
-        }),
-        dispatch => ({
-            suggestionsFetchRequestHandler: (classId, {value, reason}) => {
-                dispatch(actions.suggestionsFetchRequest({
-                    classId,
-                    searchKey: value,
-                }))
+            routerContext: getRouterContext(state),
+            searchQuery: formValueSelector('searchForm')(
+                state,
+                ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')
+            ) || null,
+            localizedKey: ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey'),
+            initialValues: {
+                [ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')]: get( // for SSR
+                    queryString.parse(ig(state, 'router', 'location', 'search')),
+                    [ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')],
+                    null
+                ),
             },
-            suggestionsClearRequestHandler: () => dispatch(actions.setEmptySuggestions()),
-            suggestionSelectedHandler: (change, event, {suggestion, method}) => {
-                if (method === 'enter')
-                    change('searchKey', suggestion)
-
-                dispatch(actions.runSearch(suggestion))
-            }
-        })
+        }),
+        {
+            runSearch: g(actions, 'runSearch'),
+            setEmptySuggestions: g(actions, 'setEmptySuggestions'),
+            suggestionsFetchRequest: g(actions, 'suggestionsFetchRequest'),
+        }
     ),
     reduxForm({
         form: 'searchForm',
         enableReinitialize: true,
-        onSubmit: (values, dispatch) => dispatch(actions.runSearch(ig(values, 'searchKey')))
+    }),
+    withHandlers({
+        loadSuggestions: props => ({value, reason}) => {
+            props.suggestionsFetchRequest({
+                searchQuery: encodeURIComponent(value),
+            })
+        },
+
+        clearSuggestions: props => () => props.setEmptySuggestions(),
+
+        getSuggestionValue: props => (suggestion) => {
+            props.change(g(props, 'localizedKey'), suggestion)
+        },
+        // parameters are needed for the case when the handler below
+        // is called upon the event 'onSuggestionSelected'
+        onSubmitHandler: props => (event, parameters) => {
+            event.preventDefault()
+
+            let
+                query = parameters
+                    ? g(parameters, 'suggestion')
+                    : g(props, 'searchQuery')
+
+            query = query ? query.replace(/ /g, '+') : ''
+
+            if (parameters && parameters.method === 'enter')
+                props.change(g(props, 'localizedKey'), query)
+
+            props.runSearch({
+                path: routerGetters.findVideos.link(
+                    g(props, 'routerContext'),
+                    {searchQuery: query},
+                    ['ordering', 'searchQuery'],
+                )
+            })
+        }
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
@@ -172,7 +195,19 @@ export default compose(
             suggestions: ImmutablePropTypes.list,
         }),
         i18nSearch: immutableI18nSearchModel,
-        handleSubmit: PropTypes.func,
+        routerContext: routerContextModel,
+        searchQuery: PropTypes.nullable(PropTypes.string),
+        localizedKey: PropTypes.string,
+        initialValues: PropTypes.object,
         change: PropTypes.func,
+
+        runSearch: PropTypes.func,
+        setEmptySuggestions: PropTypes.func,
+        suggestionsFetchRequest: PropTypes.func,
+
+        loadSuggestions: PropTypes.func,
+        clearSuggestions: PropTypes.func,
+        getSuggestionValue: PropTypes.func,
+        onSubmitHandler: PropTypes.func,
     })
 )(Search)

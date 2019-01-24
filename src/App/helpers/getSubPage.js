@@ -33,22 +33,41 @@ const
             pagination = Number(page) - 1,
 
             // !== popular - because popular by default, without postfix '-popular'
-            subPage
-                = ordering !== null && ordering !== g(orderingMapping, 'byPopularity')
+            subPage = ordering !== null && ordering !== g(orderingMapping, 'byPopularity')
                 ? `${child}-${ordering}`
                 : child
 
         return (
             pagination > 0
-            ? `${subPage}-${pagination}`
+                ? `${subPage}-${pagination}`
+                : subPage
+        )
+    },
+
+    getSubPageForSearch = (sort = null, page = 1, query = '') => {
+        const
+            ordering = sort !== null ? g(orderingMapping, sort) : null
+
+        let // !== relevant - because relevant by default, without postfix '-relevant'
+            subPage = ordering !== null && ordering !== g(orderingMapping, 'byRelevant')
+                ? `-${ordering}`
+                : ''
+
+        subPage = query
+            ? `${subPage}?q=${query}`
             : subPage
+
+        return (
+            page > 0
+                ? `${subPage}&p=${page}`
+                : subPage
         )
     }
 
 export default getSubPage
 
 export const
-    localizedGetSubPage = routerContext => (child, sort = null, page, archive) => {
+    localizedGetSubPage = routerContext => (child, sort = null, page, archive, query) => {
         const
             ordering =
                 sort === null ? null : find(
@@ -59,5 +78,7 @@ export const
         if (sort !== null && !ordering)
             throw new Error(`"sort" argument is broken: ${JSON.stringify(sort)}`)
 
-        return getSubPage(child, ordering, page, archive)
+        return query
+            ? getSubPageForSearch(ordering, page, query)
+            : getSubPage(child, ordering, page, archive)
     }

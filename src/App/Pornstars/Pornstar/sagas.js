@@ -52,7 +52,8 @@ function* setNewSort({payload}) {
     yield put(push(routerGetters.pornstar.link(
         routerContext,
         pornstarCode,
-        {ordering: newSortValue, pagination: null}
+        {ordering: newSortValue},
+        ['ordering']
     )))
 }
 
