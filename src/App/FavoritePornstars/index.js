@@ -26,7 +26,7 @@ import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
-import Head from '../../generic/Head'
+import PageTextHelmet from '../../generic/PageTextHelmet'
 import PornstarList from '../../generic/PornstarList'
 import {Page, Content, PageWrapper} from './assets'
 import headerActions from '../MainHeader/actions'
@@ -59,11 +59,7 @@ const
             : ig(favorite, 'isLoading')
             ? <CircularProgress/>
             : <Content>
-                <Head
-                    title={ig(favorite, 'pageText', 'title')}
-                    description={ig(favorite, 'pageText', 'description')}
-                    keywords={ig(favorite, 'pageText', 'keywords')}
-                />
+                <PageTextHelmet pageText={ig(favorite, 'pageText')}/>
                 <PageWrapper>
                     <Typography
                         variant="h4"

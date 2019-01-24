@@ -34,7 +34,7 @@ import {
 import {dataModel} from './models'
 import {routerGetters} from '../../router-builder'
 import ErrorContent from '../../generic/ErrorContent'
-import Head from '../../generic/Head'
+import PageTextHelmet from '../../generic/PageTextHelmet'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import {muiStyles} from './assets/muiStyles'
@@ -87,11 +87,7 @@ const
             : ig(data, 'isLoading')
             ? <CircularProgress/>
             : <Content>
-                <Head
-                    title={ig(data, 'pageText', 'title')}
-                    description={ig(data, 'pageText', 'description')}
-                    keywords={ig(data, 'pageText', 'keywords')}
-                />
+                <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>Top Rated Straight Niches</Typography>
                     <NichesList>

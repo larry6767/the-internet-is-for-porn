@@ -21,7 +21,7 @@ import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
-import Head from '../../generic/Head'
+import PageTextHelmet from '../../generic/PageTextHelmet'
 import VideoList from '../../generic/VideoList'
 import {Page, Content, PageWrapper} from './assets'
 import headerActions from '../MainHeader/actions'
@@ -58,11 +58,7 @@ const
             : ig(findVideos, 'isLoading')
             ? <CircularProgress/>
             : <Content>
-                <Head
-                    title={ig(findVideos, 'pageText', 'title')}
-                    description={ig(findVideos, 'pageText', 'description')}
-                    keywords={ig(findVideos, 'pageText', 'keywords')}
-                />
+                <PageTextHelmet pageText={ig(findVideos, 'pageText')}/>
                 <PageWrapper>
                     <Typography
                         variant="h4"

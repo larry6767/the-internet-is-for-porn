@@ -24,7 +24,7 @@ import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
-import Head from '../../generic/Head'
+import PageTextHelmet from '../../generic/PageTextHelmet'
 import Lists from '../../generic/Lists'
 import VideoList from '../../generic/VideoList'
 import {Page, Content, AllMoviesPageWrapper} from './assets'
@@ -76,11 +76,7 @@ const
             : allMovies.get('isLoading')
             ? <CircularProgress/>
             : <Content>
-                <Head
-                    title={ig(allMovies, 'pageText', 'title')}
-                    description={ig(allMovies, 'pageText', 'description')}
-                    keywords={ig(allMovies, 'pageText', 'keywords')}
-                />
+                <PageTextHelmet pageText={ig(allMovies, 'pageText')}/>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
 

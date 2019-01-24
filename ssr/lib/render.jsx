@@ -11,7 +11,12 @@ import {SheetsRegistry} from 'jss'
 import JssProvider from 'react-jss/lib/JssProvider'
 import {createGenerateClassName} from '@material-ui/core/styles'
 
-import {plainProvedGet as g, immutableProvedGet as ig, getRouterContext} from '../App/helpers'
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    getRouterContext,
+    getPageTextToHeadTags,
+} from '../App/helpers'
 import {getPureDomain} from '../App/helpers/hostLocale'
 import {buildLocalePageCodes, getLegacyOrientationPrefixes, logRequestError} from './helpers'
 import {getPageData as requestPageData} from './requests'
@@ -143,10 +148,7 @@ export default (
 
         const
             pageText = staticRouterContext.pageTextResolver(store.getState()),
-            meta = `<title>${ig(pageText, 'title')}</title>
-            <meta name="description" content="${ig(pageText, 'description')}">
-            <meta name="keywords" content="${ig(pageText, 'keywords')}">
-            `
+            headTags = getPageTextToHeadTags(pageText).map(x => renderToString(x)).join('\n')
 
         const
             serverStyleSheet = new ServerStyleSheet(),
@@ -180,7 +182,7 @@ export default (
             </script>`
 
         return res.end(`${pre}
-            ${meta}
+            ${headTags}
             ${middle}
             ${html}
             ${styledComponentsStyles}

@@ -1,16 +1,16 @@
 import React from 'react'
 import {compose} from 'recompose'
 
-import Head from '../../generic/Head'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import {Page} from './assets'
+import Helmet from 'react-helmet'
 // TODO this page needs localization
 const
     NotFound = () => <Page>
-        <Head
-            title="Not Found"
-            description="Not Found"
-        />
+        <Helmet>
+            <title>Not Found</title>
+            <meta name="description" content="Not Found"/>
+        </Helmet>
         <h1>NotFound</h1>
     </Page>
 

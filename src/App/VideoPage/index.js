@@ -23,7 +23,7 @@ import {immutableI18nButtonsModel, orientationCodes} from '../models'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ErrorContent from '../../generic/ErrorContent'
-import Head from '../../generic/Head'
+import PageTextHelmet from '../../generic/PageTextHelmet'
 import VideoList from '../../generic/VideoList'
 import ReportDialog from './ReportDialog'
 
@@ -128,11 +128,7 @@ const
             : data.get('isLoading')
             ? <CircularProgress/>
             : <Content>
-                <Head
-                    title={ig(data, 'pageText', 'title')}
-                    description={ig(data, 'pageText', 'description')}
-                    keywords={ig(data, 'pageText', 'keywords')}
-                />
+                <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <PageWrapper>
                     <PlayerSection>
                         <Typography
