@@ -1,10 +1,12 @@
-export const muiStyles = (theme, {niches, currentBreakpoint}) => {
+import {immutableProvedGet as ig} from '../../helpers'
+
+export const muiStyles = (theme, {data, currentBreakpoint}) => {
     const
-        nichesList = niches.get('nichesList')
+        nichesList = ig(data, 'nichesList')
 
     return {
         root: {
-            width: niches.get('isLoading') ? 'auto' : '100%',
+            width: ig(data, 'isLoading') ? 'auto' : '100%',
             display: 'grid',
             gridAutoFlow: 'column',
             gridTemplateRows:

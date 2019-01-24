@@ -1,4 +1,4 @@
-import {Record, List, Map} from 'immutable'
+import {Record, List} from 'immutable'
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
@@ -21,15 +21,19 @@ import {
     immutableProvedGet as ig,
     plainProvedGet as g,
     PropTypes,
-    ImmutablePropTypes,
     setPropTypes,
 } from '../helpers'
 
+import {
+    immutableI18nAllNichesModel,
+    orientationCodes,
+    PageTextRecord,
+} from '../models'
+
+import {dataModel} from './models'
 import ErrorContent from '../../generic/ErrorContent'
 import Head from '../../generic/Head'
 import {routerGetters} from '../../router-builder'
-import {immutableI18nAllNichesModel, immutablePageTextModel, orientationCodes} from '../models'
-import {nicheItemModel} from './models'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
@@ -38,17 +42,6 @@ import {AllNichesPage, Content, PageWrapper} from './assets'
 import {muiStyles} from './assets/muiStyles'
 
 const
-    NichesRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
-
-        lastOrientationCode: '',
-
-        nichesList: List(),
-        pageText: Map(),
-    }),
-
     renderListItemLink = (x, classes, getChildLink) => <Link to={getChildLink(ig(x, 'subPage'))}
         key={ig(x, 'id')}
         className={g(classes, 'routerLink')}
@@ -74,16 +67,16 @@ const
         </ListItem>
     </Link>,
 
-    AllNiches = ({classes, niches, getChildLink, i18nAllNiches}) => <AllNichesPage>
-        { ig(niches, 'isFailed')
+    AllNiches = ({classes, data, getChildLink, i18nAllNiches}) => <AllNichesPage>
+        { ig(data, 'isFailed')
             ? <ErrorContent/>
-            : ig(niches, 'isLoading')
+            : ig(data, 'isLoading')
             ? <CircularProgress/>
             : <Content>
                 <Head
-                    title={g(niches, 'pageText', 'title')}
-                    description={g(niches, 'pageText', 'description')}
-                    keywords={g(niches, 'pageText', 'keywords')}
+                    title={ig(data, 'pageText', 'title')}
+                    description={ig(data, 'pageText', 'description')}
+                    keywords={ig(data, 'pageText', 'keywords')}
                 />
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
@@ -95,7 +88,7 @@ const
                             root: g(classes, 'root')
                         }}
                     >
-                        {ig(niches, 'nichesList').map(x =>
+                        {ig(data, 'nichesList').map(x =>
                             renderListItemLink(x, classes, getChildLink)
                         )}
                     </ListComponent>
@@ -104,17 +97,28 @@ const
         }
     </AllNichesPage>,
 
-    loadPageFlow = ({currentOrientation, niches, loadPage, setHeaderText}) => {
+    NichesRecord = Record({
+        isLoading: false,
+        isLoaded: false,
+        isFailed: false,
+
+        lastOrientationCode: '',
+
+        nichesList: List(),
+        pageText: PageTextRecord(),
+    }),
+
+    loadPageFlow = ({currentOrientation, data, loadPage, setHeaderText}) => {
         if (!(
-            ig(niches, 'isLoading') ||
+            ig(data, 'isLoading') ||
             (
-                (ig(niches, 'isLoaded') || ig(niches, 'isFailed')) &&
-                g(currentOrientation, []) === ig(niches, 'lastOrientationCode')
+                (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
+                g(currentOrientation, []) === ig(data, 'lastOrientationCode')
             )
         ))
             loadPage()
-        else if (ig(niches, 'isLoaded'))
-            setHeaderText(getHeaderText(g(niches, []), true))
+        else if (ig(data, 'isLoaded'))
+            setHeaderText(getHeaderText(g(data, []), true))
    }
 
 export default compose(
@@ -124,7 +128,7 @@ export default compose(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
-            niches: NichesRecord(ig(state, 'app', 'niches', 'all')),
+            data: NichesRecord(ig(state, 'app', 'niches', 'all')),
             i18nAllNiches: ig(state, 'app', 'locale', 'i18n', 'allNiches'),
             routerContext: getRouterContext(state),
         }),
@@ -153,17 +157,14 @@ export default compose(
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         currentBreakpoint: PropTypes.string,
         currentOrientation: PropTypes.oneOf(orientationCodes),
-        niches: ImmutablePropTypes.exactRecordOf({
-            isLoading: PropTypes.bool,
-            isLoaded: PropTypes.bool,
-            isFailed: PropTypes.bool,
-
-            lastOrientationCode: PropTypes.oneOf(orientationCodes),
-
-            nichesList: ImmutablePropTypes.listOf(nicheItemModel),
-            pageText: immutablePageTextModel,
-        }),
+        data: dataModel,
         i18nAllNiches: immutableI18nAllNichesModel,
+        routerContext: routerContextModel,
+
+        loadPageRequest: PropTypes.func,
+        loadPage: PropTypes.func,
+        setNewText: PropTypes.func,
+        setHeaderText: PropTypes.func,
         getChildLink: PropTypes.func,
     })
 )(AllNiches)

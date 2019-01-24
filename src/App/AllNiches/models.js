@@ -1,9 +1,29 @@
-import {PropTypes, ImmutablePropTypes} from '../helpers'
+import {
+    ImmutablePropTypes,
+    PropTypes,
+} from '../helpers'
 
-export const
-    nicheItemModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
-        id: PropTypes.number,
-        name: PropTypes.string,
-        subPage: PropTypes.string,
-        itemsCount: PropTypes.number,
-    })
+import {
+    immutablePageTextModel,
+    immutableNichesListModel,
+    orientationCodes,
+} from '../models'
+
+const
+    model = process.env.NODE_ENV === 'production' ? null : {
+        isLoading: PropTypes.bool,
+        isLoaded: PropTypes.bool,
+        isFailed: PropTypes.bool,
+        lastOrientationCode: PropTypes.oneOf(orientationCodes),
+        pageText: immutablePageTextModel,
+        nichesList: immutableNichesListModel,
+    },
+
+    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact(model),
+    dataModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exactRecordOf(model)
+
+export {
+    stateModel,
+    dataModel,
+}
