@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
-import {Record, Map, List} from 'immutable'
+import {Record, List} from 'immutable'
 import {Link} from 'react-router-dom'
 import PermIdentityIcon from '@material-ui/icons/PermIdentity'
 
@@ -21,11 +21,17 @@ import {
     immutableProvedGet as ig,
     setPropTypes,
     PropTypes,
-    ImmutablePropTypes,
     getHeaderText,
 } from '../helpers'
 
-import {immutableI18nOrderingModel, routerContextModel, orientationCodes} from '../models'
+import {
+    immutableI18nOrderingModel,
+    routerContextModel,
+    orientationCodes,
+    PageTextRecord,
+} from '../models'
+
+import {dataModel} from './models'
 import {routerGetters} from '../../router-builder'
 import ErrorContent from '../../generic/ErrorContent'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
@@ -45,19 +51,6 @@ import {
 } from './assets'
 
 const
-    HomeRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
-
-        lastOrientationCode: '',
-
-        pageText: Map(),
-
-        nichesList: List(),
-        pornstarsList: List(),
-    }),
-
     renderListItemLink = (x, idx, arr, classes, routerContext) => <Link
         to={routerGetters.pornstar.link(routerContext, ig(x, 'subPage'), null)}
         key={ig(x, 'id')}
@@ -87,16 +80,16 @@ const
         </ListItem>
     </Link>,
 
-    Home = ({classes, home, routerContext}) => <Page>
-        { ig(home, 'isFailed')
+    Home = ({classes, data, routerContext}) => <Page>
+        { ig(data, 'isFailed')
             ? <ErrorContent/>
-            : ig(home, 'isLoading')
+            : ig(data, 'isLoading')
             ? <CircularProgress/>
             : <Content>
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>Top Rated Straight Niches</Typography>
                     <NichesList>
-                        {ig(home, 'nichesList').map(x => <Niche key={ig(x, 'id')}>
+                        {ig(data, 'nichesList').map(x => <Niche key={ig(x, 'id')}>
                             <Link
                                 to={routerGetters.niche.link(
                                     routerContext,
@@ -124,10 +117,10 @@ const
                             root: g(classes, 'root')
                         }}
                     >
-                        {ig(home, 'pornstarsList').map((x, idx) => renderListItemLink(
+                        {ig(data, 'pornstarsList').map((x, idx) => renderListItemLink(
                             x,
                             idx,
-                            ig(home, 'pornstarsList'),
+                            ig(data, 'pornstarsList'),
                             classes,
                             routerContext
                         ))}
@@ -137,17 +130,30 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({currentOrientation, home, loadPage, setHeaderText}) => {
+    HomeRecord = Record({
+        isLoading: false,
+        isLoaded: false,
+        isFailed: false,
+
+        lastOrientationCode: '',
+
+        pageText: PageTextRecord(),
+
+        nichesList: List(),
+        pornstarsList: List(),
+    }),
+
+    loadPageFlow = ({currentOrientation, data, loadPage, setHeaderText}) => {
         if (!(
-            ig(home, 'isLoading') ||
+            ig(data, 'isLoading') ||
             (
-                (ig(home, 'isLoaded') || ig(home, 'isFailed')) &&
-                g(currentOrientation, []) === ig(home, 'lastOrientationCode')
+                (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
+                g(currentOrientation, []) === ig(data, 'lastOrientationCode')
             )
         ))
             loadPage()
-        else if (ig(home, 'isLoaded'))
-            setHeaderText(getHeaderText(g(home, []), true))
+        else if (ig(data, 'isLoaded'))
+            setHeaderText(getHeaderText(g(data, []), true))
    }
 
 export default compose(
@@ -157,7 +163,7 @@ export default compose(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
-            home: HomeRecord(ig(state, 'app', 'home')),
+            data: HomeRecord(ig(state, 'app', 'home')),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
         }),
@@ -194,15 +200,7 @@ export default compose(
         }),
         currentBreakpoint: PropTypes.string,
         currentOrientation: PropTypes.oneOf(orientationCodes),
-        home: ImmutablePropTypes.exactRecordOf({
-            isLoading: PropTypes.bool,
-            isLoaded: PropTypes.bool,
-            isFailed: PropTypes.bool,
-            lastOrientationCode: PropTypes.string,
-            pageText: ImmutablePropTypes.shape({}), // TODO better type
-            nichesList: ImmutablePropTypes.listOf(ImmutablePropTypes.shape({})), // TODO better type
-            pornstarsList: ImmutablePropTypes.listOf(ImmutablePropTypes.shape({})), // TODO better type
-        }),
+        data: dataModel,
         routerContext: routerContextModel,
         i18nOrdering: immutableI18nOrderingModel,
         loadPageRequest: PropTypes.func,

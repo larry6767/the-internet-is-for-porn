@@ -1,10 +1,10 @@
-export const muiStyles = (theme, {home, currentBreakpoint}) => {
+export const muiStyles = (theme, {data, currentBreakpoint}) => {
     const
-        pornstarsList = home.get('pornstarsList')
+        pornstarsList = data.get('pornstarsList')
 
     return {
         root: {
-            width: home.get('isLoading') ? 'auto' : '100%',
+            width: data.get('isLoading') ? 'auto' : '100%',
             display: 'grid',
             gridAutoFlow: 'column',
             gridTemplateRows:
