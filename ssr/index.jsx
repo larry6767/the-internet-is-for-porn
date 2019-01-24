@@ -61,13 +61,15 @@ const initApp = async () => {
             join(__dirname, '..', 'robots', (isRC ? 'rc' : 'production'), 'robots.txt'),
 
         render = renderPage(siteLocales, defaultSiteLocaleCode, (result => ({
-            pre: `${result[0]}<div id="root">`,
-            post: `</div>${result[1]}`,
+            pre: `${result[0]}`,
+            middle: `${result[1]}<div id="root">`,
+            post: `</div>${result[2].replace('<div id="root"></div>', '')}`,
         }))(
             readFileSync(join(publicDir, 'index.html'))
                 .toString()
                 .replace(/%PUBLIC_URL%/g, '')
-                .split('<div id="root"></div>')
+                // .split('<div id="root"></div>')
+                .split('<!-- SSR use this comment as separator! -->')
         )),
 
         app = express()

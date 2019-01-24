@@ -70,9 +70,9 @@ const
         (src, propKey) => g(src, getVideoKey(propKey)),
 
     getResult = pageText => ({
-        title: getProp(pageText, 'TITLE'),
-        description: getProp(pageText, 'DESCRIPTION'),
-        keywords: getProp(pageText, 'KEYWORDS'),
+        title: getProp(pageText, 'TITLE').replace(/"/g, '\''),
+        description: getProp(pageText, 'DESCRIPTION').replace(/"/g, '\''),
+        keywords: getProp(pageText, 'KEYWORDS').replace(/"/g, '\''),
         headerTitle: pageText[getKey('HEADER-TITLE')] || null,
         headerDescription: getProp(pageText, 'HEADER-DESCRIPTION'),
         listHeader: pageText[getKey('LIST-HEADER')] || null,

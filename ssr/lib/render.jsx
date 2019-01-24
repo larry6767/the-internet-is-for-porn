@@ -45,7 +45,7 @@ const
 export default (
     siteLocales,
     defaultSiteLocaleCode,
-    {pre, post} // <- pre-bound layout template object
+    {pre, middle, post} // <- pre-bound layout template object
 ) => async (req, res, store) => {
     try {
         const
@@ -142,6 +142,13 @@ export default (
             res.status(staticRouterContext.statusCodeResolver(store.getState()))
 
         const
+            pageText = staticRouterContext.pageTextResolver(store.getState()),
+            meta = `<title>${ig(pageText, 'title')}</title>
+            <meta name="description" content="${ig(pageText, 'description')}">
+            <meta name="keywords" content="${ig(pageText, 'keywords')}">
+            `
+
+        const
             serverStyleSheet = new ServerStyleSheet(),
             jssSheetsRegistry = new SheetsRegistry(),
             generateClassName = createGenerateClassName(),
@@ -173,6 +180,8 @@ export default (
             </script>`
 
         return res.end(`${pre}
+            ${meta}
+            ${middle}
             ${html}
             ${styledComponentsStyles}
             ${jssStyles}

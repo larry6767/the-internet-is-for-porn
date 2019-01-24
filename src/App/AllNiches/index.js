@@ -26,6 +26,7 @@ import {
 } from '../helpers'
 
 import ErrorContent from '../../generic/ErrorContent'
+import Head from '../../generic/Head'
 import {routerGetters} from '../../router-builder'
 import {immutableI18nAllNichesModel, immutablePageTextModel, orientationCodes} from '../models'
 import {nicheItemModel} from './models'
@@ -79,6 +80,11 @@ const
             : ig(niches, 'isLoading')
             ? <CircularProgress/>
             : <Content>
+                <Head
+                    title={g(niches, 'pageText', 'title')}
+                    description={g(niches, 'pageText', 'description')}
+                    keywords={g(niches, 'pageText', 'keywords')}
+                />
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
                         {ig(i18nAllNiches, 'pageHeader')}
