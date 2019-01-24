@@ -19,7 +19,11 @@ import {
     setPropTypes,
 } from '../helpers'
 
-import {immutableI18nButtonsModel, orientationCodes} from '../models'
+import {
+    immutableI18nButtonsModel,
+    orientationCodes,
+    PageTextRecord,
+} from '../models'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ErrorContent from '../../generic/ErrorContent'
@@ -68,7 +72,7 @@ const
         lastSubPageForRequest: '',
         inlineAdvertisementIsShowed: true,
         reportDialogIsOpen: false,
-        pageText: Map(),
+        pageText: PageTextRecord(),
         gallery: Map(),
         videoList: List(),
         currentHref: '',

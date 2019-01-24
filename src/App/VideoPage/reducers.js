@@ -1,8 +1,13 @@
-import {handleActions} from 'redux-actions'
 import {fromJS, List, Map} from 'immutable'
+import {handleActions} from 'redux-actions'
 
-import {plainProvedGet as g} from '../helpers'
-import {defaultOrientationCode} from '../models'
+import {
+    plainProvedGet as g
+} from '../helpers'
+import {
+    PageTextRecord,
+    defaultOrientationCode,
+} from '../models'
 import actions from './actions'
 
 export default
@@ -15,7 +20,7 @@ export default
             lastSubPageForRequest: g(payload, 'subPageForRequest'),
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
-            pageText: Map(),
+            pageText: PageTextRecord(),
             gallery: Map(),
             videoList: List(),
         }),
@@ -27,7 +32,7 @@ export default
             lastSubPageForRequest: g(payload, 'subPageForRequest'),
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
-            pageText: Map(fromJS(g(payload, 'data', 'pageText'))),
+            pageText: PageTextRecord(fromJS(g(payload, 'data', 'pageText'))),
             gallery: Map(fromJS(g(payload, 'data', 'gallery'))),
             videoList: List(fromJS(g(payload, 'data', 'videoList'))),
 
@@ -42,7 +47,7 @@ export default
             isFailed: true,
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
-            pageText: Map(),
+            pageText: PageTextRecord(),
             gallery: Map(),
             videoList: List(),
         }),
@@ -81,17 +86,7 @@ export default
         lastSubPageForRequest: '',
         inlineAdvertisementIsShowed: true,
         reportDialogIsOpen: false,
-        pageText: {
-            /*
-            description: '',
-            headerDescription: '',
-            headerTitle: '',
-            keywords: '',
-            listHeader: '',
-            listHeaderEmpty: '',
-            title: '',
-            */
-        },
+        pageText: PageTextRecord(),
         gallery: {
             /*
             id: 0,
