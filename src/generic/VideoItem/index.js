@@ -134,7 +134,7 @@ const
     </VideoPreview>,
 
     VideoItem = ({
-        classes, x, getVideoLink, isSSR, addVideoToFavoriteHandler,
+        classes, x, getVideoLink, getProviderLink, isSSR, addVideoToFavoriteHandler,
         removeVideoFromFavoriteHandler, favoriteVideoList,
     }) => {
         const
@@ -172,7 +172,7 @@ const
                 </Typography>
                 <InfoBlockInner>
                     <Link
-                        to={`/find-videos?key=${ig(x, 'sponsorId')}`}
+                        to={getProviderLink(x)}
                         className={classes.routerLinkGray}
                     >
                         <Typography
@@ -181,7 +181,7 @@ const
                                 root: g(classes, 'typographySource')
                             }}
                         >
-                            {ig(x, 'sponsorId')}
+                            {`itIsJustGag${ig(x, 'sponsorId')}`}
                         </Typography>
                     </Link>
                     <Typography
@@ -222,6 +222,12 @@ export default compose(
             ig(x, 'videoPageRef'),
             ig(x, 'title')
         ),
+
+        getProviderLink: props => x => routerGetters.findVideos.link(
+            g(props, 'routerContext'),
+            {searchQuery: `itIsJustGag${ig(x, 'sponsorId')}`},
+            ['searchQuery'],
+        ),
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
@@ -229,8 +235,11 @@ export default compose(
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
         x: immutableVideoItemModel,
+        favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),
+
         addVideoToFavoriteHandler: PropTypes.func,
         removeVideoFromFavoriteHandler: PropTypes.func,
-        favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),
+        getVideoLink: PropTypes.func,
+        getProviderLink: PropTypes.func,
     })
 )(VideoItem)
