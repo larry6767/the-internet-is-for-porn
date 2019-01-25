@@ -4,7 +4,7 @@ import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {CircularProgress, Typography} from '@material-ui/core'
-import {Record, Map, List} from 'immutable'
+import {Record, List, remove} from 'immutable'
 
 import {
     getHeaderText,
@@ -14,9 +14,11 @@ import {
     immutableProvedGet as ig,
     setPropTypes,
     PropTypes,
+    ImmutablePropTypes,
 } from '../../helpers'
 
 import {
+    PageTextRecord,
     orientationCodes,
     routerContextModel,
     immutableI18nOrderingModel,
@@ -35,14 +37,16 @@ import VideoList from '../../../generic/VideoList'
 
 import Info from './Info'
 import {Page, Content, PageWrapper} from './assets'
+import appActions from '../../../App/actions'
 import headerActions from '../../MainHeader/actions'
 import actions from './actions'
 
 const
     Pornstar = ({
         currentBreakpoint, i18nOrdering, i18nButtons, data, chooseSort,
-        isSSR, modelInfoHandler, modelInfoIsOpen,
+        isSSR, modelInfoHandler, modelInfoIsOpen, favoritePornstarList,
         controlLinkBuilder, modelLinkBuilder,
+        addToFavoriteHandler, removeFromFavoriteHandler,
     }) => <Page>
         { ig(data, 'isFailed')
             ? <ErrorContent/>
@@ -60,12 +64,16 @@ const
                         {data.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <Info
+                        modelId={ig(data, 'modelId')}
                         modelThumb={ig(data, 'modelThumb')}
                         modelInfo={ig(data, 'modelInfo')}
                         modelInfoHandler={modelInfoHandler}
                         modelInfoIsOpen={modelInfoIsOpen}
+                        favoritePornstarList={favoritePornstarList}
                         currentBreakpoint={currentBreakpoint}
                         isSSR={isSSR}
+                        addToFavoriteHandler={addToFavoriteHandler}
+                        removeFromFavoriteHandler={removeFromFavoriteHandler}
                     />
                     <ControlBar
                         i18nOrdering={i18nOrdering}
@@ -100,13 +108,14 @@ const
         lastOrientationCode: '',
         lastSubPageForRequest: '',
         pageNumber: 1,
-        pageText: Map(),
+        pageText: PageTextRecord(),
         pagesCount: 1,
         sortList: List(),
         currentSort: null,
         itemsCount: 0,
         videoList: List(),
         modelsList: List(),
+        modelId: 0,
         modelInfo: List(),
         modelThumb: '',
     }),
@@ -158,12 +167,15 @@ export default compose(
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             modelInfoIsOpen: ig(state, 'app', 'pornstars', 'pornstar', 'modelInfoIsOpen'),
+            favoritePornstarList: ig(state, 'app', 'ui', 'favoritePornstarList'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
             toggleModelInfo: g(actions, 'toggleModelInfo'),
             setNewSort: g(actions, 'setNewSort'),
             setNewText: g(headerActions, 'setNewText'),
+            addPornstarToFavorite: g(appActions, 'addPornstarToFavorite'),
+            removePornstarFromFavorite: g(appActions, 'removePornstarFromFavorite'),
         }
     ),
     withProps(props => ({
@@ -193,6 +205,29 @@ export default compose(
 
         modelLinkBuilder: props => child =>
             routerGetters.pornstar.link(g(props, 'routerContext'), child, null),
+
+        addToFavoriteHandler: props => event => {
+            event.preventDefault()
+
+            const
+                id = Number(g(event.currentTarget.getAttribute('data-favorite-pornstar-id'), [])),
+                x = remove(
+                    ig(props.data, 'modelsList').find(x => ig(x, 'id') === id),
+                    'letter'
+                )
+
+            props.addPornstarToFavorite(x)
+        },
+
+        removeFromFavoriteHandler: props => event => {
+            event.preventDefault()
+
+            const
+                id = Number(g(event.currentTarget.getAttribute('data-favorite-pornstar-id'), [])),
+                x = ig(props.data, 'modelsList').find(x => ig(x, 'id') === id)
+
+            props.removePornstarFromFavorite(ig(x, 'id'))
+        },
     }),
     lifecycle({
         componentDidMount() {
@@ -213,6 +248,7 @@ export default compose(
         i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,
         modelInfoIsOpen: PropTypes.bool,
+        favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
 
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
@@ -224,5 +260,9 @@ export default compose(
         chooseSort: PropTypes.func,
         controlLinkBuilder: PropTypes.func,
         modelLinkBuilder: PropTypes.func,
+        addToFavoriteHandler: PropTypes.func,
+        addPornstarToFavorite: PropTypes.func,
+        removeFromFavoriteHandler: PropTypes.func,
+        removePornstarFromFavorite: PropTypes.func,
     }),
 )(Pornstar)

@@ -8,7 +8,9 @@ import {
     TableRow,
     TableCell,
 } from '@material-ui/core'
-import Favorite from '@material-ui/icons/FavoriteBorder'
+import Favorite from '@material-ui/icons/Favorite'
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
+import {plainProvedGet as g} from '../../../helpers'
 import {
     InfoWrapper,
     ThumbWrapper,
@@ -32,12 +34,27 @@ const
         <TableCell component="td">{x.get('value')}</TableCell>
     </TableRow>,
 
-    Info = ({classes, modelInfo, modelThumb, modelInfoHandler, modelInfoIsOpen, currentBreakpoint, isSSR}) => <InfoWrapper>
+    Info = ({
+        classes, modelId, modelInfo, modelThumb, modelInfoHandler,
+        modelInfoIsOpen, favoritePornstarList, currentBreakpoint, isSSR,
+        addToFavoriteHandler, removeFromFavoriteHandler,
+    }) => <InfoWrapper>
         <ThumbWrapper>
             <Thumb thumb={modelThumb}/>
             <InfoBar>
                 <Like>
-                    <Favorite classes={{root: classes.favoriteIcon}}/>
+                    {favoritePornstarList.find(id => id === modelId)
+                        ? <Favorite
+                            classes={{root: g(classes, 'favoriteIcon')}}
+                            data-favorite-pornstar-id={modelId}
+                            onClick={removeFromFavoriteHandler}
+                        />
+                        : <FavoriteBorder
+                            classes={{root: g(classes, 'favoriteBorderIcon')}}
+                            data-favorite-pornstar-id={modelId}
+                            onClick={addToFavoriteHandler}
+                        />
+                    }
                 </Like>
                 {!isSSR ? <Button
                     variant="outlined"

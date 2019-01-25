@@ -1,5 +1,4 @@
 import {combineReducers} from 'redux-immutable'
-import {handleActions} from 'redux-actions'
 import {fromJS, List, Map} from 'immutable'
 
 import {
@@ -8,6 +7,7 @@ import {
     removeIdFromFavoriteList,
     plainProvedGet as g,
     PropTypes,
+    ImmutablePropTypes,
     provedHandleActions,
 } from './helpers'
 
@@ -24,7 +24,12 @@ import actions from './actions'
 import {immutableLocaleRouterModel, immutableI18nModel} from './models'
 
 const
-    defaultSSR = fromJS({isSSR: false})
+    defaultSSR = fromJS({isSSR: false}),
+    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
+        currentBreakpoint: PropTypes.string,
+        favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),
+        favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
+    })
 
 export default combineReducers({
     home: homeReducer,
@@ -37,7 +42,7 @@ export default combineReducers({
     videoPage: videoPageReducer,
     findVideos: findVideosReducer,
 
-    ui: handleActions({
+    ui: provedHandleActions(stateModel, {
         [g(actions, 'resize')]: (state, action) =>
             state.set('currentBreakpoint', getCurrentBreakpoint(action.payload)),
 

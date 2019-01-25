@@ -8,16 +8,23 @@ export const muiStyles = theme => ({
         whiteSpace: 'nowrap',
         width: '100%',
     },
-    favoriteIcon: {
-        transition: 'width 0.2s, height 0.2s, top 0.2s, left 0.2s',
+    favoriteBorderIcon: {
         color: theme.palette.primary.dark,
+        transition: 'width 0.2s, height 0.2s, top 0.2s, left 0.2s',
+        marginRight: 2,
         '&:hover': {
             color: theme.palette.error.main,
             width: '1.1em',
             height: '1.1em',
-            position: 'relative',
-            top: '-0.05em',
-            left: '-0.05em',
+        }
+    },
+    favoriteIcon: {
+        color: theme.palette.error.main,
+        transition: 'width 0.2s, height 0.2s, top 0.2s, left 0.2s',
+        marginRight: 2,
+        '&:hover': {
+            width: '1.1em',
+            height: '1.1em',
         }
     },
     buttonMore: {

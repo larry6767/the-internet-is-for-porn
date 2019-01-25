@@ -171,6 +171,7 @@ const
                 g(x, 'page', 'MODELS_BY_LETTERS_MODELS_INFO', 'items'),
                 true
             ),
+            modelId: x.page.TAG_ID,
             modelInfo: getModelInfo(x.page.MODEL_INFO),
             modelThumb: x.page.MODEL_INFO.thumb_url,
         }

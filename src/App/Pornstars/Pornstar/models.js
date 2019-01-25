@@ -31,6 +31,7 @@ const
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
         modelsList: immutableModelsListWithLetterModel,
         // TODO refactor this below to `ImmutablePropTypes.mapOf(PropTypes.string)`
+        modelId: PropTypes.number,
         modelInfo: ImmutablePropTypes.listOf(
             ImmutablePropTypes.exact({
                 key: PropTypes.string,
