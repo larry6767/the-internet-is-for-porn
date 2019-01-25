@@ -3,6 +3,10 @@ export const muiStyles = theme => ({
         backgroundColor: '#fff',
         paddingRight: 5,
         paddingLeft: 15,
+        maxWidth: 215,
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
     },
     itemRoot: {
         paddingTop: 5,

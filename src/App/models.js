@@ -9,9 +9,9 @@ import {
 
 export {
     localeRouterModel, immutableLocaleRouterModel,
+    i18nHeadersModel, immutableI18nHeadersModel,
     i18nSearchModel, immutableI18nSearchModel,
     i18nNavigationModel, immutableI18nNavigationModel,
-    i18nAllNichesModel, immutableI18nAllNichesModel,
     i18nOrderingModel, immutableI18nOrderingModel,
     i18nButtonsModel, immutableI18nButtonsModel,
     i18nFooterModel, immutableI18nFooterModel,

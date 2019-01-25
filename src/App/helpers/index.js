@@ -30,6 +30,7 @@ export {default as getProvedPageKey} from './getProvedPageKey'
 export {default as getClassId} from './getClassId'
 export {default as getPageTextToHeadTags} from './getPageTextToHeadTags'
 export {default as get404PageText} from './get404PageText'
+export {default as getHeaderWithOrientation} from './getHeaderWithOrientation'
 
 // favorite pages helpers
 export {default as addToList} from './favoritePages/addToList'

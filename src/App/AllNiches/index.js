@@ -25,7 +25,6 @@ import {
 } from '../helpers'
 
 import {
-    immutableI18nAllNichesModel,
     orientationCodes,
     PageTextRecord,
     routerContextModel,
@@ -68,7 +67,7 @@ const
         </ListItem>
     </Link>,
 
-    AllNiches = ({classes, data, getChildLink, i18nAllNiches}) => <AllNichesPage>
+    AllNiches = ({classes, data, getChildLink, i18nAllNichesHeader}) => <AllNichesPage>
         { ig(data, 'isFailed')
             ? <ErrorContent/>
             : ig(data, 'isLoading')
@@ -77,7 +76,7 @@ const
                 <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
-                        {ig(i18nAllNiches, 'pageHeader')}
+                        {i18nAllNichesHeader}
                     </Typography>
                     <ListComponent
                         component="div"
@@ -126,7 +125,7 @@ export default compose(
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             data: NichesRecord(ig(state, 'app', 'niches', 'all')),
-            i18nAllNiches: ig(state, 'app', 'locale', 'i18n', 'allNiches'),
+            i18nAllNichesHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'allNiches'),
             routerContext: getRouterContext(state),
         }),
         {
@@ -155,7 +154,7 @@ export default compose(
         currentBreakpoint: PropTypes.string,
         currentOrientation: PropTypes.oneOf(orientationCodes),
         data: dataModel,
-        i18nAllNiches: immutableI18nAllNichesModel,
+        i18nAllNichesHeader: PropTypes.string,
         routerContext: routerContextModel,
 
         loadPageRequest: PropTypes.func,

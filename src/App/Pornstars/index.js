@@ -5,6 +5,7 @@ import {Record, List} from 'immutable'
 import {CircularProgress, Typography} from '@material-ui/core'
 
 import {
+    getHeaderWithOrientation,
     getHeaderText,
     getRouterContext,
     plainProvedGet as g,
@@ -31,7 +32,7 @@ import actions from './actions'
 import {Page, Content, PageWrapper} from './assets'
 
 const
-    Pornstars = ({data, linkBuilder}) => <Page>
+    Pornstars = ({data, linkBuilder, i18nPornstarsHeader}) => <Page>
         { ig(data, 'isFailed')
             ? <ErrorContent/>
             : ig(data, 'isLoading')
@@ -40,7 +41,7 @@ const
                 <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
-                        Top Rated Straight Pornstars
+                        {i18nPornstarsHeader}
                     </Typography>
                     <PornstarList
                         linkBuilder={linkBuilder}
@@ -83,6 +84,7 @@ export default compose(
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             data: DataRecord(ig(state, 'app', 'pornstars', 'all')),
             routerContext: getRouterContext(state),
+            i18nPornstarsHeader: getHeaderWithOrientation(state, 'pornstars'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -112,6 +114,7 @@ export default compose(
         currentOrientation: PropTypes.oneOf(orientationCodes),
         data: dataModel,
         routerContext: routerContextModel,
+        i18nPornstarsHeader: PropTypes.string,
 
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,

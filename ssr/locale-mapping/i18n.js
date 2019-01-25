@@ -9,6 +9,13 @@ import deepFreeze from '../lib/helpers/deepFreeze'
 const
     mapping = deepFreeze({
         eng: {
+            headers: {
+                allNiches: 'All Niches',
+                niches: 'Top Rated %ORIENTATION% Niches',
+                listNiches: 'All %ORIENTATION% Films',
+                listArchive: 'Archives',
+                pornstars: 'Top Rated %ORIENTATION% Pornstars',
+            },
             search: {
                 inputPlaceholder: 'Search box',
                 buttonTitle: 'Run search',
@@ -19,9 +26,6 @@ const
                 allMovies: {title: 'All Movies'},
                 pornstars: {title: 'Pornstars'},
                 favorite: {title: 'Favorite'},
-            },
-            allNiches: {
-                pageHeader: 'All Niches',
             },
             ordering: {
                 label: 'Sort',
@@ -91,6 +95,13 @@ const
             },
         },
         deu: {
+            headers: {
+                allNiches: 'Alle Gruppen',
+                niches: 'Die Besten %ORIENTATION% Gruppen',
+                listNiches: 'Alle Verfügbaren %ORIENTATION% Video Clips',
+                listArchive: 'Archiv',
+                pornstars: 'Die Besten %ORIENTATION% Models',
+            },
             search: {
                 inputPlaceholder: 'Stichworte hinzufügen',
                 buttonTitle: 'Suche starten',
@@ -101,9 +112,6 @@ const
                 allMovies: {title: 'Alle Vids'},
                 pornstars: {title: 'Models'},
                 favorite: {title: 'Favorisierten'},
-            },
-            allNiches: {
-                pageHeader: 'Alle Gruppen',
             },
             ordering: {
                 label: 'Sortiert',
@@ -176,6 +184,13 @@ const
             },
         },
         ita: {
+            headers: {
+                allNiches: 'Tutte le Categorie',
+                niches: 'Le %ORIENTATION% Categorie Più Votate',
+                listNiches: 'Totale %ORIENTATION% Filmati',
+                listArchive: 'archivio',
+                pornstars: 'Le %ORIENTATION% Pornostar Più Votate',
+            },
             search: {
                 inputPlaceholder: 'Inserisci parole chiave...',
                 buttonTitle: 'Esegui la ricerca',
@@ -186,9 +201,6 @@ const
                 allMovies: {title: 'Tutti I Film'},
                 pornstars: {title: 'Pornostar '},
                 favorite: {title: 'Preferiti'},
-            },
-            allNiches: {
-                pageHeader: 'Tutte le Categorie',
             },
             ordering: {
                 label: 'Ordina',
@@ -259,6 +271,13 @@ const
             },
         },
         fra: { // TODO
+            headers: {
+                allNiches: '',
+                niches: '',
+                listNiches: '',
+                listArchive: '',
+                pornstars: '',
+            },
             search: {
                 inputPlaceholder: '',
                 buttonTitle: '',
@@ -269,9 +288,6 @@ const
                 allMovies: {title: ''},
                 pornstars: {title: ''},
                 favorite: {title: ''},
-            },
-            allNiches: {
-                pageHeader: '',
             },
             ordering: {
                 label: '',
@@ -329,6 +345,13 @@ const
             },
         },
         spa: { // TODO
+            headers: {
+                allNiches: '',
+                niches: '',
+                listNiches: '',
+                listArchive: '',
+                pornstars: '',
+            },
             search: {
                 inputPlaceholder: '',
                 buttonTitle: '',
@@ -339,9 +362,6 @@ const
                 allMovies: {title: ''},
                 pornstars: {title: ''},
                 favorite: {title: ''},
-            },
-            allNiches: {
-                pageHeader: '',
             },
             ordering: {
                 label: '',
@@ -399,6 +419,13 @@ const
             },
         },
         por: { // TODO
+            headers: {
+                allNiches: '',
+                niches: '',
+                listNiches: '',
+                listArchive: '',
+                pornstars: '',
+            },
             search: {
                 inputPlaceholder: '',
                 buttonTitle: '',
@@ -409,9 +436,6 @@ const
                 allMovies: {title: ''},
                 pornstars: {title: ''},
                 favorite: {title: ''},
-            },
-            allNiches: {
-                pageHeader: '',
             },
             ordering: {
                 label: '',
@@ -469,6 +493,13 @@ const
             },
         },
         swe: { // TODO
+            headers: {
+                allNiches: '',
+                niches: '',
+                listNiches: '',
+                listArchive: '',
+                pornstars: '',
+            },
             search: {
                 inputPlaceholder: '',
                 buttonTitle: '',
@@ -479,9 +510,6 @@ const
                 allMovies: {title: ''},
                 pornstars: {title: ''},
                 favorite: {title: ''},
-            },
-            allNiches: {
-                pageHeader: '',
             },
             ordering: {
                 label: '',
@@ -539,6 +567,13 @@ const
             },
         },
         nld: { // TODO
+            headers: {
+                allNiches: '',
+                niches: '',
+                listNiches: '',
+                listArchive: '',
+                pornstars: '',
+            },
             search: {
                 inputPlaceholder: '',
                 buttonTitle: '',
@@ -549,9 +584,6 @@ const
                 allMovies: {title: ''},
                 pornstars: {title: ''},
                 favorite: {title: ''},
-            },
-            allNiches: {
-                pageHeader: '',
             },
             ordering: {
                 label: '',
@@ -609,6 +641,13 @@ const
             },
         },
         fin: { // TODO
+            headers: {
+                allNiches: '',
+                niches: '',
+                listNiches: '',
+                listArchive: '',
+                pornstars: '',
+            },
             search: {
                 inputPlaceholder: '',
                 buttonTitle: '',
@@ -619,9 +658,6 @@ const
                 allMovies: {title: ''},
                 pornstars: {title: ''},
                 favorite: {title: ''},
-            },
-            allNiches: {
-                pageHeader: '',
             },
             ordering: {
                 label: '',
@@ -679,6 +715,13 @@ const
             },
         },
         rus: { // TODO
+            headers: {
+                allNiches: '',
+                niches: '',
+                listNiches: '',
+                listArchive: '',
+                pornstars: '',
+            },
             search: {
                 inputPlaceholder: '',
                 buttonTitle: '',
@@ -689,9 +732,6 @@ const
                 allMovies: {title: ''},
                 pornstars: {title: ''},
                 favorite: {title: ''},
-            },
-            allNiches: {
-                pageHeader: '',
             },
             ordering: {
                 label: '',
@@ -749,6 +789,13 @@ const
             },
         },
         tur: { // TODO
+            headers: {
+                allNiches: '',
+                niches: '',
+                listNiches: '',
+                listArchive: '',
+                pornstars: '',
+            },
             search: {
                 inputPlaceholder: '',
                 buttonTitle: '',
@@ -759,9 +806,6 @@ const
                 allMovies: {title: ''},
                 pornstars: {title: ''},
                 favorite: {title: ''},
-            },
-            allNiches: {
-                pageHeader: '',
             },
             ordering: {
                 label: '',
