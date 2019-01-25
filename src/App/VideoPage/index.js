@@ -124,13 +124,15 @@ const
             ></iframe>
             : <AdGag/>,
 
-    renderTag = (classes, currentBreakpoint, isSSR, x, getTagLink) => isSSR
-        ? <Chip
-            key={x}
+    renderTag = (classes, currentBreakpoint, x, getTagLink) => <Link
+        to={getTagLink(x)}
+        key={x}
+        className={classes.routerLink}
+    >
+        <Chip
             label={x}
             className={classes.chip}
-            component="a"
-            href={getTagLink(x)}
+            component="div"
             variant="outlined"
             color={
                 currentBreakpoint === 'xxs' || currentBreakpoint === 'xs'
@@ -139,21 +141,7 @@ const
             }
             clickable
         />
-        : <Link to={getTagLink(x)} key={x} className={classes.routerLink}>
-            <Chip
-                label={x}
-                className={classes.chip}
-                component="div"
-                variant="outlined"
-                color={
-                    currentBreakpoint === 'xxs' || currentBreakpoint === 'xs'
-                        ? 'primary'
-                        : 'secondary'
-                }
-                clickable
-            />
-        </Link>
-    ,
+    </Link>,
 
     VideoPage = ({
         classes, isSSR, data, favoriteVideoList, closeAdvertisementHandler,
@@ -261,7 +249,7 @@ const
                             <TagsWrapper>
                                 {data.getIn(['gallery', 'tags'])
                                     ? data.getIn(['gallery', 'tags']).map(x =>
-                                        renderTag(classes, currentBreakpoint, isSSR, x, getTagLink))
+                                        renderTag(classes, currentBreakpoint, x, getTagLink))
                                     : null}
                             </TagsWrapper>
                         </VideoPlayer>
