@@ -17,7 +17,10 @@ import {
     PropTypes,
     getSubPage,
     setPropTypes,
+    getRouterContext,
 } from '../helpers'
+
+import {routerGetters} from '../../router-builder'
 
 import {
     immutableI18nButtonsModel,
@@ -121,10 +124,41 @@ const
             ></iframe>
             : <AdGag/>,
 
+    renderTag = (classes, currentBreakpoint, isSSR, x, getTagLink) => isSSR
+        ? <Chip
+            key={x}
+            label={x}
+            className={classes.chip}
+            component="a"
+            href={getTagLink(x)}
+            variant="outlined"
+            color={
+                currentBreakpoint === 'xxs' || currentBreakpoint === 'xs'
+                    ? 'primary'
+                    : 'secondary'
+            }
+            clickable
+        />
+        : <Link to={getTagLink(x)} key={x} className={classes.routerLink}>
+            <Chip
+                label={x}
+                className={classes.chip}
+                component="div"
+                variant="outlined"
+                color={
+                    currentBreakpoint === 'xxs' || currentBreakpoint === 'xs'
+                        ? 'primary'
+                        : 'secondary'
+                }
+                clickable
+            />
+        </Link>
+    ,
+
     VideoPage = ({
         classes, isSSR, data, favoriteVideoList, closeAdvertisementHandler,
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
-        toggleReportDialogHandler, pageUrl,
+        toggleReportDialogHandler, getTagLink, pageUrl,
         handleSubmit, pristine, reset, currentBreakpoint, i18nButtons,
     }) => <Page>
         { data.get('isFailed')
@@ -226,20 +260,8 @@ const
                             </Advertisement>
                             <TagsWrapper>
                                 {data.getIn(['gallery', 'tags'])
-                                    ? data.getIn(['gallery', 'tags']).map(x => <Chip
-                                        key={x}
-                                        label={x}
-                                        className={classes.chip}
-                                        component="a"
-                                        href="#chip"
-                                        variant="outlined"
-                                        color={
-                                            currentBreakpoint === 'xxs' || currentBreakpoint === 'xs'
-                                                ? 'primary'
-                                                : 'secondary'
-                                        }
-                                        clickable
-                                    />)
+                                    ? data.getIn(['gallery', 'tags']).map(x =>
+                                        renderTag(classes, currentBreakpoint, isSSR, x, getTagLink))
                                     : null}
                             </TagsWrapper>
                         </VideoPlayer>
@@ -323,6 +345,7 @@ export default compose(
             currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
             currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+            routerContext: getRouterContext(state)
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -350,6 +373,11 @@ export default compose(
             e.preventDefault()
             props.removeVideoFromFavorite(id)
         },
+        getTagLink: props => searchQuery => routerGetters.findVideos.link(
+            g(props, 'routerContext'),
+            {searchQuery},
+            ['searchQuery'],
+        ),
     }),
     reduxForm({
         form: 'reportForm',
