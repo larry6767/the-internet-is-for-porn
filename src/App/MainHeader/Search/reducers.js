@@ -4,13 +4,14 @@ import {
     provedHandleActions,
     plainProvedGet as g,
     ImmutablePropTypes,
+    PropTypes,
 } from '../../helpers'
 
 import actions from './actions'
 
 const
     stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
-        suggestions: ImmutablePropTypes.list
+        suggestions: ImmutablePropTypes.listOf(PropTypes.string),
     })
 
 export default provedHandleActions(stateModel, {

@@ -40,6 +40,13 @@ const
         }}
     />,
 
+    renderSuggestionsContainer = options => <Paper
+        {...options.containerProps}
+        square
+    >
+        {options.children}
+    </Paper>,
+
     suggestionStyle = Object.freeze({fontWeight: 300}),
     hlSuggestionStyle = Object.freeze({fontWeight: 500}),
 
@@ -103,11 +110,7 @@ const
             suggestion: g(classes, 'suggestion'),
         }}
 
-        renderSuggestionsContainer={options =>
-            <Paper {...options.containerProps} square>
-                {options.children}
-            </Paper>
-        }
+        renderSuggestionsContainer={renderSuggestionsContainer}
     />),
 
     Search = props => <SearchForm
