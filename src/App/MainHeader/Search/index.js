@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import queryString from 'query-string'
 import {get, throttle} from 'lodash'
 import {compose, withHandlers, withPropsOnChange} from 'recompose'
@@ -111,24 +111,39 @@ const
         }}
 
         renderSuggestionsContainer={renderSuggestionsContainer}
-    />),
+    />)
 
-    Search = props => <SearchForm
-        action={routerGetters.findVideos.link(g(props, 'routerContext'))} // for SSR
-    >
-        <Field
-            name={g(props, 'localizedKey')}
-            type="text"
-            props={props}
-            component={RenderAutosuggest}
-        />
-        <SearchButton
-            type="submit"
-            onClick={g(props, 'onSubmitHandler')}
-            title={ig(g(props, 'i18nSearch'), 'buttonTitle')}
-        />
-    </SearchForm>
+class Search extends Component {
+    shouldComponentUpdate(nextProps) {
+        const
+            prevProps = g(this, 'props')
 
+        return !(
+            g(prevProps, 'searchSuggestions') === g(nextProps, 'searchSuggestions')
+        )
+    }
+
+    render() {
+        const
+            props = g(this, 'props')
+
+        return <SearchForm
+            action={routerGetters.findVideos.link(g(props, 'routerContext'))} // for SSR
+        >
+            <Field
+                name={g(props, 'localizedKey')}
+                type="text"
+                props={props}
+                component={RenderAutosuggest}
+            />
+            <SearchButton
+                type="submit"
+                onClick={g(props, 'onSubmitHandler')}
+                title={ig(g(props, 'i18nSearch'), 'buttonTitle')}
+            />
+        </SearchForm>
+    }
+}
 
 export default compose(
     connect(
