@@ -1,8 +1,7 @@
 import React from 'react'
 import queryString from 'query-string'
-import {get} from 'lodash'
-import {Record, List} from 'immutable'
-import {compose, withHandlers} from 'recompose'
+import {get, throttle} from 'lodash'
+import {compose, withHandlers, withPropsOnChange} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, Field, formValueSelector} from 'redux-form/immutable'
 import Autosuggest from 'react-autosuggest'
@@ -15,7 +14,6 @@ import {
     immutableProvedGet as ig,
     plainProvedGet as g,
     PropTypes,
-    ImmutablePropTypes,
     setPropTypes,
     getRouterContext,
 } from '../../helpers'
@@ -61,19 +59,37 @@ const
         </MenuItem>
     },
 
-    renderAutosuggest = ({
-        classes, i18nSearch, search, input,
-        loadSuggestions, clearSuggestions,
-        onSubmitHandler, getSuggestionValue,
+    RenderAutosuggest = compose(
+        setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+            classes: PropTypes.shape({
+                container: PropTypes.string,
+                suggestionsContainerOpen: PropTypes.string,
+                suggestionsList: PropTypes.string,
+                suggestion: PropTypes.string,
+            }),
+
+            searchSuggestions: PropTypes.arrayOf(PropTypes.string),
+            i18nSearch: immutableI18nSearchModel,
+            input: PropTypes.object, // input props
+
+            loadSuggestions: PropTypes.func,
+            clearSuggestions: PropTypes.func,
+            getSuggestionValue: PropTypes.func,
+            onSubmitHandler: PropTypes.func,
+        })
+    )(({
+        classes, i18nSearch, searchSuggestions, input,
+        loadSuggestions, clearSuggestions, getSuggestionValue, onSubmitHandler,
     }) => <Autosuggest
         renderInputComponent={renderInputComponent}
-        suggestions={ig(search, 'suggestions').toJS()}
+        suggestions={searchSuggestions}
         getSuggestionValue={getSuggestionValue}
         renderSuggestion={renderSuggestion}
 
         onSuggestionsFetchRequested={loadSuggestions}
         onSuggestionsClearRequested={clearSuggestions}
         onSuggestionSelected={onSubmitHandler}
+
         inputProps={{
             classes,
             i18nSearch,
@@ -92,7 +108,7 @@ const
                 {options.children}
             </Paper>
         }
-    />,
+    />),
 
     Search = props => <SearchForm
         action={routerGetters.findVideos.link(g(props, 'routerContext'))} // for SSR
@@ -101,49 +117,57 @@ const
             name={g(props, 'localizedKey')}
             type="text"
             props={props}
-            component={renderAutosuggest}
+            component={RenderAutosuggest}
         />
         <SearchButton
             type="submit"
             onClick={g(props, 'onSubmitHandler')}
             title={ig(g(props, 'i18nSearch'), 'buttonTitle')}
         />
-    </SearchForm>,
-
-    SearchRecord = Record({
-        suggestions: List(),
-    })
+    </SearchForm>
 
 
 export default compose(
     connect(
-        state => ({
-            search: SearchRecord(ig(state, ['app', 'mainHeader', 'search'])),
-            i18nSearch: ig(state, 'app', 'locale', 'i18n', 'search'),
-            routerContext: getRouterContext(state),
-            searchQuery: formValueSelector('searchForm')(
-                state,
-                ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')
-            ) || null,
-            localizedKey: ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey'),
-            initialValues: {
-                [ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')]: get( // for SSR
-                    queryString.parse(ig(state, 'router', 'location', 'search')),
-                    [ig(getRouterContext(state), 'router', 'searchQuery', 'qsKey')],
-                    null
-                ),
-            },
-        }),
+        state => {
+            const
+                routerContext = getRouterContext(state),
+                searchQueryQsKey = ig(routerContext, 'router', 'searchQuery', 'qsKey')
+
+            return {
+                routerContext,
+                localizedKey: searchQueryQsKey,
+                searchSuggestions: ig(state, ['app', 'mainHeader', 'search', 'suggestions']),
+                i18nSearch: ig(state, 'app', 'locale', 'i18n', 'search'),
+                searchQuery: formValueSelector('searchForm')(state, searchQueryQsKey) || null,
+            }
+        },
         {
             runSearch: g(actions, 'runSearch'),
             setEmptySuggestions: g(actions, 'setEmptySuggestions'),
             suggestionsFetchRequest: g(actions, 'suggestionsFetchRequest'),
         }
     ),
+    withPropsOnChange([], props => {
+        const
+            searchQueryQsKey = g(props, 'localizedKey'),
+            qs = queryString.parse(ig(props.routerContext, 'location', 'search'))
+
+        return {
+            initialValues: {
+                [searchQueryQsKey]: get(qs, [searchQueryQsKey], null), // for SSR
+            },
+
+            suggestionsFetchRequest: throttle(props.suggestionsFetchRequest, 500),
+        }
+    }),
     reduxForm({
         form: 'searchForm',
         enableReinitialize: true,
     }),
+    withPropsOnChange(['searchSuggestions'], props => ({
+        searchSuggestions: Object.freeze(g(props, 'searchSuggestions').toJS()),
+    })),
     withHandlers({
         loadSuggestions: props => ({value, reason}) => {
             props.suggestionsFetchRequest({searchQuery: value})
@@ -189,10 +213,7 @@ export default compose(
             suggestion: PropTypes.string,
         }),
 
-        search: ImmutablePropTypes.exactRecordOf({
-            suggestions: ImmutablePropTypes.list,
-        }),
-
+        searchSuggestions: PropTypes.arrayOf(PropTypes.string),
         i18nSearch: immutableI18nSearchModel,
         routerContext: routerContextModel,
         searchQuery: PropTypes.nullable(PropTypes.string),
