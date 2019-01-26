@@ -1,15 +1,7 @@
 import {fromJS, List} from 'immutable'
 
-import {
-    plainProvedGet as g,
-    provedHandleActions,
-} from '../helpers'
-
-import {
-    PageTextRecord,
-    defaultOrientationCode,
-} from '../models'
-
+import {plainProvedGet as g, provedHandleActions} from '../helpers'
+import {PageTextRecord} from '../models'
 import {stateModel} from './models'
 import actions from './actions'
 
@@ -19,7 +11,7 @@ export default
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            lastOrientationCode: g(payload, 'orientationCode'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageText: PageTextRecord(),
             nichesList: List(),
             pornstarsList: List(),
@@ -28,7 +20,7 @@ export default
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            lastOrientationCode: g(payload, 'orientationCode'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageText: PageTextRecord(g(payload, 'data', 'pageText')),
             nichesList: List(fromJS(g(payload, 'data', 'nichesList'))),
             pornstarsList: List(fromJS(g(payload, 'data', 'pornstarsList'))),
@@ -45,7 +37,7 @@ export default
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        lastOrientationCode: defaultOrientationCode,
+        lastPageRequestParams: null,
         pageText: PageTextRecord(),
         nichesList: [],
         pornstarsList: []

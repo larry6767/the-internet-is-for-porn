@@ -1,12 +1,9 @@
-import {
-    ImmutablePropTypes,
-    PropTypes,
-} from '../helpers'
+import {ImmutablePropTypes, PropTypes} from '../helpers'
 
 import {
     immutablePageTextModel,
     immutableModelsListModel,
-    orientationCodes,
+    pageRequestParamsModel,
 } from '../models'
 
 const
@@ -14,12 +11,14 @@ const
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
-        lastOrientationCode: PropTypes.oneOf(orientationCodes),
+        lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageText: immutablePageTextModel,
         modelsList: immutableModelsListModel,
     },
 
-    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact(model),
+    stateModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exact(model),
+
     dataModel = process.env.NODE_ENV === 'production' ? null :
         ImmutablePropTypes.exactRecordOf(model)
 

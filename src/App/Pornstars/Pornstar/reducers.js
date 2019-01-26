@@ -1,15 +1,7 @@
 import {fromJS, List} from 'immutable'
 
-import {
-    provedHandleActions,
-    plainProvedGet as g,
-    immutableProvedGet as ig
-} from '../../helpers'
-
-import {
-    PageTextRecord,
-    defaultOrientationCode,
-} from '../../models'
+import {provedHandleActions, plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
+import {PageTextRecord} from '../../models'
 import {stateModel} from './models'
 import actions from './actions'
 
@@ -20,8 +12,7 @@ export default
             isLoaded: false,
             isFailed: false,
             modelInfoIsOpen: false,
-            lastOrientationCode: g(payload, 'orientationCode'),
-            lastSubPageForRequest: g(payload, 'subPageForRequest'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: 1,
             pageText: PageTextRecord(),
             pagesCount: 1,
@@ -39,8 +30,7 @@ export default
             isLoaded: true,
             isFailed: false,
             modelInfoIsOpen: false,
-            lastOrientationCode: g(payload, 'orientationCode'),
-            lastSubPageForRequest: g(payload, 'subPageForRequest'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: g(payload, 'data', 'pageNumber'),
             pageText: PageTextRecord(g(payload, 'data', 'pageText')),
             pagesCount: g(payload, 'data', 'pagesCount'),
@@ -79,8 +69,7 @@ export default
         isLoaded: false,
         isFailed: false,
         modelInfoIsOpen: false,
-        lastOrientationCode: defaultOrientationCode,
-        lastSubPageForRequest: '',
+        lastPageRequestParams: null,
         pageNumber: 1,
         pageText: PageTextRecord(),
         pagesCount: 1,

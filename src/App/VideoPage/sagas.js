@@ -2,9 +2,8 @@ import {get} from 'lodash'
 import {put, takeEvery, select} from 'redux-saga/effects'
 
 import {
-    getProvedPageKey,
+    obtainPageData,
     getHeaderText,
-    getPageData,
     plainProvedGet as g,
     immutableProvedGet as ig,
 } from '../helpers'
@@ -17,38 +16,28 @@ import actions from './actions'
 export function* loadVideoPageFlow(action, ssrContext) {
     try {
         const
-            reqData = yield select(x => ({
-                localeCode: ig(x, 'app', 'locale', 'localeCode'),
-                orientationCode: g(action, 'payload', 'orientationCode'),
-                page: getProvedPageKey('video'),
-                subPageCode: g(action, 'payload', 'subPageForRequest'),
-            }))
+            isSSR = yield select(x => ig(x, 'app', 'ssr', 'isSSR')),
+            pageRequestParams = g(action, 'payload', 'pageRequestParams'),
 
-        let data
-
-        if (yield select(x => ig(x, 'app', 'ssr', 'isSSR')))
-            data = yield ssrContext.getPageData(reqData)
-        else {
-            const
-                href = window.location.href,
-                time = new Date().toLocaleString("en-US", {
+            reportData = isSSR ? null : {
+                href: window.location.href,
+                time: new Date().toLocaleString("en-US", {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
                     hour: 'numeric',
                     minute: 'numeric',
                 })
+            }
 
-            data = yield getPageData(reqData)
-            yield put(actions.setTimeAndHrefForReport({href, time}))
-        }
+        const
+            data = yield obtainPageData(ssrContext, 'video', pageRequestParams)
+
+        if ( ! isSSR)
+            yield put(actions.setTimeAndHrefForReport(reportData))
 
         yield put(headerActions.setNewText(getHeaderText(data, false, false)))
-        yield put(actions.loadPageSuccess({
-            orientationCode: g(reqData, 'orientationCode'),
-            subPageForRequest: g(reqData, 'subPageCode'),
-            data,
-        }))
+        yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {
         console.error('loadAllMoviesPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())

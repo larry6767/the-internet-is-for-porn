@@ -1,8 +1,6 @@
 // TODO: this page needs propTypes
 import React from 'react'
-import {get} from 'lodash'
-import {Record, Map, List} from 'immutable'
-import queryString from 'query-string'
+import {Record} from 'immutable'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core'
@@ -11,9 +9,10 @@ import {CircularProgress, Typography} from '@material-ui/core'
 import {
     getHeaderText,
     getRouterContext,
-    localizedGetSubPage,
     immutableProvedGet as ig,
     plainProvedGet as g,
+    getPageRequestParams,
+    doesItHaveToBeReloaded,
 } from '../helpers'
 
 import {routerGetters} from '../../router-builder'
@@ -30,18 +29,21 @@ import {muiStyles} from './assets/muiStyles'
 
 const
     FindVideosRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
-        lastOrientationCode: '',
-        lastSubPageForRequest: '',
-        pageNumber: 1,
-        pageText: Map(),
-        pagesCount: 1,
-        sortList: List(),
+        isLoading: null,
+        isLoaded: null,
+        isFailed: null,
+
+        lastPageRequestParams: null,
+
+        pageText: null,
+
+        pageNumber: null,
+        pagesCount: null,
+        itemsCount: null,
+
         currentSort: null,
-        itemsCount: 0,
-        videoList: List(),
+        sortList: null,
+        videoList: null,
     }),
 
     FindVideos = ({
@@ -93,36 +95,12 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({
-        search, routerContext, findVideos,
-        loadPage, setHeaderText, currentOrientation,
-    }) => {
+    loadPageFlow = ({findVideos, loadPage, setHeaderText, routerContext, match}) => {
         const
-            qs = queryString.parse(search),
-            ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
-            pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
-            searchQuery = get(qs, [ig(routerContext, 'router', 'searchQuery', 'qsKey')], null),
-            getSubPage = localizedGetSubPage(routerContext),
-            subPageForRequest = getSubPage(null, ordering, pagination, [], searchQuery)
+            pageRequestParams = getPageRequestParams(routerContext, match)
 
-        if (typeof subPageForRequest !== 'string')
-            throw new Error(
-                `Something went wront, unexpected "subPageForRequest" type: "${
-                    typeof subPageForRequest}"` +
-                ' (this is supposed to be provided by router via props to the component)'
-            )
-
-        // "unless" condition.
-        // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
-        if (!(
-            ig(findVideos, 'isLoading') ||
-            (
-                (ig(findVideos, 'isLoaded') || ig(findVideos, 'isFailed')) &&
-                g(currentOrientation, []) === ig(findVideos, 'lastOrientationCode') &&
-                subPageForRequest === ig(findVideos, 'lastSubPageForRequest')
-            )
-        ))
-            loadPage(subPageForRequest)
+        if (doesItHaveToBeReloaded(findVideos, pageRequestParams))
+            loadPage(pageRequestParams)
         else if (ig(findVideos, 'isLoaded'))
             setHeaderText(getHeaderText(g(findVideos, []), true))
     }
@@ -132,11 +110,9 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             findVideos: FindVideosRecord(ig(state, 'app', 'findVideos')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            search: ig(state, 'router', 'location', 'search'),
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
@@ -148,13 +124,8 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => subPageForRequest => props.loadPageRequest({
-            orientationCode: g(props, 'currentOrientation'),
-            subPageForRequest: g(subPageForRequest, []),
-        }),
-
+        loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
         setHeaderText: props => headerText => props.setNewText(headerText),
-
         chooseSort: props => newSortValue => props.setNewSort({newSortValue}),
 
         controlLinkBuilder: props => qsParams => routerGetters.findVideos.link(

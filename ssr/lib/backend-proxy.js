@@ -64,26 +64,30 @@ const
         }).end()
     },
 
-    requestHandler = siteLocales => (req, res, page, orientationCode, withSubPageCode) => {
+    requestSpecificParamsKeys =
+        Object.freeze(['child', 'subchild', 'ordering', 'pagination', 'archive', 'searchQuery']),
+
+    requestHandler = siteLocales => (req, res) => {
         const
-            localeCode = g(req, 'body', 'localeCode'),
+            body = g(req, 'body'),
+            localeCode = g(body, 'localeCode'),
 
             params = {
                 headers: proxiedHeaders(siteLocales, localeCode)(req),
-                orientationCode,
-                page,
+
+                localeCode,
+                orientationCode: g(body, 'orientationCode'),
+                page: g(body, 'page'),
             }
 
-        if (withSubPageCode)
-            params.subPageCode = req.body.subPageCode // `subPageCode` may be not set (optional)
+        for (const k of requestSpecificParamsKeys)
+            if (body.hasOwnProperty(k))
+                params[k] = g(body, k)
 
-        requestPageData(siteLocales, localeCode)(params)
+        requestPageData(siteLocales)(params)
         .then(x => res.json(x).end())
         .catch(jsonThrow500(req, res))
     },
-
-    pageKeysWithSubPageCode =
-        Object.freeze(['niche', 'allMovies', 'pornstar', 'video', 'findVideos']),
 
     getPageData = siteLocales => (({validTopLevelKeys}) => (req, res) => {
         const
@@ -135,10 +139,9 @@ const
                 },
             })
 
-        if (g(apiLocaleMapping, localeCode, 'pageCode').hasOwnProperty(page)) {
-            const withSubPageCode = includes(pageKeysWithSubPageCode, page)
-            requestHandler(siteLocales)(req, res, page, orientationCode, withSubPageCode)
-        } else
+        if (g(apiLocaleMapping, localeCode, 'pageCode').hasOwnProperty(page))
+            requestHandler(siteLocales)(req, res)
+        else
             jsonThrow400(req, res)('Unexpected/unknown "page" value in request body', {
                 request: {
                     method,
@@ -149,7 +152,9 @@ const
                 },
             })
     })({
-        validTopLevelKeys: Object.freeze(['localeCode', 'orientationCode', 'page', 'subPageCode']),
+        validTopLevelKeys: Object.freeze(
+            ['localeCode', 'orientationCode', 'page'].concat(requestSpecificParamsKeys)
+        ),
     }),
 
     getSiteLocaleData = (siteLocales, defaultSiteLocaleCode) => (req, res) => {

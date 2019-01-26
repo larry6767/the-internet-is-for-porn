@@ -1,13 +1,8 @@
 import {fromJS, List, Map} from 'immutable'
 import {handleActions} from 'redux-actions'
 
-import {
-    plainProvedGet as g
-} from '../helpers'
-import {
-    PageTextRecord,
-    defaultOrientationCode,
-} from '../models'
+import {plainProvedGet as g} from '../helpers'
+import {PageTextRecord} from '../models'
 import actions from './actions'
 
 export default
@@ -16,8 +11,7 @@ export default
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            lastOrientationCode: g(payload, 'orientationCode'),
-            lastSubPageForRequest: g(payload, 'subPageForRequest'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
             pageText: PageTextRecord(),
@@ -28,8 +22,7 @@ export default
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            lastOrientationCode: g(payload, 'orientationCode'),
-            lastSubPageForRequest: g(payload, 'subPageForRequest'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
             pageText: PageTextRecord(fromJS(g(payload, 'data', 'pageText'))),
@@ -82,8 +75,7 @@ export default
         reportIsSending: false,
         reportIsSent: false,
         reportIsNotSent: false,
-        lastOrientationCode: defaultOrientationCode,
-        lastSubPageForRequest: '',
+        lastPageRequestParams: null,
         inlineAdvertisementIsShowed: true,
         reportDialogIsOpen: false,
         pageText: PageTextRecord(),

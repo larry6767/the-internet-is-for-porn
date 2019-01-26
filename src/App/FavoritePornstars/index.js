@@ -11,14 +11,14 @@ import {
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
-    PropTypes,
     setPropTypes,
+    getPageRequestParams,
+    doesItHaveToBeReloaded,
 } from '../helpers'
 
 import {
     immutableI18nButtonsModel,
     routerContextModel,
-    orientationCodes,
 } from '../models'
 
 import {routerGetters} from '../../router-builder'
@@ -38,8 +38,11 @@ const
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        pageNumber: 1,
+
+        lastPageRequestParams: null,
+
         pageText: Map(),
+        pageNumber: 1,
         pagesCount: 1,
         itemsCount: 0,
         modelsList: List(),
@@ -91,14 +94,23 @@ const
                 </PageWrapper>
             </Content>
         }
-    </Page>
+    </Page>,
+
+    loadPageFlow = ({favorite, loadPage, setHeaderText, routerContext, match}) => {
+        const
+            pageRequestParams = getPageRequestParams(routerContext, match)
+
+        if (doesItHaveToBeReloaded(favorite, pageRequestParams))
+            loadPage(pageRequestParams)
+        else if (ig(favorite, 'isLoaded'))
+            setHeaderText(getHeaderText(g(favorite, []), true))
+    }
 
 export default compose(
     orientationPortal,
     sectionPortal,
     connect(
         state => ({
-            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
@@ -110,10 +122,7 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => () => props.loadPageRequest({
-            orientationCode: g(props, 'currentOrientation'),
-        }),
-
+        loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
         setHeaderText: props => headerText => props.setNewText(headerText),
 
         controlLinkBuilder: props => qsParams =>
@@ -131,15 +140,15 @@ export default compose(
     }),
     lifecycle({
         componentDidMount() {
-            if (!ig(this.props.favorite, 'isLoading') && !ig(this.props.favorite, 'isLoaded'))
-                this.props.loadPage()
-            else if (ig(this.props.favorite, 'isLoaded'))
-                this.props.setHeaderText(getHeaderText(g(this, 'props', 'favorite'), true))
-        }
+            loadPageFlow(this.props)
+        },
+
+        componentWillReceiveProps(nextProps) {
+            loadPageFlow(nextProps)
+        },
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        currentOrientation: PropTypes.oneOf(orientationCodes),
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
     }),

@@ -7,13 +7,13 @@ import {compose} from 'recompose'
 import status500 from './App/helpers/status500BranchResolver'
 
 import {
-    localizedGetSubPage,
     plainProvedGet as g,
     immutableProvedGet as ig,
     PropTypes,
     assertPropTypes,
     setPropTypes,
     get404PageText,
+    getPageRequestParams,
 } from './App/helpers'
 
 import {routerContextModel, orientationCodes, defaultOrientationCode} from './App/models'
@@ -62,6 +62,7 @@ import NotFound from './App/NotFound'
 
 const
     getQs = r => queryString.parse(ig(r, 'location', 'search')),
+
     renderQs = qs => g(Object.keys(qs), 'length') > 0 ? `?${
         queryString.stringify(qs).replace(/%2B/g, '+').replace(/%20/g, '+')}` : '',
 
@@ -118,7 +119,7 @@ const
             qs[qsKey] = ig(r, 'router', 'ordering', ordering, 'qsValue')
         }
 
-        if (qsParams.hasOwnProperty('pagination')) {
+        if (qsParams.hasOwnProperty('pagination') && g(qsParams, 'pagination') !== null) {
             const
                 pagination = g(qsParams, 'pagination'),
                 qsKey = ig(r, 'router', 'pagination', 'qsKey')
@@ -314,16 +315,16 @@ export const
             path: (r, orientationCode) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', orientationCode),
-                    videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
+                    video = ig(r, 'router', 'routes', 'video', 'section')
 
-                return `${orientationPfx}/${videoPfx}:child/:name`
+                return `${orientationPfx}/${video}/:child/:subchild`
             },
             link: (r, videoId, title) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
-                    videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
+                    video = ig(r, 'router', 'routes', 'video', 'section')
 
-                return `${orientationPfx}/${videoPfx}${videoId
+                return `${orientationPfx}/${video}/${videoId
                     }/${title.replace(/ /g, '-').replace(/\./g, '').replace(/%/g, '')}`
             },
         }),
@@ -392,8 +393,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
             if (get(props, ['staticContext', 'isPreRouting'])) {
                 const
-                    {staticContext: x} = props,
-                    action = homeActions.loadPageRequest({orientationCode})
+                    {match, staticContext: x} = props,
+                    orientedR = r.set('currentOrientation', orientationCode),
+                    pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                    action = homeActions.loadPageRequest({pageRequestParams})
 
                 x.saga = loadHomeFlow.bind(null, action)
                 x.statusCodeResolver = status500(['app', 'home', 'isFailed'])
@@ -421,8 +424,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
-                        {staticContext: x} = props,
-                        action = allNichesActions.loadPageRequest({orientationCode})
+                        {match, staticContext: x} = props,
+                        orientedR = r.set('currentOrientation', orientationCode),
+                        pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                        action = allNichesActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadAllNichesPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'niches', 'all', 'isFailed'])
@@ -446,17 +451,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
-                        qs = queryString.parse(ig(r, 'location', 'search')),
-                        {match: {params}, staticContext: x} = props,
-                        action = nicheActions.loadPageRequest({
-                            orientationCode,
-                            subPageForRequest: localizedGetSubPage(r)(
-                                g(params, 'child'),
-                                get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
-                                [g(params, 0), g(params, 1)]
-                            ),
-                        })
+                        {match, staticContext: x} = props,
+                        orientedR = r.set('currentOrientation', orientationCode),
+                        pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                        action = nicheActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadNichePageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'niches', 'niche', 'isFailed'])
@@ -480,16 +478,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
-                        qs = queryString.parse(ig(r, 'location', 'search')),
-                        {match: {params}, staticContext: x} = props,
-                        action = nicheActions.loadPageRequest({
-                            orientationCode,
-                            subPageForRequest: localizedGetSubPage(r)(
-                                g(params, 'child'),
-                                get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
-                            ),
-                        })
+                        {match, staticContext: x} = props,
+                        orientedR = r.set('currentOrientation', orientationCode),
+                        pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                        action = nicheActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadNichePageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'niches', 'niche', 'isFailed'])
@@ -518,16 +510,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
-                        qs = queryString.parse(ig(r, 'location', 'search')),
-                        {staticContext: x} = props,
-                        action = allMoviesActions.loadPageRequest({
-                            orientationCode,
-                            subPageForRequest: localizedGetSubPage(r)(
-                                null,
-                                get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
-                            ),
-                        })
+                        {match, staticContext: x} = props,
+                        orientedR = r.set('currentOrientation', orientationCode),
+                        pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                        action = allMoviesActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadAllMoviesPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
@@ -551,17 +537,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
-                        qs = queryString.parse(ig(r, 'location', 'search')),
-                        {match: {params}, staticContext: x} = props,
-                        action = allMoviesActions.loadPageRequest({
-                            orientationCode,
-                            subPageForRequest: localizedGetSubPage(r)(
-                                null,
-                                get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
-                                [g(params, 0), g(params, 1)]
-                            ),
-                        })
+                        {match, staticContext: x} = props,
+                        orientedR = r.set('currentOrientation', orientationCode),
+                        pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                        action = allMoviesActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadAllMoviesPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
@@ -590,8 +569,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
-                        {staticContext: x} = props,
-                        action = pornstarsActions.loadPageRequest({orientationCode})
+                        {match, staticContext: x} = props,
+                        orientedR = r.set('currentOrientation', orientationCode),
+                        pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                        action = pornstarsActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadPornstarsPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'pornstars', 'all', 'isFailed'])
@@ -615,16 +596,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
-                        qs = queryString.parse(ig(r, 'location', 'search')),
-                        {match: {params}, staticContext: x} = props,
-                        action = pornstarActions.loadPageRequest({
-                            orientationCode,
-                            subPageForRequest: localizedGetSubPage(r)(
-                                g(params, 'child'),
-                                get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null)
-                            ),
-                        })
+                        {match, staticContext: x} = props,
+                        orientedR = r.set('currentOrientation', orientationCode),
+                        pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                        action = pornstarActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadPornstarPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'pornstars', 'pornstar', 'isFailed'])
@@ -655,11 +630,13 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         const currentSection = 'favorite'
 
         if (get(props, ['staticContext', 'isPreRouting'])) {
-            const {staticContext: x} = props
-            x.saga = loadFavoritePageFlow.bind(
-                null,
-                favoriteActions.loadPageRequest({orientationCode: defaultOrientationCode})
-            )
+            const
+                {match, staticContext: x} = props,
+                orientedR = r.set('currentOrientation', defaultOrientationCode),
+                pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                action = favoriteActions.loadPageRequest({pageRequestParams})
+
+            x.saga = loadFavoritePageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'favorite', 'isFailed'])
             x.pageTextResolver = state => ig(state, ['app', 'favorite', 'pageText'])
             x.currentSection = currentSection
@@ -676,11 +653,13 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         const currentSection = 'favorite'
 
         if (get(props, ['staticContext', 'isPreRouting'])) {
-            const {staticContext: x} = props
-            x.saga = loadFavoritePornstarsPageFlow.bind(
-                null,
-                favoritePornstarsActions.loadPageRequest({orientationCode: defaultOrientationCode})
-            )
+            const
+                {match, staticContext: x} = props,
+                orientedR = r.set('currentOrientation', defaultOrientationCode),
+                pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                action = favoritePornstarsActions.loadPageRequest({pageRequestParams})
+
+            x.saga = loadFavoritePornstarsPageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', 'favorite', 'isFailed'])
             x.pageTextResolver = state => ig(state, ['app', 'favorite', 'pageText'])
             x.currentSection = currentSection
@@ -704,12 +683,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
-                        {match: {params}, staticContext: x} = props,
-                        action = videoPageActions.loadPageRequest({
-                            orientationCode,
-                            subPageForRequest:
-                                localizedGetSubPage(r)(`${params.child}/${params.name}`),
-                        })
+                        {match, staticContext: x} = props,
+                        orientedR = r.set('currentOrientation', orientationCode),
+                        pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                        action = videoPageActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadVideoPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'videoPage', 'isFailed'])
@@ -738,18 +715,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
-                        qs = queryString.parse(ig(r, 'location', 'search')),
-                        {staticContext: x} = props,
-                        action = findVideosActions.loadPageRequest({
-                            orientationCode,
-                            subPageForRequest: localizedGetSubPage(r)(
-                                null,
-                                get(qs, [ig(r, 'router', 'ordering', 'qsKey')], null),
-                                get(qs, [ig(r, 'router', 'pagination', 'qsKey')], null),
-                                [],
-                                get(qs, [ig(r, 'router', 'searchQuery', 'qsKey')], null)
-                            ),
-                        })
+                        {match, staticContext: x} = props,
+                        orientedR = r.set('currentOrientation', orientationCode),
+                        pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                        action = findVideosActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadFindVideosPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'findVideos', 'isFailed'])

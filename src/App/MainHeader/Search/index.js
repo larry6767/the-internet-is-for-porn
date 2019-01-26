@@ -154,9 +154,7 @@ export default compose(
     }),
     withHandlers({
         loadSuggestions: props => ({value, reason}) => {
-            props.suggestionsFetchRequest({
-                searchQuery: encodeURIComponent(value),
-            })
+            props.suggestionsFetchRequest({searchQuery: value})
         },
 
         clearSuggestions: props => () => props.setEmptySuggestions(),

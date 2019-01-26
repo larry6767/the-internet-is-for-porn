@@ -1,25 +1,22 @@
-import {get} from 'lodash'
 import React from 'react'
-import queryString from 'query-string'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {CircularProgress, Typography} from '@material-ui/core'
-import {Record, List, remove} from 'immutable'
+import {Record, remove} from 'immutable'
 
 import {
     getHeaderText,
-    localizedGetSubPage,
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
     setPropTypes,
     PropTypes,
     ImmutablePropTypes,
+    getPageRequestParams,
+    doesItHaveToBeReloaded,
 } from '../../helpers'
 
 import {
-    PageTextRecord,
-    orientationCodes,
     routerContextModel,
     immutableI18nOrderingModel,
     immutableI18nButtonsModel,
@@ -100,55 +97,35 @@ const
     </Page>,
 
     DataRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
-        modelInfoIsOpen: false,
+        isLoading: null,
+        isLoaded: null,
+        isFailed: null,
+        modelInfoIsOpen: null,
 
-        lastOrientationCode: '',
-        lastSubPageForRequest: '',
-        pageNumber: 1,
-        pageText: PageTextRecord(),
-        pagesCount: 1,
-        sortList: List(),
+        lastPageRequestParams: null,
+
+        pageText: null,
+
+        pageNumber: null,
+        pagesCount: null,
+        itemsCount: null,
+
+        sortList: null,
         currentSort: null,
-        itemsCount: 0,
-        videoList: List(),
-        modelsList: List(),
-        modelId: 0,
-        modelInfo: List(),
-        modelThumb: '',
+
+        videoList: null,
+        modelsList: null,
+        modelId: null,
+        modelInfo: null,
+        modelThumb: null,
     }),
 
-    loadPageFlow = ({
-        search, routerContext, pornstarCode, data,
-        loadPage, setHeaderText, currentOrientation,
-    }) => {
+    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
         const
-            qs = queryString.parse(search),
-            ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
-            pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
-            getSubPage = localizedGetSubPage(routerContext),
-            subPageForRequest = getSubPage(pornstarCode, ordering, pagination)
+            pageRequestParams = getPageRequestParams(routerContext, match)
 
-        if (typeof subPageForRequest !== 'string')
-            throw new Error(
-                `Something went wront, unexpected "subPageForRequest" type: "${
-                    typeof subPageForRequest}"` +
-                ' (this is supposed to be provided by router via props to the component)'
-            )
-
-        // "unless" condition.
-        // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
-        if (!(
-            ig(data, 'isLoading') ||
-            (
-                (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
-                subPageForRequest === ig(data, 'lastSubPageForRequest') &&
-                g(currentOrientation, []) === ig(data, 'lastOrientationCode')
-            )
-        ))
-            loadPage(subPageForRequest)
+        if (doesItHaveToBeReloaded(data, pageRequestParams))
+            loadPage(pageRequestParams)
         else if (ig(data, 'isLoaded'))
             setHeaderText(getHeaderText(data, true))
     }
@@ -158,11 +135,9 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             data: DataRecord(ig(state, 'app', 'pornstars', 'pornstar')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            search: ig(state, 'router', 'location', 'search'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
@@ -182,11 +157,7 @@ export default compose(
         pornstarCode: g(props, 'match', 'params', 'child'),
     })),
     withHandlers({
-        loadPage: props => subPageForRequest => props.loadPageRequest({
-            orientationCode: g(props, 'currentOrientation'),
-            subPageForRequest,
-        }),
-
+        loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
         setHeaderText: props => headerText => props.setNewText(headerText),
 
         modelInfoHandler: props => state => props.toggleModelInfo(state),
@@ -239,11 +210,9 @@ export default compose(
         },
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        currentOrientation: PropTypes.oneOf(orientationCodes),
         currentBreakpoint: PropTypes.string,
         data: dataModel,
         isSSR: PropTypes.bool,
-        search: PropTypes.string,
         routerContext: routerContextModel,
         i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,

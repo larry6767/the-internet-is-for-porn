@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
-import {Record, List} from 'immutable'
+import {Record} from 'immutable'
 import {CircularProgress, Typography} from '@material-ui/core'
 
 import {
@@ -12,14 +12,11 @@ import {
     immutableProvedGet as ig,
     setPropTypes,
     PropTypes,
+    getPageRequestParams,
+    doesItHaveToBeReloaded,
 } from '../helpers'
 
-import {
-    orientationCodes,
-    PageTextRecord,
-    routerContextModel,
-} from '../models'
-
+import {routerContextModel} from '../models'
 import {dataModel} from './models'
 import {routerGetters} from '../../router-builder'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
@@ -53,25 +50,22 @@ const
     </Page>,
 
     DataRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
+        isLoading: null,
+        isLoaded: null,
+        isFailed: null,
 
-        lastOrientationCode: '',
+        lastPageRequestParams: null,
 
-        modelsList: List(),
-        pageText: PageTextRecord(),
+        modelsList: null,
+        pageText: null,
     }),
 
-    loadPageFlow = ({data, loadPage, setHeaderText, currentOrientation}) => {
-        if (!(
-            ig(data, 'isLoading') ||
-            (
-                (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
-                g(currentOrientation, []) === ig(data, 'lastOrientationCode')
-            )
-        ))
-            loadPage()
+    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
+        const
+            pageRequestParams = getPageRequestParams(routerContext, match)
+
+        if (doesItHaveToBeReloaded(data, pageRequestParams))
+            loadPage(pageRequestParams)
         else if (ig(data, 'isLoaded'))
             setHeaderText(getHeaderText(g(data, []), true))
     }
@@ -81,7 +75,6 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             data: DataRecord(ig(state, 'app', 'pornstars', 'all')),
             routerContext: getRouterContext(state),
             i18nPornstarsHeader: getHeaderWithOrientation(state, 'pornstars'),
@@ -92,10 +85,7 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => () => props.loadPageRequest({
-            orientationCode: g(props, 'currentOrientation'),
-        }),
-
+        loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
         setHeaderText: props => headerText => props.setNewText(headerText),
 
         linkBuilder: props => child =>
@@ -111,7 +101,6 @@ export default compose(
         },
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        currentOrientation: PropTypes.oneOf(orientationCodes),
         data: dataModel,
         routerContext: routerContextModel,
         i18nPornstarsHeader: PropTypes.string,

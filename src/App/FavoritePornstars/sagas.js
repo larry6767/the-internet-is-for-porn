@@ -1,36 +1,18 @@
-import {put, takeEvery, select} from 'redux-saga/effects'
+import {put, takeEvery} from 'redux-saga/effects'
 
-import {
-    getProvedPageKey,
-    getHeaderText,
-    getPageData,
-    plainProvedGet as g,
-    immutableProvedGet as ig,
-} from '../helpers'
-
+import {obtainPageData, getHeaderText, plainProvedGet as g} from '../helpers'
 import errorActions from '../../generic/ErrorMessage/actions'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
 
 export function* loadFavoritePornstarsPageFlow(action, ssrContext) {
     try {
-        const reqData = yield select(x => ({
-            localeCode: ig(x, 'app', 'locale', 'localeCode'),
-            orientationCode: g(action, 'payload', 'orientationCode'),
-            page: getProvedPageKey('favoritePornstars'),
-        }))
-
-        let data
-        if (yield select(x => ig(x, 'app', 'ssr', 'isSSR')))
-            data = yield ssrContext.getPageData(reqData)
-        else
-            data = yield getPageData(reqData)
+        const
+            pageRequestParams = g(action, 'payload', 'pageRequestParams'),
+            data = yield obtainPageData(ssrContext, 'favoritePornstars', pageRequestParams)
 
         yield put(headerActions.setNewText(getHeaderText(data)))
-        yield put(actions.loadPageSuccess({
-            orientationCode: g(reqData, 'orientationCode'),
-            data: g(data, []),
-        }))
+        yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {
         console.error('loadFavoritePornstarsPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())

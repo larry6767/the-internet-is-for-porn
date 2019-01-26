@@ -1,8 +1,6 @@
 // TODO: this page needs propTypes
-import {get} from 'lodash'
 import React from 'react'
-import {Record, List} from 'immutable'
-import queryString from 'query-string'
+import {Record} from 'immutable'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {withStyles} from '@material-ui/core'
@@ -10,16 +8,16 @@ import {CircularProgress, Typography} from '@material-ui/core'
 
 import {
     getHeaderWithOrientation,
-    localizedGetSubPage,
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
-    PropTypes,
     setPropTypes,
     getHeaderText,
+    getPageRequestParams,
+    doesItHaveToBeReloaded,
 } from '../helpers'
 
-import {immutableI18nButtonsModel, orientationCodes, PageTextRecord} from '../models'
+import {immutableI18nButtonsModel} from '../models'
 import {routerGetters} from '../../router-builder'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
@@ -35,27 +33,26 @@ import {muiStyles} from './assets/muiStyles'
 
 const
     AllMoviesRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
+        isLoading: null,
+        isLoaded: null,
+        isFailed: null,
 
-        currentPage: '',
-        lastSubPageForRequest: '',
-        lastOrientationCode: '',
+        currentPage: null,
+        lastPageRequestParams: null,
 
-        pageNumber: 1,
-        pageText: PageTextRecord,
-        pagesCount: 1,
+        pageNumber: null,
+        pageText: null,
+        pagesCount: null,
 
-        tagList: List(),
-        tagArchiveList: List(),
-        sortList: List(),
+        tagList: null,
+        tagArchiveList: null,
+        sortList: null,
         currentSort: null,
         archiveFilms: null,
         tagArchiveListOlder: null,
         tagArchiveListNewer: null,
-        itemsCount: 0,
-        videoList: List(),
+        itemsCount: null,
+        videoList: null,
     }),
 
     AllMovies = ({
@@ -127,43 +124,12 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({
-        search, routerContext, allMovies, archiveParams,
-        loadPage, setHeaderText, currentOrientation,
-    }) => {
+    loadPageFlow = ({allMovies, loadPage, setHeaderText, routerContext, match}) => {
         const
-            qs = queryString.parse(search),
-            ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
-            pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
-            getSubPage = localizedGetSubPage(routerContext),
+            pageRequestParams = getPageRequestParams(routerContext, match)
 
-            archive =
-                archiveParams === null ? null :
-                [g(archiveParams, 'year'), g(archiveParams, 'month')],
-
-            subPageForRequest =
-                archive !== null
-                ? getSubPage(null, ordering, pagination, archive)
-                : getSubPage(null, ordering, pagination)
-
-        if (typeof subPageForRequest !== 'string')
-            throw new Error(
-                `Something went wront, unexpected "subPageForRequest" type: "${
-                    typeof subPageForRequest}"` +
-                ' (this is supposed to be provided by router via props to the component)'
-            )
-
-        // "unless" condition.
-        // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
-        if (!(
-            ig(allMovies, 'isLoading') ||
-            (
-                (ig(allMovies, 'isLoaded') || ig(allMovies, 'isFailed')) &&
-                g(currentOrientation, []) === ig(allMovies, 'lastOrientationCode') &&
-                subPageForRequest === ig(allMovies, 'lastSubPageForRequest')
-            )
-        ))
-            loadPage(subPageForRequest)
+        if (doesItHaveToBeReloaded(allMovies, pageRequestParams))
+            loadPage(pageRequestParams)
         else if (ig(allMovies, 'isLoaded'))
             setHeaderText(getHeaderText(g(allMovies, []), true))
     }
@@ -173,11 +139,9 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             allMovies: AllMoviesRecord(ig(state, 'app', 'allMovies')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            search: ig(state, 'router', 'location', 'search'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
@@ -192,16 +156,12 @@ export default compose(
     ),
     withProps(props => ({
         archiveParams: !(props.match.params[0] && props.match.params[1]) ? null : {
-            year: g(props, 'match', 'params', 0),
-            month: g(props, 'match', 'params', 1),
+            year: Number(g(props, 'match', 'params', 0)),
+            month: Number(g(props, 'match', 'params', 1)),
         },
     })),
     withHandlers({
-        loadPage: props => subPageForRequest => props.loadPageRequest({
-            orientationCode: g(props, 'currentOrientation'),
-            subPageForRequest,
-        }),
-
+        loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
         setHeaderText: props => headerText => props.setNewText(headerText),
 
         chooseSort: props => newSortValue => props.setNewSort({
@@ -253,6 +213,5 @@ export default compose(
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         i18nButtons: immutableI18nButtonsModel,
-        currentOrientation: PropTypes.oneOf(orientationCodes),
     }),
 )(AllMovies)

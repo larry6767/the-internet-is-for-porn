@@ -1,4 +1,4 @@
-import {Record, List} from 'immutable'
+import {Record} from 'immutable'
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
@@ -22,14 +22,11 @@ import {
     plainProvedGet as g,
     PropTypes,
     setPropTypes,
+    getPageRequestParams,
+    doesItHaveToBeReloaded,
 } from '../helpers'
 
-import {
-    orientationCodes,
-    PageTextRecord,
-    routerContextModel,
-} from '../models'
-
+import {routerContextModel} from '../models'
 import {dataModel} from './models'
 import ErrorContent from '../../generic/ErrorContent'
 import PageTextHelmet from '../../generic/PageTextHelmet'
@@ -94,25 +91,22 @@ const
     </AllNichesPage>,
 
     NichesRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
+        isLoading: null,
+        isLoaded: null,
+        isFailed: null,
 
-        lastOrientationCode: '',
+        lastPageRequestParams: null,
 
-        nichesList: List(),
-        pageText: PageTextRecord(),
+        nichesList: null,
+        pageText: null,
     }),
 
-    loadPageFlow = ({currentOrientation, data, loadPage, setHeaderText}) => {
-        if (!(
-            ig(data, 'isLoading') ||
-            (
-                (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
-                g(currentOrientation, []) === ig(data, 'lastOrientationCode')
-            )
-        ))
-            loadPage()
+    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
+        const
+            pageRequestParams = getPageRequestParams(routerContext, match)
+
+        if (doesItHaveToBeReloaded(data, pageRequestParams))
+            loadPage(pageRequestParams)
         else if (ig(data, 'isLoaded'))
             setHeaderText(getHeaderText(g(data, []), true))
    }
@@ -123,7 +117,6 @@ export default compose(
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             data: NichesRecord(ig(state, 'app', 'niches', 'all')),
             i18nAllNichesHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'allNiches'),
             routerContext: getRouterContext(state),
@@ -134,9 +127,7 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => () =>
-            props.loadPageRequest({orientationCode: g(props, 'currentOrientation')}),
-
+        loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
         setHeaderText: props => headerText => props.setNewText(headerText),
         getChildLink: props => child => routerGetters.niche.link(g(props, 'routerContext'), child),
     }),
@@ -152,7 +143,6 @@ export default compose(
     withStylesProps(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         currentBreakpoint: PropTypes.string,
-        currentOrientation: PropTypes.oneOf(orientationCodes),
         data: dataModel,
         i18nAllNichesHeader: PropTypes.string,
         routerContext: routerContextModel,

@@ -182,4 +182,42 @@ export const
     immutableNichesListModel = process.env.NODE_ENV === 'production' ? null :
         nichesListModelBuilder(true, false),
     immutableNichesListWithThumbModel = process.env.NODE_ENV === 'production' ? null :
-        nichesListModelBuilder(true, true)
+        nichesListModelBuilder(true, true),
+
+    PageRequestParamsRecord = Record({
+        orientationCode: null,
+        child: null,
+        subchild: null,
+        ordering: null,
+        pagination: null,
+        archive: null,
+        searchQuery: null,
+    }),
+
+    PageRequestArchiveParamRecord = Record({
+        year: null,
+        month: null,
+    })
+
+const
+    pageRequestParamsModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
+        orientationCode: PropTypes.string,
+        child: PropTypes.nullable(PropTypes.string),
+        subchild: PropTypes.nullable(PropTypes.string),
+        ordering: PropTypes.nullable(PropTypes.string),
+        pagination: PropTypes.nullable(PropTypes.number),
+
+        archive: PropTypes.nullable(ImmutablePropTypes.exactRecordOf({
+            year: PropTypes.number,
+            month: PropTypes.number,
+        })),
+
+        searchQuery: PropTypes.nullable(PropTypes.string),
+    })
+
+export const
+    pageRequestParamsModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.oneOfType([
+            ImmutablePropTypes.exact(pageRequestParamsModelProps),
+            ImmutablePropTypes.exactRecordOf(pageRequestParamsModelProps),
+        ])

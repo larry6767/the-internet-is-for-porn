@@ -1,14 +1,17 @@
 import {pick, map, find, omit, compact, get, set} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
+import queryString from 'query-string'
 
 import {plainProvedGet as g, PropTypes, assertPropTypes, getClassId} from '../App/helpers'
 import {pageKeys} from '../App/models'
 import {defaultHostToFetchSiteLocalesFrom} from '../config'
 import apiLocales from '../locale-mapping/backend-api'
+import routerLocales from '../locale-mapping/router'
 import {backendUrl, backendUrlForReport, backendUrlForSearch} from './helpers/backendUrl'
 import {videoItemModel} from '../generic/VideoItem/models'
 import {incomingVideoItemModel} from './helpers/requests/getFilteredVideoList'
+import getSubPage, {orderingMapping} from './helpers/getSubPage'
 
 import {
     incomingVideoPageTextModel,
@@ -374,16 +377,44 @@ if (process.env.NODE_ENV !== 'production')
         'getPageDataPageMapping'
     )
 
+                // pageKeysWithSubPageCode =
+                //     Object.freeze(['niche', 'allMovies', 'pornstar', 'video', 'findVideos']),
+
 /*
     Generic helper to obtain data from backend for specific "page".
 */
-export const getPageData = (siteLocales, localeCode) => async ({
+export const getPageData = siteLocales => async ({
     headers,
+
+    localeCode,
     orientationCode,
     page,
-    subPageCode = null, // optional
+
+    child,
+    subchild,
+    ordering,
+    pagination,
+    archive,
+    searchQuery,
 }) => {
     const
+        backOrdering = !ordering ? null : find(
+            Object.keys(orderingMapping),
+            k => g(routerLocales, localeCode, 'ordering', k, 'qsValue') === ordering
+        )
+
+    if (ordering && !backOrdering)
+        throw new Error(`"ordering" argument is broken: ${JSON.stringify(ordering)}`)
+
+    const
+        subPageCode = getSubPage(
+            child && subchild ? `${child}/${subchild}` : child,
+            backOrdering,
+            pagination,
+            archive ? [g(archive, 'year'), g(archive, 'month')] : [],
+            searchQuery
+        ),
+
         url = getPageDataUrlBuilder(localeCode, orientationCode, page, subPageCode),
         result = g(getPageDataPageMapping, page)
 
@@ -472,12 +503,18 @@ export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => 
 export const getSearchSuggestions = (siteLocales, localeCode, orientationCode) =>
     async ({headers, formData}) => {
         const
-            prepareData = x => compact(x), // 'compact' is for array with a single empty value, like ['']
-            classId = getClassId(orientationCode)
+            // 'compact' is for array with a single empty value, like ['']
+            prepareData = x => compact(x),
+
+            classId = getClassId(orientationCode),
+
+            qs = {
+                c: classId,
+                t: g(formData, 'searchQuery'),
+            }
 
         return prepareData(await fetch(
-            `${backendUrlForSearch(siteLocales, localeCode)}?c=${
-                classId}&t=${g(formData, 'searchQuery')}`,
+            `${backendUrlForSearch(siteLocales, localeCode)}?${queryString.stringify(qs)}`,
             {
                 method: 'GET',
                 headers,

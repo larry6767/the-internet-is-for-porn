@@ -2,12 +2,10 @@ import {put, takeEvery, select} from 'redux-saga/effects'
 import {push} from 'connected-react-router/immutable'
 
 import {
-    getProvedPageKey,
+    obtainPageData,
     getHeaderText,
-    getPageData,
     getRouterContext,
     plainProvedGet as g,
-    immutableProvedGet as ig,
 } from '../../helpers'
 
 import {routerGetters} from '../../../router-builder'
@@ -17,25 +15,12 @@ import actions from './actions'
 
 export function* loadPornstarPageFlow(action, ssrContext) {
     try {
-        const reqData = yield select(x => ({
-            localeCode: ig(x, 'app', 'locale', 'localeCode'),
-            orientationCode: g(action, 'payload', 'orientationCode'),
-            page: getProvedPageKey('pornstar'),
-            subPageCode: g(action, 'payload', 'subPageForRequest'),
-        }))
-
-        let data
-        if (yield select(x => ig(x, 'app', 'ssr', 'isSSR')))
-            data = yield ssrContext.getPageData(reqData)
-        else
-            data = yield getPageData(reqData)
+        const
+            pageRequestParams = g(action, 'payload', 'pageRequestParams'),
+            data = yield obtainPageData(ssrContext, 'pornstar', pageRequestParams)
 
         yield put(headerActions.setNewText(getHeaderText(data)))
-        yield put(actions.loadPageSuccess({
-            orientationCode: g(reqData, 'orientationCode'),
-            subPageForRequest: g(reqData, 'subPageCode'),
-            data,
-        }))
+        yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {
         console.error('loadPornstarPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())

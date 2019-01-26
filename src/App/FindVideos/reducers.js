@@ -1,14 +1,7 @@
 import {fromJS, List} from 'immutable'
 
 import {ImmutablePropTypes, PropTypes, provedHandleActions, plainProvedGet as g} from '../helpers'
-
-import {
-    immutablePageTextModel,
-    PageTextRecord,
-    orientationCodes,
-    defaultOrientationCode,
-} from '../models'
-
+import {immutablePageTextModel, PageTextRecord, pageRequestParamsModel} from '../models'
 import {immutableVideoItemModel} from '../../generic/VideoItem/models'
 import actions from './actions'
 
@@ -17,8 +10,7 @@ const
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
-        lastOrientationCode: PropTypes.oneOf(orientationCodes),
-        lastSubPageForRequest: PropTypes.string,
+        lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageNumber: PropTypes.number,
         pageText: immutablePageTextModel,
         pagesCount: PropTypes.number,
@@ -37,8 +29,7 @@ export default
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            lastOrientationCode: g(payload, 'orientationCode'),
-            lastSubPageForRequest: g(payload, 'subPageForRequest'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: 1,
             pageText: PageTextRecord(),
             pagesCount: 1,
@@ -51,8 +42,7 @@ export default
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            lastOrientationCode: g(payload, 'orientationCode'),
-            lastSubPageForRequest: g(payload, 'subPageForRequest'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: g(payload, 'data', 'pageNumber'),
             pageText: PageTextRecord(g(payload, 'data', 'pageText')),
             pagesCount: g(payload, 'data', 'pagesCount'),
@@ -79,8 +69,7 @@ export default
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        lastOrientationCode: defaultOrientationCode,
-        lastSubPageForRequest: '',
+        lastPageRequestParams: null,
         pageNumber: 1,
         pageText: PageTextRecord(),
         pagesCount: 1,

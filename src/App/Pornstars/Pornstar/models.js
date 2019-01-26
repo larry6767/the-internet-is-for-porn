@@ -1,12 +1,9 @@
-import {
-    ImmutablePropTypes,
-    PropTypes,
-} from '../../helpers'
+import {ImmutablePropTypes, PropTypes} from '../../helpers'
 
 import {
     immutablePageTextModel,
     immutableModelsListWithLetterModel,
-    orientationCodes,
+    pageRequestParamsModel,
 } from '../../models'
 
 import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
@@ -17,8 +14,7 @@ const
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
         modelInfoIsOpen: PropTypes.bool,
-        lastOrientationCode: PropTypes.oneOf(orientationCodes),
-        lastSubPageForRequest: PropTypes.string,
+        lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageNumber: PropTypes.number,
         pageText: immutablePageTextModel,
         pagesCount: PropTypes.number,
@@ -41,7 +37,9 @@ const
         modelThumb: PropTypes.string,
     },
 
-    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact(model),
+    stateModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exact(model),
+
     dataModel = process.env.NODE_ENV === 'production' ? null :
         ImmutablePropTypes.exactRecordOf(model)
 

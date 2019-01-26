@@ -16,7 +16,7 @@ const
                 pornstar: {section: 'porn-star'},
                 favorite: {section: 'favorite-movies'},
                 favoritePornstars: {section: 'favorite-porn-stars'},
-                video: {sectionPfx: 'video-'},
+                video: {section: 'video'},
                 findVideos: {section: 'find-videos'},
             },
             redirects: {
@@ -62,7 +62,7 @@ const
                 pornstar: {section: 'model'},
                 favorite: {section: 'favorisierten-video'},
                 favoritePornstars: {section: 'favorisierten-models'},
-                video: {sectionPfx: 'video-'},
+                video: {section: 'video'},
                 findVideos: {section: 'finde-videos'},
             },
             redirects: {
@@ -108,7 +108,7 @@ const
                 pornstar: {section: 'pornostar'},
                 favorite: {section: 'filmati-preferiti'},
                 favoritePornstars: {section: 'pornostar-preferiti'},
-                video: {sectionPfx: 'film-'},
+                video: {section: 'film'},
                 findVideos: {section: 'trova-video'},
             },
             redirects: {
@@ -154,7 +154,7 @@ const
                 pornstar: {section: ''},
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
-                video: {sectionPfx: ''},
+                video: {section: ''},
                 findVideos: {section: ''},
             },
             redirects: {
@@ -200,7 +200,7 @@ const
                 pornstar: {section: ''},
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
-                video: {sectionPfx: ''},
+                video: {section: ''},
                 findVideos: {section: ''},
             },
             redirects: {
@@ -246,7 +246,7 @@ const
                 pornstar: {section: ''},
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
-                video: {sectionPfx: ''},
+                video: {section: ''},
                 findVideos: {section: ''},
             },
             redirects: {
@@ -292,7 +292,7 @@ const
                 pornstar: {section: ''},
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
-                video: {sectionPfx: ''},
+                video: {section: ''},
                 findVideos: {section: ''},
             },
             redirects: {
@@ -338,7 +338,7 @@ const
                 pornstar: {section: ''},
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
-                video: {sectionPfx: ''},
+                video: {section: ''},
                 findVideos: {section: ''},
             },
             redirects: {
@@ -384,7 +384,7 @@ const
                 pornstar: {section: ''},
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
-                video: {sectionPfx: ''},
+                video: {section: ''},
                 findVideos: {section: ''},
             },
             redirects: {
@@ -430,7 +430,7 @@ const
                 pornstar: {section: ''},
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
-                video: {sectionPfx: ''},
+                video: {section: ''},
                 findVideos: {section: ''},
             },
             redirects: {
@@ -476,7 +476,7 @@ const
                 pornstar: {section: ''},
                 favorite: {section: ''},
                 favoritePornstars: {section: ''},
-                video: {sectionPfx: ''},
+                video: {section: ''},
                 findVideos: {section: ''},
             },
             redirects: {
