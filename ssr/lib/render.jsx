@@ -16,7 +16,10 @@ import {
     immutableProvedGet as ig,
     getRouterContext,
     getPageTextToHeadTags,
+    PropTypes,
+    assertPropTypes,
 } from '../App/helpers'
+
 import {getPureDomain} from '../App/helpers/hostLocale'
 import {buildLocalePageCodes, getLegacyOrientationPrefixes, logRequestError} from './helpers'
 import {getPageData as requestPageData} from './requests'
@@ -33,10 +36,10 @@ import i18n from '../locale-mapping/i18n'
 
 const
     getPageData =
-        (req, siteLocales, localeCode) => etc =>
-            requestPageData(siteLocales, localeCode)({
-                headers: proxiedHeaders(siteLocales, localeCode)(req),
-                ...etc
+        (req, siteLocales) => params =>
+            requestPageData(siteLocales)({
+                headers: proxiedHeaders(siteLocales, g(params, 'localeCode'))(req),
+                ...params
             }),
 
     // to fix redirects with unicode symbols
@@ -44,7 +47,24 @@ const
         const x = parse(url)
         x.pathname = x.pathname.split(/\//).map(x => encodeURIComponent(x)).join('/')
         return format(x)
-    }
+    },
+
+    preRoutingStaticRouterContextModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.oneOfType([
+            PropTypes.exact({
+                isPreRouting: PropTypes.bool,
+                url: PropTypes.string,
+            }),
+
+            PropTypes.exact({
+                isPreRouting: PropTypes.bool,
+                currentSection: PropTypes.nullable(PropTypes.string),
+                currentOrientation: PropTypes.string.isOptional,
+                saga: PropTypes.func.isOptional,
+                statusCodeResolver: PropTypes.func.isOptional,
+                pageTextResolver: PropTypes.func,
+            }),
+        ])
 
 // renders a page and makes a proper response for express.js
 export default (
@@ -73,13 +93,9 @@ export default (
         store.dispatch(appActions.fillLocaleI18n(g(i18n, localeCode)))
         store.dispatch(languageActions.setNewLanguage(localeCode))
 
-        const
-            staticRouterContext = {isPreRouting: true},
-            state = store.getState(),
-            routerContext = getRouterContext(state)
-
         {
             const
+                state = store.getState(),
                 staticLegacyRedirectsRouterContext = {},
 
                 redirectsRouterContext = getRouterContext(
@@ -102,13 +118,24 @@ export default (
             }
         }
 
+        const
+            staticRouterContext = {isPreRouting: true}
+
         // just filling `staticRouterContext` with meta info,
         // not really rendering anything.
         renderToString(
             <StaticRouter location={g(req, 'url')} context={staticRouterContext}>
-                <RouterBuilder routerContext={routerContext}/>
+                <RouterBuilder routerContext={getRouterContext(store.getState())}/>
             </StaticRouter>
         )
+
+        if (process.env.NODE_ENV !== 'production')
+            assertPropTypes(
+                preRoutingStaticRouterContextModel,
+                staticRouterContext,
+                'ssr/lib/render',
+                'pre routing staticRouterContext'
+            )
 
         if (staticRouterContext.hasOwnProperty('url')) {
             const url = g(escapeURL(g(staticRouterContext, 'url')), [])
@@ -126,15 +153,12 @@ export default (
                 g(staticRouterContext, 'currentOrientation')
             ))
 
-        if (staticRouterContext.saga) {
+        if (staticRouterContext.hasOwnProperty('saga')) {
             await new Promise((resolve, reject) => {
                 try {
                     store.runSaga(function* () {
                         try {
-                            const ssrContext = {
-                                getPageData: getPageData(req, siteLocales, localeCode),
-                            }
-
+                            const ssrContext = {getPageData: getPageData(req, siteLocales)}
                             yield all([staticRouterContext.saga(ssrContext)])
                             resolve()
                         } catch (e) {reject(e)}
@@ -143,7 +167,7 @@ export default (
             })
         }
 
-        if (staticRouterContext.statusCodeResolver)
+        if (staticRouterContext.hasOwnProperty('statusCodeResolver'))
             res.status(staticRouterContext.statusCodeResolver(store.getState()))
 
         const
@@ -160,7 +184,10 @@ export default (
                 <JssProvider registry={jssSheetsRegistry} generateClassName={generateClassName}>
                     <Provider store={store}>
                         <StaticRouter location={g(req, 'url')} context={{}}>
-                            <App sheetsManager={sheetsManager} routerContext={routerContext}>
+                            <App
+                                sheetsManager={sheetsManager}
+                                routerContext={getRouterContext(store.getState())}
+                            >
                                 {RouterBuilder}
                             </App>
                         </StaticRouter>

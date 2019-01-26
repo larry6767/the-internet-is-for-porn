@@ -6,9 +6,10 @@ import {
 import {
     immutableArchiveFilmsModel,
     immutablePageTextModel,
-    orientationCodes,
     immutableNichesListModel,
+    pageRequestParamsModel,
 } from '../../models'
+
 import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
 
 const
@@ -19,8 +20,7 @@ const
 
         currentPage: PropTypes.string,
         currentSubPage: PropTypes.string,
-        lastOrientationCode: PropTypes.oneOf(orientationCodes),
-        lastSubPageForRequest: PropTypes.string,
+        lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
 
         pageNumber: PropTypes.number,
         pagesCount: PropTypes.number,
@@ -59,7 +59,9 @@ const
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
     },
 
-    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact(model),
+    stateModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exact(model),
+
     dataModel = process.env.NODE_ENV === 'production' ? null :
         ImmutablePropTypes.exactRecordOf(model)
 

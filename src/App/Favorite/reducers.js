@@ -9,7 +9,7 @@ import {
     PropTypes,
 } from '../helpers'
 
-import {PageTextRecord, immutablePageTextModel} from '../models'
+import {PageTextRecord, immutablePageTextModel, pageRequestParamsModel} from '../models'
 import {immutableVideoItemModel} from '../../generic/VideoItem/models'
 import actions from './actions'
 
@@ -18,8 +18,9 @@ const
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
-        pageNumber: PropTypes.number,
+        lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageText: immutablePageTextModel,
+        pageNumber: PropTypes.number,
         pagesCount: PropTypes.number,
         itemsCount: PropTypes.number,
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
@@ -27,12 +28,13 @@ const
 
 export default
     provedHandleActions(stateModel, {
-        [g(actions, 'loadPageRequest')]: state => state.merge({
+        [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            pageNumber: 1,
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageText: PageTextRecord(),
+            pageNumber: 1,
             pagesCount: 1,
             itemsCount: 0,
             videoList: List(),
@@ -41,8 +43,9 @@ export default
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            pageNumber: g(payload, 'data', 'pageNumber'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageText: PageTextRecord(g(payload, 'data', 'pageText')),
+            pageNumber: g(payload, 'data', 'pageNumber'),
             pagesCount: g(payload, 'data', 'pagesCount'),
             itemsCount: g(payload, 'data', 'itemsCount'),
             videoList: List(fromJS(g(payload, 'data', 'videoList'))),
@@ -65,8 +68,9 @@ export default
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        pageNumber: 1,
+        lastPageRequestParams: null,
         pageText: PageTextRecord(),
+        pageNumber: 1,
         pagesCount: 1,
         itemsCount: 0,
         videoList: [],

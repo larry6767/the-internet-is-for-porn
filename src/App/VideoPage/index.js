@@ -1,5 +1,5 @@
 // TODO: this page needs refactoring (propTypes, ig, g, etc)
-import {Record, Map, List} from 'immutable'
+import {Record} from 'immutable'
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {compose, lifecycle, withHandlers} from 'recompose'
@@ -14,16 +14,13 @@ import {
     getHeaderText,
     plainProvedGet as g,
     immutableProvedGet as ig,
+    getRouterContext,
     PropTypes,
-    getSubPage,
     setPropTypes,
+    getPageRequestParams,
 } from '../helpers'
 
-import {
-    immutableI18nButtonsModel,
-    orientationCodes,
-    PageTextRecord,
-} from '../models'
+import {immutableI18nButtonsModel} from '../models'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ErrorContent from '../../generic/ErrorContent'
@@ -59,24 +56,25 @@ import {
 
 const
     fieldNamesArray = ['op', '_cid', '_gid', '_url'], // hidden field names for report request
+
     VideoPageRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
+        isLoading: null,
+        isLoaded: null,
+        isFailed: null,
 
-        reportIsSending: false,
-        reportIsSent: false,
-        reportIsNotSent: false,
+        reportIsSending: null,
+        reportIsSent: null,
+        reportIsNotSent: null,
 
-        lastOrientationCode: '',
-        lastSubPageForRequest: '',
-        inlineAdvertisementIsShowed: true,
-        reportDialogIsOpen: false,
-        pageText: PageTextRecord(),
-        gallery: Map(),
-        videoList: List(),
-        currentHref: '',
-        currentTime: '',
+        lastPageRequestParams: null,
+
+        inlineAdvertisementIsShowed: null,
+        reportDialogIsOpen: null,
+        pageText: null,
+        gallery: null,
+        videoList: null,
+        currentHref: null,
+        currentTime: null,
     }),
 
     renderFavoriteButton = (
@@ -278,28 +276,20 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({match, data, loadPage, setHeaderText, currentOrientation}) => {
+    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
         const
-            subPageForRequest = getSubPage(`${match.params.child}/${match.params.name}`)
-
-        if (typeof subPageForRequest !== 'string')
-            throw new Error(
-                `Something went wront, unexpected "subPageForRequest" type: "${
-                    typeof subPageForRequest}"` +
-                ' (this is supposed to be provided by router via props to the component)'
-            )
+            pageRequestParams = getPageRequestParams(routerContext, match)
 
         // "unless" condition.
         // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
         if (!(
-            data.get('isLoading') ||
+            ig(data, 'isLoading') ||
             (
-                (data.get('isLoaded') || data.get('isFailed')) &&
-                g(currentOrientation, []) === ig(data, 'lastOrientationCode') &&
-                subPageForRequest === ig(data, 'lastSubPageForRequest')
+                (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
+                pageRequestParams.equals(ig(data, 'lastPageRequestParams'))
             )
         ))
-            loadPage(subPageForRequest)
+            loadPage(pageRequestParams)
         else if (ig(data, 'isLoaded'))
             setHeaderText(getHeaderText(g(data, []), true, false))
     }
@@ -311,6 +301,7 @@ export default compose(
         state => ({
             data: VideoPageRecord(state.getIn(['app', 'videoPage'])),
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
+            routerContext: getRouterContext(state),
             pageUrl: state.getIn(['router', 'location', 'pathname']),
             favoriteVideoList: state.getIn(['app', 'ui', 'favoriteVideoList']),
             initialValues: { // Setting default form values. redux-form creates keys in store for this
@@ -321,7 +312,6 @@ export default compose(
                 'report-reason': 'reason_nothing',
             },
             currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
-            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
         }),
         {
@@ -334,11 +324,7 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => subPageForRequest => props.loadPageRequest({
-            orientationCode: g(props, 'currentOrientation'),
-            subPageForRequest: g(subPageForRequest, []),
-        }),
-
+        loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
         setHeaderText: props => headerText => props.setNewText(g(headerText, [])),
         closeAdvertisementHandler: props => () => props.closeAdvertisement(),
         toggleReportDialogHandler: props => () => props.toggleReportDialog(),
@@ -371,6 +357,5 @@ export default compose(
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
         i18nButtons: immutableI18nButtonsModel,
-        currentOrientation: PropTypes.oneOf(orientationCodes),
     })
 )(VideoPage)

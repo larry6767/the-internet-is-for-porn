@@ -2,16 +2,14 @@ import {fromJS, List, Map} from 'immutable'
 
 import {ImmutablePropTypes, PropTypes, provedHandleActions, plainProvedGet as g} from '../helpers'
 import {immutableVideoItemModel} from '../../generic/VideoItem/models'
+import actions from './actions'
 
 import {
     immutableArchiveFilmsModel,
     immutablePageTextModel,
     PageTextRecord,
-    orientationCodes,
-    defaultOrientationCode,
+    pageRequestParamsModel,
 } from '../models'
-
-import actions from './actions'
 
 const
     model = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
@@ -19,8 +17,7 @@ const
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
         currentPage: PropTypes.string,
-        lastOrientationCode: PropTypes.oneOf(orientationCodes),
-        lastSubPageForRequest: PropTypes.string,
+        lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageNumber: PropTypes.number,
         pageText: immutablePageTextModel,
         pagesCount: PropTypes.number,
@@ -63,8 +60,7 @@ export default
             isLoaded: false,
             isFailed: false,
             currentPage: '',
-            lastOrientationCode: g(payload, 'orientationCode'),
-            lastSubPageForRequest: g(payload, 'subPageForRequest'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: 1,
             pageText: PageTextRecord(),
             pagesCount: 1,
@@ -89,8 +85,7 @@ export default
                 isLoaded: true,
                 isFailed: false,
                 currentPage: g(payload, 'data', 'currentPage'),
-                lastOrientationCode: g(payload, 'orientationCode'),
-                lastSubPageForRequest: g(payload, 'subPageForRequest'),
+                lastPageRequestParams: g(payload, 'pageRequestParams'),
                 pageNumber: g(payload, 'data', 'pageNumber'),
                 pageText: PageTextRecord(g(payload, 'data', 'pageText')),
                 pagesCount: g(payload, 'data', 'pagesCount'),
@@ -130,8 +125,7 @@ export default
         isLoaded: false,
         isFailed: false,
         currentPage: '',
-        lastOrientationCode: defaultOrientationCode,
-        lastSubPageForRequest: '',
+        lastPageRequestParams: null,
         pageNumber: 1,
         pageText: PageTextRecord(),
         pagesCount: 1,

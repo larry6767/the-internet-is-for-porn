@@ -1,16 +1,8 @@
 import {combineReducers} from 'redux-immutable'
 import {fromJS, List} from 'immutable'
 
-import {
-    provedHandleActions,
-    plainProvedGet as g,
-} from '../helpers'
-
-import {
-    PageTextRecord,
-    defaultOrientationCode,
-} from '../models'
-
+import {provedHandleActions, plainProvedGet as g} from '../helpers'
+import {PageTextRecord} from '../models'
 import {stateModel} from './models'
 import actions from './actions'
 import pornstarReducer from './Pornstar/reducers'
@@ -23,7 +15,7 @@ export default combineReducers({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            lastOrientationCode: g(payload, 'orientationCode'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             modelsList: List(),
             pageText: PageTextRecord(),
         }),
@@ -31,7 +23,7 @@ export default combineReducers({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            lastOrientationCode: g(payload, 'orientationCode'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             modelsList: List(fromJS(g(payload, 'data', 'modelsList'))),
             pageText: PageTextRecord(g(payload, 'data', 'pageText')),
         }),
@@ -46,7 +38,7 @@ export default combineReducers({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        lastOrientationCode: defaultOrientationCode,
+        lastPageRequestParams: null,
         modelsList: [],
         pageText: PageTextRecord(),
     }))

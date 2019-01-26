@@ -5,6 +5,7 @@ import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import {Page} from './assets'
 import {get404PageText} from '../helpers'
+
 // TODO: this page needs video list from backend
 const
     NotFound = () => <Page>

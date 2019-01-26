@@ -1,14 +1,7 @@
 import {fromJS, List, Map} from 'immutable'
 
-import {
-    provedHandleActions,
-    plainProvedGet as g,
-} from '../../helpers'
-
-import {
-    PageTextRecord,
-    defaultOrientationCode,
-} from '../../models'
+import {provedHandleActions, plainProvedGet as g} from '../../helpers'
+import {PageTextRecord} from '../../models'
 import {stateModel} from './models'
 import actions from './actions'
 
@@ -20,8 +13,7 @@ export default
             isFailed: false,
             currentPage: '',
             currentSubPage: '',
-            lastOrientationCode: g(payload, 'orientationCode'),
-            lastSubPageForRequest: g(payload, 'subPageForRequest'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: 1,
             pagesCount: 1,
             pageText: PageTextRecord(),
@@ -47,8 +39,7 @@ export default
                 isFailed: false,
                 currentPage: g(payload, 'data', 'currentPage'),
                 currentSubPage: g(payload, 'data', 'currentSubPage'),
-                lastOrientationCode: g(payload, 'orientationCode'),
-                lastSubPageForRequest: g(payload, 'subPageForRequest'),
+                lastPageRequestParams: g(payload, 'pageRequestParams'),
                 pageNumber: g(payload, 'data', 'pageNumber'),
                 pagesCount: g(payload, 'data', 'pagesCount'),
                 pageText: PageTextRecord(g(payload, 'data', 'pageText')),
@@ -90,8 +81,7 @@ export default
         isFailed: false,
         currentPage: '',
         currentSubPage: '',
-        lastOrientationCode: defaultOrientationCode,
-        lastSubPageForRequest: '',
+        lastPageRequestParams: null,
         pageNumber: 1,
         pagesCount: 1,
         pageText: PageTextRecord(),

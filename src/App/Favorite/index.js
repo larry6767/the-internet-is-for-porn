@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
-import {Record, List} from 'immutable'
+import {Record} from 'immutable'
 
 import {
     getHeaderText,
@@ -14,15 +14,10 @@ import {
     PropTypes,
     ImmutablePropTypes,
     setPropTypes,
+    getPageRequestParams,
 } from '../helpers'
 
-import {
-    immutableI18nButtonsModel,
-    routerContextModel,
-    orientationCodes,
-    PageTextRecord,
-} from '../models'
-
+import {immutableI18nButtonsModel, routerContextModel} from '../models'
 import {routerGetters} from '../../router-builder'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
@@ -37,14 +32,17 @@ import {muiStyles} from './assets/muiStyles'
 
 const
     FavoriteRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
-        pageNumber: 1,
-        pageText: PageTextRecord(),
-        pagesCount: 1,
-        itemsCount: 0,
-        videoList: List(),
+        isLoading: null,
+        isLoaded: null,
+        isFailed: null,
+
+        lastPageRequestParams: null,
+
+        pageText: null,
+        pageNumber: null,
+        pagesCount: null,
+        itemsCount: null,
+        videoList: null,
     }),
 
     Favorite = ({
@@ -91,14 +89,29 @@ const
                 </PageWrapper>
             </Content>
         }
-    </Page>
+    </Page>,
+
+    loadPageFlow = ({favorite, loadPage, setHeaderText, routerContext, match}) => {
+        const
+            pageRequestParams = getPageRequestParams(routerContext, match)
+
+        if (!(
+            ig(favorite, 'isLoading') ||
+            (
+                (ig(favorite, 'isLoaded') || ig(favorite, 'isFailed')) &&
+                pageRequestParams.equals(ig(favorite, 'lastPageRequestParams'))
+            )
+        ))
+            loadPage(pageRequestParams)
+        else if (ig(favorite, 'isLoaded'))
+            setHeaderText(getHeaderText(g(favorite, []), true))
+    }
 
 export default compose(
     orientationPortal,
     sectionPortal,
     connect(
         state => ({
-            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
@@ -110,10 +123,7 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => () => props.loadPageRequest({
-            orientationCode: g(props, 'currentOrientation'),
-        }),
-
+        loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
         setHeaderText: props => headerText => props.setNewText(headerText),
 
         controlLinkBuilder: props => qsParams =>
@@ -128,15 +138,15 @@ export default compose(
     }),
     lifecycle({
         componentDidMount() {
-            if (!ig(this.props.favorite, 'isLoading') && !ig(this.props.favorite, 'isLoaded'))
-                this.props.loadPage()
-            else if (ig(this.props.favorite, 'isLoaded'))
-                this.props.setHeaderText(getHeaderText(g(this, 'props', 'favorite'), true))
-        }
+            loadPageFlow(this.props)
+        },
+
+        componentWillReceiveProps(nextProps) {
+            loadPageFlow(nextProps)
+        },
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        currentOrientation: PropTypes.oneOf(orientationCodes),
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,

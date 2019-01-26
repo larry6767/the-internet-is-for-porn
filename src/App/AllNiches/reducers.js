@@ -1,12 +1,8 @@
 import {combineReducers} from 'redux-immutable'
 import {fromJS, List} from 'immutable'
 
-import {
-    provedHandleActions,
-    plainProvedGet as g,
-} from '../helpers'
-
-import {defaultOrientationCode, PageTextRecord} from '../models'
+import {provedHandleActions, plainProvedGet as g} from '../helpers'
+import {PageTextRecord} from '../models'
 import {stateModel} from './models'
 import actions from './actions'
 import nicheReducer from './Niche/reducers'
@@ -19,7 +15,7 @@ export default combineReducers({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            lastOrientationCode: g(payload, 'orientationCode'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             nichesList: List(),
             pageText: PageTextRecord(),
         }),
@@ -27,7 +23,7 @@ export default combineReducers({
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            lastOrientationCode: g(payload, 'orientationCode'),
+            lastPageRequestParams: g(payload, 'pageRequestParams'),
             nichesList: List(fromJS(g(payload, 'data', 'tagList'))),
             pageText: PageTextRecord(g(payload, 'data', 'pageText')),
         }),
@@ -42,7 +38,7 @@ export default combineReducers({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        lastOrientationCode: defaultOrientationCode,
+        lastPageRequestParams: null,
         nichesList: [],
         pageText: PageTextRecord(),
     }))

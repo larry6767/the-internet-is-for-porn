@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
-import {Record, List} from 'immutable'
+import {Record} from 'immutable'
 import {Link} from 'react-router-dom'
 import PermIdentityIcon from '@material-ui/icons/PermIdentity'
 
@@ -22,15 +22,10 @@ import {
     setPropTypes,
     PropTypes,
     getHeaderText,
+    getPageRequestParams,
 } from '../helpers'
 
-import {
-    immutableI18nOrderingModel,
-    routerContextModel,
-    orientationCodes,
-    PageTextRecord,
-} from '../models'
-
+import {immutableI18nOrderingModel, routerContextModel} from '../models'
 import {dataModel} from './models'
 import {routerGetters} from '../../router-builder'
 import ErrorContent from '../../generic/ErrorContent'
@@ -133,27 +128,30 @@ const
     </Page>,
 
     HomeRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
+        isLoading: null,
+        isLoaded: null,
+        isFailed: null,
 
-        lastOrientationCode: '',
+        lastPageRequestParams: null,
 
-        pageText: PageTextRecord(),
+        pageText: null,
 
-        nichesList: List(),
-        pornstarsList: List(),
+        nichesList: null,
+        pornstarsList: null,
     }),
 
-    loadPageFlow = ({currentOrientation, data, loadPage, setHeaderText}) => {
+    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
+        const
+            pageRequestParams = getPageRequestParams(routerContext, match)
+
         if (!(
             ig(data, 'isLoading') ||
             (
                 (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
-                g(currentOrientation, []) === ig(data, 'lastOrientationCode')
+                pageRequestParams.equals(ig(data, 'lastPageRequestParams'))
             )
         ))
-            loadPage()
+            loadPage(pageRequestParams)
         else if (ig(data, 'isLoaded'))
             setHeaderText(getHeaderText(g(data, []), true))
    }
@@ -164,7 +162,6 @@ export default compose(
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            currentOrientation: ig(state, 'app', 'mainHeader', 'niche', 'currentOrientation'),
             data: HomeRecord(ig(state, 'app', 'home')),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
@@ -175,9 +172,7 @@ export default compose(
         }
     ),
     withHandlers({
-        loadPage: props => () =>
-            props.loadPageRequest({orientationCode: g(props, 'currentOrientation')}),
-
+        loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
         setHeaderText: props => headerText => props.setNewText(headerText),
     }),
     lifecycle({
@@ -201,7 +196,6 @@ export default compose(
             root: PropTypes.string,
         }),
         currentBreakpoint: PropTypes.string,
-        currentOrientation: PropTypes.oneOf(orientationCodes),
         data: dataModel,
         routerContext: routerContextModel,
         i18nOrdering: immutableI18nOrderingModel,
