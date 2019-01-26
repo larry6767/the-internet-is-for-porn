@@ -20,15 +20,9 @@ import {
     getRouterContext,
 } from '../../helpers'
 
-import {
-    immutableI18nSearchModel,
-    routerContextModel,
-} from '../../models'
+import {immutableI18nSearchModel, routerContextModel} from '../../models'
 import {routerGetters} from '../../../router-builder'
-import {
-    SearchForm,
-    SearchButton
-} from './assets'
+import {SearchForm, SearchButton} from './assets'
 import {muiStyles} from './assets/muiStyles'
 import actions from './actions'
 
@@ -48,23 +42,21 @@ const
         }}
     />,
 
+    suggestionStyle = Object.freeze({fontWeight: 300}),
+    hlSuggestionStyle = Object.freeze({fontWeight: 500}),
+
     renderSuggestion = (suggestion, {query, isHighlighted}) => {
-        const matches = match(suggestion, query)
-        const parts = parse(suggestion, matches)
+        const
+            matches = match(suggestion, query),
+            parts = parse(suggestion, matches)
 
         return <MenuItem selected={isHighlighted} component="div">
             <div>
-                {parts.map((part, index) => {
-                    return part.highlight ? (
-                        <span key={String(index)} style={{fontWeight: 500}}>
-                            {part.text}
-                        </span>
-                    ) : (
-                        <strong key={String(index)} style={{fontWeight: 300}}>
-                            {part.text}
-                        </strong>
-                    )
-                })}
+                {parts.map((part, i) =>
+                    g(part, 'highlight')
+                    ? <span key={String(i)} style={hlSuggestionStyle}>{g(part, 'text')}</span>
+                    : <strong key={String(i)} style={suggestionStyle}>{g(part, 'text')}</strong>
+                )}
             </div>
         </MenuItem>
     },
@@ -159,9 +151,10 @@ export default compose(
 
         clearSuggestions: props => () => props.setEmptySuggestions(),
 
-        getSuggestionValue: props => (suggestion) => {
+        getSuggestionValue: props => suggestion => {
             props.change(g(props, 'localizedKey'), suggestion)
         },
+
         // parameters are needed for the case when the handler below
         // is called upon the event 'onSuggestionSelected'
         onSubmitHandler: props => (event, parameters) => {
@@ -184,14 +177,22 @@ export default compose(
                     ['ordering', 'searchQuery'],
                 )
             })
-        }
+        },
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.object,
-        search: ImmutablePropTypes.recordOf({
+        classes: PropTypes.shape({
+            input: PropTypes.string,
+            container: PropTypes.string,
+            suggestionsContainerOpen: PropTypes.string,
+            suggestionsList: PropTypes.string,
+            suggestion: PropTypes.string,
+        }),
+
+        search: ImmutablePropTypes.exactRecordOf({
             suggestions: ImmutablePropTypes.list,
         }),
+
         i18nSearch: immutableI18nSearchModel,
         routerContext: routerContextModel,
         searchQuery: PropTypes.nullable(PropTypes.string),
