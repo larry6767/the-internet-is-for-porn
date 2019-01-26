@@ -15,6 +15,7 @@ import {
     ImmutablePropTypes,
     setPropTypes,
     getPageRequestParams,
+    doesItHaveToBeReloaded,
 } from '../helpers'
 
 import {immutableI18nButtonsModel, routerContextModel} from '../models'
@@ -95,13 +96,7 @@ const
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
-        if (!(
-            ig(favorite, 'isLoading') ||
-            (
-                (ig(favorite, 'isLoaded') || ig(favorite, 'isFailed')) &&
-                pageRequestParams.equals(ig(favorite, 'lastPageRequestParams'))
-            )
-        ))
+        if (doesItHaveToBeReloaded(favorite, pageRequestParams))
             loadPage(pageRequestParams)
         else if (ig(favorite, 'isLoaded'))
             setHeaderText(getHeaderText(g(favorite, []), true))

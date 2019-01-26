@@ -13,6 +13,7 @@ import {
     PropTypes,
     ImmutablePropTypes,
     getPageRequestParams,
+    doesItHaveToBeReloaded,
 } from '../../helpers'
 
 import {
@@ -123,15 +124,7 @@ const
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
-        // "unless" condition.
-        // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
-        if (!(
-            ig(data, 'isLoading') ||
-            (
-                (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
-                pageRequestParams.equals(ig(data, 'lastPageRequestParams'))
-            )
-        ))
+        if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)
         else if (ig(data, 'isLoaded'))
             setHeaderText(getHeaderText(data, true))

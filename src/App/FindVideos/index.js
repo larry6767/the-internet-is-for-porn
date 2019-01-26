@@ -12,6 +12,7 @@ import {
     immutableProvedGet as ig,
     plainProvedGet as g,
     getPageRequestParams,
+    doesItHaveToBeReloaded,
 } from '../helpers'
 
 import {routerGetters} from '../../router-builder'
@@ -98,15 +99,7 @@ const
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
-        // "unless" condition.
-        // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
-        if (!(
-            ig(findVideos, 'isLoading') ||
-            (
-                (ig(findVideos, 'isLoaded') || ig(findVideos, 'isFailed')) &&
-                pageRequestParams.equals(ig(findVideos, 'lastPageRequestParams'))
-            )
-        ))
+        if (doesItHaveToBeReloaded(findVideos, pageRequestParams))
             loadPage(pageRequestParams)
         else if (ig(findVideos, 'isLoaded'))
             setHeaderText(getHeaderText(g(findVideos, []), true))

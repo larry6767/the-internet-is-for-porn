@@ -13,6 +13,7 @@ import {
     immutableProvedGet as ig,
     setPropTypes,
     getPageRequestParams,
+    doesItHaveToBeReloaded,
 } from '../helpers'
 
 import {
@@ -99,13 +100,7 @@ const
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
-        if (!(
-            ig(favorite, 'isLoading') ||
-            (
-                (ig(favorite, 'isLoaded') || ig(favorite, 'isFailed')) &&
-                pageRequestParams.equals(ig(favorite, 'lastPageRequestParams'))
-            )
-        ))
+        if (doesItHaveToBeReloaded(favorite, pageRequestParams))
             loadPage(pageRequestParams)
         else if (ig(favorite, 'isLoaded'))
             setHeaderText(getHeaderText(g(favorite, []), true))

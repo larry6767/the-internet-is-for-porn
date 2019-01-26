@@ -23,6 +23,7 @@ import {
     PropTypes,
     setPropTypes,
     getPageRequestParams,
+    doesItHaveToBeReloaded,
 } from '../helpers'
 
 import {immutableI18nAllNichesModel, routerContextModel} from '../models'
@@ -104,13 +105,7 @@ const
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
-        if (!(
-            ig(data, 'isLoading') ||
-            (
-                (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
-                pageRequestParams.equals(ig(data, 'lastPageRequestParams'))
-            )
-        ))
+        if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)
         else if (ig(data, 'isLoaded'))
             setHeaderText(getHeaderText(g(data, []), true))

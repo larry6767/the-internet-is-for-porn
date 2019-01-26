@@ -13,6 +13,7 @@ import {
     setPropTypes,
     getHeaderText,
     getPageRequestParams,
+    doesItHaveToBeReloaded,
 } from '../helpers'
 
 import {immutableI18nButtonsModel} from '../models'
@@ -121,15 +122,7 @@ const
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
-        // "unless" condition.
-        // when data is already loaded for a specified `subPage` or failed (for that `subPage`).
-        if (!(
-            ig(allMovies, 'isLoading') ||
-            (
-                (ig(allMovies, 'isLoaded') || ig(allMovies, 'isFailed')) &&
-                pageRequestParams.equals(ig(allMovies, 'lastPageRequestParams'))
-            )
-        ))
+        if (doesItHaveToBeReloaded(allMovies, pageRequestParams))
             loadPage(pageRequestParams)
         else if (ig(allMovies, 'isLoaded'))
             setHeaderText(getHeaderText(g(allMovies, []), true))
