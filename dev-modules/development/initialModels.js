@@ -18,7 +18,7 @@ const
                     pornstar: exact({section: PropTypes.string}),
                     favorite: exact({section: PropTypes.string}),
                     favoritePornstars: exact({section: PropTypes.string}),
-                    video: exact({sectionPfx: PropTypes.string}),
+                    video: exact({section: PropTypes.string}),
                     findVideos: exact({section: PropTypes.string}),
                 }),
                 ordering: exact({

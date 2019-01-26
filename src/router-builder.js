@@ -315,16 +315,16 @@ export const
             path: (r, orientationCode) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', orientationCode),
-                    videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
+                    video = ig(r, 'router', 'routes', 'video', 'section')
 
-                return `${orientationPfx}/${videoPfx}:child/:subchild`
+                return `${orientationPfx}/${video}/:child/:subchild`
             },
             link: (r, videoId, title) => {
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
-                    videoPfx = ig(r, 'router', 'routes', 'video', 'sectionPfx')
+                    video = ig(r, 'router', 'routes', 'video', 'section')
 
-                return `${orientationPfx}/${videoPfx}${videoId
+                return `${orientationPfx}/${video}/${videoId
                     }/${title.replace(/ /g, '-').replace(/\./g, '').replace(/%/g, '')}`
             },
         }),
