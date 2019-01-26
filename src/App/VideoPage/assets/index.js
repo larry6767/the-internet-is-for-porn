@@ -26,10 +26,11 @@ export const VideoPlayer = styled.div`
 export const VideoWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    width: auto;
+    width: calc(100% - 320px);
     flex-grow: 1;
     padding: 10px 10px 0;
 
+    ${({theme}) => theme.media.sm`width: 100%;`}
     ${({theme}) => theme.media.mobile`padding: 0;`}
 `
 
@@ -43,7 +44,7 @@ export const Video = styled.div`
         content: '';
         padding-top: 468px;
 
-        ${({theme}) => theme.media.mobile`padding-top: 80%;`}
+        ${({theme}) => theme.media.mobile`padding-top: 300px;`}
     }
 
     & iframe {
@@ -218,8 +219,6 @@ export const TagsWrapper = styled.div`
     align-items: center;
     flex-wrap: wrap;
     padding: 10px 10px 4px;
-
-    ${({theme}) => theme.media.mobile`padding: 0;`}
 `
 
 export const SponsorLink = styled.a`

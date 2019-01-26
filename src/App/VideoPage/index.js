@@ -9,6 +9,8 @@ import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography, Button, Chip} from '@material-ui/core'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
+import HomeIcon from '@material-ui/icons/Home'
+import ReportIcon from '@material-ui/icons/Report'
 
 import {
     getHeaderText,
@@ -90,7 +92,7 @@ const
             variant="contained"
             color="primary"
             classes={{
-                root: classes.buttonRoot
+                root: classes.buttonFavorite
             }}
             onClick={removeVideoFromFavoriteHandler.bind(this, data.getIn(['gallery', 'id']))}
         >
@@ -103,7 +105,7 @@ const
             variant="contained"
             color="primary"
             classes={{
-                root: classes.buttonRoot
+                root: classes.buttonFavorite
             }}
             onClick={addVideoToFavoriteHandler.bind(this, data.get('gallery').deleteAll(
                 ['published', 'classId', 'sponsorUrl', 'urlForIframe']
@@ -178,7 +180,7 @@ const
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                {data.getIn(['gallery', 'sponsorId'])}
+                                {`itIsJustGag${data.getIn(['gallery', 'sponsorId'])}`}
                             </SponsorLink>
                         </Typography>
                         <VideoPlayer>
@@ -216,6 +218,9 @@ const
                                                     root: classes.buttonRoot
                                                 }}
                                             >
+                                                <HomeIcon
+                                                    classes={{root: classes.homeIcon}}
+                                                />
                                                 {ig(i18nButtons, 'backToMainPage')}
                                             </Button>
                                         </Link>
@@ -230,6 +235,9 @@ const
                                                 }}
                                                 onClick={toggleReportDialogHandler}
                                             >
+                                                <ReportIcon
+                                                    classes={{root: classes.reportIcon}}
+                                                />
                                                 {ig(i18nButtons, 'report')}
                                             </Button>
                                             : null}
@@ -246,12 +254,14 @@ const
                                     'isAd'
                                 )}
                             </Advertisement>
-                            <TagsWrapper>
+                            {currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
+                                ? null
+                                : <TagsWrapper>
                                 {data.getIn(['gallery', 'tags'])
                                     ? data.getIn(['gallery', 'tags']).map(x =>
                                         renderTag(classes, currentBreakpoint, x, getTagLink))
                                     : null}
-                            </TagsWrapper>
+                            </TagsWrapper>}
                         </VideoPlayer>
                     </PlayerSection>
                     <RelatedVideos>
