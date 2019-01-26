@@ -21,7 +21,6 @@ import {
     setPropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
-    getRouterContext,
 } from '../helpers'
 
 import {routerGetters} from '../../router-builder'
@@ -326,7 +325,6 @@ export default compose(
             },
             currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
-            routerContext: getRouterContext(state)
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),

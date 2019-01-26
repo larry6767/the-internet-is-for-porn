@@ -147,23 +147,25 @@ export const
 
     immutablePageTextModel = process.env.NODE_ENV === 'production' ? null :
         ImmutablePropTypes.exactRecordOf({
+            title: PropTypes.string,
             description: PropTypes.string,
-            headerDescription: PropTypes.string,
-            headerTitle: PropTypes.nullable(PropTypes.string),
             keywords: PropTypes.string,
+            headerTitle: PropTypes.nullable(PropTypes.string),
+            headerDescription: PropTypes.string,
             listHeader: PropTypes.nullable(PropTypes.string),
             listHeaderEmpty: PropTypes.nullable(PropTypes.string),
-            title: PropTypes.string,
+            galleryTitle: PropTypes.nullable(PropTypes.string),
         }),
 
     PageTextRecord = Record({
+        title: '',
         description: '',
-        headerDescription: '',
-        headerTitle: null,
         keywords: '',
+        headerTitle: null,
+        headerDescription: '',
         listHeader: null,
         listHeaderEmpty: null,
-        title: '',
+        galleryTitle: null,
     }),
 
     modelsListModel = process.env.NODE_ENV === 'production' ? null :
