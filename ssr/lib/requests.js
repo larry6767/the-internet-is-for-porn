@@ -399,9 +399,6 @@ if (process.env.NODE_ENV !== 'production')
         'getPageDataPageMapping'
     )
 
-                // pageKeysWithSubPageCode =
-                //     Object.freeze(['niche', 'allMovies', 'pornstar', 'video', 'findVideos']),
-
 /*
     Generic helper to obtain data from backend for specific "page".
 */
