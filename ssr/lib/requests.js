@@ -2,6 +2,7 @@ import {pick, map, find, omit, compact, get, set} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 import queryString from 'query-string'
+import {parse, format} from 'url'
 
 import {plainProvedGet as g, PropTypes, assertPropTypes, getClassId} from '../App/helpers'
 import {pageKeys} from '../App/models'
@@ -388,7 +389,10 @@ const
         if (subPageCode !== null)
             url = url.replace(/%SUB_PAGE_CODE%/g, subPageCode)
 
-        return url.replace(/%ORIENTATION_PFX%/g, orientationPrefix)
+        url = url.replace(/%ORIENTATION_PFX%/g, orientationPrefix)
+        url = parse(url)
+        url.pathname = url.pathname.split(/\//).map(x => encodeURIComponent(x)).join('/')
+        return format(url)
     }
 
 if (process.env.NODE_ENV !== 'production')
