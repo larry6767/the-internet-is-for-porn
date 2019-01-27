@@ -12,6 +12,7 @@ import {backendUrl, backendUrlForReport, backendUrlForSearch} from './helpers/ba
 import {videoItemModel} from '../generic/VideoItem/models'
 import {incomingVideoItemModel} from './helpers/requests/getFilteredVideoList'
 import getSubPage, {orderingMapping} from './helpers/getSubPage'
+import deepFreeze from './helpers/deepFreeze'
 
 import {
     incomingVideoPageTextModel,
@@ -330,25 +331,46 @@ const
     ),
 
     getPageDataPageMapping = Object.freeze({
-        home: [
-            {blocks: {allTagsBlock: 1, modelsABCBlockText: 1, modelsABCBlockThumbs: 1}},
+        home: Object.freeze([
+            deepFreeze({blocks: {allTagsBlock: 1, modelsABCBlockText: 1, modelsABCBlockThumbs: 1}}),
             getHomeMap,
-        ],
-        allNiches: [{blocks: {allTagsBlock: 1}}, getAllNichesMap],
-        niche: [{blocks: {allTagsBlock: 1}}, getNicheMap],
-        allMovies: [{blocks: {allTagsBlock: 1}}, getAllMoviesMap],
-        pornstars: [null, getPornstarsMap],
-        pornstar: [
-            {blocks: {modelsABCBlockText: 1, modelsABCBlockThumbs: 1}},
+        ]),
+        allNiches: Object.freeze([
+            deepFreeze({blocks: {allTagsBlock: 1}}),
+            getAllNichesMap,
+        ]),
+        niche: Object.freeze([
+            deepFreeze({blocks: {allTagsBlock: 1}}),
+            getNicheMap,
+        ]),
+        allMovies: Object.freeze([
+            deepFreeze({blocks: {allTagsBlock: 1}}),
+            getAllMoviesMap,
+        ]),
+        pornstars: Object.freeze([
+            null,
+            getPornstarsMap,
+        ]),
+        pornstar: Object.freeze([
+            deepFreeze({blocks: {modelsABCBlockText: 1, modelsABCBlockThumbs: 1}}),
             getPornstarMap,
-        ],
-        favorite: [null, getFavoriteMap],
-        favoritePornstars: [
-            {blocks: {modelsABCBlockThumbs: 1}},
+        ]),
+        favorite: Object.freeze([
+            null,
+            getFavoriteMap,
+        ]),
+        favoritePornstars: Object.freeze([
+            deepFreeze({blocks: {modelsABCBlockThumbs: 1}}),
             getFavoritePornstarsMap,
-        ],
-        video: [null, getVideoPageMap],
-        findVideos: [null, getFindVideosMap],
+        ]),
+        video: Object.freeze([
+            null,
+            getVideoPageMap,
+        ]),
+        findVideos: Object.freeze([
+            null,
+            getFindVideosMap,
+        ]),
     }),
 
     getPageDataUrlBuilder = (localeCode, orientationCode, page, subPageCode) => {
