@@ -63,6 +63,20 @@ const
         })))
     },
 
+    i18nHeadersModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            allNiches: PropTypes.string,
+            niches: PropTypes.string,
+            listNiches: PropTypes.string,
+            listArchive: PropTypes.string,
+            pornstars: PropTypes.string,
+            relatedVideo: PropTypes.string,
+        })
+    },
+
     i18nSearchModelBuilder = isImmutable => {
         const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
@@ -84,15 +98,6 @@ const
             allMovies: navigationItem,
             pornstars: navigationItem,
             favorite: navigationItem,
-        })
-    },
-
-    i18nAllNichesModelBuilder = isImmutable => {
-        const
-            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
-
-        return exact({
-            pageHeader: PropTypes.string,
         })
     },
 
@@ -180,14 +185,14 @@ const
         })
     },
 
+    i18nHeadersModel = i18nHeadersModelBuilder(false),
+    immutableI18nHeadersModel = i18nHeadersModelBuilder(true),
+
     i18nSearchModel = i18nSearchModelBuilder(false),
     immutableI18nSearchModel = i18nSearchModelBuilder(true),
 
     i18nNavigationModel = i18nNavigationModelBuilder(false),
     immutableI18nNavigationModel = i18nNavigationModelBuilder(true),
-
-    i18nAllNichesModel = i18nAllNichesModelBuilder(false),
-    immutableI18nAllNichesModel = i18nAllNichesModelBuilder(true),
 
     i18nOrderingModel = i18nOrderingModelBuilder(false),
     immutableI18nOrderingModel = i18nOrderingModelBuilder(true),
@@ -209,9 +214,9 @@ const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
 
         return exact({
+            headers: isImmutable ? immutableI18nHeadersModel : i18nHeadersModel,
             search: isImmutable ? immutableI18nSearchModel : i18nSearchModel,
             navigation: isImmutable ? immutableI18nNavigationModel : i18nNavigationModel,
-            allNiches: isImmutable ? immutableI18nAllNichesModel : i18nAllNichesModel,
             ordering: isImmutable ? immutableI18nOrderingModel : i18nOrderingModel,
             buttons: isImmutable ? immutableI18nButtonsModel : i18nButtonsModel,
             footer: isImmutable ? immutableI18nFooterModel : i18nFooterModel,
@@ -221,9 +226,9 @@ const
     }
 
 export {
+    i18nHeadersModel, immutableI18nHeadersModel,
     i18nSearchModel, immutableI18nSearchModel,
     i18nNavigationModel, immutableI18nNavigationModel,
-    i18nAllNichesModel, immutableI18nAllNichesModel,
     i18nOrderingModel, immutableI18nOrderingModel,
     i18nButtonsModel, immutableI18nButtonsModel,
     i18nFooterModel, immutableI18nFooterModel,

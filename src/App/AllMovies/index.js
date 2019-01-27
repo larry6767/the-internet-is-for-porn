@@ -7,6 +7,7 @@ import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
 
 import {
+    getHeaderWithOrientation,
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -67,6 +68,8 @@ const
         controlBackFromArchiveLinkBuilder,
         listsTagLinkBuilder,
         listsArchiveLinkBuilder,
+        i18nListNichesHeader,
+        i18nListArchiveHeader,
     }) => <Page>
         { allMovies.get('isFailed')
             ? <ErrorContent/>
@@ -82,6 +85,9 @@ const
 
                     tagArchiveList={allMovies.get('tagArchiveList')}
                     archiveLinkBuilder={listsArchiveLinkBuilder}
+
+                    i18nListNichesHeader={i18nListNichesHeader}
+                    i18nListArchiveHeader={i18nListArchiveHeader}
                 />
                 <AllMoviesPageWrapper>
                     <Typography
@@ -139,6 +145,8 @@ export default compose(
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+            i18nListNichesHeader: getHeaderWithOrientation(state, 'listNiches'),
+            i18nListArchiveHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'listArchive'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),

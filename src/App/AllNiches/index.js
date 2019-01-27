@@ -26,7 +26,7 @@ import {
     doesItHaveToBeReloaded,
 } from '../helpers'
 
-import {immutableI18nAllNichesModel, routerContextModel} from '../models'
+import {routerContextModel} from '../models'
 import {dataModel} from './models'
 import ErrorContent from '../../generic/ErrorContent'
 import PageTextHelmet from '../../generic/PageTextHelmet'
@@ -64,7 +64,7 @@ const
         </ListItem>
     </Link>,
 
-    AllNiches = ({classes, data, getChildLink, i18nAllNiches}) => <AllNichesPage>
+    AllNiches = ({classes, data, getChildLink, i18nAllNichesHeader}) => <AllNichesPage>
         { ig(data, 'isFailed')
             ? <ErrorContent/>
             : ig(data, 'isLoading')
@@ -73,7 +73,7 @@ const
                 <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
-                        {ig(i18nAllNiches, 'pageHeader')}
+                        {i18nAllNichesHeader}
                     </Typography>
                     <ListComponent
                         component="div"
@@ -118,7 +118,7 @@ export default compose(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             data: NichesRecord(ig(state, 'app', 'niches', 'all')),
-            i18nAllNiches: ig(state, 'app', 'locale', 'i18n', 'allNiches'),
+            i18nAllNichesHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'allNiches'),
             routerContext: getRouterContext(state),
         }),
         {
@@ -144,7 +144,7 @@ export default compose(
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         currentBreakpoint: PropTypes.string,
         data: dataModel,
-        i18nAllNiches: immutableI18nAllNichesModel,
+        i18nAllNichesHeader: PropTypes.string,
         routerContext: routerContextModel,
 
         loadPageRequest: PropTypes.func,

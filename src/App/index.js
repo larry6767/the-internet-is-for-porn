@@ -52,7 +52,7 @@ export default compose(
         }),
         dispatch => ({
             resizeAction: event => dispatch(actions.resize(
-                typeof event === "number" ? event : event.srcElement.outerWidth
+                typeof event === "number" ? event : event.srcElement.innerWidth
             )),
             getFavoriteVideoListAction: () => dispatch(actions.getFavoriteVideoList()),
             getFavoritePornstarListAction: () => dispatch(actions.getFavoritePornstarList())

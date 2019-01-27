@@ -9,6 +9,8 @@ import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography, Button, Chip} from '@material-ui/core'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
+import HomeIcon from '@material-ui/icons/Home'
+import ReportIcon from '@material-ui/icons/Report'
 
 import {
     getHeaderText,
@@ -20,6 +22,8 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
 } from '../helpers'
+
+import {routerGetters} from '../../router-builder'
 
 import {immutableI18nButtonsModel} from '../models'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
@@ -86,7 +90,7 @@ const
             variant="contained"
             color="primary"
             classes={{
-                root: classes.buttonRoot
+                root: classes.buttonFavorite
             }}
             onClick={removeVideoFromFavoriteHandler.bind(this, data.getIn(['gallery', 'id']))}
         >
@@ -99,7 +103,7 @@ const
             variant="contained"
             color="primary"
             classes={{
-                root: classes.buttonRoot
+                root: classes.buttonFavorite
             }}
             onClick={addVideoToFavoriteHandler.bind(this, data.get('gallery').deleteAll(
                 ['published', 'classId', 'sponsorUrl', 'urlForIframe']
@@ -120,10 +124,29 @@ const
             ></iframe>
             : <AdGag/>,
 
+    renderTag = (classes, currentBreakpoint, x, getTagLink) => <Link
+        to={getTagLink(x)}
+        key={x}
+        className={classes.routerLink}
+    >
+        <Chip
+            label={x}
+            className={classes.chip}
+            component="div"
+            variant="outlined"
+            color={
+                currentBreakpoint === 'xxs' || currentBreakpoint === 'xs'
+                    ? 'primary'
+                    : 'secondary'
+            }
+            clickable
+        />
+    </Link>,
+
     VideoPage = ({
         classes, isSSR, data, favoriteVideoList, closeAdvertisementHandler,
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
-        toggleReportDialogHandler, pageUrl,
+        toggleReportDialogHandler, getTagLink, pageUrl,
         handleSubmit, pristine, reset, currentBreakpoint, i18nButtons,
     }) => <Page>
         { data.get('isFailed')
@@ -155,7 +178,7 @@ const
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                {data.getIn(['gallery', 'sponsorId'])}
+                                {`itIsJustGag${data.getIn(['gallery', 'sponsorId'])}`}
                             </SponsorLink>
                         </Typography>
                         <VideoPlayer>
@@ -193,6 +216,9 @@ const
                                                     root: classes.buttonRoot
                                                 }}
                                             >
+                                                <HomeIcon
+                                                    classes={{root: classes.homeIcon}}
+                                                />
                                                 {ig(i18nButtons, 'backToMainPage')}
                                             </Button>
                                         </Link>
@@ -207,6 +233,9 @@ const
                                                 }}
                                                 onClick={toggleReportDialogHandler}
                                             >
+                                                <ReportIcon
+                                                    classes={{root: classes.reportIcon}}
+                                                />
                                                 {ig(i18nButtons, 'report')}
                                             </Button>
                                             : null}
@@ -223,24 +252,14 @@ const
                                     'isAd'
                                 )}
                             </Advertisement>
-                            <TagsWrapper>
+                            {currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
+                                ? null
+                                : <TagsWrapper>
                                 {data.getIn(['gallery', 'tags'])
-                                    ? data.getIn(['gallery', 'tags']).map(x => <Chip
-                                        key={x}
-                                        label={x}
-                                        className={classes.chip}
-                                        component="a"
-                                        href="#chip"
-                                        variant="outlined"
-                                        color={
-                                            currentBreakpoint === 'xxs' || currentBreakpoint === 'xs'
-                                                ? 'primary'
-                                                : 'secondary'
-                                        }
-                                        clickable
-                                    />)
+                                    ? data.getIn(['gallery', 'tags']).map(x =>
+                                        renderTag(classes, currentBreakpoint, x, getTagLink))
                                     : null}
-                            </TagsWrapper>
+                            </TagsWrapper>}
                         </VideoPlayer>
                     </PlayerSection>
                     <RelatedVideos>
@@ -329,6 +348,11 @@ export default compose(
             e.preventDefault()
             props.removeVideoFromFavorite(id)
         },
+        getTagLink: props => searchQuery => routerGetters.findVideos.link(
+            g(props, 'routerContext'),
+            {searchQuery},
+            ['searchQuery'],
+        ),
     }),
     reduxForm({
         form: 'reportForm',

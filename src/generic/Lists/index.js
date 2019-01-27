@@ -58,7 +58,7 @@ const
 
     ModelsLetterListItem = renderListItem('id', 'name', 'itemsCount', 'subPage', 'letter'),
 
-    ArchiveList = ({classes, tagArchiveList, linkBuilder}) => {
+    ArchiveList = ({classes, tagArchiveList, linkBuilder, i18nListArchiveHeader}) => {
         const
             years = tagArchiveList
                 .groupBy(x => x.get('year'))
@@ -75,7 +75,7 @@ const
                         <ListSubheader classes={{
                             root: classes.listSubheader
                         }}>
-                            {`Archives ${year}`}
+                            {`${i18nListArchiveHeader} ${year}`}
                         </ListSubheader>
                         {listByYear.map(x => ArchiveYearListItem(x, classes, linkBuilder))}
                     </ul>
@@ -123,6 +123,9 @@ const
 
         modelsList,
         modelLinkBuilder,
+
+        i18nListNichesHeader,
+        i18nListArchiveHeader,
     }) =>
         currentBreakpoint === 'md'
         || currentBreakpoint === 'lg'
@@ -134,7 +137,7 @@ const
                         <ListSubheader classes={{
                             root: classes.listSubheader
                         }}>
-                            All straight films{/* TODO localize it */}
+                            {i18nListNichesHeader}
                         </ListSubheader>
                     }
                 >
@@ -145,6 +148,7 @@ const
                     classes={classes}
                     tagArchiveList={tagArchiveList}
                     linkBuilder={archiveLinkBuilder}
+                    i18nListArchiveHeader={i18nListArchiveHeader}
                 /> : null }
                 { modelsList ? <ModelsList
                     classes={classes}

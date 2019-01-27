@@ -2,6 +2,7 @@ import {pick, map, find, omit, compact, get, set} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 import queryString from 'query-string'
+import {parse, format} from 'url'
 
 import {plainProvedGet as g, PropTypes, assertPropTypes, getClassId} from '../App/helpers'
 import {pageKeys} from '../App/models'
@@ -12,6 +13,7 @@ import {backendUrl, backendUrlForReport, backendUrlForSearch} from './helpers/ba
 import {videoItemModel} from '../generic/VideoItem/models'
 import {incomingVideoItemModel} from './helpers/requests/getFilteredVideoList'
 import getSubPage, {orderingMapping} from './helpers/getSubPage'
+import deepFreeze from './helpers/deepFreeze'
 
 import {
     incomingVideoPageTextModel,
@@ -330,25 +332,46 @@ const
     ),
 
     getPageDataPageMapping = Object.freeze({
-        home: [
-            {blocks: {allTagsBlock: 1, modelsABCBlockText: 1, modelsABCBlockThumbs: 1}},
+        home: Object.freeze([
+            deepFreeze({blocks: {allTagsBlock: 1, modelsABCBlockText: 1, modelsABCBlockThumbs: 1}}),
             getHomeMap,
-        ],
-        allNiches: [{blocks: {allTagsBlock: 1}}, getAllNichesMap],
-        niche: [{blocks: {allTagsBlock: 1}}, getNicheMap],
-        allMovies: [{blocks: {allTagsBlock: 1}}, getAllMoviesMap],
-        pornstars: [null, getPornstarsMap],
-        pornstar: [
-            {blocks: {modelsABCBlockText: 1, modelsABCBlockThumbs: 1}},
+        ]),
+        allNiches: Object.freeze([
+            deepFreeze({blocks: {allTagsBlock: 1}}),
+            getAllNichesMap,
+        ]),
+        niche: Object.freeze([
+            deepFreeze({blocks: {allTagsBlock: 1}}),
+            getNicheMap,
+        ]),
+        allMovies: Object.freeze([
+            deepFreeze({blocks: {allTagsBlock: 1}}),
+            getAllMoviesMap,
+        ]),
+        pornstars: Object.freeze([
+            null,
+            getPornstarsMap,
+        ]),
+        pornstar: Object.freeze([
+            deepFreeze({blocks: {modelsABCBlockText: 1, modelsABCBlockThumbs: 1}}),
             getPornstarMap,
-        ],
-        favorite: [null, getFavoriteMap],
-        favoritePornstars: [
-            {blocks: {modelsABCBlockThumbs: 1}},
+        ]),
+        favorite: Object.freeze([
+            null,
+            getFavoriteMap,
+        ]),
+        favoritePornstars: Object.freeze([
+            deepFreeze({blocks: {modelsABCBlockThumbs: 1}}),
             getFavoritePornstarsMap,
-        ],
-        video: [null, getVideoPageMap],
-        findVideos: [null, getFindVideosMap],
+        ]),
+        video: Object.freeze([
+            null,
+            getVideoPageMap,
+        ]),
+        findVideos: Object.freeze([
+            null,
+            getFindVideosMap,
+        ]),
     }),
 
     getPageDataUrlBuilder = (localeCode, orientationCode, page, subPageCode) => {
@@ -366,7 +389,10 @@ const
         if (subPageCode !== null)
             url = url.replace(/%SUB_PAGE_CODE%/g, subPageCode)
 
-        return url.replace(/%ORIENTATION_PFX%/g, orientationPrefix)
+        url = url.replace(/%ORIENTATION_PFX%/g, orientationPrefix)
+        url = parse(url)
+        url.pathname = url.pathname.split(/\//).map(x => encodeURIComponent(x)).join('/')
+        return format(url)
     }
 
 if (process.env.NODE_ENV !== 'production')
@@ -376,9 +402,6 @@ if (process.env.NODE_ENV !== 'production')
         'requests',
         'getPageDataPageMapping'
     )
-
-                // pageKeysWithSubPageCode =
-                //     Object.freeze(['niche', 'allMovies', 'pornstar', 'video', 'findVideos']),
 
 /*
     Generic helper to obtain data from backend for specific "page".
