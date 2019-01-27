@@ -6,7 +6,7 @@ import {Map} from 'immutable'
 
 import {immutableProvedGet as ig, setPropTypes} from '../helpers'
 import {immutableI18nFooterModel, immutableI18nButtonsModel} from '../models'
-import {IMG_PATH} from '../../config'
+// import {IMG_PATH} from '../../config'
 import {linksToProtect} from './fixtures'
 
 import {
@@ -16,7 +16,7 @@ import {
     LinkList,
     LinkItem,
     Link,
-    QRCodeBlock
+    // QRCodeBlock
 } from './assets'
 
 const
@@ -60,9 +60,9 @@ const
                     &nbsp;&copy;&nbsp;Copyright&nbsp;{domain}
                 </Typography>
             </TextBlock>
-            <QRCodeBlock>
+            {/* <QRCodeBlock>
                 <img src={`${IMG_PATH}qrcode.svg`} alt="qrcode"/>
-            </QRCodeBlock>
+            </QRCodeBlock> */}
         </FooterInner>
     </Footer>
 

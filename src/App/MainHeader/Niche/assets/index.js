@@ -21,7 +21,7 @@ export const NicheMobile = styled.nav`
 export const NicheMobileItem = styled.a`
     width: 33.33%;
     padding: 10px 0;
-    border: 2px solid ${({theme}) => theme.palette.primary.dark};
+    border: 2px solid ${({theme}) => theme.palette.primary.light};
     text-align: center;
     color: ${({theme}) => theme.palette.primary.light};
     text-decoration: none;
@@ -39,6 +39,7 @@ export const NicheMobileItem = styled.a`
 
 export const NicheMobileItemSelected = styled(NicheMobileItem)`
     color: ${({theme}) => theme.palette.primary.contrastText};
+    background: ${({theme}) => theme.palette.primary.light}
 `
 
 export const TextIcon = styled.div`
