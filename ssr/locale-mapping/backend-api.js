@@ -196,8 +196,8 @@ const
             },
             orientationPrefixes: {
                 straight: '', // no prefix
-                gay: 'homo',
-                tranny: 'trans',
+                gay: '/homo',
+                tranny: '/trans',
             },
         },
         spa: {
@@ -244,8 +244,8 @@ const
             },
             orientationPrefixes: {
                 straight: '', // no prefix
-                gay: 'homosexual',
-                tranny: 'transexual',
+                gay: '/homosexual',
+                tranny: '/transexual',
             },
         },
         por: {
@@ -292,8 +292,8 @@ const
             },
             orientationPrefixes: {
                 straight: '', // no prefix
-                gay: 'gays',
-                tranny: 'travesti',
+                gay: '/gays',
+                tranny: '/travesti',
             },
         },
         swe: {
@@ -340,8 +340,8 @@ const
             },
             orientationPrefixes: {
                 straight: '', // no prefix
-                gay: 'bögiga',
-                tranny: 'shemale',
+                gay: '/bögiga',
+                tranny: '/shemale',
             },
         },
         nld: {
@@ -388,8 +388,8 @@ const
             },
             orientationPrefixes: {
                 straight: '', // no prefix
-                gay: 'gay',
-                tranny: 'shemale',
+                gay: '/gay',
+                tranny: '/shemale',
             },
         },
         fin: {
@@ -436,8 +436,8 @@ const
             },
             orientationPrefixes: {
                 straight: '', // no prefix
-                gay: 'homo',
-                tranny: 'shemale',
+                gay: '/homo',
+                tranny: '/shemale',
             },
         },
         rus: {
@@ -484,8 +484,8 @@ const
             },
             orientationPrefixes: {
                 straight: '', // no prefix
-                gay: 'геи',
-                tranny: 'транссексуал',
+                gay: '/геи',
+                tranny: '/транссексуал',
             },
         },
         tur: {
@@ -532,8 +532,8 @@ const
             },
             orientationPrefixes: {
                 straight: '', // no prefix
-                gay: 'gayler',
-                tranny: 'travestiler',
+                gay: '/gayler',
+                tranny: '/travestiler',
             },
         },
     }),

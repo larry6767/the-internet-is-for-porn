@@ -73,6 +73,7 @@ const
             listNiches: PropTypes.string,
             listArchive: PropTypes.string,
             pornstars: PropTypes.string,
+            relatedVideo: PropTypes.string,
         })
     },
 
