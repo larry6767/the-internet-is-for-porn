@@ -6,6 +6,7 @@ export {
     breakpointMD,
     breakpointLG,
     breakpointXL,
+    breakpoints,
     compareCurrentBreakpoint,
 } from './getCurrentBreakpoint'
 

@@ -12,8 +12,14 @@ export const ControlButtons = styled.div`
 
 export const ButtonsList = styled.div`
     display: flex;
-    flex-wrap: wrap;
     margin-right: 15px;
+    margin-bottom: 12px;
+
+    ${({theme}) => theme.media.mobile`
+        width: 100%;
+        overflow-x: scroll;
+        margin-right: 0;
+    `}
 `
 
 export const SortWrapper = styled.div`

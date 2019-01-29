@@ -48,6 +48,7 @@ const
 
     FindVideos = ({
         classes,
+        currentBreakpoint,
         i18nOrdering,
         i18nButtons,
         findVideos,
@@ -72,6 +73,7 @@ const
                         {findVideos.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <ControlBar
+                        cb={currentBreakpoint}
                         i18nOrdering={i18nOrdering}
                         i18nButtons={i18nButtons}
                         chooseSort={chooseSort}

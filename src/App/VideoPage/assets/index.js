@@ -6,8 +6,8 @@ export {
     PageWrapper,
 } from '../../../generic/assets'
 
-export const PlayerSection = styled.div`
-    margin-bottom: 60px;
+export const PlayerSection = styled.section`
+    margin-bottom: 40px;
 `
 
 export const VideoPlayer = styled.div`

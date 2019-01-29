@@ -18,6 +18,9 @@ import {
     PropTypes,
     ImmutablePropTypes,
     setPropTypes,
+    compareCurrentBreakpoint as ccb,
+    breakpointSM as sm,
+    breakpoints,
 } from '../../App/helpers'
 
 import {
@@ -127,6 +130,7 @@ const
         archiveFilms: PropTypes.nullable(immutableArchiveFilmsModel),
     })(({
         classes,
+        cb,
         linkBuilder,
         archiveLinkBuilder,
         i18nOrdering,
@@ -147,15 +151,17 @@ const
             text={ig(i18nButtons, 'archive')}
         />}
         <SortWrapper>
-            <Typography
-                variant="body1"
-                gutterBottom
-                classes={{
-                    root: g(classes, 'typographyRoot')
-                }}
-            >
-                {`${ig(i18nOrdering, 'label')}:`}
-            </Typography>
+            {ccb(cb, sm) === -1
+                ? null
+                : <Typography
+                    variant="body1"
+                    classes={{
+                        root: g(classes, 'typographyRoot')
+                    }}
+                >
+                    {`${ig(i18nOrdering, 'label')}:`}
+                </Typography>}
+
             {isSSR
                 ? <SortSelectInlined
                     sortList={sortList}
@@ -263,6 +269,7 @@ const
     ControlBar = ({
         classes,
         isSSR,
+        cb,
 
         i18nOrdering,
         i18nButtons,
@@ -324,6 +331,7 @@ const
                         linkBuilder={favoriteLinkBuilder}
                     />
                     : <NicheControlBar
+                        cb={cb}
                         classes={classes}
                         linkBuilder={linkBuilder}
                         archiveLinkBuilder={archiveLinkBuilder}
@@ -350,6 +358,7 @@ export default compose(
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
+        cb: PropTypes.oneOf(breakpoints).isOptional,
 
         i18nOrdering: immutableI18nOrderingModel.isOptional,
         i18nButtons: immutableI18nButtonsModel,

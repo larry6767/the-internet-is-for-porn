@@ -75,6 +75,7 @@ const
                         {ig(data, 'pageText', 'listHeader')}
                     </Typography>
                     <ControlBar
+                        cb={currentBreakpoint}
                         linkBuilder={controlLinkBuilder}
                         archiveLinkBuilder={controlArchiveLinkBuilder}
                         backFromArchiveLinkBuilder={controlBackFromArchiveLinkBuilder}
