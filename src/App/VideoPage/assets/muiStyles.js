@@ -19,6 +19,7 @@ export const muiStyles = theme => ({
     buttonRoot: {
         marginBottom: 10,
         marginRight: 10,
+        whiteSpace: 'nowrap',
 
         [theme.breakpoints.down('xs')]: {
             fontSize: 0,
@@ -30,6 +31,7 @@ export const muiStyles = theme => ({
     buttonFavorite: {
         marginBottom: 10,
         marginRight: 10,
+        whiteSpace: 'nowrap',
 
         [theme.breakpoints.down('sm')]: {
             fontSize: 0,
@@ -40,6 +42,7 @@ export const muiStyles = theme => ({
     },
     buttonReport: {
         marginBottom: 10,
+        whiteSpace: 'nowrap',
 
         [theme.breakpoints.down('xs')]: {
             fontSize: 0,
@@ -85,7 +88,7 @@ export const muiStyles = theme => ({
         },
     },
     chip: {
-        margin: '0 16px 16px 0',
+        margin: '0 16px 8px 0',
         height: 24,
     },
 })

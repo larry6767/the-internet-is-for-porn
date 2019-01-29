@@ -61,9 +61,9 @@ export const VideoIframe = styled.iframe`
 export const ControlPanel = styled.div`
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
     width: 100%;
 
+    ${({theme}) => theme.media.md`flex-wrap: wrap;`}
     ${({theme}) => theme.media.mobile`flex-wrap: wrap;`}
 `
 
@@ -135,7 +135,10 @@ export const AdGag = styled.div`
     align-items: center;
     background: ${({theme}) => `${theme.palette.secondary.main}`};
     border-radius: 2px;
-    margin-bottom: 10px;
+
+    &:first-child {
+        margin-bottom: 10px;
+    }
 
     ${({theme}) => theme.media.sm`
         width: calc(300px * 0.9);
@@ -215,7 +218,10 @@ export const CloseAdvertisement = styled.div`
 export const AdIframeWrapper = styled.div`
     position: relative;
     overflow: hidden;
-    margin-bottom: 10px;
+
+    &:first-child {
+        margin-bottom: 10px;
+    }
 
     ${({theme}) => theme.media.sm`
         width: calc(300px * 0.9);
@@ -263,7 +269,7 @@ export const TagsWrapper = styled.div`
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    padding: 10px 10px 4px;
+    padding: 10px;
 `
 
 export const SponsorLink = styled.a`

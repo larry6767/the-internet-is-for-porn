@@ -21,6 +21,9 @@ import {
     setPropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
+    compareCurrentBreakpoint as ccb,
+    breakpointSM as sm,
+    breakpointMD as md,
 } from '../helpers'
 
 import {routerGetters} from '../../router-builder'
@@ -136,7 +139,7 @@ const
             </AdIframeWrapper>
             : <AdGag currentWidth={currentWidth}/>,
 
-    renderTag = (classes, currentBreakpoint, x, getTagLink) => <Link
+    renderTag = (classes, cb, x, getTagLink) => <Link
         to={getTagLink(x)}
         key={x}
         className={classes.routerLink}
@@ -147,7 +150,7 @@ const
             component="div"
             variant="outlined"
             color={
-                currentBreakpoint === 'xxs' || currentBreakpoint === 'xs'
+                ccb(cb, sm) === -1
                     ? 'primary'
                     : 'secondary'
             }
@@ -177,7 +180,7 @@ const
         classes, isSSR, data, favoriteVideoList, closeAdvertisementHandler,
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
         toggleReportDialogHandler, getTagLink, pageUrl,
-        handleSubmit, pristine, reset, currentBreakpoint, currentWidth, i18nButtons,
+        handleSubmit, pristine, reset, cb, currentWidth, i18nButtons, i18nRelatedVideo,
     }) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
@@ -188,9 +191,9 @@ const
                 <PageWrapper>
                     <PlayerSection>
                         <Typography
-                            variant={currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
+                            variant={ccb(cb, sm) === -1
                                 ? 'h6'
-                                : currentBreakpoint === 'sm'
+                                : ccb(cb, sm) === 0
                                 ? 'h5'
                                 : 'h4'}
                             classes={{
@@ -200,7 +203,7 @@ const
                             {`${data.getIn(['gallery', 'title'])} ${
                                 data.getIn(['pageText', 'galleryTitle'])}`}
                         </Typography>
-                        {currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
+                        {ccb(cb, sm) === -1
                             ? null
                             : <ProvidedBy
                                 classes={classes}
@@ -251,7 +254,7 @@ const
                                                 {ig(i18nButtons, 'backToMainPage')}
                                             </Button>
                                         </Link>
-                                        {currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
+                                        {ccb(cb, sm) === -1
                                             ? <ProvidedBy
                                                 classes={classes}
                                                 data={data}
@@ -281,25 +284,29 @@ const
                                 {renderIframe('sidebar1', currentWidth)}
                                 {renderIframe('sidebar2', currentWidth)}
                             </Advertisement>
-                            {currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
+                            {ccb(cb, sm) === -1
                                 ? null
                                 : <TagsWrapper>
                                 {data.getIn(['gallery', 'tags'])
                                     ? data.getIn(['gallery', 'tags']).map(x =>
-                                        renderTag(classes, currentBreakpoint, x, getTagLink))
+                                        renderTag(classes, cb, x, getTagLink))
                                     : null}
                             </TagsWrapper>}
                         </VideoPlayer>
                     </PlayerSection>
                     <RelatedVideos>
                         <Typography
-                            variant="h4"
+                            variant={ccb(cb, sm) === -1
+                                ? 'h6'
+                                : ccb(cb, sm) === 0
+                                ? 'h5'
+                                : 'h4'}
                             gutterBottom
                             classes={{
                                 root: classes.typographyTitle
                             }}
                         >
-                            {'Click On Each Of These Related Films'}
+                            {i18nRelatedVideo}
                         </Typography>
                         <VideoList
                             videoList={data.get('videoList')}
@@ -308,7 +315,7 @@ const
                     <BottomAdvertisement>
                         {renderIframe('bottom1', currentWidth)}
                         {renderIframe('bottom2', currentWidth)}
-                        {currentBreakpoint === 'xs' || currentBreakpoint === 'xxs' || currentBreakpoint === 'sm'
+                        {ccb(cb, md) === -1
                             ? null
                             : renderIframe('bottom3', currentWidth)}
                     </BottomAdvertisement>
@@ -355,8 +362,9 @@ export default compose(
                 'report-reason': 'reason_nothing',
             },
             currentWidth: state.getIn(['app', 'ui', 'currentWidth']),
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
+            cb: state.getIn(['app', 'ui', 'currentBreakpoint']),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+            i18nRelatedVideo: ig(state, 'app', 'locale', 'i18n', 'headers', 'relatedVideo'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
