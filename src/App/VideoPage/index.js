@@ -158,14 +158,14 @@ const
         />
     </Link>,
 
-    ProvidedBy = ({classes, data, withLabel = false}) => <Typography
+    ProvidedBy = ({classes, i18nLabelProvidedBy, data, withLabel = false}) => <Typography
         variant="body1"
         classes={{
             root: classes.typographySponsor
         }}
     >
         {withLabel
-            ? 'provided by: '
+            ? `${i18nLabelProvidedBy}: `
             : null}
         <SponsorLink
             href={data.getIn(['gallery', 'sponsorUrl'])}
@@ -181,6 +181,7 @@ const
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
         toggleReportDialogHandler, getTagLink, pageUrl,
         handleSubmit, pristine, reset, cb, currentWidth, i18nButtons, i18nRelatedVideo,
+        i18nLabelProvidedBy,
     }) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
@@ -206,6 +207,7 @@ const
                                 classes={classes}
                                 data={data}
                                 withLabel={true}
+                                i18nLabelProvidedBy={i18nLabelProvidedBy}
                             />}
                         <VideoPlayer>
                             <VideoWrapper>
@@ -358,6 +360,8 @@ export default compose(
             cb: state.getIn(['app', 'ui', 'currentBreakpoint']),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nRelatedVideo: ig(state, 'app', 'locale', 'i18n', 'headers', 'relatedVideo'),
+            i18nLabelProvidedBy: ig(state, 'app', 'locale', 'i18n', 'labels', 'providedBy'),
+            i18n: ig(state, 'app', 'locale', 'i18n', 'headers', 'relatedVideo'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
