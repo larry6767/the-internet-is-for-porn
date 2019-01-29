@@ -41,7 +41,7 @@ const
                 key={ig(siteLocale, 'code')}
                 value={ig(siteLocale, 'code')}
             >
-                <Item type={ig(siteLocale, 'code')}></Item>
+                <Item type={ig(siteLocale, 'code')}/>
                 {ig(siteLocale, 'title')}
             </MenuItem>)
         }
@@ -58,6 +58,7 @@ const
                     href={`//${ig(siteLocale, 'host')}`}
                     isActive={currentLanguage === ig(siteLocale, 'code')}
                 >
+                    <Item type={ig(siteLocale, 'code')}/>
                     {ig(siteLocale, 'title')}
                 </InlinedSelectionItem>
             )}
