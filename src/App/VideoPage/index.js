@@ -57,6 +57,9 @@ import {
     AdGag,
     TagsWrapper,
     SponsorLink,
+    VideoIframe,
+    AdIframeWrapper,
+    AdIframe,
 } from './assets'
 
 const
@@ -115,14 +118,23 @@ const
             {ig(i18nButtons, 'addToFavorite')}
         </Button>,
 
-    renderIframe = (src, isAd) =>
-        (!(process.env.NODE_ENV !== 'production' && isAd === 'isAd') || isAd !== 'isAd')
-            ? <iframe
+    renderIframe = (src, currentWidth, isVideo) =>
+        isVideo === 'isVideo'
+            ? <VideoIframe
                 title={src}
                 src={src}
                 frameBorder="0"
-            ></iframe>
-            : <AdGag/>,
+            />
+            : process.env.NODE_ENV === 'production'
+            ? <AdIframeWrapper currentWidth={currentWidth}>
+                <AdIframe
+                    title={src}
+                    src={`https://videosection.com/_ad#str-eng-1545--${src}`}
+                    currentWidth={currentWidth}
+                    frameBorder="0"
+                />
+            </AdIframeWrapper>
+            : <AdGag currentWidth={currentWidth}/>,
 
     renderTag = (classes, currentBreakpoint, x, getTagLink) => <Link
         to={getTagLink(x)}
@@ -143,11 +155,29 @@ const
         />
     </Link>,
 
+    ProvidedBy = ({classes, data, withLabel = false}) => <Typography
+        variant="body1"
+        classes={{
+            root: classes.typographySponsor
+        }}
+    >
+        {withLabel
+            ? 'provided by: '
+            : null}
+        <SponsorLink
+            href={data.getIn(['gallery', 'sponsorUrl'])}
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            {`itIsJustGag${data.getIn(['gallery', 'sponsorId'])}`}
+        </SponsorLink>
+    </Typography>,
+
     VideoPage = ({
         classes, isSSR, data, favoriteVideoList, closeAdvertisementHandler,
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
         toggleReportDialogHandler, getTagLink, pageUrl,
-        handleSubmit, pristine, reset, currentBreakpoint, i18nButtons,
+        handleSubmit, pristine, reset, currentBreakpoint, currentWidth, i18nButtons,
     }) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
@@ -158,7 +188,11 @@ const
                 <PageWrapper>
                     <PlayerSection>
                         <Typography
-                            variant="h4"
+                            variant={currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
+                                ? 'h6'
+                                : currentBreakpoint === 'sm'
+                                ? 'h5'
+                                : 'h4'}
                             classes={{
                                 root: classes.typographyTitle
                             }}
@@ -166,38 +200,33 @@ const
                             {`${data.getIn(['gallery', 'title'])} ${
                                 data.getIn(['pageText', 'galleryTitle'])}`}
                         </Typography>
-                        <Typography
-                            variant="body1"
-                            classes={{
-                                root: classes.typographySponsor
-                            }}
-                        >
-                            {'provided by: '}
-                            <SponsorLink
-                                href={data.getIn(['gallery', 'sponsorUrl'])}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                {`itIsJustGag${data.getIn(['gallery', 'sponsorId'])}`}
-                            </SponsorLink>
-                        </Typography>
+                        {currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
+                            ? null
+                            : <ProvidedBy
+                                classes={classes}
+                                data={data}
+                                withLabel={true}
+                            />}
                         <VideoPlayer>
                             <VideoWrapper>
                                 <Video>
                                     {(data.get('inlineAdvertisementIsShowed') && !isSSR)
                                         ? <InlineAdvertisementWrapper>
-                                            <InlineAdvertisement>
+                                            <InlineAdvertisement
+                                                currentWidth={currentWidth}
+                                            >
                                                 <CloseAdvertisement
                                                     onClick={closeAdvertisementHandler}
                                                 />
-                                                {renderIframe(
-                                                    'https://videosection.com/_ad#str-eng-1545--invideo',
-                                                    'isAd'
-                                                )}
+                                                {renderIframe('invideo', currentWidth)}
                                             </InlineAdvertisement>
                                         </InlineAdvertisementWrapper>
                                         : null}
-                                    {renderIframe(data.getIn(['gallery', 'urlForIframe']))}
+                                    {renderIframe(
+                                        data.getIn(['gallery', 'urlForIframe']),
+                                        null,
+                                        'isVideo'
+                                    )}
                                 </Video>
                                 <ControlPanel>
                                     <ControlPanelBlock>
@@ -222,6 +251,12 @@ const
                                                 {ig(i18nButtons, 'backToMainPage')}
                                             </Button>
                                         </Link>
+                                        {currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
+                                            ? <ProvidedBy
+                                                classes={classes}
+                                                data={data}
+                                            />
+                                            : null}
                                     </ControlPanelBlock>
                                     <ControlPanelBlock>
                                         {!isSSR
@@ -229,7 +264,7 @@ const
                                                 variant="contained"
                                                 color="primary"
                                                 classes={{
-                                                    root: classes.buttonRoot
+                                                    root: classes.buttonReport
                                                 }}
                                                 onClick={toggleReportDialogHandler}
                                             >
@@ -243,14 +278,8 @@ const
                                 </ControlPanel>
                             </VideoWrapper>
                             <Advertisement>
-                                {renderIframe(
-                                    'https://videosection.com/_ad#str-eng-1545--sidebar1',
-                                    'isAd'
-                                )}
-                                {renderIframe(
-                                    'https://videosection.com/_ad#str-eng-1545--sidebar2',
-                                    'isAd'
-                                )}
+                                {renderIframe('sidebar1', currentWidth)}
+                                {renderIframe('sidebar2', currentWidth)}
                             </Advertisement>
                             {currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
                                 ? null
@@ -277,9 +306,11 @@ const
                         />
                     </RelatedVideos>
                     <BottomAdvertisement>
-                        {renderIframe('https://videosection.com/_ad#str-eng-1545--bottom1', 'isAd')}
-                        {renderIframe('https://videosection.com/_ad#str-eng-1545--bottom2', 'isAd')}
-                        {renderIframe('https://videosection.com/_ad#str-eng-1545--bottom3', 'isAd')}
+                        {renderIframe('bottom1', currentWidth)}
+                        {renderIframe('bottom2', currentWidth)}
+                        {currentBreakpoint === 'xs' || currentBreakpoint === 'xxs' || currentBreakpoint === 'sm'
+                            ? null
+                            : renderIframe('bottom3', currentWidth)}
                     </BottomAdvertisement>
                 </PageWrapper>
                 <ReportDialog
@@ -323,6 +354,7 @@ export default compose(
                 [fieldNamesArray[3]]: state.getIn(['app', 'videoPage', 'currentHref']),
                 'report-reason': 'reason_nothing',
             },
+            currentWidth: state.getIn(['app', 'ui', 'currentWidth']),
             currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
         }),

@@ -16,7 +16,6 @@ export const VideoPlayer = styled.div`
     flex-wrap: wrap;
     width: 100%;
     border-radius: 2px;
-    overflow: hidden;
     background-color: ${({theme}) => theme.palette.primary.light};
 
     ${({theme}) => theme.media.sm`flex-direction: column;`}
@@ -44,17 +43,19 @@ export const Video = styled.div`
         content: '';
         padding-top: 468px;
 
-        ${({theme}) => theme.media.mobile`padding-top: 300px;`}
+        ${({theme}) => theme.media.mobile`padding-top: 80%;`}
     }
+`
 
-    & iframe {
-        position: absolute;
-        z-index: 1;
-        width: 100%;
-        height: 100%;
-        flex-grow: 1;
-        border-radius: 2px;
-    }
+export const VideoIframe = styled.iframe`
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    border-radius: 2px;
+
+    ${({theme}) => theme.media.mobile`width: calc(100% + 20px); left: -10px;`}
 `
 
 export const ControlPanel = styled.div`
@@ -73,6 +74,46 @@ export const ControlPanelBlock = styled.div`
     ${({theme}) => theme.media.mobile`flex-wrap: wrap;`}
 `
 
+export const Advertisement = styled.div`
+    display: flex;
+    width: 320px;
+    padding: 10px;
+    flex-direction: column;
+
+    ${({theme}) => theme.media.sm`
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        order: 1;
+    `}
+
+    ${({theme}) => theme.media.mobile`
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0;
+        order: 1;
+    `}
+`
+
+export const BottomAdvertisement = styled.section`
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    background-color: ${({theme}) => theme.palette.primary.light};
+    padding: 10px 10px 7px;
+    border-radius: 2px;
+
+    ${({theme}) => theme.media.sm`flex-wrap: wrap; justify-content: space-around;`}
+    ${({theme}) => theme.media.mobile`
+        padding: 0;
+        background-color: none;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        background: none;
+    `}
+`
+
 export const InlineAdvertisementWrapper = styled.div`
     position: absolute;
     z-index: 2;
@@ -82,19 +123,47 @@ export const InlineAdvertisementWrapper = styled.div`
     bottom: 0;
     background-color: ${({theme}) => theme.palette.primary.lightOpacity};
     cursor: not-allowed;
+
+    ${({theme}) => theme.media.mobile`left: -10px; right: -10px;`}
 `
 
 export const AdGag = styled.div`
+    width: 300px;
+    height: 254px;
     display: flex;
     justify-content: center;
     align-items: center;
     background: ${({theme}) => `${theme.palette.secondary.main}`};
+    border-radius: 2px;
+    margin-bottom: 10px;
+
+    ${({theme}) => theme.media.sm`
+        width: calc(300px * 0.9);
+        height: calc(254px * 0.9);
+    `}
+
+    ${({theme, currentWidth}) => theme.media.mobile`
+        width: ${getAdWidth(currentWidth, 2)}px;
+        height: ${getAdWidth(currentWidth, 2) * heightRatio}px;
+    `}
 
     &::before {
         content: 'Gag for advertisement';
         color: ${({theme}) => `${theme.palette.primary.main}`};
+        text-align: center;
     }
 `
+
+const
+    getAdWidth = (currentWidth, quantity) => (currentWidth - quantity * 10 - 10) / quantity,
+    getCrazyAdStyles = (currentWidth, quantity, abstractСoefficient) => `
+        width: ${(abstractСoefficient - getAdWidth(currentWidth, quantity) / 300) * 300}px;
+        height: ${(abstractСoefficient - getAdWidth(currentWidth, quantity) / 254) * 254}px;
+        zoom: ${getAdWidth(currentWidth, quantity) / 300};
+        transform: scale(${getAdWidth(currentWidth, quantity) / 300});
+        transform-origin: 0 0;
+    `,
+    heightRatio = 0.84
 
 export const InlineAdvertisement = styled.div`
     position: absolute;
@@ -103,21 +172,19 @@ export const InlineAdvertisement = styled.div`
     width: 300px;
     height: 254px;
     background-color: ${({theme}) => theme.palette.primary.light};
+    overflow: hidden;
 
-    ${({theme}) => theme.media.mobile`
-        top: calc(50% - 85px);
-        left: calc(50% - 100px);
-        width: 200px;
-        height: 170px;
+    ${({theme}) => theme.media.sm`
+        width: calc(300px * 0.9);
+        height: calc(254px * 0.9);
     `}
 
-    & iframe,
-    ${AdGag} {
-        border-radius: 2px;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-    }
+    ${({theme, currentWidth}) => theme.media.mobile`
+        top: calc(50% - ${getAdWidth(currentWidth, 2) / 2 * heightRatio}px);
+        left: calc(50% - ${getAdWidth(currentWidth, 2) / 2}px);
+        width: ${getAdWidth(currentWidth, 2)}px;
+        height: ${getAdWidth(currentWidth, 2) * heightRatio}px;
+    `}
 
     ${AdGag} {
         position: relative;
@@ -145,75 +212,50 @@ export const CloseAdvertisement = styled.div`
     cursor: pointer;
 `
 
-export const Advertisement = styled.div`
-    display: flex;
-    width: 320px;
-    padding: 10px;
-    flex-direction: column;
+export const AdIframeWrapper = styled.div`
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
 
     ${({theme}) => theme.media.sm`
-        width: 100%;
-        flex-direction: row;
-        justify-content: space-around;
-        order: 1;
+        width: calc(300px * 0.9);
     `}
 
-    ${({theme}) => theme.media.mobile`
-        width: 100%;
-        flex-wrap: wrap;
-        flex-direction: row;
-        justify-content: space-around;
-        padding: 0;
-        order: 1;
+    ${({theme, currentWidth}) => theme.media.xs`
+        width: ${getAdWidth(currentWidth, 2)}px;
     `}
 
-    & iframe,
-    ${AdGag} {
-        width: 300px;
-        height: 254px;
-        border-radius: 2px;
-        overflow: hidden;
+    ${({theme, currentWidth}) => theme.media.xxs`
+        width: ${getAdWidth(currentWidth, 2)}px;
+    `}
 
-        ${({theme}) => theme.media.sm`width: calc(50% - 10px);`}
-
-        &:not(:last-child) {
-            margin-bottom: 10px;
-
-            ${({theme}) => theme.media.sm`margin-bottom: 0;`}
-        }
+    &::before {
+        display: block;
+        content: '';
+        padding-top: ${heightRatio * 100}%;
     }
+`
+
+export const AdIframe = styled.iframe`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 254px;
+    border-radius: 2px;
+    ${({theme}) => theme.media.sm`
+        width: calc(300px * 1.15);
+        height: calc(254px * 1.15);
+        zoom: 0.9;
+        transform: scale(0.9);
+        transform-origin: 0 0;
+    `}
+    ${({theme, currentWidth}) => theme.media.xs`${getCrazyAdStyles(currentWidth, 2, 2.3)}`}
+    ${({theme, currentWidth}) => theme.media.xxs`${getCrazyAdStyles(currentWidth, 2, 2.6)}`}
 `
 
 export const RelatedVideos = styled.section`
     margin-bottom: 40px;
-`
-
-export const BottomAdvertisement = styled.section`
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    background-color: ${({theme}) => theme.palette.primary.light};
-    padding: 10px 10px 7px;
-    border-radius: 2px;
-
-    ${({theme}) => theme.media.sm`flex-wrap: wrap; justify-content: space-around;`}
-    ${({theme}) => theme.media.mobile`
-        flex-wrap: wrap;
-        justify-content: space-around;
-        background: none;
-    `}
-
-    & iframe,
-    ${AdGag} {
-        width: 300px;
-        height: 254px;
-        border-radius: 2px;
-
-        &:not(:last-child) {
-            ${({theme}) => theme.media.sm`margin-bottom: 10px;`}
-            ${({theme}) => theme.media.mobile`margin-bottom: 10px;`}
-        }
-    }
 `
 
 export const TagsWrapper = styled.div`

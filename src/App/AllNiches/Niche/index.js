@@ -6,6 +6,7 @@ import {CircularProgress, Typography} from '@material-ui/core'
 import {Record} from 'immutable'
 
 import {
+    getHeaderWithOrientation,
     getHeaderText,
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -48,6 +49,8 @@ const
         controlBackFromArchiveLinkBuilder,
         listsTagLinkBuilder,
         listsArchiveLinkBuilder,
+        i18nListNichesHeader,
+        i18nListArchiveHeader,
     }) => <Page>
         { ig(data, 'isFailed')
             ? <ErrorContent/>
@@ -63,6 +66,9 @@ const
 
                     tagArchiveList={ig(data, 'tagArchiveList')}
                     archiveLinkBuilder={listsArchiveLinkBuilder}
+
+                    i18nListNichesHeader={i18nListNichesHeader}
+                    i18nListArchiveHeader={i18nListArchiveHeader}
                 />
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
@@ -138,6 +144,8 @@ export default compose(
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+            i18nListNichesHeader: getHeaderWithOrientation(state, 'listNiches'),
+            i18nListArchiveHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'listArchive'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -224,6 +232,8 @@ export default compose(
         routerContext: routerContextModel,
         i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,
+        i18nListNichesHeader: PropTypes.string,
+        i18nListArchiveHeader: PropTypes.string,
 
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,

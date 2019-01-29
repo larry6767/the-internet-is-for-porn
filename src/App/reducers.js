@@ -26,6 +26,7 @@ import {immutableLocaleRouterModel, immutableI18nModel} from './models'
 const
     defaultSSR = fromJS({isSSR: false}),
     stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
+        currentWidth: PropTypes.number,
         currentBreakpoint: PropTypes.string,
         favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
@@ -43,8 +44,10 @@ export default combineReducers({
     findVideos: findVideosReducer,
 
     ui: provedHandleActions(stateModel, {
-        [g(actions, 'resize')]: (state, action) =>
-            state.set('currentBreakpoint', getCurrentBreakpoint(action.payload)),
+        [g(actions, 'resize')]: (state, action) => state.merge({
+            currentWidth: action.payload,
+            currentBreakpoint: getCurrentBreakpoint(action.payload),
+        }),
 
         [g(actions, 'setFavoriteVideoList')]: (state, {payload: favoriteVideoList}) =>
             state.set('favoriteVideoList', List(favoriteVideoList)),
@@ -60,6 +63,7 @@ export default combineReducers({
         [g(actions, 'removePornstarIdFromFavorite')]: (state, {payload: id}) =>
             removeIdFromFavoriteList(state, 'favoritePornstarList', id),
     }, fromJS({
+        currentWidth: 0,
         currentBreakpoint: getCurrentBreakpoint(),
         favoriteVideoList: List(),
         favoritePornstarList: List(),

@@ -4,6 +4,13 @@ export const muiStyles = theme => ({
     },
     typographyTitle: {
         maxWidth: '100%',
+
+        [theme.breakpoints.down('xs')]: {
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+            marginBottom: 10,
+        },
     },
     typographySponsor: {
         color: theme.palette.primary.main,
@@ -11,10 +18,7 @@ export const muiStyles = theme => ({
     },
     buttonRoot: {
         marginBottom: 10,
-
-        '&:not(:last-child)': {
-            marginRight: 10
-        },
+        marginRight: 10,
 
         [theme.breakpoints.down('xs')]: {
             fontSize: 0,
@@ -25,6 +29,7 @@ export const muiStyles = theme => ({
     },
     buttonFavorite: {
         marginBottom: 10,
+        marginRight: 10,
 
         [theme.breakpoints.down('sm')]: {
             fontSize: 0,
@@ -32,10 +37,16 @@ export const muiStyles = theme => ({
             minHeight: 36,
             padding: '6px 6px',
         },
+    },
+    buttonReport: {
+        marginBottom: 10,
 
-        '&:not(:last-child)': {
-            marginRight: 10
-        }
+        [theme.breakpoints.down('xs')]: {
+            fontSize: 0,
+            minWidth: 36,
+            minHeight: 36,
+            padding: '6px 6px',
+        },
     },
     favoriteBorderIcon: {
         color: theme.palette.primary.contrastText,
