@@ -13,18 +13,19 @@ export const Item = styled.span`
 
 export const InlinedSelectionWrap = styled.div`
     display: block;
+    width: 100%;
+    margin: 10px 0;
 `
 
 export const InlinedSelectionList = styled.nav`
     display: flex;
     justify-content: center;
-    padding: 1px 0 0.5px;
 `
 
 export const InlinedSelectionItem = styled.a`
     display: inline-block;
-    padding: 10px 2px;
-    border: 1px solid
+    padding: 10px 8px;
+    border: 2px solid
         ${({theme, isActive}) => isActive ? theme.palette.secondary.dark : theme.palette.primary.light};
     color:
         ${({theme, isActive}) =>
