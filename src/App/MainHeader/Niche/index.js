@@ -59,7 +59,7 @@ const
             /* WARNING! <a> with `href` attribute is important to give bare links to SSR */
             (isSSR || compareCurrentBreakpoint(currentBreakpoint, breakpointXS) <= 0)
 
-            ? <NicheMobile>
+            ? <NicheMobile isSSR={isSSR}>
                 {orientationCodes.map(orientationCode =>
                     currentOrientation === orientationCode
 

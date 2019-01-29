@@ -1,6 +1,7 @@
 import React from 'react'
-import {Select, MenuItem, OutlinedInput, CircularProgress, SvgIcon, Chip} from '@material-ui/core'
+import {Select, MenuItem, OutlinedInput, CircularProgress, Chip} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
+import WarningIcon from '@material-ui/icons/Warning'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
 import {Record} from 'immutable'
@@ -49,12 +50,7 @@ const
     // implementation for SSR, to give search engines bare links they could follow
     // TODO FIXME set proper `href` attribute
     // WARNING! <a> with `href` attribute is important to give bare links to SSR
-    LanguageSelectInlined = ({
-        classes,
-        siteLocales,
-        currentLanguage,
-        chooseLanguage,
-    }) => <InlinedSelectionWrap>
+    LanguageSelectInlined = ({siteLocales, currentLanguage}) => <InlinedSelectionWrap>
         <InlinedSelectionList>
             {siteLocales.map(siteLocale =>
                 <InlinedSelectionItem
@@ -62,7 +58,6 @@ const
                     href={`//${ig(siteLocale, 'host')}`}
                     isActive={currentLanguage === ig(siteLocale, 'code')}
                 >
-                    <Item type={ig(siteLocale, 'code')}></Item>
                     {ig(siteLocale, 'title')}
                 </InlinedSelectionItem>
             )}
@@ -80,9 +75,7 @@ const
         ig(siteLocalesState, 'isFailed')
         ? <Chip
             label="Failed to load site locales!"
-            icon={<SvgIcon>
-                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
-            </SvgIcon>}
+            icon={<WarningIcon/>}
         />
 
         : ig(siteLocalesState, 'isLoading') || !ig(siteLocalesState, 'isLoaded')

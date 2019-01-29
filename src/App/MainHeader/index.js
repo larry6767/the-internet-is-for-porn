@@ -34,7 +34,7 @@ import {muiStyles} from './assets/muiStyles'
 const
     MainHeader = ({
         classes, isSSR, pageUrl, currentBreakpoint,
-        data, toggleSearchAction, pageText
+        data, toggleSearchAction
     }) => {
         const
             isXSorXXS = currentBreakpoint === 'xs' || currentBreakpoint === 'xxs',
@@ -64,7 +64,9 @@ const
                             {ig(data, 'description')}
                         </Typography>
                     </TextWrapper>
-                    <SearchWrapper>
+                    <SearchWrapper
+                        isSSR={isSSR}
+                    >
                         {
                             isXSorXXS && isSearchShown ? '' :
                             isXSorXXS ? <BurgerMenu/> : ''

@@ -33,6 +33,7 @@ const Wrapper = styled.div`
 
 export const SearchWrapper = styled(Wrapper)`
     justify-content: space-between;
+    ${({isSSR}) => isSSR ? `width: calc(100% - 330px);` : ``}
 
     ${({theme}) => theme.media.mobile`width: 100%; min-height: 70px; flex-wrap: wrap;`}
 `
@@ -82,7 +83,8 @@ export const BottomInner = styled.div`
     padding: 0 10px;
     margin: 0 auto;
 
-    ${({isSSR}) => `display: ${isSSR ? 'block' : 'flex'};`}
+    ${'' /* ${({isSSR}) => `display: ${isSSR ? 'block' : 'flex'};`} */}
+    display: flex;
     ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}
 `

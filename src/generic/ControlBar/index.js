@@ -262,8 +262,11 @@ const
         />
     </Fragment>),
 
-    ShowedElements = ({itemsCount, pageNumber}) => <Typography variant="body1" gutterBottom>
-        {`Showing ${itemsCount * pageNumber - (itemsCount - 1)} - ${itemsCount * pageNumber}`}
+    ShowedElements = ({
+        itemsCount, pageNumber, i18nLabelShowing
+    }) => <Typography variant="body1" gutterBottom>
+        {`${i18nLabelShowing
+            } ${itemsCount * pageNumber - (itemsCount - 1)} - ${itemsCount * pageNumber}`}
     </Typography>,
 
     ControlBar = ({
@@ -273,6 +276,7 @@ const
 
         i18nOrdering,
         i18nButtons,
+        i18nLabelShowing,
 
         linkBuilder,
         backFromArchiveLinkBuilder,
@@ -349,6 +353,7 @@ const
             <ShowedElements
                 itemsCount={itemsCount}
                 pageNumber={pageNumber}
+                i18nLabelShowing={i18nLabelShowing}
             />
         </Wrapper>
     }
@@ -362,6 +367,7 @@ export default compose(
 
         i18nOrdering: immutableI18nOrderingModel.isOptional,
         i18nButtons: immutableI18nButtonsModel,
+        i18nLabelShowing: PropTypes.string,
 
         linkBuilder: PropTypes.func,
         archiveLinkBuilder: PropTypes.func.isOptional,

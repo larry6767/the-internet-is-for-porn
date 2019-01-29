@@ -15,8 +15,11 @@ export const NicheWrapper = styled.div`
 
 export const NicheMobile = styled.nav`
     display: flex;
-    width: 100%;
     justify-content: center;
+    ${({isSSR}) => isSSR ? `
+        width: 320px;
+        margin-left: 10px;
+        padding: 9px 0 10px;` : `width: 100%;`};
 `
 export const NicheMobileItem = styled.a`
     width: 33.33%;
