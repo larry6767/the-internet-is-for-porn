@@ -50,6 +50,7 @@ const
         classes,
         isSSR,
         i18nButtons,
+        i18nLabelShowing,
         favorite,
         controlLinkBuilder,
         controlFavoriteLinkBuilder,
@@ -77,6 +78,7 @@ const
                     <ControlBar
                         isSSR={isSSR}
                         i18nButtons={i18nButtons}
+                        i18nLabelShowing={i18nLabelShowing}
                         linkBuilder={controlLinkBuilder}
                         favoriteLinkBuilder={controlFavoriteLinkBuilder}
                         pagesCount={ig(favorite, 'pagesCount')}
@@ -110,6 +112,7 @@ export default compose(
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+            i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
             favorite: FavoriteRecord(ig(state, 'app', 'favorite')),
         }),
         {
@@ -145,6 +148,7 @@ export default compose(
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
+        i18nLabelShowing: PropTypes.string,
         favorite: ImmutablePropTypes.record, // TODO better type
         controlLinkBuilder: PropTypes.func,
         controlFavoriteLinkBuilder: PropTypes.func,

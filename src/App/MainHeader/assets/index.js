@@ -82,9 +82,8 @@ export const BottomInner = styled.div`
     align-items: center;
     padding: 0 10px;
     margin: 0 auto;
-
-    ${'' /* ${({isSSR}) => `display: ${isSSR ? 'block' : 'flex'};`} */}
     display: flex;
+
     ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}
 `

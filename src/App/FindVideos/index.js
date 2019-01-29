@@ -51,6 +51,7 @@ const
         currentBreakpoint,
         i18nOrdering,
         i18nButtons,
+        i18nLabelShowing,
         findVideos,
         chooseSort,
         isSSR,
@@ -76,6 +77,7 @@ const
                         cb={currentBreakpoint}
                         i18nOrdering={i18nOrdering}
                         i18nButtons={i18nButtons}
+                        i18nLabelShowing={i18nLabelShowing}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
                         pagesCount={ig(findVideos, 'pagesCount')}
@@ -118,6 +120,7 @@ export default compose(
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
+            i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
