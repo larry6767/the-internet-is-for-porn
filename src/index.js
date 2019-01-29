@@ -11,8 +11,20 @@ import {BACKEND_URL} from './config'
 store.runSaga(saga)
 
 const
-    rootEl = document.getElementById('root'),
-    runFrontEnd = () => render(<Root />, rootEl)
+    rootEl = g(document.getElementById('root'), []),
+    loadingEl = g(document.getElementById('loading'), []),
+
+    runFrontEnd = async () => {
+        try {
+            render(<Root />, rootEl)
+        } catch (err) {
+            console.error('Application initialization is failed with exception:', err)
+            window.alert('Application initialization is failed!')
+        } finally {
+            loadingEl.remove()
+            rootEl.classList.add('loaded')
+        }
+    }
 
 if (process.env.NODE_ENV === 'production')
     runFrontEnd()
@@ -41,7 +53,7 @@ else {
             store.dispatch(appActions.setLocaleCode(g(x, 'localeCode')))
             store.dispatch(appActions.fillLocaleRouter(g(x, 'router')))
             store.dispatch(appActions.fillLocaleI18n(g(x, 'i18n')))
-            runFrontEnd()
+            return runFrontEnd()
         }).catch(err => {
             console.error('Application initialization is failed with exception:', err)
             render(<div>

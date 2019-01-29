@@ -10,6 +10,40 @@
     <title>The internet is for pOOOrn</title>
   </head>
   <body>
+    <!-- WARNING! This div#loading is supposed to be left as is (SSR use it as separator)! -->
+    <div id="loading" style="display:none">Loading…</div>
+
+    <script>
+      document.getElementById('loading').style.display = ''
+      var style = document.createElement('style')
+      style.type = 'text/css'
+      style.appendChild(document.createTextNode(
+        '#loading {'+
+          'display: flex;'+
+          'position: fixed;'+
+          'width: 100%;'+
+          'height: 100%;'+
+          'z-index: 1;'+
+          'justify-content: center;'+
+          'align-items: center;'+
+          'background: white;'+
+        '}'+
+        '#root {'+
+          'position: fixed;'+
+          'overflow: hidden;'+
+          'opacity: 0;'+
+          'z-index: -1;'+
+        '}'+
+        '#root.loaded {'+
+          'position: unset;'+
+          'overflow: unset;'+
+          'opacity: unset;'+
+          'z-index: unset;'+
+        '}'
+      ))
+      document.getElementsByTagName('head')[0].appendChild(style)
+    </script>
+
     <!-- WARNING! This div#root is supposed to be left as is (SSR use it as separator)! -->
     <div id="root"></div>
   </body>
