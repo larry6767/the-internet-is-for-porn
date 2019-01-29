@@ -35,6 +35,13 @@ export const NicheMobileItem = styled.a`
         border-radius: 0 4px 4px 0;
         border-left: none;
     }
+
+    ${({theme}) => theme.media.mobile`
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding: 10px;
+    `}
 `
 
 export const NicheMobileItemSelected = styled(NicheMobileItem)`

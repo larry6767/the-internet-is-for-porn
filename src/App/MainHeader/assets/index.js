@@ -90,4 +90,11 @@ export const BottomInner = styled.div`
 export const TextWrapper = styled.div`
     width: 100%;
     margin-bottom: 10px;
+
+    ${({theme}) => theme.media.mobile`
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: ${({theme}) => theme.palette.primary.contrastText};
+    `}
 `
