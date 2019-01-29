@@ -33,6 +33,7 @@ const Wrapper = styled.div`
 
 export const SearchWrapper = styled(Wrapper)`
     justify-content: space-between;
+    ${({isSSR}) => isSSR ? `width: calc(100% - 330px);` : ``}
 
     ${({theme}) => theme.media.mobile`width: 100%; min-height: 70px; flex-wrap: wrap;`}
 `
@@ -62,15 +63,18 @@ export const Icon = styled.div`
     background-repeat: no-repeat;
     background-position: center;
     background-size: 25px;
-    ${({type}) => {
-        if (type === 'search')
-        return 'background-image: url(/img/search.svg);'
-        if (type === 'close')
-        return `
+    ${({type}) =>
+        type === 'search'
+        ? 'background-image: url(/img/search.svg);'
+
+        : type === 'close'
+        ? `
             background-image: url(/img/close.svg);
             order: 2;
         `
-    }}
+
+        : ''
+    }
 
     ${({theme}) => theme.media.mobile`display: block;`}
 `
@@ -81,7 +85,6 @@ export const BottomInner = styled.div`
     align-items: center;
     padding: 0 10px;
     margin: 0 auto;
-
     ${({isSSR}) => `display: ${isSSR ? 'block' : 'flex'};`}
     ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}
@@ -90,4 +93,11 @@ export const BottomInner = styled.div`
 export const TextWrapper = styled.div`
     width: 100%;
     margin-bottom: 10px;
+
+    ${({theme}) => theme.media.mobile`
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: ${({theme}) => theme.palette.primary.contrastText};
+    `}
 `

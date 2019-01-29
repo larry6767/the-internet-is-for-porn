@@ -2,7 +2,7 @@ import {throttle} from 'lodash'
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle} from 'recompose'
-import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles'
+import {MuiThemeProvider} from '@material-ui/core/styles'
 import {ThemeProvider as SCThemeProvider} from 'styled-components'
 import {Normalize} from 'styled-normalize'
 
@@ -12,20 +12,8 @@ import MainHeader from './MainHeader'
 import MainFooter from './MainFooter'
 import actions from './actions'
 import theme from './assets/theme'
+import muiTheme from './assets/muiTheme'
 import GlobalStyle from './assets/style'
-
-const
-    muiTheme = createMuiTheme({
-        palette: {
-            primary: {...theme.palette.primary},
-            secondary: {...theme.palette.secondary},
-            error: {...theme.palette.error},
-            success: {...theme.palette.success},
-        },
-        typography: {
-            useNextVariants: true,
-        },
-    })
 
 export const App = ({sheetsManager, routerContext, children}) => <MuiThemeProvider
     theme={muiTheme}

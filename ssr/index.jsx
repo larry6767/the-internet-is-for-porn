@@ -11,8 +11,15 @@ import {json} from 'body-parser'
 // react and jsx stuff
 import React from 'react'
 import Router from 'react-router'
+import {renderToString} from 'react-dom/server'
+import {SheetsRegistry} from 'jss'
+import JssProvider from 'react-jss/lib/JssProvider'
+import {createGenerateClassName} from '@material-ui/core/styles'
+import {CircularProgress} from '@material-ui/core'
+import {MuiThemeProvider} from '@material-ui/core/styles'
 
 // local libs
+import muiTheme from './App/assets/muiTheme'
 import {plainProvedGet as g} from './App/helpers'
 import {patchSiteLocales} from './App/helpers/hostLocale'
 import {deepFreeze} from './lib/helpers'
@@ -62,11 +69,44 @@ const initApp = async () => {
 
         render = renderPage(siteLocales, defaultSiteLocaleCode, (result => {
             const
-                split = result[0].split('<title>The internet is for pOOOrn</title>')
+                split = result[0].split('<title>The internet is for pOOOrn</title>'),
+
+                loadingDiv = '<div id="loading" style="display:none">',
+                split2 = split[1].split(`${loadingDiv}Loading…</div>`),
+
+                jssSheetsRegistry = process.env.NODE_ENV !== 'production' ? null :
+                    new SheetsRegistry(),
+
+                loadingInnards = process.env.NODE_ENV !== 'production' ? null : renderToString(
+                    <JssProvider
+                        registry={jssSheetsRegistry}
+                        generateClassName={createGenerateClassName({
+                            productionPrefix: 'loading-block',
+                        })}
+                    >
+                        <MuiThemeProvider theme={muiTheme} sheetsManager={new Map()}>
+                            <CircularProgress size={128}/>
+                        </MuiThemeProvider>
+                    </JssProvider>
+                ),
+
+                jssLoadingStyles = process.env.NODE_ENV !== 'production' ? null :
+                    `<style id="jss-loading-styles">
+                        ${jssSheetsRegistry.registry.filter(x => x.attached).join('\n')}
+                    </style>`,
+
+                // For development (non-production) mode we don't have frontend bundle
+                // on SSR server, so we don't need that loader since it never load enything.
+                loadingBlock = process.env.NODE_ENV !== 'production' ? '' :
+                    `${loadingDiv}${loadingInnards}${jssLoadingStyles}</div>`,
+
+                // Removing <script> tag for development (non-production) mode to avoid exceptions.
+                postLoadingPart = process.env.NODE_ENV === 'production' ? split2[1] :
+                    split2[1].replace(/<script id="loading-script">[^\0]*<\/script>/m, '')
 
             return {
                 pre: `${split[0]}`,
-                middle: `${split[1]}<div id="root">`,
+                middle: `${split2[0]}${loadingBlock}${postLoadingPart}<div id="root">`,
                 post: `</div>${result[1]}`
             }
         })(

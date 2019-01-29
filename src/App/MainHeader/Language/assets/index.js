@@ -13,23 +13,23 @@ export const Item = styled.span`
 
 export const InlinedSelectionWrap = styled.div`
     display: block;
+    width: 100%;
     margin: 10px 0;
 `
 
 export const InlinedSelectionList = styled.nav`
     display: flex;
-    width: 100%;
     justify-content: center;
 `
 
 export const InlinedSelectionItem = styled.a`
     display: inline-block;
-    padding: 10px 10px;
+    padding: 10px 8px;
     border: 2px solid
-        ${({theme, isActive}) => isActive ? theme.palette.primary.main : theme.palette.primary.dark};
+        ${({theme, isActive}) => isActive ? theme.palette.secondary.dark : theme.palette.primary.light};
     color:
         ${({theme, isActive}) =>
-            isActive ? theme.palette.primary.main : theme.palette.primary.light};
+            isActive ? theme.palette.secondary.dark : theme.palette.primary.light};
     text-align: center;
     white-space: nowrap;
     text-decoration: none;
@@ -43,11 +43,13 @@ export const InlinedSelectionItem = styled.a`
 
     &:first-child {
         border-radius: 4px 0 0 4px;
-        border-right: none;
     }
 
     &:last-child {
         border-radius: 0 4px 4px 0;
-        border-left: none;
+    }
+
+    &:not(:last-child) {
+        border-right: none;
     }
 `

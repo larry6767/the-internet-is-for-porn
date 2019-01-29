@@ -52,6 +52,7 @@ const
         classes,
         isSSR,
         i18nButtons,
+        i18nLabelShowing,
         controlLinkBuilder,
         controlFavoriteLinkBuilder,
         favorite,
@@ -80,6 +81,7 @@ const
                     <ControlBar
                         isSSR={isSSR}
                         i18nButtons={i18nButtons}
+                        i18nLabelShowing={i18nLabelShowing}
                         linkBuilder={controlLinkBuilder}
                         favoriteLinkBuilder={controlFavoriteLinkBuilder}
                         pagesCount={ig(favorite, 'pagesCount')}
@@ -115,6 +117,7 @@ export default compose(
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             favorite: FavoriteRecord(ig(state, 'app', 'favoritePornstars')),
+            i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),

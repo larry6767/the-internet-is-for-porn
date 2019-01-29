@@ -16,10 +16,7 @@ export const FooterInner = styled.div`
 `
 
 export const TextBlock = styled.div`
-    width: calc(100% - 70px);
-
-    ${({theme}) => theme.media.xl`width: 100%;`}
-    ${({theme}) => theme.media.xs`width: 100%;`}
+    width: 100%;
 `
 
 export const LinkList = styled.ul`

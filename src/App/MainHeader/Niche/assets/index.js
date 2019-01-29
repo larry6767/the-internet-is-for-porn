@@ -15,8 +15,11 @@ export const NicheWrapper = styled.div`
 
 export const NicheMobile = styled.nav`
     display: flex;
-    width: 100%;
     justify-content: center;
+    ${({isSSR}) => isSSR ? `
+        width: 320px;
+        margin-left: 10px;
+        padding: 9px 0 10px;` : `width: 100%;`};
 `
 export const NicheMobileItem = styled.a`
     width: 33.33%;
@@ -35,6 +38,13 @@ export const NicheMobileItem = styled.a`
         border-radius: 0 4px 4px 0;
         border-left: none;
     }
+
+    ${({theme}) => theme.media.mobile`
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding: 10px;
+    `}
 `
 
 export const NicheMobileItemSelected = styled(NicheMobileItem)`

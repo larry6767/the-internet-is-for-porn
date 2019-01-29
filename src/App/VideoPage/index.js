@@ -21,6 +21,9 @@ import {
     setPropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
+    compareCurrentBreakpoint as ccb,
+    breakpointSM as sm,
+    breakpointMD as md,
 } from '../helpers'
 
 import {routerGetters} from '../../router-builder'
@@ -57,6 +60,9 @@ import {
     AdGag,
     TagsWrapper,
     SponsorLink,
+    VideoIframe,
+    AdIframeWrapper,
+    AdIframe,
 } from './assets'
 
 const
@@ -115,16 +121,25 @@ const
             {ig(i18nButtons, 'addToFavorite')}
         </Button>,
 
-    renderIframe = (src, isAd) =>
-        (!(process.env.NODE_ENV !== 'production' && isAd === 'isAd') || isAd !== 'isAd')
-            ? <iframe
+    renderIframe = (src, currentWidth, isVideo) =>
+        isVideo === 'isVideo'
+            ? <VideoIframe
                 title={src}
                 src={src}
                 frameBorder="0"
-            ></iframe>
-            : <AdGag/>,
+            />
+            : process.env.NODE_ENV === 'production'
+            ? <AdIframeWrapper currentWidth={currentWidth}>
+                <AdIframe
+                    title={src}
+                    src={`https://videosection.com/_ad#str-eng-1545--${src}`}
+                    currentWidth={currentWidth}
+                    frameBorder="0"
+                />
+            </AdIframeWrapper>
+            : <AdGag currentWidth={currentWidth}/>,
 
-    renderTag = (classes, currentBreakpoint, x, getTagLink) => <Link
+    renderTag = (classes, cb, x, getTagLink) => <Link
         to={getTagLink(x)}
         key={x}
         className={classes.routerLink}
@@ -135,7 +150,7 @@ const
             component="div"
             variant="outlined"
             color={
-                currentBreakpoint === 'xxs' || currentBreakpoint === 'xs'
+                ccb(cb, sm) === -1
                     ? 'primary'
                     : 'secondary'
             }
@@ -143,11 +158,30 @@ const
         />
     </Link>,
 
+    ProvidedBy = ({classes, i18nLabelProvidedBy, data, withLabel = false}) => <Typography
+        variant="body1"
+        classes={{
+            root: classes.typographySponsor
+        }}
+    >
+        {withLabel
+            ? `${i18nLabelProvidedBy}: `
+            : null}
+        <SponsorLink
+            href={data.getIn(['gallery', 'sponsorUrl'])}
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            {`itIsJustGag${data.getIn(['gallery', 'sponsorId'])}`}
+        </SponsorLink>
+    </Typography>,
+
     VideoPage = ({
         classes, isSSR, data, favoriteVideoList, closeAdvertisementHandler,
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
         toggleReportDialogHandler, getTagLink, pageUrl,
-        handleSubmit, pristine, reset, currentBreakpoint, i18nButtons,
+        handleSubmit, pristine, reset, cb, currentWidth, i18nButtons, i18nRelatedVideo,
+        i18nLabelProvidedBy,
     }) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
@@ -159,6 +193,7 @@ const
                     <PlayerSection>
                         <Typography
                             variant="h4"
+                            gutterBottom
                             classes={{
                                 root: classes.typographyTitle
                             }}
@@ -166,38 +201,34 @@ const
                             {`${data.getIn(['gallery', 'title'])} ${
                                 data.getIn(['pageText', 'galleryTitle'])}`}
                         </Typography>
-                        <Typography
-                            variant="body1"
-                            classes={{
-                                root: classes.typographySponsor
-                            }}
-                        >
-                            {'provided by: '}
-                            <SponsorLink
-                                href={data.getIn(['gallery', 'sponsorUrl'])}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                {`itIsJustGag${data.getIn(['gallery', 'sponsorId'])}`}
-                            </SponsorLink>
-                        </Typography>
+                        {ccb(cb, sm) === -1
+                            ? null
+                            : <ProvidedBy
+                                classes={classes}
+                                data={data}
+                                withLabel={true}
+                                i18nLabelProvidedBy={i18nLabelProvidedBy}
+                            />}
                         <VideoPlayer>
                             <VideoWrapper>
                                 <Video>
                                     {(data.get('inlineAdvertisementIsShowed') && !isSSR)
                                         ? <InlineAdvertisementWrapper>
-                                            <InlineAdvertisement>
+                                            <InlineAdvertisement
+                                                currentWidth={currentWidth}
+                                            >
                                                 <CloseAdvertisement
                                                     onClick={closeAdvertisementHandler}
                                                 />
-                                                {renderIframe(
-                                                    'https://videosection.com/_ad#str-eng-1545--invideo',
-                                                    'isAd'
-                                                )}
+                                                {renderIframe('invideo', currentWidth)}
                                             </InlineAdvertisement>
                                         </InlineAdvertisementWrapper>
                                         : null}
-                                    {renderIframe(data.getIn(['gallery', 'urlForIframe']))}
+                                    {renderIframe(
+                                        data.getIn(['gallery', 'urlForIframe']),
+                                        null,
+                                        'isVideo'
+                                    )}
                                 </Video>
                                 <ControlPanel>
                                     <ControlPanelBlock>
@@ -222,6 +253,12 @@ const
                                                 {ig(i18nButtons, 'backToMainPage')}
                                             </Button>
                                         </Link>
+                                        {ccb(cb, sm) === -1
+                                            ? <ProvidedBy
+                                                classes={classes}
+                                                data={data}
+                                            />
+                                            : null}
                                     </ControlPanelBlock>
                                     <ControlPanelBlock>
                                         {!isSSR
@@ -229,7 +266,7 @@ const
                                                 variant="contained"
                                                 color="primary"
                                                 classes={{
-                                                    root: classes.buttonRoot
+                                                    root: classes.buttonReport
                                                 }}
                                                 onClick={toggleReportDialogHandler}
                                             >
@@ -243,21 +280,15 @@ const
                                 </ControlPanel>
                             </VideoWrapper>
                             <Advertisement>
-                                {renderIframe(
-                                    'https://videosection.com/_ad#str-eng-1545--sidebar1',
-                                    'isAd'
-                                )}
-                                {renderIframe(
-                                    'https://videosection.com/_ad#str-eng-1545--sidebar2',
-                                    'isAd'
-                                )}
+                                {renderIframe('sidebar1', currentWidth)}
+                                {renderIframe('sidebar2', currentWidth)}
                             </Advertisement>
-                            {currentBreakpoint === 'xs' || currentBreakpoint === 'xxs'
+                            {ccb(cb, sm) === -1
                                 ? null
                                 : <TagsWrapper>
                                 {data.getIn(['gallery', 'tags'])
                                     ? data.getIn(['gallery', 'tags']).map(x =>
-                                        renderTag(classes, currentBreakpoint, x, getTagLink))
+                                        renderTag(classes, cb, x, getTagLink))
                                     : null}
                             </TagsWrapper>}
                         </VideoPlayer>
@@ -270,16 +301,18 @@ const
                                 root: classes.typographyTitle
                             }}
                         >
-                            {'Click On Each Of These Related Films'}
+                            {i18nRelatedVideo}
                         </Typography>
                         <VideoList
                             videoList={data.get('videoList')}
                         />
                     </RelatedVideos>
                     <BottomAdvertisement>
-                        {renderIframe('https://videosection.com/_ad#str-eng-1545--bottom1', 'isAd')}
-                        {renderIframe('https://videosection.com/_ad#str-eng-1545--bottom2', 'isAd')}
-                        {renderIframe('https://videosection.com/_ad#str-eng-1545--bottom3', 'isAd')}
+                        {renderIframe('bottom1', currentWidth)}
+                        {renderIframe('bottom2', currentWidth)}
+                        {ccb(cb, md) === -1
+                            ? null
+                            : renderIframe('bottom3', currentWidth)}
                     </BottomAdvertisement>
                 </PageWrapper>
                 <ReportDialog
@@ -323,8 +356,12 @@ export default compose(
                 [fieldNamesArray[3]]: state.getIn(['app', 'videoPage', 'currentHref']),
                 'report-reason': 'reason_nothing',
             },
-            currentBreakpoint: state.getIn(['app', 'ui', 'currentBreakpoint']),
+            currentWidth: state.getIn(['app', 'ui', 'currentWidth']),
+            cb: state.getIn(['app', 'ui', 'currentBreakpoint']),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+            i18nRelatedVideo: ig(state, 'app', 'locale', 'i18n', 'headers', 'relatedVideo'),
+            i18nLabelProvidedBy: ig(state, 'app', 'locale', 'i18n', 'labels', 'providedBy'),
+            i18n: ig(state, 'app', 'locale', 'i18n', 'headers', 'relatedVideo'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),

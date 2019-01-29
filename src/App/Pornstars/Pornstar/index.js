@@ -40,7 +40,7 @@ import actions from './actions'
 
 const
     Pornstar = ({
-        currentBreakpoint, i18nOrdering, i18nButtons, data, chooseSort,
+        currentBreakpoint, i18nOrdering, i18nButtons, i18nLabelShowing, data, chooseSort,
         isSSR, modelInfoHandler, modelInfoIsOpen, favoritePornstarList,
         controlLinkBuilder, modelLinkBuilder,
         addToFavoriteHandler, removeFromFavoriteHandler,
@@ -75,6 +75,7 @@ const
                     <ControlBar
                         i18nOrdering={i18nOrdering}
                         i18nButtons={i18nButtons}
+                        i18nLabelShowing={i18nLabelShowing}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
                         pagesCount={ig(data, 'pagesCount')}
@@ -141,6 +142,7 @@ export default compose(
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+            i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
             modelInfoIsOpen: ig(state, 'app', 'pornstars', 'pornstar', 'modelInfoIsOpen'),
             favoritePornstarList: ig(state, 'app', 'ui', 'favoritePornstarList'),
         }),

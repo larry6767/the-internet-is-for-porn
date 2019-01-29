@@ -3,9 +3,9 @@ export const muiStyles = {
         textDecoration: 'none'
     },
     paginationButtonRoot: {
-        padding: 8,
+        padding:  '5px 8px',
         minWidth: 36,
-        marginBottom: 12,
+        minHeight: 36,
     },
     paginationLink: {
         textDecoration: 'none',

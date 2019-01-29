@@ -9,6 +9,10 @@ import deepFreeze from '../lib/helpers/deepFreeze'
 const
     mapping = deepFreeze({
         eng: {
+            labels: {
+                providedBy: 'provided by',
+                showing: 'Showing',
+            },
             headers: {
                 allNiches: 'All Niches',
                 niches: 'Top Rated %ORIENTATION% Niches',
@@ -97,6 +101,10 @@ const
             },
         },
         deu: {
+            labels: {
+                providedBy: 'zur Verfügung gestellt von',
+                showing: 'Anzeigen',
+            },
             headers: {
                 allNiches: 'Alle Gruppen',
                 niches: 'Die Besten %ORIENTATION% Gruppen',
@@ -188,6 +196,10 @@ const
             },
         },
         ita: {
+            labels: {
+                providedBy: 'fornito da',
+                showing: 'Mostrando',
+            },
             headers: {
                 allNiches: 'Tutte le Categorie',
                 niches: 'Le %ORIENTATION% Categorie Più Votate',
@@ -277,6 +289,10 @@ const
             },
         },
         fra: {
+            labels: {
+                providedBy: 'fourni par',
+                showing: 'Montrant',
+            },
             headers: {
                 allNiches: 'Toutes les Niches',
                 niches: 'Les Niches %ORIENTATION% les Mieux Notée',
@@ -367,6 +383,10 @@ const
             },
         },
         spa: {
+            labels: {
+                providedBy: 'proporcionado por',
+                showing: 'Demostración',
+            },
             headers: {
                 allNiches: 'Todas las Nichos',
                 niches: 'Las Más Buscadas %ORIENTATION% Nichos',
@@ -457,6 +477,10 @@ const
             },
         },
         por: {
+            labels: {
+                providedBy: 'fornecido por',
+                showing: 'Mostrando',
+            },
             headers: {
                 allNiches: 'Todas as Niches',
                 niches: 'As Melhores Niches %ORIENTATION%',
@@ -546,6 +570,10 @@ const
             },
         },
         swe: {
+            labels: {
+                providedBy: 'tillhandahålls av',
+                showing: 'Som visar',
+            },
             headers: {
                 allNiches: 'Alla Kategorier',
                 niches: 'Bästa %ORIENTATION% Kategorier',
@@ -634,6 +662,10 @@ const
             },
         },
         nld: {
+            labels: {
+                providedBy: 'geleverd door',
+                showing: 'Tonen',
+            },
             headers: {
                 allNiches: 'Alle Groepen',
                 niches: 'Hoog Gewaardeerde %ORIENTATION% Groepen',
@@ -724,6 +756,10 @@ const
             },
         },
         fin: {
+            labels: {
+                providedBy: 'toimittamat',
+                showing: 'Näytetään',
+            },
             headers: {
                 allNiches: 'Kaikki Nichet',
                 niches: 'Suositut %ORIENTATION% Nichet',
@@ -813,6 +849,10 @@ const
             },
         },
         rus: {
+            labels: {
+                providedBy: 'предоставлено',
+                showing: 'Показано',
+            },
             headers: {
                 allNiches: 'Все Группы',
                 niches: 'Лучшие %ORIENTATION% Группы',
@@ -901,6 +941,10 @@ const
             },
         },
         tur: {
+            labels: {
+                providedBy: 'tarafından sunulan',
+                showing: 'Gösterme',
+            },
             headers: {
                 allNiches: 'Tüm Gruplar',
                 niches: 'En Popüler %ORIENTATION% Gruplar',

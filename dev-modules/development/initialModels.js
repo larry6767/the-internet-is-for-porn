@@ -63,6 +63,16 @@ const
         })))
     },
 
+    i18nLabelsModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            providedBy: PropTypes.string,
+            showing: PropTypes.string,
+        })
+    },
+
     i18nHeadersModelBuilder = isImmutable => {
         const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
@@ -185,6 +195,9 @@ const
         })
     },
 
+    i18nLabelsModel = i18nLabelsModelBuilder(false),
+    immutableI18nLabelsModel = i18nLabelsModelBuilder(true),
+
     i18nHeadersModel = i18nHeadersModelBuilder(false),
     immutableI18nHeadersModel = i18nHeadersModelBuilder(true),
 
@@ -214,6 +227,7 @@ const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
 
         return exact({
+            labels: isImmutable ? immutableI18nLabelsModel : i18nLabelsModel,
             headers: isImmutable ? immutableI18nHeadersModel : i18nHeadersModel,
             search: isImmutable ? immutableI18nSearchModel : i18nSearchModel,
             navigation: isImmutable ? immutableI18nNavigationModel : i18nNavigationModel,
@@ -226,6 +240,7 @@ const
     }
 
 export {
+    i18nLabelsModel, immutableI18nLabelsModel,
     i18nHeadersModel, immutableI18nHeadersModel,
     i18nSearchModel, immutableI18nSearchModel,
     i18nNavigationModel, immutableI18nNavigationModel,

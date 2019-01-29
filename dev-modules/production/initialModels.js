@@ -1,6 +1,7 @@
 export const
     localeRouterModel = null, immutableLocaleRouterModel = null,
     ssrLocaleRouterModel = null, ssrImmutableLocaleRouterModel = null,
+    i18nLabelsModel = null, immutableI18nLabelsModel = null,
     i18nHeadersModel = null, immutableI18nHeadersModel = null,
     i18nSearchModel = null, immutableI18nSearchModel = null,
     i18nNavigationModel = null, immutableI18nNavigationModel = null,

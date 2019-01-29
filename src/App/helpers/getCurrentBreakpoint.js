@@ -7,16 +7,14 @@ export const
     breakpointLG = 'lg',
     breakpointXL = 'XL'
 
-const
-    // ordering
-    breakpoints = [
-        breakpointXXS,
-        breakpointXS,
-        breakpointSM,
-        breakpointMD,
-        breakpointLG,
-        breakpointXL,
-    ]
+export const breakpoints = [ // ordering
+    breakpointXXS,
+    breakpointXS,
+    breakpointSM,
+    breakpointMD,
+    breakpointLG,
+    breakpointXL,
+]
 
 export default (currentWidth = null) =>
     currentWidth === null
