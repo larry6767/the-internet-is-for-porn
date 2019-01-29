@@ -74,9 +74,10 @@ const initApp = async () => {
                 loadingDiv = '<div id="loading" style="display:none">',
                 split2 = split[1].split(`${loadingDiv}Loading…</div>`),
 
-                jssSheetsRegistry = new SheetsRegistry(),
+                jssSheetsRegistry = process.env.NODE_ENV !== 'production' ? null :
+                    new SheetsRegistry(),
 
-                loadingInnards = renderToString(
+                loadingInnards = process.env.NODE_ENV !== 'production' ? null : renderToString(
                     <JssProvider
                         registry={jssSheetsRegistry}
                         generateClassName={createGenerateClassName({
@@ -89,17 +90,23 @@ const initApp = async () => {
                     </JssProvider>
                 ),
 
-                jssLoadingStyles = `<style id="jss-loading-styles">
-                    ${jssSheetsRegistry.registry.filter(x => x.attached).join('\n')}
-                </style>`
+                jssLoadingStyles = process.env.NODE_ENV !== 'production' ? null :
+                    `<style id="jss-loading-styles">
+                        ${jssSheetsRegistry.registry.filter(x => x.attached).join('\n')}
+                    </style>`,
+
+                // For development (non-production) mode we don't have frontend bundle
+                // on SSR server, so we don't need that loader since it never load enything.
+                loadingBlock = process.env.NODE_ENV !== 'production' ? '' :
+                    `${loadingDiv}${loadingInnards}${jssLoadingStyles}</div>`,
+
+                // Removing <script> tag for development (non-production) mode to avoid exceptions.
+                postLoadingPart = process.env.NODE_ENV === 'production' ? split2[1] :
+                    split2[1].replace(/<script id="loading-script">[^\0]*<\/script>/m, '')
 
             return {
                 pre: `${split[0]}`,
-
-                middle:
-                    `${split2[0]}${loadingDiv}${loadingInnards}${jssLoadingStyles}</div>${
-                    split2[1]}<div id="root">`,
-
+                middle: `${split2[0]}${loadingBlock}${postLoadingPart}<div id="root">`,
                 post: `</div>${result[1]}`
             }
         })(
