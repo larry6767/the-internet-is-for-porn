@@ -191,11 +191,8 @@ const
                 <PageWrapper>
                     <PlayerSection>
                         <Typography
-                            variant={ccb(cb, sm) === -1
-                                ? 'h6'
-                                : ccb(cb, sm) === 0
-                                ? 'h5'
-                                : 'h4'}
+                            variant="h4"
+                            gutterBottom
                             classes={{
                                 root: classes.typographyTitle
                             }}
@@ -296,11 +293,7 @@ const
                     </PlayerSection>
                     <RelatedVideos>
                         <Typography
-                            variant={ccb(cb, sm) === -1
-                                ? 'h6'
-                                : ccb(cb, sm) === 0
-                                ? 'h5'
-                                : 'h4'}
+                            variant="h4"
                             gutterBottom
                             classes={{
                                 root: classes.typographyTitle

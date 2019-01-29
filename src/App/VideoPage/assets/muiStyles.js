@@ -4,13 +4,6 @@ export const muiStyles = theme => ({
     },
     typographyTitle: {
         maxWidth: '100%',
-
-        [theme.breakpoints.down('xs')]: {
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            marginBottom: 10,
-        },
     },
     typographySponsor: {
         color: theme.palette.primary.main,
