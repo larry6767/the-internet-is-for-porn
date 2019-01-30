@@ -1,29 +1,24 @@
-import {Record} from 'immutable'
-
 import ig from './immutable/provedGet'
 import PropTypes from './propTypes'
 import ImmutablePropTypes from './propTypes/immutable'
 import {assertPropTypes} from './propTypes/check'
 
-import {
-    pageRequestParamsModel,
-    PageRequestParamsRecord,
-    PageRequestArchiveParamRecord,
-} from '../models'
+import {pageRequestParamsModel} from '../models'
 
 const
-    dataModelProps = process.env.NODE_ENV === 'production' ? null : {
+    dataModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
-    },
+    }),
 
-    dataModel = process.env.NODE_ENV === 'production' ? null :
-        PropTypes.oneOfType([
-            ImmutablePropTypes.recordOf(dataModelProps),
-            ImmutablePropTypes.mapOf(dataModelProps),
-        ])
+    // Could be `Map` from store of some component's filtering `Record`,
+    // only `.getIn` method is required for compatibility.
+    dataModel = process.env.NODE_ENV === 'production' ? null : PropTypes.oneOfType([
+        ImmutablePropTypes.mapOf(dataModelProps),
+        ImmutablePropTypes.recordOf(dataModelProps),
+    ])
 
 export default (data, pageRequestParams) => {
     if (process.env.NODE_ENV !== 'production') {
@@ -31,14 +26,6 @@ export default (data, pageRequestParams) => {
 
         assertPropTypes(
             pageRequestParamsModel,
-            pageRequestParams,
-            'doesItHaveToBeReloaded',
-            'pageRequestParams'
-        )
-
-        // Aditional check that it is actually a `Record` (not `Map`).
-        assertPropTypes(
-            ImmutablePropTypes.record,
             pageRequestParams,
             'doesItHaveToBeReloaded',
             'pageRequestParams'
@@ -52,16 +39,7 @@ export default (data, pageRequestParams) => {
         ig(data, 'isLoading') ||
         (
             (ig(data, 'isLoaded') || ig(data, 'isFailed')) &&
-
-            pageRequestParams.equals(
-                lastPageRequestParams === null
-                ? null
-                : Record.isRecord(lastPageRequestParams)
-                ? lastPageRequestParams
-                : PageRequestParamsRecord(lastPageRequestParams).update('archive', x =>
-                    x === null ? null : PageRequestArchiveParamRecord(x)
-                )
-            )
+            pageRequestParams.equals(lastPageRequestParams)
         )
     )
 }
