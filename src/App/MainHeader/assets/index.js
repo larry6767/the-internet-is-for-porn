@@ -33,9 +33,14 @@ const Wrapper = styled.div`
 
 export const SearchWrapper = styled(Wrapper)`
     justify-content: space-between;
-    ${({isSSR}) => isSSR ? `width: calc(100% - 330px);` : ``}
-
+    ${({isSSR}) => isSSR ? 'width: calc(100% - 330px);' : ''}
     ${({theme}) => theme.media.mobile`width: 100%; min-height: 70px; flex-wrap: wrap;`}
+
+    /* not showing this block when JS is enabled in browser (because SSR version looks different) */
+    html.is-loading & {
+        width: 100%;
+        height: 61px;
+    }
 `
 
 export const NavigationWrapper = styled(Wrapper)`
