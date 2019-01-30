@@ -1,5 +1,6 @@
 import {get} from 'lodash'
-import {put, takeEvery, select} from 'redux-saga/effects'
+import {put, takeEvery, takeLatest, select} from 'redux-saga/effects'
+import {animateScroll} from 'react-scroll'
 
 import {
     obtainPageData,
@@ -82,7 +83,17 @@ export function* sendReportFlow({payload: formData}) {
     }
 }
 
+export function scrollToPlayerFlow({payload}) {
+    const player = g(payload, 'playerRef', 'current')
+    animateScroll.scrollTo(player ? player.offsetTop : 0, {
+        duration: 500,
+        delay: 500,
+        smooth: true,
+    })
+}
+
 export default function* saga() {
     yield takeEvery(actions.loadPageRequest, loadVideoPageFlow)
     yield takeEvery(actions.sendReportRequest, sendReportFlow)
+    yield takeLatest(actions.scrollToPlayer, scrollToPlayerFlow)
 }

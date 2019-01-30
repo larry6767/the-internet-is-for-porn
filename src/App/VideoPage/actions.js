@@ -10,6 +10,7 @@ const actions = createActions('VIDEO_PAGE', [
     'SEND_REPORT_SUCCESS',
     'SEND_REPORT_FAILURE',
     'SET_TIME_AND_HREF_FOR_REPORT',
+    'SCROLL_TO_PLAYER',
 ])
 
 export default actions

@@ -158,6 +158,8 @@ const
         />
     </Link>,
 
+    playerRef = React.createRef(),
+
     ProvidedBy = ({classes, i18nLabelProvidedBy, data, withLabel = false}) => <Typography
         variant="body1"
         classes={{
@@ -209,7 +211,7 @@ const
                                 withLabel={true}
                                 i18nLabelProvidedBy={i18nLabelProvidedBy}
                             />}
-                        <VideoPlayer>
+                        <VideoPlayer ref={playerRef}>
                             <VideoWrapper>
                                 <Video>
                                     {(data.get('inlineAdvertisementIsShowed') && !isSSR)
@@ -329,14 +331,18 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
+    loadPageFlow = ({
+        data, loadPage, setHeaderText, scrollToPlayerHandler, routerContext, match
+    }) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
-        if (doesItHaveToBeReloaded(data, pageRequestParams))
+        if (doesItHaveToBeReloaded(data, pageRequestParams)) {
             loadPage(pageRequestParams)
-        else if (ig(data, 'isLoaded'))
+        } else if (ig(data, 'isLoaded')) {
             setHeaderText(getHeaderText(g(data, []), true, false))
+            scrollToPlayerHandler({playerRef})
+        }
     }
 
 export default compose(
@@ -370,6 +376,7 @@ export default compose(
             toggleReportDialog: g(actions, 'toggleReportDialog'),
             addVideoToFavorite: g(appActions, 'addVideoToFavorite'),
             removeVideoFromFavorite: g(appActions, 'removeVideoFromFavorite'),
+            scrollToPlayer: g(actions, 'scrollToPlayer'),
         }
     ),
     withHandlers({
@@ -390,6 +397,7 @@ export default compose(
             {searchQuery},
             ['searchQuery'],
         ),
+        scrollToPlayerHandler: props => playerRef => props.scrollToPlayer(playerRef),
     }),
     reduxForm({
         form: 'reportForm',
