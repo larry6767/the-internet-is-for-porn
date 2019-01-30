@@ -12,7 +12,7 @@ store.runSaga(saga)
 
 const
     rootEl = g(document.getElementById('root'), []),
-    loadingEl = g(document.getElementById('loading'), []),
+    htmlEl = g(document.getElementsByTagName('html'), 0),
 
     runFrontEnd = async () => {
         try {
@@ -21,7 +21,7 @@ const
             console.error('Application initialization is failed with exception:', err)
             window.alert('Application initialization is failed!')
         } finally {
-            loadingEl.remove()
+            htmlEl.classList.remove('is-loading')
             rootEl.classList.add('loaded')
         }
     }

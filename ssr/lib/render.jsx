@@ -211,9 +211,9 @@ export default (
         return res.end(`${g(layout, 'pre')}
             ${headTags}
             ${g(layout, 'middle')}
-            ${html}
             ${styledComponentsStyles}
             ${jssStyles}
+            ${html}
             ${storePresetHtml}
         ${g(layout, 'post')}`)
     } catch (e) {
