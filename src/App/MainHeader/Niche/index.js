@@ -52,7 +52,7 @@ const
         i18nOrientation,
         orient,
         linkBuilder,
-    }) => <NicheBlock>
+    }) => <NicheBlock isSSR={isSSR}>
         {
             /* rendering mobile version for SSR to render links with "href"s for search engines */
             /* TODO FIXME set proper `href` attribute */

@@ -1,9 +1,11 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
 import {compose} from 'recompose'
 import {Record} from 'immutable'
-import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
 import {Typography} from '@material-ui/core'
+
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -11,13 +13,15 @@ import {
     ImmutablePropTypes,
     setPropTypes,
 } from '../helpers'
+
 import Niche from './Niche'
 import Navigation from './Navigation'
 import Language from './Language'
 import Search from './Search'
 import BurgerMenu from './BurgerMenu'
-import {connect} from 'react-redux'
 import actions from './actions'
+import {muiStyles} from './assets/muiStyles'
+
 import {
     Header,
     Top,
@@ -29,7 +33,6 @@ import {
     BottomInner,
     TextWrapper,
 } from './assets'
-import {muiStyles} from './assets/muiStyles'
 
 const
     MainHeader = ({
@@ -64,9 +67,7 @@ const
                             {ig(data, 'description')}
                         </Typography>
                     </TextWrapper>
-                    <SearchWrapper
-                        isSSR={isSSR}
-                    >
+                    <SearchWrapper isSSR={isSSR}>
                         {
                             isXSorXXS && isSearchShown ? '' :
                             isXSorXXS ? <BurgerMenu/> : ''
@@ -77,7 +78,7 @@ const
                                 to="/"
                                 className={pageUrl === '/' ? classes.routerLinkSpy : ''}
                             >
-                                <Logo src="/img/logo.png" alt="VideoSection logo"/>
+                                <Logo src="/img/logo.png" alt="VideoSection logo" isSSR={isSSR}/>
                             </Link>
                         }
                         {
@@ -104,7 +105,7 @@ const
                 !isXSorXXS
                     ? <div>
                         <BottomInner isSSR={isSSR}>
-                            <NavigationWrapper>
+                            <NavigationWrapper isSSR={isSSR}>
                                 <Navigation/>
                                 {/* <HDSwitch/> */}
                             </NavigationWrapper>

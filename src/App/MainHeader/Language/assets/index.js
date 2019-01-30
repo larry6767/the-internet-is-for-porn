@@ -16,7 +16,6 @@ export const InlinedSelectionWrap = styled.div`
     width: 100%;
     margin: 10px 0;
 
-    /* not showing this block when JS is enabled in browser (because SSR version looks different) */
     html.is-loading & {
         display: none;
     }
