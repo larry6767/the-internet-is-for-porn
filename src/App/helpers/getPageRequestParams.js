@@ -1,15 +1,12 @@
 import {get} from 'lodash'
 import queryString from 'query-string'
+import {fromJS} from 'immutable'
 
 import g from './plain/provedGet'
 import ig from './immutable/provedGet'
 import {assertPropTypes} from './propTypes/check'
 
-import {
-    PageRequestParamsRecord,
-    PageRequestArchiveParamRecord,
-    pageRequestParamsModel,
-} from '../models'
+import {pageRequestParamsModel} from '../models'
 
 export default (routerContext, match) => {
     const
@@ -18,20 +15,18 @@ export default (routerContext, match) => {
         pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
         searchQuery = get(qs, [ig(routerContext, 'router', 'searchQuery', 'qsKey')], null),
 
-        archive =
-            !(match.params[0] && match.params[1]) ? null :
-            PageRequestArchiveParamRecord({
-                year: Number(g(match, 'params', 0)),
-                month: Number(g(match, 'params', 1)),
-            }),
-
-        result = PageRequestParamsRecord({
+        result = fromJS({
             orientationCode: ig(routerContext, 'currentOrientation'),
             child: match.params.child || null,
             subchild: match.params.subchild || null,
             ordering,
             pagination: pagination === null ? null : Number(pagination),
-            archive,
+
+            archive: !(match.params[0] && match.params[1]) ? null : {
+                year: Number(g(match, 'params', 0)),
+                month: Number(g(match, 'params', 1)),
+            },
+
             searchQuery,
         })
 

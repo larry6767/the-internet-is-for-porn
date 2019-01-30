@@ -5,6 +5,11 @@ export const NicheBlock = styled.div`
 
     ${({theme}) => theme.media.sm`flex-grow: 0;`}
     ${({theme}) => theme.media.mobile`width: 100%; margin-top: 10px;`}
+
+    /* not showing this block when JS is enabled in browser (because SSR version looks different) */
+    html.is-loading & {
+        display: none;
+    }
 `
 
 export const NicheWrapper = styled.div`
