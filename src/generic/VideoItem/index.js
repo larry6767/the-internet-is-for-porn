@@ -181,7 +181,7 @@ const
                                 root: g(classes, 'typographySource')
                             }}
                         >
-                            {`itIsJustGag${ig(x, 'sponsorId')}`}
+                            {ig(x, 'sponsorName')}
                         </Typography>
                     </Link>
                     <Typography
@@ -225,7 +225,7 @@ export default compose(
 
         getProviderLink: props => x => routerGetters.findVideos.link(
             g(props, 'routerContext'),
-            {searchQuery: `itIsJustGag${ig(x, 'sponsorId')}`},
+            {searchQuery: `${ig(x, 'sponsorName')} porn`},
             ['searchQuery'],
         ),
     }),

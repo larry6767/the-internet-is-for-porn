@@ -117,7 +117,7 @@ const
                     rel="noopener noreferrer"
                     href={data.getIn(['gallery', 'sponsorUrl'])}
                 >
-                    {data.getIn(['gallery', 'sponsorId'])}
+                    {data.getIn(['gallery', 'sponsorName'])}
                 </a>,
                 [ig(i18nReport, 'found')]: <Fragment>
                     {<Link to={pageUrl}>{data.get('currentHref')}</Link>}

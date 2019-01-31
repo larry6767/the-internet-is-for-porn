@@ -52,7 +52,7 @@ export const
         classId: PropTypes.number,
         title: PropTypes.string,
         urlForIframe: PropTypes.string,
-        sponsorId: PropTypes.string,
+        sponsorName: PropTypes.string,
         sponsorUrl: PropTypes.string,
         published: PropTypes.string,
 
@@ -66,7 +66,10 @@ export const
 
         duration: PropTypes.string,
         videoPageRef: PropTypes.number,
-    })
+    }),
+
+    sponsorsModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.arrayOf(PropTypes.shape({name: PropTypes.string}))
 
 const
     // {foo: 'foo', bar: 'bar'}
@@ -86,7 +89,7 @@ const
     getPubTplProp = process.env.NODE_ENV === 'production' ? g :
         (src, propKey, ...xs) => g(src, g(publishedTemplateModelPropsKeys, propKey), ...xs)
 
-export default (data, pageUrl, publishedTemplate) => {
+export default (data, pageUrl, publishedTemplate, sponsors) => {
     if (process.env.NODE_ENV !== 'production') {
         assertPropTypes(incomingGalleryModel, data, 'getGallery', 'original source gallery data')
         assertPropTypes(pageUrlModel, pageUrl, 'getGallery', 'page url')
@@ -97,6 +100,8 @@ export default (data, pageUrl, publishedTemplate) => {
             'getGallery',
             'published template'
         )
+
+        assertPropTypes(sponsorsModel, sponsors, 'getGallery', 'sponsors')
     }
 
     const
@@ -150,7 +155,7 @@ export default (data, pageUrl, publishedTemplate) => {
             classId: Number(getProp(data, 'id_class')),
             title: getProp(data, 'title'),
             urlForIframe: g(getProp(data, 'embed_code').match(/src="([\S]+)"/), 1),
-            sponsorId: getProp(data, 'id_sponsor'),
+            sponsorName: g(sponsors, getProp(data, 'id_sponsor'), 'name'),
             sponsorUrl: getProp(data, 'url'),
             published,
 

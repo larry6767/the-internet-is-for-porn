@@ -15,7 +15,7 @@ const
             firstThumb: PropTypes.number,
 
             title: PropTypes.string,
-            sponsorId: PropTypes.string,
+            sponsorName: PropTypes.string,
             tags: list(PropTypes.string),
 
             // This is for very small string under a video preview,
