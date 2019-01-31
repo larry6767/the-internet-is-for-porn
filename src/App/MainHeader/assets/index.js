@@ -77,11 +77,11 @@ export const NavigationWrapper = styled(Wrapper)`
     justify-content: space-between;
 
     ${({theme}) => theme.media.sm`padding-left: 0;`}
-    ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.mobile`padding-left: 0; width: 100%;`}
-    ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xs`padding-left: 0; width: 100%;`}
-    ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xxs`padding-left: 0; width: 100%;`}
+    ${({isSSR}) => !g(isSSR, []) ? null : 'padding-left: 0; width: 100%;'}
 
     html.is-loading & {
+        padding-left: 177px;
+        ${({theme}) => theme.media.sm`padding-left: 0;`}
         ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xs`display: none;`}
         ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xxs`display: none;`}
     }
