@@ -104,7 +104,7 @@ const
             nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
     },
 
-    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
+    loadPageFlow = ({data, loadPage, routerContext, match}) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 

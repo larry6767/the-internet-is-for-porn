@@ -132,14 +132,12 @@ const
             nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
     },
 
-    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
+    loadPageFlow = ({data, loadPage, routerContext, match}) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
         if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)
-        else if (ig(data, 'isLoaded'))
-            setHeaderText(getHeaderText(g(data, []), true))
     }
 
 export default compose(
@@ -173,7 +171,6 @@ export default compose(
     })),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        setHeaderText: props => headerText => props.setNewText(headerText),
 
         chooseSort: props => newSortValue => props.setNewSort({
             newSortValue,
@@ -251,7 +248,6 @@ export default compose(
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
-        setHeaderText: PropTypes.func,
         setNewSort: PropTypes.func,
         chooseSort: PropTypes.func,
         controlLinkBuilder: PropTypes.func,
