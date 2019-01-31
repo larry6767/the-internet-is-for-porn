@@ -16,6 +16,7 @@ import {
     setPropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
+    areWeSwitchedOnPage,
 } from '../helpers'
 
 import {immutableI18nButtonsModel, routerContextModel} from '../models'
@@ -32,7 +33,7 @@ import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
 const
-    FavoriteRecord = Record({
+    DataRecord = Record({
         isLoading: null,
         isLoaded: null,
         isFailed: null,
@@ -51,16 +52,16 @@ const
         isSSR,
         i18nButtons,
         i18nLabelShowing,
-        favorite,
+        data,
         controlLinkBuilder,
         controlFavoriteLinkBuilder,
     }) => <Page>
-        { ig(favorite, 'isFailed')
+        { ig(data, 'isFailed')
             ? <ErrorContent/>
-            : ig(favorite, 'isLoading')
+            : ig(data, 'isLoading')
             ? <CircularProgress/>
             : <Content>
-                <PageTextHelmet pageText={ig(favorite, 'pageText')}/>
+                <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <PageWrapper>
                     <Typography
                         variant="h4"
@@ -69,10 +70,10 @@ const
                             root: g(classes, 'typographyTitle'),
                         }}
                     >
-                        {g(ig(favorite, 'videoList'), 'size')
-                            ? `${(ig(favorite, 'pageText', 'listHeader') || '')
-                                .replace(/[0-9]/g, '')}${g(ig(favorite, 'videoList'), 'size')}`
-                            : ig(favorite, 'pageText', 'listHeaderEmpty')
+                        {g(ig(data, 'videoList'), 'size')
+                            ? `${(ig(data, 'pageText', 'listHeader') || '')
+                                .replace(/[0-9]/g, '')}${g(ig(data, 'videoList'), 'size')}`
+                            : ig(data, 'pageText', 'listHeaderEmpty')
                         }
                     </Typography>
                     <ControlBar
@@ -81,27 +82,30 @@ const
                         i18nLabelShowing={i18nLabelShowing}
                         linkBuilder={controlLinkBuilder}
                         favoriteLinkBuilder={controlFavoriteLinkBuilder}
-                        pagesCount={ig(favorite, 'pagesCount')}
-                        pageNumber={ig(favorite, 'pageNumber')}
-                        itemsCount={ig(favorite, 'itemsCount')}
+                        pagesCount={ig(data, 'pagesCount')}
+                        pageNumber={ig(data, 'pageNumber')}
+                        itemsCount={ig(data, 'itemsCount')}
                         favoriteButtons={true}
                     />
                     <VideoList
-                        videoList={ig(favorite, 'videoList')}
+                        videoList={ig(data, 'videoList')}
                     />
                 </PageWrapper>
             </Content>
         }
     </Page>,
 
-    loadPageFlow = ({favorite, loadPage, setHeaderText, routerContext, match}) => {
+    setNewPageFlow = (prevProps, nextProps) => {
+        if (areWeSwitchedOnPage(prevProps, nextProps))
+            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+    },
+
+    loadPageFlow = ({data, loadPage, routerContext, match}) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
-        if (doesItHaveToBeReloaded(favorite, pageRequestParams))
+        if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)
-        else if (ig(favorite, 'isLoaded'))
-            setHeaderText(getHeaderText(g(favorite, []), true))
     }
 
 export default compose(
@@ -113,7 +117,7 @@ export default compose(
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
-            favorite: FavoriteRecord(ig(state, 'app', 'favorite')),
+            data: DataRecord(ig(state, 'app', 'favorite')),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -122,7 +126,6 @@ export default compose(
     ),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        setHeaderText: props => headerText => props.setNewText(headerText),
 
         controlLinkBuilder: props => qsParams =>
             routerGetters.favorite.link(
@@ -137,10 +140,12 @@ export default compose(
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)
+            setNewPageFlow(null, this.props)
         },
 
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
+            setNewPageFlow(this.props, nextProps)
         },
     }),
     withStyles(muiStyles),
@@ -149,7 +154,7 @@ export default compose(
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
         i18nLabelShowing: PropTypes.string,
-        favorite: ImmutablePropTypes.record, // TODO better type
+        data: ImmutablePropTypes.record, // TODO better type
         controlLinkBuilder: PropTypes.func,
         controlFavoriteLinkBuilder: PropTypes.func,
         loadPageRequest: PropTypes.func,

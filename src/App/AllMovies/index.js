@@ -15,6 +15,7 @@ import {
     getHeaderText,
     getPageRequestParams,
     doesItHaveToBeReloaded,
+    areWeSwitchedOnPage,
 } from '../helpers'
 
 import {immutableI18nButtonsModel} from '../models'
@@ -32,7 +33,7 @@ import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
 const
-    AllMoviesRecord = Record({
+    DataRecord = Record({
         isLoading: null,
         isLoaded: null,
         isFailed: null,
@@ -60,7 +61,7 @@ const
         currentBreakpoint,
         i18nOrdering,
         i18nButtons,
-        allMovies,
+        data,
         chooseSort,
         isSSR,
         controlLinkBuilder,
@@ -72,19 +73,19 @@ const
         i18nListArchiveHeader,
         i18nLabelShowing,
     }) => <Page>
-        { allMovies.get('isFailed')
+        { data.get('isFailed')
             ? <ErrorContent/>
-            : allMovies.get('isLoading')
+            : data.get('isLoading')
             ? <CircularProgress/>
             : <Content>
-                <PageTextHelmet pageText={ig(allMovies, 'pageText')}/>
+                <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
 
-                    tagList={allMovies.get('tagList')}
+                    tagList={data.get('tagList')}
                     tagLinkBuilder={listsTagLinkBuilder}
 
-                    tagArchiveList={allMovies.get('tagArchiveList')}
+                    tagArchiveList={data.get('tagArchiveList')}
                     archiveLinkBuilder={listsArchiveLinkBuilder}
 
                     i18nListNichesHeader={i18nListNichesHeader}
@@ -98,7 +99,7 @@ const
                             root: classes.typographyTitle
                         }}
                     >
-                        {allMovies.getIn(['pageText', 'listHeader'])}
+                        {data.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <ControlBar
                         cb={currentBreakpoint}
@@ -110,31 +111,34 @@ const
                         i18nLabelShowing={i18nLabelShowing}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        pagesCount={allMovies.get('pagesCount')}
-                        pageNumber={allMovies.get('pageNumber')}
-                        itemsCount={allMovies.get('itemsCount')}
-                        sortList={allMovies.get('sortList')}
-                        currentSort={allMovies.get('currentSort')}
-                        archiveFilms={allMovies.get('archiveFilms')}
-                        tagArchiveListOlder={allMovies.get('tagArchiveListOlder')}
-                        tagArchiveListNewer={allMovies.get('tagArchiveListNewer')}
+                        pagesCount={data.get('pagesCount')}
+                        pageNumber={data.get('pageNumber')}
+                        itemsCount={data.get('itemsCount')}
+                        sortList={data.get('sortList')}
+                        currentSort={data.get('currentSort')}
+                        archiveFilms={data.get('archiveFilms')}
+                        tagArchiveListOlder={data.get('tagArchiveListOlder')}
+                        tagArchiveListNewer={data.get('tagArchiveListNewer')}
                     />
                     <VideoList
-                        videoList={allMovies.get('videoList')}
+                        videoList={data.get('videoList')}
                     />
                 </AllMoviesPageWrapper>
             </Content>
         }
     </Page>,
 
-    loadPageFlow = ({allMovies, loadPage, setHeaderText, routerContext, match}) => {
+    setNewPageFlow = (prevProps, nextProps) => {
+        if (areWeSwitchedOnPage(prevProps, nextProps))
+            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+    },
+
+    loadPageFlow = ({data, loadPage, routerContext, match}) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
-        if (doesItHaveToBeReloaded(allMovies, pageRequestParams))
+        if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)
-        else if (ig(allMovies, 'isLoaded'))
-            setHeaderText(getHeaderText(g(allMovies, []), true))
     }
 
 export default compose(
@@ -143,7 +147,7 @@ export default compose(
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            allMovies: AllMoviesRecord(ig(state, 'app', 'allMovies')),
+            data: DataRecord(ig(state, 'app', 'allMovies')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
@@ -166,7 +170,6 @@ export default compose(
     })),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        setHeaderText: props => headerText => props.setNewText(headerText),
 
         chooseSort: props => newSortValue => props.setNewSort({
             newSortValue,
@@ -208,10 +211,12 @@ export default compose(
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)
+            setNewPageFlow(null, this.props)
         },
 
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
+            setNewPageFlow(this.props, nextProps)
         },
     }),
     withStyles(muiStyles),

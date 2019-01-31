@@ -24,6 +24,7 @@ import {
     setPropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
+    areWeSwitchedOnPage,
 } from '../helpers'
 
 import {routerContextModel} from '../models'
@@ -90,7 +91,7 @@ const
         }
     </AllNichesPage>,
 
-    NichesRecord = Record({
+    DataRecord = Record({
         isLoading: null,
         isLoaded: null,
         isFailed: null,
@@ -101,14 +102,17 @@ const
         pageText: null,
     }),
 
-    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
+    setNewPageFlow = (prevProps, nextProps) => {
+        if (areWeSwitchedOnPage(prevProps, nextProps))
+            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+    },
+
+    loadPageFlow = ({data, loadPage, routerContext, match}) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
         if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)
-        else if (ig(data, 'isLoaded'))
-            setHeaderText(getHeaderText(g(data, []), true))
    }
 
 export default compose(
@@ -117,7 +121,7 @@ export default compose(
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: NichesRecord(ig(state, 'app', 'niches', 'all')),
+            data: DataRecord(ig(state, 'app', 'niches', 'all')),
             i18nAllNichesHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'allNiches'),
             routerContext: getRouterContext(state),
         }),
@@ -128,16 +132,17 @@ export default compose(
     ),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        setHeaderText: props => headerText => props.setNewText(headerText),
         getChildLink: props => child => routerGetters.niche.link(g(props, 'routerContext'), child),
     }),
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)
+            setNewPageFlow(null, this.props)
         },
 
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
+            setNewPageFlow(this.props, nextProps)
         },
     }),
     withStylesProps(muiStyles),
@@ -150,7 +155,6 @@ export default compose(
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
-        setHeaderText: PropTypes.func,
         getChildLink: PropTypes.func,
     })
 )(AllNiches)

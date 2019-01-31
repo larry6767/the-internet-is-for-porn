@@ -15,6 +15,7 @@ import {
     PropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
+    areWeSwitchedOnPage,
 } from '../../helpers'
 
 import {
@@ -126,6 +127,11 @@ const
         videoList: null,
     }),
 
+    setNewPageFlow = (prevProps, nextProps) => {
+        if (areWeSwitchedOnPage(prevProps, nextProps))
+            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+    },
+
     loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
@@ -223,10 +229,12 @@ export default compose(
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)
+            setNewPageFlow(null, this.props)
         },
 
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
+            setNewPageFlow(this.props, nextProps)
         },
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {

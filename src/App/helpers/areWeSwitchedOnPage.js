@@ -3,25 +3,14 @@ import ig from './immutable/provedGet'
 import PropTypes from './propTypes'
 import ImmutablePropTypes from './propTypes/immutable'
 import {assertPropTypes} from './propTypes/check'
-// import getHeaderText from './getHeaderText'
 
 const
-    // pageTextModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
-    //     headerTitle: PropTypes.nullable(PropTypes.string),
-    //     headerDescription: PropTypes.string,
-    // }),
-
     dataModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
         isLoaded: PropTypes.bool,
-        // pageText: PropTypes.oneOfType([
-        //     ImmutablePropTypes.recordOf(pageTextModelProps),
-        //     ImmutablePropTypes.shape(pageTextModelProps),
-        // ]),
     }),
 
     propsModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape({
         currentSection: PropTypes.nullable(PropTypes.string),
-        // setNewText: PropTypes.func,
         data: PropTypes.oneOfType([
             ImmutablePropTypes.recordOf(dataModelProps),
             ImmutablePropTypes.shape(dataModelProps),
@@ -33,8 +22,8 @@ const
 
 export default (prevProps, nextProps) => {
     if (process.env.NODE_ENV !== 'production') {
-        assertPropTypes(optionalPropsModel, prevProps, 'switchOnPageFlow', 'prevProps')
-        assertPropTypes(propsModel, nextProps, 'switchOnPageFlow', 'nextProps')
+        assertPropTypes(optionalPropsModel, prevProps, 'areWeSwitchedOnPage', 'prevProps')
+        assertPropTypes(propsModel, nextProps, 'areWeSwitchedOnPage', 'nextProps')
     }
 
     if (
@@ -50,10 +39,8 @@ export default (prevProps, nextProps) => {
             !ig(g(prevProps, 'data'), 'isLoaded') &&
             ig(g(nextProps, 'data'), 'isLoaded')
         )
-    ) {
-        // nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true, false))
+    )
         return true
-    } else {
+    else
         return false
-    }
 }

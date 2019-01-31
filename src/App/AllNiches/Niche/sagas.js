@@ -6,6 +6,7 @@ import {
     obtainPageData,
     getRouterContext,
     plainProvedGet as g,
+    immutableProvedGet as ig,
 } from '../../helpers'
 
 import {routerGetters} from '../../../router-builder'
@@ -16,10 +17,13 @@ import actions from './actions'
 export function* loadNichePageFlow(action, ssrContext) {
     try {
         const
+            isSSR = yield select(x => ig(x, 'app', 'ssr', 'isSSR')),
             pageRequestParams = g(action, 'payload', 'pageRequestParams'),
             data = yield obtainPageData(ssrContext, 'niche', pageRequestParams)
 
-        yield put(headerActions.setNewText(getHeaderText(data)))
+        if (isSSR)
+            yield put(headerActions.setNewText(getHeaderText(data)))
+
         yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {
         console.error('loadNichePageFlow is failed with exception:', err)

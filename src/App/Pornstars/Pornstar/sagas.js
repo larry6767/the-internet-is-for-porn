@@ -6,6 +6,7 @@ import {
     getHeaderText,
     getRouterContext,
     plainProvedGet as g,
+    immutableProvedGet as ig,
 } from '../../helpers'
 
 import {routerGetters} from '../../../router-builder'
@@ -16,10 +17,13 @@ import actions from './actions'
 export function* loadPornstarPageFlow(action, ssrContext) {
     try {
         const
+            isSSR = yield select(x => ig(x, 'app', 'ssr', 'isSSR')),
             pageRequestParams = g(action, 'payload', 'pageRequestParams'),
             data = yield obtainPageData(ssrContext, 'pornstar', pageRequestParams)
 
-        yield put(headerActions.setNewText(getHeaderText(data)))
+        if (isSSR)
+            yield put(headerActions.setNewText(getHeaderText(data)))
+
         yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {
         console.error('loadPornstarPageFlow is failed with exception:', err)
