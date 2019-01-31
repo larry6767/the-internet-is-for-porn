@@ -36,7 +36,9 @@ export function* loadVideoPageFlow(action, ssrContext) {
         if ( ! isSSR)
             yield put(actions.setTimeAndHrefForReport(reportData))
 
-        yield put(headerActions.setNewText(getHeaderText(data, false, false)))
+        if (isSSR)
+            yield put(headerActions.setNewText(getHeaderText(data, false, false)))
+
         yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {
         console.error('loadAllMoviesPageFlow is failed with exception:', err)

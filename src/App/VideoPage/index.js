@@ -2,9 +2,10 @@
 import {Record} from 'immutable'
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {compose, lifecycle, withHandlers} from 'recompose'
+import {compose, lifecycle, withHandlers, withState} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, reset as resetForm} from 'redux-form/immutable'
+import {animateScroll} from 'react-scroll'
 import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography, Button, Chip} from '@material-ui/core'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
@@ -13,7 +14,6 @@ import HomeIcon from '@material-ui/icons/Home'
 import ReportIcon from '@material-ui/icons/Report'
 
 import {
-    getHeaderText,
     plainProvedGet as g,
     immutableProvedGet as ig,
     getRouterContext,
@@ -24,6 +24,8 @@ import {
     compareCurrentBreakpoint as ccb,
     breakpointSM as sm,
     breakpointMD as md,
+    areWeSwitchedOnPage,
+    getHeaderText,
 } from '../helpers'
 
 import {routerGetters} from '../../router-builder'
@@ -181,7 +183,7 @@ const
         addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
         toggleReportDialogHandler, getTagLink, pageUrl,
         handleSubmit, pristine, reset, cb, currentWidth, i18nButtons, i18nRelatedVideo,
-        i18nLabelProvidedBy,
+        i18nLabelProvidedBy, setPlayerRef,
     }) => <Page>
         { data.get('isFailed')
             ? <ErrorContent/>
@@ -209,7 +211,7 @@ const
                                 withLabel={true}
                                 i18nLabelProvidedBy={i18nLabelProvidedBy}
                             />}
-                        <VideoPlayer>
+                        <VideoPlayer ref={g(setPlayerRef, [])}>
                             <VideoWrapper>
                                 <Video>
                                     {(data.get('inlineAdvertisementIsShowed') && !isSSR)
@@ -329,14 +331,19 @@ const
         }
     </Page>,
 
-    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
+    setNewPageFlow = props => {
+        props.scrollToPlayer()
+        props.setNewText(getHeaderText(g(props, 'data'), true, false))
+    },
+
+    loadPageFlow = ({
+        data, loadPage, routerContext, match
+    }) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
         if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)
-        else if (ig(data, 'isLoaded'))
-            setHeaderText(getHeaderText(g(data, []), true, false))
     }
 
 export default compose(
@@ -362,6 +369,7 @@ export default compose(
             i18nRelatedVideo: ig(state, 'app', 'locale', 'i18n', 'headers', 'relatedVideo'),
             i18nLabelProvidedBy: ig(state, 'app', 'locale', 'i18n', 'labels', 'providedBy'),
             i18n: ig(state, 'app', 'locale', 'i18n', 'headers', 'relatedVideo'),
+            currentSection: ig(state, 'app', 'mainHeader', 'navigation', 'currentSection'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -372,9 +380,9 @@ export default compose(
             removeVideoFromFavorite: g(appActions, 'removeVideoFromFavorite'),
         }
     ),
+    withState('playerRef', 'setPlayerRef', null),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        setHeaderText: props => headerText => props.setNewText(g(headerText, [])),
         closeAdvertisementHandler: props => () => props.closeAdvertisement(),
         toggleReportDialogHandler: props => () => props.toggleReportDialog(),
         addVideoToFavoriteHandler: props => (video, e) => {
@@ -390,6 +398,13 @@ export default compose(
             {searchQuery},
             ['searchQuery'],
         ),
+        scrollToPlayer: props => () => {
+            animateScroll.scrollTo(g(props, 'playerRef', 'offsetTop'), {
+                duration: 500,
+                delay: 500,
+                smooth: true,
+            })
+        }
     }),
     reduxForm({
         form: 'reportForm',
@@ -400,10 +415,23 @@ export default compose(
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)
+            if (areWeSwitchedOnPage(null, this.props) && g(this.props, 'playerRef') !== null) {
+                setNewPageFlow(this.props)
+            }
         },
 
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
+            if (
+                (areWeSwitchedOnPage(this.props, nextProps) && g(nextProps, 'playerRef') !== null) ||
+                (
+                    g(this.props, 'data', 'isLoaded') &&
+                    g(this.props, 'playerRef') === null &&
+                    g(nextProps, 'playerRef') !== null
+                )
+            ) {
+                setNewPageFlow(nextProps)
+            }
         },
     }),
     withStyles(muiStyles),

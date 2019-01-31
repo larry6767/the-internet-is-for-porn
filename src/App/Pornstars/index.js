@@ -14,6 +14,7 @@ import {
     PropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
+    areWeSwitchedOnPage,
 } from '../helpers'
 
 import {routerContextModel} from '../models'
@@ -60,14 +61,18 @@ const
         pageText: null,
     }),
 
-    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
+    setNewPageFlow = (prevProps, nextProps) => {
+        if (areWeSwitchedOnPage(prevProps, nextProps)) {
+            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+        }
+    },
+
+    loadPageFlow = ({data, loadPage, routerContext, match}) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
         if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)
-        else if (ig(data, 'isLoaded'))
-            setHeaderText(getHeaderText(g(data, []), true))
     }
 
 export default compose(
@@ -86,7 +91,6 @@ export default compose(
     ),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        setHeaderText: props => headerText => props.setNewText(headerText),
 
         linkBuilder: props => child =>
             routerGetters.pornstar.link(g(props, 'routerContext'), g(child, []), null),
@@ -94,10 +98,12 @@ export default compose(
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)
+            setNewPageFlow(null, this.props)
         },
 
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
+            setNewPageFlow(this.props, nextProps)
         },
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
@@ -108,7 +114,6 @@ export default compose(
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
-        setHeaderText: PropTypes.func,
         linkBuilder: PropTypes.func,
     }),
 )(Pornstars)

@@ -22,7 +22,6 @@ const
             window.alert('Application initialization is failed!')
         } finally {
             htmlEl.classList.remove('is-loading')
-            rootEl.classList.add('loaded')
         }
     }
 

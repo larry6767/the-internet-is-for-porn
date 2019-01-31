@@ -1,4 +1,5 @@
 import {all, takeEvery, put} from 'redux-saga/effects'
+import {LOCATION_CHANGE} from 'connected-react-router'
 
 import homeSaga from './Home/sagas'
 import mainHeaderSaga from './MainHeader/sagas'
@@ -53,6 +54,10 @@ export function* getFavoritePornstarList(action, ssrContext) {
     yield put(actions.setFavoritePornstarList(getIdsForInitialFavoriteList('mcj_fav_model')))
 }
 
+function scrollToTop() {
+    window.scrollTo(0, 0)
+}
+
 export default function* saga() {
     yield takeEvery(actions.getFavoriteVideoList, getFavoriteVideoList)
     yield takeEvery(actions.removeVideoFromFavorite, removeVideoFromFavorite)
@@ -60,6 +65,7 @@ export default function* saga() {
     yield takeEvery(actions.getFavoritePornstarList, getFavoritePornstarList)
     yield takeEvery(actions.removePornstarFromFavorite, removePornstarFromFavorite)
     yield takeEvery(actions.addPornstarToFavorite, addPornstarToFavorite)
+    yield takeEvery(LOCATION_CHANGE, scrollToTop)
 
     yield all([
         homeSaga(),
