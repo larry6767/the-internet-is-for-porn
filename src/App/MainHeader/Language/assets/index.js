@@ -16,20 +16,20 @@ export const InlinedSelectionWrap = styled.div`
     width: 100%;
     margin: 10px 0;
 
-    /* not showing this block when JS is enabled in browser (because SSR version looks different) */
     html.is-loading & {
         display: none;
     }
 `
 
 export const InlinedSelectionList = styled.nav`
-    display: flex;
-    justify-content: center;
+    display: block;
+    padding-top: 2px;
+    padding-left: 2px;
 `
 
 export const InlinedSelectionItem = styled.a`
     display: inline-block;
-    padding: 10px 8px;
+    padding: 8px 6px;
     border: 2px solid
         ${({theme, isActive}) => isActive ? theme.palette.secondary.dark : theme.palette.primary.light};
     color:
@@ -40,6 +40,8 @@ export const InlinedSelectionItem = styled.a`
     text-decoration: none;
     vertical-align: middle;
     line-height: 24px;
+    margin-top: -2px;
+    margin-left: -2px;
 
     &>* {
         vertical-align: middle;
@@ -52,9 +54,5 @@ export const InlinedSelectionItem = styled.a`
 
     &:last-child {
         border-radius: 0 4px 4px 0;
-    }
-
-    &:not(:last-child) {
-        border-right: none;
     }
 `
