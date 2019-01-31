@@ -8,6 +8,8 @@ export {
 
 export const PlayerSection = styled.section`
     margin-bottom: 40px;
+
+    ${({theme}) => theme.media.mobile`margin-bottom: 20px;`}
 `
 
 export const VideoPlayer = styled.div`
@@ -30,7 +32,7 @@ export const VideoWrapper = styled.div`
     padding: 10px 10px 0;
 
     ${({theme}) => theme.media.sm`width: 100%;`}
-    ${({theme}) => theme.media.mobile`padding: 0;width: 100%;`}
+    ${({theme}) => theme.media.mobile`padding: 0; width: 100%;`}
 `
 
 export const Video = styled.div`

@@ -11,6 +11,7 @@ export const Page = styled.section`
 
     ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}
+    ${({theme}) => theme.media.mobile`padding: 10px;`}
 `
 
 export const Content = styled.div`

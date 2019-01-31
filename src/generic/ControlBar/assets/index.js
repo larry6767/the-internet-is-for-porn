@@ -19,6 +19,7 @@ export const ButtonsList = styled.div`
         width: 100%;
         overflow-x: scroll;
         margin-right: 0;
+        margin-bottom: 8px;
     `}
 `
 
