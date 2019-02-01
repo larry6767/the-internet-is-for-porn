@@ -34,11 +34,13 @@ export function* loadSitePageFlow(action, ssrContext) {
 function* setNewSort({payload}) {
     const
         routerContext = yield select(state => getRouterContext(state)),
+        siteCode = g(payload, 'siteCode'),
         newSortValue = g(payload, 'newSortValue')
 
     yield put(push(
         routerGetters.site.link(
             routerContext,
+            siteCode,
             {ordering: newSortValue},
             ['ordering']
         )

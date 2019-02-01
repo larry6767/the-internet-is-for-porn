@@ -2,7 +2,7 @@
 import React from 'react'
 import {Record} from 'immutable'
 import {connect} from 'react-redux'
-import {compose, lifecycle, withHandlers} from 'recompose'
+import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
 
@@ -74,7 +74,7 @@ const
                     >
                         {data.getIn(['pageText', 'listHeader'])}
                     </Typography>
-                    {/* <ControlBar
+                    <ControlBar
                         cb={currentBreakpoint}
                         i18nOrdering={i18nOrdering}
                         i18nButtons={i18nButtons}
@@ -91,7 +91,7 @@ const
                         tagArchiveListNewer={null}
                         linkBuilder={controlLinkBuilder}
                         archiveLinkBuilder={null}
-                    /> */}
+                    />
                     <VideoList
                         videoList={ig(data, 'videoList')}
                     />
@@ -132,12 +132,19 @@ export default compose(
             setNewText: g(headerActions, 'setNewText'),
         }
     ),
+    withProps(props => ({
+        siteCode: g(props, 'match', 'params', 'child'),
+    })),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        chooseSort: props => newSortValue => props.setNewSort({newSortValue}),
+        chooseSort: props => newSortValue => props.setNewSort({
+            newSortValue,
+            siteCode: g(props, 'siteCode'),
+        }),
 
         controlLinkBuilder: props => qsParams => routerGetters.site.link(
             g(props, 'routerContext'),
+            g(props, 'siteCode'),
             qsParams,
             ['ordering', 'pagination']
         ),
