@@ -65,7 +65,9 @@ const
     },
 
     requestSpecificParamsKeys =
-        Object.freeze(['child', 'subchild', 'ordering', 'pagination', 'archive', 'searchQuery']),
+        Object.freeze(
+            ['child', 'subchild', 'ordering', 'pagination', 'archive', 'searchQuery', 'isSitePage']
+        ),
 
     requestHandler = siteLocales => (req, res) => {
         const

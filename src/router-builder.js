@@ -58,6 +58,10 @@ import FindVideos from './App/FindVideos'
 import findVideosActions from './App/FindVideos/actions'
 import {loadFindVideosPageFlow} from './App/FindVideos/sagas'
 
+import Site from './App/Site'
+import siteActions from './App/Site/actions'
+import {loadSitePageFlow} from './App/Site/sagas'
+
 import NotFound from './App/NotFound'
 
 const
@@ -346,6 +350,24 @@ export const
                 return `${orientationPfx}/${findVideos}${renderQs(qs)}`
             },
         }),
+
+        site: Object.freeze({
+            path: (r, orientationCode) => {
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
+                    site = ig(r, 'router', 'routes', 'site', 'section')
+
+                return `${orientationPfx}/${site}/:child`
+            },
+            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
+                const
+                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
+                    site = ig(r, 'router', 'routes', 'site', 'section'),
+                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
+
+                return `${orientationPfx}/${site}/${child}${renderQs(qs)}`
+            },
+        }),
     })
 
 const
@@ -373,6 +395,8 @@ const
         video: getterModel,
 
         findVideos: getterModel,
+
+        site: getterModel,
     })
 
 if (process.env.NODE_ENV !== 'production')
@@ -728,6 +752,38 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                     return null
                 } else
                     return <FindVideos
+                        {...props}
+                        currentSection={currentSection}
+                        orientationCode={orientationCode}
+                    />
+            }}
+        />
+    )}
+
+    {/* site */}
+    {orientationCodes.map(orientationCode =>
+        <Route
+            key={`${orientationCode}-site`}
+            exact
+            path={routerGetters.site.path(r, orientationCode)}
+            render={props => {
+                const currentSection = 'site'
+
+                if (get(props, ['staticContext', 'isPreRouting'])) {
+                    const
+                        {match, staticContext: x} = props,
+                        orientedR = r.set('currentOrientation', orientationCode),
+                        pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                        action = siteActions.loadPageRequest({pageRequestParams})
+
+                    x.saga = loadSitePageFlow.bind(null, action)
+                    x.statusCodeResolver = status500(['app', 'site', 'isFailed'])
+                    x.pageTextResolver = state => ig(state, ['app', 'site', 'pageText'])
+                    x.currentOrientation = orientationCode
+                    x.currentSection = currentSection
+                    return null
+                } else
+                    return <Site
                         {...props}
                         currentSection={currentSection}
                         orientationCode={orientationCode}

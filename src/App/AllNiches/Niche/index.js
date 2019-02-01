@@ -50,6 +50,7 @@ const
         controlBackFromArchiveLinkBuilder,
         listsTagLinkBuilder,
         listsArchiveLinkBuilder,
+        sponsorLinkBuilder,
         i18nListNichesHeader,
         i18nListArchiveHeader,
         i18nLabelShowing,
@@ -62,6 +63,9 @@ const
                 <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
+
+                    sponsorsList={ig(data, 'sponsorsList')}
+                    sponsorLinkBuilder={sponsorLinkBuilder}
 
                     tagList={ig(data, 'tagList')}
                     tagLinkBuilder={listsTagLinkBuilder}
@@ -116,6 +120,7 @@ const
         pageText: null,
         pagesCount: null,
 
+        sponsorsList: null,
         tagList: null,
         tagArchiveList: null,
         sortList: null,
@@ -222,6 +227,9 @@ export default compose(
                 month,
                 null
             ),
+
+        sponsorLinkBuilder: props => sponsor =>
+            routerGetters.site.link(g(props, 'routerContext'), sponsor, null)
     }),
     lifecycle({
         componentDidMount() {
@@ -255,5 +263,6 @@ export default compose(
         controlBackFromArchiveLinkBuilder: PropTypes.func,
         listsTagLinkBuilder: PropTypes.func,
         listsArchiveLinkBuilder: PropTypes.func,
+        sponsorLinkBuilder: PropTypes.func,
     }),
 )(Niche)

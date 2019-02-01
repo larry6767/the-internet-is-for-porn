@@ -45,6 +45,7 @@ export const
         'favoritePornstars',
         'video',
         'findVideos',
+        'site',
     ]),
 
     orientationCodes = Object.freeze(['straight', 'gay', 'tranny']),
@@ -200,4 +201,5 @@ export const
             })),
 
             searchQuery: PropTypes.nullable(PropTypes.string),
+            isSitePage: PropTypes.nullable(PropTypes.bool),
         })

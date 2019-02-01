@@ -16,16 +16,18 @@ import {muiStyles} from './assets/muiStyles'
 
 const
     // Generic list item component generator
-    renderListItem =
-        (idKey, titleKey, countKey, subPage, year, month) =>
+    renderItem =
+        (isSponsor, idKey, titleKey, countKey, subPage, year, month) =>
         (x, classes, linkBuilder) =>
         <Link
             to={
-                year && month
+                isSponsor
+                ? linkBuilder(x.toLowerCase())
+                : year && month
                 ? linkBuilder(x.get(year), x.get(month)) // archive links
                 : linkBuilder(x.get(subPage)) // niche link
             }
-            key={x.get(idKey)}
+            key={isSponsor ? x : x.get(idKey)}
             className={classes.routerLink}
         >
             <ListItem
@@ -41,8 +43,8 @@ const
                 </ListItemIcon>
                 <ListItemText
                     inset
-                    primary={x.get(titleKey)}
-                    secondary={x.get(countKey)}
+                    primary={isSponsor ? x : x.get(titleKey)}
+                    secondary={isSponsor ? null : x.get(countKey)}
                     classes={{
                         root: classes.itemTextRoot,
                         primary: classes.primaryTypography
@@ -51,12 +53,14 @@ const
             </ListItem>
         </Link>,
 
-    NichesListItem = renderListItem('id', 'name', 'itemsCount', 'subPage'),
+    SponsorsListItem = renderItem(true),
+
+    NichesListItem = renderItem(false, 'id', 'name', 'itemsCount', 'subPage'),
 
     ArchiveYearListItem =
-        renderListItem('archiveDate', 'month', 'itemsCount', 'subPage', 'year', 'monthNumber'),
+        renderItem(false, 'archiveDate', 'month', 'itemsCount', 'subPage', 'year', 'monthNumber'),
 
-    ModelsLetterListItem = renderListItem('id', 'name', 'itemsCount', 'subPage', 'letter'),
+    ModelsLetterListItem = renderItem(false, 'id', 'name', 'itemsCount', 'subPage', 'letter'),
 
     ArchiveList = ({classes, tagArchiveList, linkBuilder, i18nListArchiveHeader}) => {
         const
@@ -115,6 +119,9 @@ const
         classes,
         currentBreakpoint,
 
+        sponsorsList,
+        sponsorLinkBuilder,
+
         tagList,
         tagLinkBuilder,
 
@@ -131,6 +138,19 @@ const
         || currentBreakpoint === 'lg'
         || currentBreakpoint === 'XL'
             ? <ListsInner>
+                { sponsorsList ? <ListComponent
+                    component="nav"
+                    subheader={
+                        <ListSubheader classes={{
+                            root: classes.listSubheader
+                        }}>
+                            {i18nListArchiveHeader}
+                        </ListSubheader>
+                    }
+                >
+                    {sponsorsList.map(x => SponsorsListItem(x, classes, sponsorLinkBuilder))}
+                </ListComponent> : null }
+
                 { tagList ? <ListComponent
                     component="nav"
                     subheader={

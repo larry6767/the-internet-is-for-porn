@@ -27,6 +27,7 @@ const
 
         pageText: immutablePageTextModel,
 
+        sponsorsList: ImmutablePropTypes.listOf(PropTypes.string),
         tagList: immutableNichesListModel,
 
         tagArchiveList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({

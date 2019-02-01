@@ -45,6 +45,7 @@ const
         pageText: null,
         pagesCount: null,
 
+        sponsorsList: null,
         tagList: null,
         tagArchiveList: null,
         sortList: null,
@@ -64,6 +65,7 @@ const
         data,
         chooseSort,
         isSSR,
+        sponsorLinkBuilder,
         controlLinkBuilder,
         controlArchiveLinkBuilder,
         controlBackFromArchiveLinkBuilder,
@@ -73,19 +75,22 @@ const
         i18nListArchiveHeader,
         i18nLabelShowing,
     }) => <Page>
-        { data.get('isFailed')
+        { ig(data, 'isFailed')
             ? <ErrorContent/>
-            : data.get('isLoading')
+            : ig(data, 'isLoading')
             ? <CircularProgress/>
             : <Content>
                 <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
 
-                    tagList={data.get('tagList')}
+                    sponsorsList={ig(data, 'sponsorsList')}
+                    sponsorLinkBuilder={sponsorLinkBuilder}
+
+                    tagList={ig(data, 'tagList')}
                     tagLinkBuilder={listsTagLinkBuilder}
 
-                    tagArchiveList={data.get('tagArchiveList')}
+                    tagArchiveList={ig(data, 'tagArchiveList')}
                     archiveLinkBuilder={listsArchiveLinkBuilder}
 
                     i18nListNichesHeader={i18nListNichesHeader}
@@ -111,17 +116,17 @@ const
                         i18nLabelShowing={i18nLabelShowing}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        pagesCount={data.get('pagesCount')}
-                        pageNumber={data.get('pageNumber')}
-                        itemsCount={data.get('itemsCount')}
-                        sortList={data.get('sortList')}
-                        currentSort={data.get('currentSort')}
-                        archiveFilms={data.get('archiveFilms')}
-                        tagArchiveListOlder={data.get('tagArchiveListOlder')}
-                        tagArchiveListNewer={data.get('tagArchiveListNewer')}
+                        pagesCount={ig(data, 'pagesCount')}
+                        pageNumber={ig(data, 'pageNumber')}
+                        itemsCount={ig(data, 'itemsCount')}
+                        sortList={ig(data, 'sortList')}
+                        currentSort={ig(data, 'currentSort')}
+                        archiveFilms={ig(data, 'archiveFilms')}
+                        tagArchiveListOlder={ig(data, 'tagArchiveListOlder')}
+                        tagArchiveListNewer={ig(data, 'tagArchiveListNewer')}
                     />
                     <VideoList
-                        videoList={data.get('videoList')}
+                        videoList={ig(data, 'videoList')}
                     />
                 </AllMoviesPageWrapper>
             </Content>
@@ -207,6 +212,9 @@ export default compose(
                 month,
                 null
             ),
+
+        sponsorLinkBuilder: props => sponsor =>
+            routerGetters.site.link(g(props, 'routerContext'), sponsor, null)
     }),
     lifecycle({
         componentDidMount() {
