@@ -39,6 +39,7 @@ import {
     getArchiveFilms,
     getModelInfo,
     getGallery,
+    getSponsorsList,
 } from './helpers/requests'
 
 const
@@ -85,6 +86,7 @@ const
             pageNumber: x.page.PAGE_NUMBER,
             pagesCount: x.page.PAGES_COUNT,
             pageText: getPageText(x.page.PAGE_TEXT),
+            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')),
             tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
 
             tagArchiveList: getTagArchiveList(
@@ -108,7 +110,11 @@ const
 
             archiveFilms: archiveFilms && getArchiveFilms(archiveFilms),
             itemsCount: x.page.ITEMS_PER_PAGE,
-            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
+            videoList: getFilteredVideoList(
+                g(x, 'page', 'GALS_INFO', 'ids'),
+                g(x, 'page', 'GALS_INFO', 'items'),
+                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+            ),
         }
     },
 
@@ -125,6 +131,7 @@ const
             pageNumber: g(x, 'page', 'PAGE_NUMBER'),
             pagesCount: g(x, 'page', 'PAGES_COUNT'),
             pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
+            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')),
             tagList: getTagListByLetters(g(x, 'page', 'TAGS_BY_LETTERS', 'letters')),
 
             tagArchiveList: getTagArchiveList(
@@ -151,7 +158,8 @@ const
 
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items')
+                g(x, 'page', 'GALS_INFO', 'items'),
+                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
             ),
         }
     },
@@ -170,7 +178,11 @@ const
                 g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
 
             itemsCount: x.page.ITEMS_PER_PAGE,
-            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
+            videoList: getFilteredVideoList(
+                g(x, 'page', 'GALS_INFO', 'ids'),
+                g(x, 'page', 'GALS_INFO', 'items'),
+                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+            ),
             modelsList: getModelsList(
                 g(x, 'page', 'MODELS_BY_LETTERS', 'letters'),
                 g(x, 'page', 'MODELS_BY_LETTERS_MODELS_INFO', 'items'),
@@ -197,7 +209,11 @@ const
             pageText: getPageText(x.page.PAGE_TEXT),
             pagesCount: x.page.PAGES_COUNT,
             itemsCount: x.page.ITEMS_PER_PAGE,
-            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
+            videoList: getFilteredVideoList(
+                g(x, 'page', 'GALS_INFO', 'ids'),
+                g(x, 'page', 'GALS_INFO', 'items'),
+                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+            ),
         }
     },
 
@@ -258,7 +274,8 @@ const
 
                 videoList: getFilteredVideoList(
                     g(x, 'page', 'GALS_INFO', 'ids'),
-                    g(x, 'page', 'GALS_INFO', 'items')
+                    g(x, 'page', 'GALS_INFO', 'items'),
+                    g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
                 ),
             }
 
@@ -287,7 +304,37 @@ const
                 g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
 
             itemsCount: x.page.ITEMS_PER_PAGE,
-            videoList: getFilteredVideoList(x.page.GALS_INFO.ids, x.page.GALS_INFO.items),
+            videoList: getFilteredVideoList(
+                g(x, 'page', 'GALS_INFO', 'ids'),
+                g(x, 'page', 'GALS_INFO', 'items'),
+                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+            ),
+        }
+    },
+
+    getSiteMap = x => {
+        const
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS'))
+
+        return {
+            pageNumber: x.page.PAGE_NUMBER,
+            pageText: getPageText(x.page.PAGE_TEXT),
+            pagesCount: x.page.PAGES_COUNT,
+
+            sortList,
+            currentSort:
+                g(sortList, 'length') ? g(sortList.find(x => g(x, 'isActive')), 'code') : null,
+
+            itemsCount: x.page.ITEMS_PER_PAGE,
+            videoList: getFilteredVideoList(
+                g(x, 'page', 'GALS_INFO', 'ids'),
+                g(x, 'page', 'GALS_INFO', 'items'),
+                {
+                    [g(x, 'page', 'SPONSOR_INFO', 'id')]: {
+                        name: g(x, 'page', 'SPONSOR_INFO', 'name')
+                    }
+                }
+            ),
         }
     },
 
@@ -297,6 +344,7 @@ const
             allTagsBlock: PropTypes.number.isOptional,
             modelsABCBlockText: PropTypes.number.isOptional,
             modelsABCBlockThumbs: PropTypes.number.isOptional,
+            galsFacets: PropTypes.number.isOptional,
         }).isOptional,
     }),
 
@@ -341,11 +389,11 @@ const
             getAllNichesMap,
         ]),
         niche: Object.freeze([
-            deepFreeze({blocks: {allTagsBlock: 1}}),
+            deepFreeze({blocks: {allTagsBlock: 1, galsFacets: 1}}),
             getNicheMap,
         ]),
         allMovies: Object.freeze([
-            deepFreeze({blocks: {allTagsBlock: 1}}),
+            deepFreeze({blocks: {allTagsBlock: 1, galsFacets: 1}}),
             getAllMoviesMap,
         ]),
         pornstars: Object.freeze([
@@ -353,11 +401,11 @@ const
             getPornstarsMap,
         ]),
         pornstar: Object.freeze([
-            deepFreeze({blocks: {modelsABCBlockText: 1, modelsABCBlockThumbs: 1}}),
+            deepFreeze({blocks: {modelsABCBlockText: 1, modelsABCBlockThumbs: 1, galsFacets: 1}}),
             getPornstarMap,
         ]),
         favorite: Object.freeze([
-            null,
+            deepFreeze({blocks: {galsFacets: 1}}),
             getFavoriteMap,
         ]),
         favoritePornstars: Object.freeze([
@@ -365,12 +413,16 @@ const
             getFavoritePornstarsMap,
         ]),
         video: Object.freeze([
-            null,
+            deepFreeze({blocks: {galsFacets: 1}}),
             getVideoPageMap,
         ]),
         findVideos: Object.freeze([
-            null,
+            deepFreeze({blocks: {galsFacets: 1}}),
             getFindVideosMap,
+        ]),
+        site: Object.freeze([
+            deepFreeze({blocks: {galsFacets: 1}}),
+            getSiteMap,
         ]),
     }),
 
@@ -419,6 +471,7 @@ export const getPageData = siteLocales => async ({
     pagination,
     archive,
     searchQuery,
+    isSitePage = false,
 }) => {
     const
         backOrdering = !ordering ? null : find(
@@ -435,7 +488,8 @@ export const getPageData = siteLocales => async ({
             backOrdering,
             pagination,
             archive ? [g(archive, 'year'), g(archive, 'month')] : [],
-            searchQuery
+            searchQuery,
+            isSitePage,
         ),
 
         url = getPageDataUrlBuilder(localeCode, orientationCode, page, subPageCode),

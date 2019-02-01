@@ -16,6 +16,11 @@ const
         },
         typography: {
             useNextVariants: true,
+            fontFamily: [
+                'Arial',
+                'Helvetica',
+                'sans-serif',
+              ].join(','),
         },
         overrides: {
             MuiTypography: {
@@ -32,8 +37,35 @@ const
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',
                     },
-                }
-            }
+                },
+                body1: {
+                    [preMuiTheme.breakpoints.down("xs")]: {
+                        fontSize: '0.875rem',
+                    },
+                },
+                body2: {
+                    [preMuiTheme.breakpoints.down("xs")]: {
+                        fontSize: '0.75rem',
+                    },
+                },
+            },
+            MuiMenuItem: {
+                root: {
+                    [preMuiTheme.breakpoints.down("xs")]: {
+                        fontSize: '0.75rem',
+                        lineHeight: 1.5,
+                        padding: '8px 13px',
+                    },
+                },
+            },
+            MuiSelect: {
+                root: {
+                    [preMuiTheme.breakpoints.down("xs")]: {
+                        fontSize: '0.75rem',
+                        lineHeight: 1.5,
+                    },
+                },
+            },
         },
     })
 

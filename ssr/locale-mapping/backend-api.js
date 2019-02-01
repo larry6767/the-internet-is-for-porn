@@ -49,6 +49,10 @@ const
                     code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
                 },
+                site: {
+                    code: {straight: 'site', gay: 'site', tranny: 'site'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
+                },
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -96,6 +100,10 @@ const
                 findVideos: {
                     code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                },
+                site: {
+                    code: {straight: 'site', gay: 'site', tranny: 'site'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
             },
             orientationPrefixes: {
@@ -145,6 +153,10 @@ const
                     code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
                 },
+                site: {
+                    code: {straight: 'site', gay: 'site', tranny: 'site'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
+                },
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -192,6 +204,10 @@ const
                 findVideos: {
                     code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                },
+                site: {
+                    code: {straight: 'site', gay: 'site', tranny: 'site'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
             },
             orientationPrefixes: {
@@ -241,6 +257,10 @@ const
                     code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
                 },
+                site: {
+                    code: {straight: 'site', gay: 'site', tranny: 'site'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
+                },
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -288,6 +308,10 @@ const
                 findVideos: {
                     code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                },
+                site: {
+                    code: {straight: 'site', gay: 'site', tranny: 'site'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
             },
             orientationPrefixes: {
@@ -337,6 +361,10 @@ const
                     code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
                 },
+                site: {
+                    code: {straight: 'site', gay: 'site', tranny: 'site'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
+                },
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -384,6 +412,10 @@ const
                 findVideos: {
                     code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                },
+                site: {
+                    code: {straight: 'site', gay: 'site', tranny: 'site'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
             },
             orientationPrefixes: {
@@ -433,6 +465,10 @@ const
                     code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
                 },
+                site: {
+                    code: {straight: 'site', gay: 'site', tranny: 'site'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
+                },
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -480,6 +516,10 @@ const
                 findVideos: {
                     code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                },
+                site: {
+                    code: {straight: 'site', gay: 'site', tranny: 'site'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
             },
             orientationPrefixes: {
@@ -529,6 +569,10 @@ const
                     code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
                 },
+                site: {
+                    code: {straight: 'site', gay: 'site', tranny: 'site'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
+                },
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -562,6 +606,7 @@ const
         favoritePornstars: pageCodeBranchModel,
         video: pageCodeBranchModel,
         findVideos: pageCodeBranchModel,
+        site: pageCodeBranchModel,
     }),
 
     localeInnardsModel = PropTypes.exact({

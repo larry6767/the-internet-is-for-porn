@@ -1,26 +1,20 @@
-// TODO: this page needs refactoring (propTypes, ig, ext)
+// TODO: this page needs propTypes
 import React from 'react'
+import {Record} from 'immutable'
 import {connect} from 'react-redux'
-import {compose, lifecycle, withHandlers} from 'recompose'
+import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import {CircularProgress, Typography} from '@material-ui/core'
-import {Record, Map, List} from 'immutable'
 
 import {
     getHeaderText,
     getRouterContext,
-    plainProvedGet as g,
     immutableProvedGet as ig,
-    setPropTypes,
+    plainProvedGet as g,
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
 } from '../helpers'
-
-import {
-    immutableI18nButtonsModel,
-    routerContextModel,
-} from '../models'
 
 import {routerGetters} from '../../router-builder'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
@@ -28,7 +22,7 @@ import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'
 import ErrorContent from '../../generic/ErrorContent'
 import PageTextHelmet from '../../generic/PageTextHelmet'
-import PornstarList from '../../generic/PornstarList'
+import VideoList from '../../generic/VideoList'
 import {Page, Content, PageWrapper} from './assets'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
@@ -36,28 +30,33 @@ import {muiStyles} from './assets/muiStyles'
 
 const
     DataRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
+        isLoading: null,
+        isLoaded: null,
+        isFailed: null,
 
         lastPageRequestParams: null,
 
-        pageText: Map(),
-        pageNumber: 1,
-        pagesCount: 1,
-        itemsCount: 0,
-        modelsList: List(),
+        pageText: null,
+
+        pageNumber: null,
+        pagesCount: null,
+        itemsCount: null,
+
+        currentSort: null,
+        sortList: null,
+        videoList: null,
     }),
 
-    FavoritePornstars = ({
+    Site = ({
         classes,
-        isSSR,
+        currentBreakpoint,
+        i18nOrdering,
         i18nButtons,
         i18nLabelShowing,
-        controlLinkBuilder,
-        controlFavoriteLinkBuilder,
         data,
-        linkBuilder,
+        chooseSort,
+        isSSR,
+        controlLinkBuilder,
     }) => <Page>
         { ig(data, 'isFailed')
             ? <ErrorContent/>
@@ -70,29 +69,31 @@ const
                         variant="h4"
                         gutterBottom
                         classes={{
-                            root: g(classes, 'typographyTitle')
+                            root: classes.typographyTitle
                         }}
                     >
-                        {g(ig(data, 'modelsList'), 'size')
-                            ? `${(ig(data, 'pageText', 'listHeader') || '')
-                                .replace(/[0-9]/g, '')}${g(ig(data, 'modelsList'), 'size')}`
-                            : ig(data, 'pageText', 'listHeaderEmpty')
-                        }
+                        {data.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <ControlBar
-                        isSSR={isSSR}
+                        cb={currentBreakpoint}
+                        i18nOrdering={i18nOrdering}
                         i18nButtons={i18nButtons}
                         i18nLabelShowing={i18nLabelShowing}
-                        linkBuilder={controlLinkBuilder}
-                        favoriteLinkBuilder={controlFavoriteLinkBuilder}
+                        chooseSort={chooseSort}
+                        isSSR={isSSR}
                         pagesCount={ig(data, 'pagesCount')}
                         pageNumber={ig(data, 'pageNumber')}
                         itemsCount={ig(data, 'itemsCount')}
-                        favoriteButtons={true}
+                        sortList={ig(data, 'sortList')}
+                        currentSort={ig(data, 'currentSort')}
+                        archiveFilms={null}
+                        tagArchiveListOlder={null}
+                        tagArchiveListNewer={null}
+                        linkBuilder={controlLinkBuilder}
+                        archiveLinkBuilder={null}
                     />
-                    <PornstarList
-                        linkBuilder={linkBuilder}
-                        pornstarList={ig(data, 'modelsList')}
+                    <VideoList
+                        videoList={ig(data, 'videoList')}
                     />
                 </PageWrapper>
             </Content>
@@ -106,7 +107,7 @@ const
 
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
         const
-            pageRequestParams = getPageRequestParams(routerContext, match)
+            pageRequestParams = getPageRequestParams(routerContext, match, true)
 
         if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)
@@ -117,32 +118,36 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
+            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            data: DataRecord(ig(state, 'app', 'site')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
-            data: DataRecord(ig(state, 'app', 'favoritePornstars')),
+            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
+            setNewSort: g(actions, 'setNewSort'),
             setNewText: g(headerActions, 'setNewText'),
         }
     ),
+    withProps(props => ({
+        siteCode: g(props, 'match', 'params', 'child'),
+    })),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
+        chooseSort: props => newSortValue => props.setNewSort({
+            newSortValue,
+            siteCode: g(props, 'siteCode'),
+        }),
 
-        controlLinkBuilder: props => qsParams =>
-            routerGetters.favoritePornstars.link(
-                g(props, 'routerContext'),
-                {...qsParams},
-                ['pagination']
-            ),
-
-        controlFavoriteLinkBuilder: props => section =>
-            g(routerGetters, section).link(g(props, 'routerContext'), null),
-
-        linkBuilder: props => child =>
-            routerGetters.pornstar.link(g(props, 'routerContext'), child, null),
+        controlLinkBuilder: props => qsParams => routerGetters.site.link(
+            g(props, 'routerContext'),
+            g(props, 'siteCode'),
+            qsParams,
+            ['ordering', 'pagination']
+        ),
     }),
     lifecycle({
         componentDidMount() {
@@ -155,9 +160,5 @@ export default compose(
             setNewPageFlow(this.props, nextProps)
         },
     }),
-    withStyles(muiStyles),
-    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        routerContext: routerContextModel,
-        i18nButtons: immutableI18nButtonsModel,
-    }),
-)(FavoritePornstars)
+    withStyles(muiStyles)
+)(Site)

@@ -20,6 +20,7 @@ import favoriteReducer from './Favorite/reducers'
 import favoritePornstarsReducer from './FavoritePornstars/reducers'
 import videoPageReducer from './VideoPage/reducers'
 import findVideosReducer from './FindVideos/reducers'
+import siteReducer from './Site/reducers'
 import actions from './actions'
 import {immutableLocaleRouterModel, immutableI18nModel} from './models'
 
@@ -42,6 +43,7 @@ export default combineReducers({
     favoritePornstars: favoritePornstarsReducer,
     videoPage: videoPageReducer,
     findVideos: findVideosReducer,
+    site: siteReducer,
 
     ui: provedHandleActions(stateModel, {
         [g(actions, 'resize')]: (state, action) => state.merge({

@@ -25,6 +25,7 @@ import {
     getHeaderText,
     getPageRequestParams,
     doesItHaveToBeReloaded,
+    areWeSwitchedOnPage,
 } from '../helpers'
 
 import {immutableI18nOrderingModel, routerContextModel} from '../models'
@@ -149,14 +150,17 @@ const
         pornstarsList: null,
     }),
 
+    setNewPageFlow = (prevProps, nextProps) => {
+        if (areWeSwitchedOnPage(prevProps, nextProps))
+            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+    },
+
     loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
         if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)
-        else if (ig(data, 'isLoaded'))
-            setHeaderText(getHeaderText(g(data, []), true))
    }
 
 export default compose(
@@ -178,15 +182,16 @@ export default compose(
     ),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        setHeaderText: props => headerText => props.setNewText(headerText),
     }),
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)
+            setNewPageFlow(null, this.props)
         },
 
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
+            setNewPageFlow(this.props, nextProps)
         },
     }),
     withStylesProps(muiStyles),
@@ -209,6 +214,6 @@ export default compose(
 
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
-        setHeaderText: PropTypes.func,
+        setNewText: PropTypes.func,
     })
 )(Home)

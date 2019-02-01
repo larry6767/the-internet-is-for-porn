@@ -170,11 +170,11 @@ const
             ? `${i18nLabelProvidedBy}: `
             : null}
         <SponsorLink
-            href={data.getIn(['gallery', 'sponsorUrl'])}
+            href={data.getIn(['gallery', 'sponsorUrl'])} // TODO need link to search
             target="_blank"
             rel="noopener noreferrer"
         >
-            {`itIsJustGag${data.getIn(['gallery', 'sponsorId'])}`}
+            {data.getIn(['gallery', 'sponsorName'])}
         </SponsorLink>
     </Typography>,
 

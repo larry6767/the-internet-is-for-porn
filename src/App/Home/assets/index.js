@@ -22,6 +22,8 @@ export const NichesList = styled.ul`
     list-style-type: none;
     padding: 0;
     margin: 0 0 40px;
+
+    ${({theme}) => theme.media.mobile`margin: 0 0 20px;`}
 `
 
 export const Niche = styled.div`

@@ -22,7 +22,12 @@ export const TopInner = styled.div`
     ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}
     ${({theme}) => theme.media.sm`padding: 12px 10px;`}
-    ${({theme}) => theme.media.mobile`flex-wrap: wrap; justify-content: center; width: 100%;`}
+    ${({theme}) => theme.media.mobile`
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        padding: 10px;
+    `}
 
     html.is-loading & {
         ${({theme}) => theme.media.xs`padding-bottom: 14px;`}
@@ -94,7 +99,7 @@ export const Logo = styled.img`
     height: 50px;
 
     ${({theme}) => theme.media.sm`width: 135px; height: 37px;`}
-    ${({theme}) => theme.media.mobile`margin: 0 10px`}
+    ${({theme}) => theme.media.mobile`margin: 0 10px; width: 135px; height: 37px;`}
     ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.mobile`margin: 0;`}
     ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xs`margin: 0;`}
     ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xxs`margin: 0;`}
@@ -120,7 +125,10 @@ export const Icon = styled.div`
         : ''
     }
 
-    ${({theme}) => theme.media.mobile`display: block;`}
+    ${({theme}) => theme.media.mobile`
+        display: block;
+        background-size: 20px;
+    `}
 `
 
 export const BottomInner = styled.div`
@@ -143,5 +151,6 @@ export const TextWrapper = styled.div`
         text-overflow: ellipsis;
         overflow: hidden;
         color: ${({theme}) => theme.palette.primary.contrastText};
+        margin-bottom: 0;
     `}
 `

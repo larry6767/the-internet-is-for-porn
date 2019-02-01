@@ -37,6 +37,13 @@ export const muiStyles = theme => ({
         display: 'block',
         padding: '15px 60px 15px 20px',
         transition: 'background-image 0.3s',
-        color: '#ffffff'
+        color: '#ffffff',
+
+        [theme.breakpoints.down("xs")]: {
+            padding: '8px 40px 8px 10px',
+            backgroundSize: '20px',
+            backgroundPosition: 'right 10px center',
+            fontSize: '0.875rem',
+        },
     }
 })

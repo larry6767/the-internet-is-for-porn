@@ -7,7 +7,7 @@ export const NicheBlock = styled.div`
 
     ${({theme}) => theme.media.sm`flex-grow: 0;`}
     ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.sm`flex-grow: 1;`}
-    ${({theme}) => theme.media.mobile`width: 100%; margin-top: 10px;`}
+    ${({theme}) => theme.media.mobile`width: 100%;`}
 
     html.is-loading & {
         display: none;
@@ -62,7 +62,8 @@ export const NicheMobileItem = styled.a`
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
-        padding: 10px;
+        padding: 7px;
+        font-size: 0.875rem;
     `}
 `
 

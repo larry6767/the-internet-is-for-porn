@@ -13,6 +13,7 @@ import {
     plainProvedGet as g,
     getPageRequestParams,
     doesItHaveToBeReloaded,
+    areWeSwitchedOnPage,
 } from '../helpers'
 
 import {routerGetters} from '../../router-builder'
@@ -28,7 +29,7 @@ import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
 const
-    FindVideosRecord = Record({
+    DataRecord = Record({
         isLoading: null,
         isLoaded: null,
         isFailed: null,
@@ -52,17 +53,17 @@ const
         i18nOrdering,
         i18nButtons,
         i18nLabelShowing,
-        findVideos,
+        data,
         chooseSort,
         isSSR,
         controlLinkBuilder,
     }) => <Page>
-        { ig(findVideos, 'isFailed')
+        { ig(data, 'isFailed')
             ? <ErrorContent/>
-            : ig(findVideos, 'isLoading')
+            : ig(data, 'isLoading')
             ? <CircularProgress/>
             : <Content>
-                <PageTextHelmet pageText={ig(findVideos, 'pageText')}/>
+                <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <PageWrapper>
                     <Typography
                         variant="h4"
@@ -71,7 +72,7 @@ const
                             root: classes.typographyTitle
                         }}
                     >
-                        {findVideos.getIn(['pageText', 'listHeader'])}
+                        {data.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <ControlBar
                         cb={currentBreakpoint}
@@ -80,11 +81,11 @@ const
                         i18nLabelShowing={i18nLabelShowing}
                         chooseSort={chooseSort}
                         isSSR={isSSR}
-                        pagesCount={ig(findVideos, 'pagesCount')}
-                        pageNumber={ig(findVideos, 'pageNumber')}
-                        itemsCount={ig(findVideos, 'itemsCount')}
-                        sortList={ig(findVideos, 'sortList')}
-                        currentSort={ig(findVideos, 'currentSort')}
+                        pagesCount={ig(data, 'pagesCount')}
+                        pageNumber={ig(data, 'pageNumber')}
+                        itemsCount={ig(data, 'itemsCount')}
+                        sortList={ig(data, 'sortList')}
+                        currentSort={ig(data, 'currentSort')}
                         archiveFilms={null}
                         tagArchiveListOlder={null}
                         tagArchiveListNewer={null}
@@ -92,21 +93,24 @@ const
                         archiveLinkBuilder={null}
                     />
                     <VideoList
-                        videoList={ig(findVideos, 'videoList')}
+                        videoList={ig(data, 'videoList')}
                     />
                 </PageWrapper>
             </Content>
         }
     </Page>,
 
-    loadPageFlow = ({findVideos, loadPage, setHeaderText, routerContext, match}) => {
+    setNewPageFlow = (prevProps, nextProps) => {
+        if (areWeSwitchedOnPage(prevProps, nextProps))
+            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+    },
+
+    loadPageFlow = ({data, loadPage, routerContext, match}) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
-        if (doesItHaveToBeReloaded(findVideos, pageRequestParams))
+        if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)
-        else if (ig(findVideos, 'isLoaded'))
-            setHeaderText(getHeaderText(g(findVideos, []), true))
     }
 
 export default compose(
@@ -115,7 +119,7 @@ export default compose(
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            findVideos: FindVideosRecord(ig(state, 'app', 'findVideos')),
+            data: DataRecord(ig(state, 'app', 'findVideos')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
@@ -130,7 +134,6 @@ export default compose(
     ),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        setHeaderText: props => headerText => props.setNewText(headerText),
         chooseSort: props => newSortValue => props.setNewSort({newSortValue}),
 
         controlLinkBuilder: props => qsParams => routerGetters.findVideos.link(
@@ -142,10 +145,12 @@ export default compose(
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)
+            setNewPageFlow(null, this.props)
         },
 
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
+            setNewPageFlow(this.props, nextProps)
         },
     }),
     withStyles(muiStyles)

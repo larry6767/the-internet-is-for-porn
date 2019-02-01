@@ -8,7 +8,7 @@ import {assertPropTypes} from './propTypes/check'
 
 import {pageRequestParamsModel} from '../models'
 
-export default (routerContext, match) => {
+export default (routerContext, match, isSitePage = false) => {
     const
         qs = queryString.parse(ig(routerContext, 'location', 'search')),
         ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
@@ -28,6 +28,7 @@ export default (routerContext, match) => {
             },
 
             searchQuery,
+            isSitePage,
         })
 
     if (process.env.NODE_ENV !== 'production')

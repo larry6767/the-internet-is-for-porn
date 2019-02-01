@@ -12,6 +12,25 @@ const
         byRelevant: 'relevant',
     }),
 
+    // API accepts requests for this page like '/site-%name%/latest-2.html'
+    getSubPageForSitePage = (child, sort = null, page = 1) => {
+        const
+            ordering = sort !== null ? g(orderingMapping, sort) : null,
+
+            // '/site/name?sort=latest&page=2' matches '/site-%name%/latest-1.html', etc
+            pagination = Number(page) - 1,
+
+            subPage = ordering !== null
+                ? `${child}/${ordering}`
+                : `${child}`
+
+        return (
+            pagination > 0
+                ? `${subPage}-${pagination}`
+                : subPage
+        )
+    },
+
     getSubPageForSearch = (sort = null, page = 1, query = '') => {
         const
             ordering = sort !== null ? g(orderingMapping, sort) : null,
@@ -33,7 +52,8 @@ const
 
     // API accepts requests like '/somepage-latest-5.html',
     // but on the client side this is implemented like '/section/somepage?sort=latest&page=5'.
-    getSubPage = (child, sort = null, page = 1, archive = [], query = null) => {
+    getSubPage = (child, sort = null, page = 1, archive = [], query = null, isSitePage) => {
+        if (isSitePage) return getSubPageForSitePage(child, sort, page)
         if (query !== null) return getSubPageForSearch(sort, page, query)
 
         child = child || '' // Empty `child` is for pages like /somepage?sort=latest&page=5

@@ -15,6 +15,7 @@ import {
     PropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
+    areWeSwitchedOnPage,
 } from '../../helpers'
 
 import {
@@ -49,6 +50,7 @@ const
         controlBackFromArchiveLinkBuilder,
         listsTagLinkBuilder,
         listsArchiveLinkBuilder,
+        sponsorLinkBuilder,
         i18nListNichesHeader,
         i18nListArchiveHeader,
         i18nLabelShowing,
@@ -61,6 +63,9 @@ const
                 <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <Lists
                     currentBreakpoint={currentBreakpoint}
+
+                    sponsorsList={ig(data, 'sponsorsList')}
+                    sponsorLinkBuilder={sponsorLinkBuilder}
 
                     tagList={ig(data, 'tagList')}
                     tagLinkBuilder={listsTagLinkBuilder}
@@ -115,6 +120,7 @@ const
         pageText: null,
         pagesCount: null,
 
+        sponsorsList: null,
         tagList: null,
         tagArchiveList: null,
         sortList: null,
@@ -126,14 +132,17 @@ const
         videoList: null,
     }),
 
-    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
+    setNewPageFlow = (prevProps, nextProps) => {
+        if (areWeSwitchedOnPage(prevProps, nextProps))
+            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+    },
+
+    loadPageFlow = ({data, loadPage, routerContext, match}) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
         if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)
-        else if (ig(data, 'isLoaded'))
-            setHeaderText(getHeaderText(g(data, []), true))
     }
 
 export default compose(
@@ -167,7 +176,6 @@ export default compose(
     })),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        setHeaderText: props => headerText => props.setNewText(headerText),
 
         chooseSort: props => newSortValue => props.setNewSort({
             newSortValue,
@@ -219,14 +227,19 @@ export default compose(
                 month,
                 null
             ),
+
+        sponsorLinkBuilder: props => sponsor =>
+            routerGetters.site.link(g(props, 'routerContext'), sponsor, null)
     }),
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)
+            setNewPageFlow(null, this.props)
         },
 
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
+            setNewPageFlow(this.props, nextProps)
         },
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
@@ -243,7 +256,6 @@ export default compose(
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
-        setHeaderText: PropTypes.func,
         setNewSort: PropTypes.func,
         chooseSort: PropTypes.func,
         controlLinkBuilder: PropTypes.func,
@@ -251,5 +263,6 @@ export default compose(
         controlBackFromArchiveLinkBuilder: PropTypes.func,
         listsTagLinkBuilder: PropTypes.func,
         listsArchiveLinkBuilder: PropTypes.func,
+        sponsorLinkBuilder: PropTypes.func,
     }),
 )(Niche)

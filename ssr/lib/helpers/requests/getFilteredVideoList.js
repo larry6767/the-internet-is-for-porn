@@ -72,7 +72,7 @@ const
 
 export {incomingModel as incomingVideoItemModel}
 
-export default (ids, items) => map(getOrderedVideoList(ids, items), x => {
+export default (ids, items, sponsors) => map(getOrderedVideoList(ids, items), x => {
     if (process.env.NODE_ENV !== 'production')
         assertPropTypes(incomingModel, x, 'getFilteredVideoList', 'original source video item')
 
@@ -90,7 +90,7 @@ export default (ids, items) => map(getOrderedVideoList(ids, items), x => {
             firstThumb: Number(getProp(x, 'thumb_top')),
 
             title: getProp(x, 'title'),
-            sponsorId: getProp(x, 'id_sponsor'),
+            sponsorName: g(sponsors, getProp(x, 'id_sponsor'), 'name'),
             tags: getProp(x, 'tags'),
 
             tagsShort: getProp(x, 'tags').reduce((acc, tag) => {
