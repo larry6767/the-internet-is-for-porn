@@ -18,7 +18,7 @@ const
                 favoritePornstars: {section: 'favorite-porn-stars'},
                 video: {section: 'video'},
                 findVideos: {section: 'find-videos'},
-                site: {section: 'site'},
+                site: {section: 'sites'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -65,7 +65,7 @@ const
                 favoritePornstars: {section: 'favorisierten-models'},
                 video: {section: 'video'},
                 findVideos: {section: 'finde-videos'},
-                site: {section: ''},
+                site: {section: 'websites'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -112,7 +112,7 @@ const
                 favoritePornstars: {section: 'pornostar-preferiti'},
                 video: {section: 'film'},
                 findVideos: {section: 'trova-video'},
-                site: {section: ''},
+                site: {section: 'siti'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -159,7 +159,7 @@ const
                 favoritePornstars: {section: 'stars-du-porno-préférées'},
                 video: {section: 'vidéo'},
                 findVideos: {section: 'trouver-des-vidéos'},
-                site: {section: ''},
+                site: {section: 'sites'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -206,7 +206,7 @@ const
                 favoritePornstars: {section: 'estrellas-porno-favoritas'},
                 video: {section: 'vídeo'},
                 findVideos: {section: 'encontrar-videos'},
-                site: {section: ''},
+                site: {section: 'sitios'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -253,7 +253,7 @@ const
                 favoritePornstars: {section: 'estrelas-porno-favoritas'},
                 video: {section: 'vídeo'},
                 findVideos: {section: 'encontrar-vídeos'},
-                site: {section: ''},
+                site: {section: 'sites'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -300,7 +300,7 @@ const
                 favoritePornstars: {section: 'favoritpornstjärnor'},
                 video: {section: 'videoklipp'},
                 findVideos: {section: 'hitta-videos'},
-                site: {section: ''},
+                site: {section: 'webbplatser'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -347,7 +347,7 @@ const
                 favoritePornstars: {section: 'favoriete-pornosterren'},
                 video: {section: 'video'},
                 findVideos: {section: 'vind-videos'},
-                site: {section: ''},
+                site: {section: 'plaatsen'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -394,7 +394,7 @@ const
                 favoritePornstars: {section: 'suosikki-pornotähti'},
                 video: {section: 'videot'},
                 findVideos: {section: 'löydä-videoita'},
-                site: {section: ''},
+                site: {section: 'sivustot'},
             },
             redirects: {
                 categories: {search: '?categories'},
@@ -488,7 +488,7 @@ const
                 favoritePornstars: {section: 'favori-porno-yıldızları'},
                 video: {section: 'video'},
                 findVideos: {section: 'videoları-bul'},
-                site: {section: ''},
+                site: {section: 'siteler'},
             },
             redirects: {
                 categories: {search: '?categories'},
