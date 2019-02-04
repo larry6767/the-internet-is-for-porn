@@ -46,6 +46,7 @@ export const
         'video',
         'findVideos',
         'site',
+        'notFound',
     ]),
 
     orientationCodes = Object.freeze(['straight', 'gay', 'tranny']),

@@ -1,4 +1,4 @@
-import {pick, map, find, omit, compact, get, set} from 'lodash'
+import {pick, map, find, compact, get, set} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 import queryString from 'query-string'
@@ -32,7 +32,6 @@ import {
     getTagListByLetters,
     getModelsList,
     getOrderingSortList,
-    getFavoritesSortList,
     getFilteredVideoList,
     getPageText,
     getTagArchiveList,
@@ -41,6 +40,7 @@ import {
     getGallery,
     getSponsorsList,
 } from './helpers/requests'
+import {sponsors} from '../fixtures'
 
 const
     getHomeMap = x => ({
@@ -212,7 +212,8 @@ const
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
                 g(x, 'page', 'GALS_INFO', 'items'),
-                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                // g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                sponsors
             ),
         }
     },
@@ -267,7 +268,9 @@ const
                 gallery: getGallery(
                     g(x, 'page', 'GALLERY'),
                     g(x, 'page', 'PAGE_URL'),
-                    g(x, 'page', 'TIME_AGO')
+                    g(x, 'page', 'TIME_AGO'),
+                    // g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                    sponsors
                 ),
 
                 pageText: getVideoPageText(g(x, 'page', 'PAGE_TEXT')),
@@ -275,7 +278,8 @@ const
                 videoList: getFilteredVideoList(
                     g(x, 'page', 'GALS_INFO', 'ids'),
                     g(x, 'page', 'GALS_INFO', 'items'),
-                    g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                    // g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                    sponsors
                 ),
             }
 
@@ -337,6 +341,15 @@ const
             ),
         }
     },
+
+    getNotFoundMap = x => ({
+        videoList: getFilteredVideoList(
+            g(x, 'page', 'GALS_INFO', 'ids'),
+            g(x, 'page', 'GALS_INFO', 'items'),
+            // g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+            sponsors
+        ),
+    }),
 
     getPageDataParamsOptionsModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         // for now it is the only option we use
@@ -421,8 +434,12 @@ const
             getFindVideosMap,
         ]),
         site: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1}}),
+            null,
             getSiteMap,
+        ]),
+        notFound: Object.freeze([
+            null,
+            getNotFoundMap,
         ]),
     }),
 

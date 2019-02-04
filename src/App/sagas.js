@@ -11,6 +11,7 @@ import favoritePornstarsSaga from './FavoritePornstars/sagas'
 import videoPageSaga from './VideoPage/sagas'
 import findVideosSaga from './FindVideos/sagas'
 import siteSaga from './Site/sagas'
+import notFoundSaga from './NotFound/sagas'
 
 import {
     getIdsForInitialFavoriteList,
@@ -79,5 +80,6 @@ export default function* saga() {
         videoPageSaga(),
         findVideosSaga(),
         siteSaga(),
+        notFoundSaga(),
     ])
 }

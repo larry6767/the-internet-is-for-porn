@@ -69,7 +69,7 @@ export const
     }),
 
     sponsorsModel = process.env.NODE_ENV === 'production' ? null :
-        PropTypes.arrayOf(PropTypes.shape({name: PropTypes.string}))
+        PropTypes.objectOf(PropTypes.shape({name: PropTypes.string}))
 
 const
     // {foo: 'foo', bar: 'bar'}

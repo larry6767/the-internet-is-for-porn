@@ -53,6 +53,7 @@ const
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
+                notFound: {url: '/error404.html'},
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -105,6 +106,7 @@ const
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
+                notFound: {url: '/error404.html'},
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -157,6 +159,7 @@ const
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
+                notFound: {url: '/error404.html'},
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -209,6 +212,7 @@ const
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
+                notFound: {url: '/error404.html'},
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -261,6 +265,7 @@ const
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
+                notFound: {url: '/error404.html'},
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -313,6 +318,7 @@ const
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
+                notFound: {url: '/error404.html'},
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -365,6 +371,7 @@ const
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
+                notFound: {url: '/error404.html'},
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -417,6 +424,7 @@ const
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
+                notFound: {url: '/error404.html'},
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -469,6 +477,7 @@ const
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
+                notFound: {url: '/error404.html'},
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -521,6 +530,7 @@ const
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
+                notFound: {url: '/error404.html'},
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -573,6 +583,7 @@ const
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.html',
                 },
+                notFound: {url: '/error404.html'},
             },
             orientationPrefixes: {
                 straight: '', // no prefix
@@ -607,6 +618,7 @@ const
         video: pageCodeBranchModel,
         findVideos: pageCodeBranchModel,
         site: pageCodeBranchModel,
+        notFound: withoutPageCodeBranchModel,
     }),
 
     localeInnardsModel = PropTypes.exact({
