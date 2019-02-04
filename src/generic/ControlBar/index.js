@@ -1,12 +1,9 @@
-import {range} from 'lodash'
 import React, {Fragment} from 'react'
-import {Link} from 'react-router-dom'
 import {compose} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 
 import {
     Typography,
-    Button,
     Select,
     MenuItem,
     OutlinedInput,
@@ -29,12 +26,14 @@ import {
     immutableArchiveFilmsModel,
 } from '../../App/models'
 
+import Pagination from '../Pagination'
+import WrappedButton from '../WrappedButton'
+
 import {muiStyles} from './assets/muiStyles'
 
 import {
     Wrapper,
     ControlButtons,
-    ButtonsList,
     SortWrapper,
     InlinedSelectionWrap,
     InlinedSelectionList,
@@ -93,60 +92,45 @@ const
         </InlinedSelectionList>
     </InlinedSelectionWrap>),
 
-    WrappedButton = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.shape({
-            link: PropTypes.string,
-            buttonRoot: PropTypes.string,
-        }),
-        link: PropTypes.string,
-        text: PropTypes.string,
-    })(({
-        classes,
-        link,
-        text,
-    }) => <Link to={link} className={g(classes, 'link')}>
-        <Button
-            variant="outlined"
-            color="primary"
-            classes={{
-                root: g(classes, 'buttonRoot'),
-            }}
-        >
-            {text}
-        </Button>
-    </Link>),
-
     NicheControlBar = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.shape({typographyRoot: PropTypes.string}),
+        classes: PropTypes.shape({
+            typographyRoot: PropTypes.string,
+        }),
+        cb: PropTypes.oneOf(breakpoints).isOptional,
+        pageNumber: PropTypes.number,
+        pagesCount: PropTypes.number,
         linkBuilder: PropTypes.func,
         archiveLinkBuilder: PropTypes.nullable(PropTypes.func),
         i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,
         isSSR: PropTypes.bool,
         chooseSort: PropTypes.func,
-        buttonsElements: PropTypes.node,
         sortList: sortListModel,
         currentSort: PropTypes.nullable(PropTypes.string),
         archiveFilms: PropTypes.nullable(immutableArchiveFilmsModel),
     })(({
         classes,
         cb,
+        pageNumber,
+        pagesCount,
         linkBuilder,
         archiveLinkBuilder,
         i18nOrdering,
         i18nButtons,
         isSSR,
         chooseSort,
-        buttonsElements,
         sortList,
         currentSort,
         archiveFilms,
     }) => <Fragment>
-        <ButtonsList>
-            {buttonsElements}
-        </ButtonsList>
+        <Pagination
+            cb={cb}
+            pageNumber={pageNumber}
+            pagesCount={pagesCount}
+            linkBuilder={linkBuilder}
+        />
+
         {archiveFilms === null ? null : <WrappedButton
-            classes={classes}
             link={archiveLinkBuilder(ig(archiveFilms, 'year'), ig(archiveFilms, 'month'))}
             text={ig(i18nButtons, 'archive')}
         />}
@@ -181,8 +165,12 @@ const
 
     ArchiveControlBar = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,
+        cb: PropTypes.oneOf(breakpoints).isOptional,
+        pageNumber: PropTypes.number,
+        pagesCount: PropTypes.number,
+        linkBuilder: PropTypes.func,
+
         i18nButtons: immutableI18nButtonsModel,
-        buttonsElements: PropTypes.node,
 
         tagArchiveListOlder: PropTypes.nullable(ImmutablePropTypes.exact({
             month: PropTypes.string, // TODO convert to number on backend proxy
@@ -198,26 +186,32 @@ const
         backFromArchiveLinkBuilder: PropTypes.func,
     })(({
         classes,
+        cb,
+        pageNumber,
+        pagesCount,
+        linkBuilder,
         i18nButtons,
-        buttonsElements,
         tagArchiveListOlder,
         tagArchiveListNewer,
         archiveLinkBuilder,
         backFromArchiveLinkBuilder,
     }) => <Fragment>
         {tagArchiveListOlder === null ? null : <WrappedButton
-            classes={classes}
             link={archiveLinkBuilder(
                 ig(tagArchiveListOlder, 'year'),
                 ig(tagArchiveListOlder, 'month')
             )}
             text={ig(i18nButtons, 'previousMonth')}
         />}
-        <ButtonsList>
-            {buttonsElements}
-        </ButtonsList>
+
+        <Pagination
+            cb={cb}
+            pageNumber={pageNumber}
+            pagesCount={pagesCount}
+            linkBuilder={linkBuilder}
+        />
+
         {tagArchiveListNewer === null ? null : <WrappedButton
-            classes={classes}
             link={archiveLinkBuilder(
                 ig(tagArchiveListNewer, 'year'),
                 ig(tagArchiveListNewer, 'month')
@@ -225,7 +219,6 @@ const
             text={ig(i18nButtons, 'nextMonth')}
         />}
         <WrappedButton
-            classes={classes}
             link={backFromArchiveLinkBuilder()}
             text={ig(i18nButtons, 'topFilms')}
         />
@@ -233,30 +226,33 @@ const
 
     FavoriteControlBar = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,
-        buttonsElements: PropTypes.node,
-        i18nButtons: immutableI18nButtonsModel,
+        cb: PropTypes.oneOf(breakpoints).isOptional,
+        pageNumber: PropTypes.number,
+        pagesCount: PropTypes.number,
         linkBuilder: PropTypes.func,
+        i18nButtons: immutableI18nButtonsModel,
     })(({
         classes,
-        buttonsElements,
-        i18nButtons,
+        cb,
+        pageNumber,
+        pagesCount,
         linkBuilder,
+        i18nButtons,
     }) => <Fragment>
-        {
-            g(buttonsElements, 'length') === 0 ? null :
-            <ButtonsList>
-                {buttonsElements}
-            </ButtonsList>
-        }
+        {pagesCount === 1 ? null :
+            <Pagination
+                cb={cb}
+                pageNumber={pageNumber}
+                pagesCount={pagesCount}
+                linkBuilder={linkBuilder}
+            />}
 
         <WrappedButton
-            classes={classes}
             link={linkBuilder('favorite')}
             text={ig(i18nButtons, 'favoriteMovies')}
         />
 
         <WrappedButton
-            classes={classes}
             link={linkBuilder('favoritePornstars')}
             text={ig(i18nButtons, 'favoritePornstars')}
         />
@@ -294,69 +290,53 @@ const
         tagArchiveListOlder,
         tagArchiveListNewer,
         favoriteButtons,
-    }) => {
-        const
-            // pagination
-            buttonsElements = range(1, pagesCount + 1).map(n =>
-                <Link
-                    key={n}
-                    to={linkBuilder({pagination: n})}
-                    className={g(classes, 'paginationLink')}
-                >
-                    <Button
-                        classes={{
-                            root: g(classes, 'paginationButtonRoot'),
-                        }}
-                        variant={n === pageNumber ? 'contained' : 'outlined'}
-                        color="primary"
-                    >
-                        {n}
-                    </Button>
-                </Link>
-            )
-
-        return <Wrapper>
-            <ControlButtons>
-                {archiveFilms && ig(archiveFilms, 'currentlyActiveId') !== null
-                    ? <ArchiveControlBar
-                        classes={classes}
-                        i18nButtons={i18nButtons}
-                        buttonsElements={buttonsElements}
-                        tagArchiveListOlder={tagArchiveListOlder}
-                        tagArchiveListNewer={tagArchiveListNewer}
-                        archiveLinkBuilder={archiveLinkBuilder}
-                        backFromArchiveLinkBuilder={backFromArchiveLinkBuilder}
-                    />
-                    : favoriteButtons
-                    ? <FavoriteControlBar
-                        classes={classes}
-                        i18nButtons={i18nButtons}
-                        buttonsElements={buttonsElements}
-                        linkBuilder={favoriteLinkBuilder}
-                    />
-                    : <NicheControlBar
-                        cb={cb}
-                        classes={classes}
-                        linkBuilder={linkBuilder}
-                        archiveLinkBuilder={archiveLinkBuilder}
-                        i18nOrdering={i18nOrdering}
-                        i18nButtons={i18nButtons}
-                        isSSR={isSSR}
-                        chooseSort={chooseSort}
-                        buttonsElements={buttonsElements}
-                        sortList={sortList}
-                        currentSort={currentSort}
-                        archiveFilms={archiveFilms}
-                    />
-                }
-            </ControlButtons>
-            <ShowedElements
-                itemsCount={itemsCount}
-                pageNumber={pageNumber}
-                i18nLabelShowing={i18nLabelShowing}
-            />
-        </Wrapper>
-    }
+    }) => <Wrapper>
+        <ControlButtons>
+            {archiveFilms && ig(archiveFilms, 'currentlyActiveId') !== null
+                ? <ArchiveControlBar
+                    classes={classes}
+                    cb={cb}
+                    pageNumber={pageNumber}
+                    pagesCount={pagesCount}
+                    i18nButtons={i18nButtons}
+                    tagArchiveListOlder={tagArchiveListOlder}
+                    tagArchiveListNewer={tagArchiveListNewer}
+                    linkBuilder={linkBuilder}
+                    archiveLinkBuilder={archiveLinkBuilder}
+                    backFromArchiveLinkBuilder={backFromArchiveLinkBuilder}
+                />
+                : favoriteButtons
+                ? <FavoriteControlBar
+                    classes={classes}
+                    cb={cb}
+                    pageNumber={pageNumber}
+                    pagesCount={pagesCount}
+                    linkBuilder={favoriteLinkBuilder}
+                    i18nButtons={i18nButtons}
+                />
+                : <NicheControlBar
+                    classes={classes}
+                    cb={cb}
+                    pageNumber={pageNumber}
+                    pagesCount={pagesCount}
+                    linkBuilder={linkBuilder}
+                    archiveLinkBuilder={archiveLinkBuilder}
+                    i18nOrdering={i18nOrdering}
+                    i18nButtons={i18nButtons}
+                    isSSR={isSSR}
+                    chooseSort={chooseSort}
+                    sortList={sortList}
+                    currentSort={currentSort}
+                    archiveFilms={archiveFilms}
+                />
+            }
+        </ControlButtons>
+        <ShowedElements
+            itemsCount={itemsCount}
+            pageNumber={pageNumber}
+            i18nLabelShowing={i18nLabelShowing}
+        />
+    </Wrapper>
 
 export default compose(
     withStyles(muiStyles),
@@ -396,5 +376,5 @@ export default compose(
         }).isOptional,
 
         favoriteButtons: PropTypes.bool.isOptional, // could be not presented at all
-    })
+    }),
 )(ControlBar)
