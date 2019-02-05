@@ -40,7 +40,7 @@ import {
     getGallery,
     getSponsorsList,
 } from './helpers/requests'
-import {sponsors} from '../fixtures'
+import {sponsors} from '../fixtures' // TODO get rid of this
 
 const
     getHomeMap = x => ({
@@ -86,7 +86,7 @@ const
             pageNumber: x.page.PAGE_NUMBER,
             pagesCount: x.page.PAGES_COUNT,
             pageText: getPageText(x.page.PAGE_TEXT),
-            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')),
+            sponsorsList: getSponsorsList(sponsors), // TODO get rid of this
             tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
 
             tagArchiveList: getTagArchiveList(
@@ -112,8 +112,7 @@ const
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items'),
-                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
         }
     },
@@ -131,7 +130,7 @@ const
             pageNumber: g(x, 'page', 'PAGE_NUMBER'),
             pagesCount: g(x, 'page', 'PAGES_COUNT'),
             pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
-            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')),
+            sponsorsList: getSponsorsList(sponsors), // TODO get rid of this
             tagList: getTagListByLetters(g(x, 'page', 'TAGS_BY_LETTERS', 'letters')),
 
             tagArchiveList: getTagArchiveList(
@@ -158,8 +157,7 @@ const
 
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items'),
-                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
         }
     },
@@ -180,8 +178,7 @@ const
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items'),
-                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
             modelsList: getModelsList(
                 g(x, 'page', 'MODELS_BY_LETTERS', 'letters'),
@@ -211,9 +208,7 @@ const
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items'),
-                // g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
-                sponsors
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
         }
     },
@@ -270,16 +265,14 @@ const
                     g(x, 'page', 'PAGE_URL'),
                     g(x, 'page', 'TIME_AGO'),
                     // g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
-                    sponsors
+                    sponsors // TODO get rid of this
                 ),
 
                 pageText: getVideoPageText(g(x, 'page', 'PAGE_TEXT')),
 
                 videoList: getFilteredVideoList(
                     g(x, 'page', 'GALS_INFO', 'ids'),
-                    g(x, 'page', 'GALS_INFO', 'items'),
-                    // g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
-                    sponsors
+                    g(x, 'page', 'GALS_INFO', 'items')
                 ),
             }
 
@@ -310,8 +303,7 @@ const
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items'),
-                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
         }
     },
@@ -332,12 +324,7 @@ const
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items'),
-                {
-                    [g(x, 'page', 'SPONSOR_INFO', 'id')]: {
-                        name: g(x, 'page', 'SPONSOR_INFO', 'name')
-                    }
-                }
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
         }
     },
@@ -345,9 +332,7 @@ const
     getNotFoundMap = x => ({
         videoList: getFilteredVideoList(
             g(x, 'page', 'GALS_INFO', 'ids'),
-            g(x, 'page', 'GALS_INFO', 'items'),
-            // g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
-            sponsors
+            g(x, 'page', 'GALS_INFO', 'items')
         ),
     }),
 
@@ -358,6 +343,7 @@ const
             modelsABCBlockText: PropTypes.number.isOptional,
             modelsABCBlockThumbs: PropTypes.number.isOptional,
             galsFacets: PropTypes.number.isOptional,
+            updateSponsorURL: PropTypes.number.isOptional,
         }).isOptional,
     }),
 
@@ -402,11 +388,11 @@ const
             getAllNichesMap,
         ]),
         niche: Object.freeze([
-            deepFreeze({blocks: {allTagsBlock: 1, galsFacets: 1}}),
+            deepFreeze({blocks: {allTagsBlock: 1, galsFacets: 1, updateSponsorURL: 1}}),
             getNicheMap,
         ]),
         allMovies: Object.freeze([
-            deepFreeze({blocks: {allTagsBlock: 1, galsFacets: 1}}),
+            deepFreeze({blocks: {allTagsBlock: 1, galsFacets: 1, updateSponsorURL: 1}}),
             getAllMoviesMap,
         ]),
         pornstars: Object.freeze([
@@ -414,11 +400,13 @@ const
             getPornstarsMap,
         ]),
         pornstar: Object.freeze([
-            deepFreeze({blocks: {modelsABCBlockText: 1, modelsABCBlockThumbs: 1, galsFacets: 1}}),
+            deepFreeze({blocks: {
+                modelsABCBlockText: 1, modelsABCBlockThumbs: 1, galsFacets: 1, updateSponsorURL: 1
+            }}),
             getPornstarMap,
         ]),
         favorite: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1}}),
+            deepFreeze({blocks: {galsFacets: 1, updateSponsorURL: 1}}),
             getFavoriteMap,
         ]),
         favoritePornstars: Object.freeze([
@@ -426,19 +414,19 @@ const
             getFavoritePornstarsMap,
         ]),
         video: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1}}),
+            deepFreeze({blocks: {galsFacets: 1, updateSponsorURL: 1}}),
             getVideoPageMap,
         ]),
         findVideos: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1}}),
+            deepFreeze({blocks: {galsFacets: 1, updateSponsorURL: 1}}),
             getFindVideosMap,
         ]),
         site: Object.freeze([
-            null,
+            deepFreeze({blocks: {galsFacets: 1, updateSponsorURL: 1}}),
             getSiteMap,
         ]),
         notFound: Object.freeze([
-            null,
+            deepFreeze({blocks: {galsFacets: 1, updateSponsorURL: 1}}),
             getNotFoundMap,
         ]),
     }),

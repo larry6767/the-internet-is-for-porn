@@ -17,8 +17,7 @@ const
         tags: PropTypes.arrayOf(PropTypes.string),
         length: PropTypes.string, // but actually a number
 
-        // it could be a number, but i'm not sure if it's always a number
-        id_sponsor: PropTypes.string,
+        sponsor: PropTypes.string,
 
         // example: ["1", "2", "3", ..., "10"],
         // looks like it is a list of numbers actually
@@ -72,7 +71,7 @@ const
 
 export {incomingModel as incomingVideoItemModel}
 
-export default (ids, items, sponsors) => map(getOrderedVideoList(ids, items), x => {
+export default (ids, items) => map(getOrderedVideoList(ids, items), x => {
     if (process.env.NODE_ENV !== 'production')
         assertPropTypes(incomingModel, x, 'getFilteredVideoList', 'original source video item')
 
@@ -90,7 +89,7 @@ export default (ids, items, sponsors) => map(getOrderedVideoList(ids, items), x 
             firstThumb: Number(getProp(x, 'thumb_top')),
 
             title: getProp(x, 'title'),
-            sponsorName: g(sponsors, getProp(x, 'id_sponsor'), 'name'),
+            sponsorName: getProp(x, 'sponsor'),
             tags: getProp(x, 'tags'),
 
             tagsShort: getProp(x, 'tags').reduce((acc, tag) => {

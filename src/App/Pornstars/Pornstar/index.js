@@ -41,7 +41,7 @@ import actions from './actions'
 
 const
     Pornstar = ({
-        currentBreakpoint, i18nOrdering, i18nButtons, i18nLabelShowing, data, chooseSort,
+        cb, i18nOrdering, i18nButtons, i18nLabelShowing, data, chooseSort,
         isSSR, modelInfoHandler, modelInfoIsOpen, favoritePornstarList,
         controlLinkBuilder, modelLinkBuilder,
         addToFavoriteHandler, removeFromFavoriteHandler,
@@ -53,7 +53,7 @@ const
             : <Content>
                 <PageTextHelmet pageText={ig(data, 'pageText')}/>
                 <Lists
-                    currentBreakpoint={currentBreakpoint}
+                    currentBreakpoint={cb}
                     modelsList={ig(data, 'modelsList')}
                     modelLinkBuilder={modelLinkBuilder}
                 />
@@ -68,12 +68,13 @@ const
                         modelInfoHandler={modelInfoHandler}
                         modelInfoIsOpen={modelInfoIsOpen}
                         favoritePornstarList={favoritePornstarList}
-                        currentBreakpoint={currentBreakpoint}
+                        currentBreakpoint={cb}
                         isSSR={isSSR}
                         addToFavoriteHandler={addToFavoriteHandler}
                         removeFromFavoriteHandler={removeFromFavoriteHandler}
                     />
                     <ControlBar
+                        cb={cb}
                         i18nOrdering={i18nOrdering}
                         i18nButtons={i18nButtons}
                         i18nLabelShowing={i18nLabelShowing}
@@ -140,7 +141,7 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             data: DataRecord(ig(state, 'app', 'pornstars', 'pornstar')),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
@@ -217,7 +218,7 @@ export default compose(
         },
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        currentBreakpoint: PropTypes.string,
+        cb: PropTypes.string,
         data: dataModel,
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
