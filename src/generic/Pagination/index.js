@@ -8,6 +8,7 @@ import {Button} from '@material-ui/core'
 
 import {
     plainProvedGet as g,
+    immutableProvedGet as ig,
     PropTypes,
     setPropTypes,
     compareCurrentBreakpoint as ccb,
@@ -15,6 +16,7 @@ import {
     breakpoints,
 } from '../../App/helpers'
 
+import {immutableI18nButtonsModel} from '../../App/models'
 import WrappedButton from '../WrappedButton'
 import {muiStyles} from './assets/muiStyles'
 import {
@@ -25,7 +27,7 @@ import {
 const
     Pagination = ({
         classes, cb, pageNumber, pagesCount, linkBuilder,
-        setButtonRef, setWrapperRef
+        setButtonRef, setWrapperRef, i18nButtons,
     }) => {
         const
             // pagination
@@ -53,7 +55,7 @@ const
             {ccb(cb, sm) === -1 && pageNumber !== 1
                 ? <WrappedButton
                     link={linkBuilder({pagination: pageNumber - 1})}
-                    text={'prev'}
+                    text={ig(i18nButtons, 'prev')}
                 />
                 : null}
 
@@ -64,7 +66,7 @@ const
             {ccb(cb, sm) === -1 && pageNumber !== pagesCount
                 ? <WrappedButton
                     link={linkBuilder({pagination: pageNumber + 1})}
-                    text={'next'}
+                    text={ig(i18nButtons, 'next')}
                     marginRight0={true}
                 />
                 : null}
@@ -100,6 +102,7 @@ export default compose(
         pagesCount: PropTypes.number,
         buttonRef: PropTypes.nullable(PropTypes.object),
         wrapperRef: PropTypes.nullable(PropTypes.object),
+        i18nButtons: immutableI18nButtonsModel,
 
         linkBuilder: PropTypes.func,
         setButtonRef: PropTypes.func,

@@ -134,6 +134,8 @@ const
             favoriteMovies: PropTypes.string,
             favoritePornstars: PropTypes.string,
             archive: PropTypes.string,
+            prev: PropTypes.string,
+            next: PropTypes.string,
             previousMonth: PropTypes.string,
             nextMonth: PropTypes.string,
             topFilms: PropTypes.string,

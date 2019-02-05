@@ -128,6 +128,7 @@ const
             pageNumber={pageNumber}
             pagesCount={pagesCount}
             linkBuilder={linkBuilder}
+            i18nButtons={i18nButtons}
         />
 
         {archiveFilms === null ? null : <WrappedButton
@@ -209,6 +210,7 @@ const
             pageNumber={pageNumber}
             pagesCount={pagesCount}
             linkBuilder={linkBuilder}
+            i18nButtons={i18nButtons}
         />
 
         {tagArchiveListNewer === null ? null : <WrappedButton
@@ -245,6 +247,7 @@ const
                 pageNumber={pageNumber}
                 pagesCount={pagesCount}
                 linkBuilder={linkBuilder}
+                i18nButtons={i18nButtons}
             />}
 
         <WrappedButton
