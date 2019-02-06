@@ -83,6 +83,7 @@ const
 
         inlineAdvertisementIsShowed: null,
         reportDialogIsOpen: null,
+        openGraphData: null,
         pageText: null,
         gallery: null,
         videoList: null,
@@ -190,7 +191,10 @@ const
             : data.get('isLoading')
             ? <CircularProgress/>
             : <Content>
-                <PageTextHelmet pageText={ig(data, 'pageText')}/>
+                <PageTextHelmet
+                    pageText={ig(data, 'pageText')}
+                    openGraphData={ig(data, 'openGraphData')}
+                />
                 <PageWrapper>
                     <PlayerSection>
                         <Typography
@@ -285,14 +289,12 @@ const
                                 {renderIframe('sidebar1', currentWidth)}
                                 {renderIframe('sidebar2', currentWidth)}
                             </Advertisement>
-                            {ccb(cb, sm) === -1
-                                ? null
-                                : <TagsWrapper>
+                            <TagsWrapper>
                                 {data.getIn(['gallery', 'tags'])
                                     ? data.getIn(['gallery', 'tags']).map(x =>
                                         renderTag(classes, cb, x, getTagLink))
                                     : null}
-                            </TagsWrapper>}
+                            </TagsWrapper>
                         </VideoPlayer>
                     </PlayerSection>
                     <RelatedVideos>

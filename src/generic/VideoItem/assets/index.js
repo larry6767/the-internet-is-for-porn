@@ -35,6 +35,9 @@ export const VideoPreviewBar = styled.div`
     height: 31px;
     transform: translateY(35px);
     transition: transform 0.2s;
+
+    ${({theme}) => theme.media.sm`transform: translateY(0);`}
+    ${({theme}) => theme.media.mobile`transform: translateY(0);`}
 `
 
 export const LoadingProgress = styled.div`
@@ -113,7 +116,8 @@ export const Like = styled.div`
 
 export const Duration = styled.div`
     display: flex;
-    padding: 5px;
+    align-items: center;
+    padding: 0 5px;
     background-color: ${({theme}) => theme.palette.primary.lightOpacity};
     border-radius: 1px;
     min-height: 35px;

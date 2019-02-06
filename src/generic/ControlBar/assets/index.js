@@ -10,19 +10,6 @@ export const ControlButtons = styled.div`
     flex-wrap: wrap;
 `
 
-export const ButtonsList = styled.div`
-    display: flex;
-    margin-right: 15px;
-    margin-bottom: 12px;
-
-    ${({theme}) => theme.media.mobile`
-        width: 100%;
-        overflow-x: scroll;
-        margin-right: 0;
-        margin-bottom: 8px;
-    `}
-`
-
 export const SortWrapper = styled.div`
     display: flex;
     align-items: center;

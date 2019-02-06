@@ -3,8 +3,9 @@ import {handleActions} from 'redux-actions'
 
 import {plainProvedGet as g} from '../helpers'
 import {PageTextRecord} from '../models'
+import {OpenGraphDataRecord} from './models'
 import actions from './actions'
-
+// TODO: this reducer needs provedHandleActions
 export default
     handleActions({
         [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
@@ -15,6 +16,7 @@ export default
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
             pageText: PageTextRecord(),
+            openGraphData: OpenGraphDataRecord(),
             gallery: Map(),
             videoList: List(),
         }),
@@ -26,6 +28,7 @@ export default
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
             pageText: PageTextRecord(fromJS(g(payload, 'data', 'pageText'))),
+            openGraphData: OpenGraphDataRecord(fromJS(g(payload, 'data', 'openGraphData'))),
             gallery: Map(fromJS(g(payload, 'data', 'gallery'))),
             videoList: List(fromJS(g(payload, 'data', 'videoList'))),
 
@@ -41,6 +44,7 @@ export default
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
             pageText: PageTextRecord(),
+            openGraphData: OpenGraphDataRecord(),
             gallery: Map(),
             videoList: List(),
         }),
@@ -79,6 +83,7 @@ export default
         inlineAdvertisementIsShowed: true,
         reportDialogIsOpen: false,
         pageText: PageTextRecord(),
+        openGrapgData: OpenGraphDataRecord(),
         gallery: {
             /*
             id: 0,

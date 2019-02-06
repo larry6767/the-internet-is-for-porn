@@ -63,6 +63,8 @@ import siteActions from './App/Site/actions'
 import {loadSitePageFlow} from './App/Site/sagas'
 
 import NotFound from './App/NotFound'
+import notFoundActions from './App/NotFound/actions'
+import {loadNotFoundPageFlow} from './App/NotFound/sagas'
 
 const
     getQs = r => queryString.parse(ig(r, 'location', 'search')),
@@ -368,6 +370,11 @@ export const
                 return `${orientationPfx}/${site}/${child}${renderQs(qs)}`
             },
         }),
+
+        notFound: Object.freeze({
+            path: () => '*',
+            link: () => '*',
+        }),
     })
 
 const
@@ -397,6 +404,8 @@ const
         findVideos: getterModel,
 
         site: getterModel,
+
+        notFound: getterModel,
     })
 
 if (process.env.NODE_ENV !== 'production')
@@ -715,6 +724,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                     x.saga = loadVideoPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'videoPage', 'isFailed'])
                     x.pageTextResolver = state => ig(state, ['app', 'videoPage', 'pageText'])
+                    x.openGraphDataResolver = state =>
+                        ig(state, ['app', 'videoPage', 'openGraphData'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -793,19 +804,35 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     )}
 
     {/* 404 */}
-    <Route render={props => {
-        const currentSection = null
+    {orientationCodes.map(orientationCode =>
+        <Route
+            key={`${orientationCode}-notFound`}
+            path={routerGetters.notFound.path(r, orientationCode)}
+            render={props => {
+                const currentSection = 'notFound'
 
-        // making real 404 status response on server-side rendering
-        if (get(props, ['staticContext', 'isPreRouting'])) {
-            props.staticContext.statusCodeResolver = () => 404
-            // TODO: this page needs video list from backend
-            props.staticContext.pageTextResolver = () => get404PageText()
-            props.staticContext.currentSection = currentSection
-            return null
-        } else
-            return <NotFound {...props} currentSection={currentSection}/>
-    }}/>
+                if (get(props, ['staticContext', 'isPreRouting'])) {
+                    const
+                        {match, staticContext: x} = props,
+                        orientedR = r.set('currentOrientation', orientationCode),
+                        pageRequestParams = getPageRequestParams(orientedR, g(match, [])),
+                        action = notFoundActions.loadPageRequest({pageRequestParams})
+
+                    x.saga = loadNotFoundPageFlow.bind(null, action)
+                    x.statusCodeResolver = () => 404
+                    x.pageTextResolver = () => get404PageText()
+                    x.currentOrientation = orientationCode
+                    x.currentSection = currentSection
+                    return null
+                } else
+                    return <NotFound
+                        {...props}
+                        currentSection={currentSection}
+                        orientationCode={orientationCode}
+                    />
+            }}
+        />
+    )}
 </Switch>
 
 export default compose(

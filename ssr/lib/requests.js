@@ -1,4 +1,4 @@
-import {pick, map, find, omit, compact, get, set} from 'lodash'
+import {pick, map, find, compact, get, set} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 import queryString from 'query-string'
@@ -25,6 +25,7 @@ import {
     incomingGalleryModel,
     publishedTemplateModel,
     galleryModel,
+    openGraphDataModel,
 } from './helpers/requests/getGallery'
 
 import {
@@ -32,13 +33,13 @@ import {
     getTagListByLetters,
     getModelsList,
     getOrderingSortList,
-    getFavoritesSortList,
     getFilteredVideoList,
     getPageText,
     getTagArchiveList,
     getArchiveFilms,
     getModelInfo,
     getGallery,
+    getOpenGraphData,
     getSponsorsList,
 } from './helpers/requests'
 
@@ -86,7 +87,7 @@ const
             pageNumber: x.page.PAGE_NUMBER,
             pagesCount: x.page.PAGES_COUNT,
             pageText: getPageText(x.page.PAGE_TEXT),
-            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')),
+            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')),
             tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
 
             tagArchiveList: getTagArchiveList(
@@ -112,8 +113,7 @@ const
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items'),
-                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
         }
     },
@@ -131,7 +131,7 @@ const
             pageNumber: g(x, 'page', 'PAGE_NUMBER'),
             pagesCount: g(x, 'page', 'PAGES_COUNT'),
             pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
-            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')),
+            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')),
             tagList: getTagListByLetters(g(x, 'page', 'TAGS_BY_LETTERS', 'letters')),
 
             tagArchiveList: getTagArchiveList(
@@ -158,8 +158,7 @@ const
 
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items'),
-                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
         }
     },
@@ -180,8 +179,7 @@ const
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items'),
-                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
             modelsList: getModelsList(
                 g(x, 'page', 'MODELS_BY_LETTERS', 'letters'),
@@ -211,8 +209,7 @@ const
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items'),
-                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
         }
     },
@@ -253,6 +250,7 @@ const
     }),
 
     mappedVideoPageModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape({
+        openGraphData: openGraphDataModel,
         gallery: galleryModel,
         pageText: videoPageTextModel,
         videoList: PropTypes.arrayOf(videoItemModel),
@@ -264,18 +262,19 @@ const
 
         const
             result = {
+                openGraphData: getOpenGraphData(g(x, 'page', 'GALLERY')),
                 gallery: getGallery(
                     g(x, 'page', 'GALLERY'),
                     g(x, 'page', 'PAGE_URL'),
-                    g(x, 'page', 'TIME_AGO')
+                    g(x, 'page', 'TIME_AGO'),
+                    g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')
                 ),
 
                 pageText: getVideoPageText(g(x, 'page', 'PAGE_TEXT')),
 
                 videoList: getFilteredVideoList(
                     g(x, 'page', 'GALS_INFO', 'ids'),
-                    g(x, 'page', 'GALS_INFO', 'items'),
-                    g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                    g(x, 'page', 'GALS_INFO', 'items')
                 ),
             }
 
@@ -306,8 +305,7 @@ const
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items'),
-                g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
         }
     },
@@ -328,15 +326,17 @@ const
             itemsCount: x.page.ITEMS_PER_PAGE,
             videoList: getFilteredVideoList(
                 g(x, 'page', 'GALS_INFO', 'ids'),
-                g(x, 'page', 'GALS_INFO', 'items'),
-                {
-                    [g(x, 'page', 'SPONSOR_INFO', 'id')]: {
-                        name: g(x, 'page', 'SPONSOR_INFO', 'name')
-                    }
-                }
+                g(x, 'page', 'GALS_INFO', 'items')
             ),
         }
     },
+
+    getNotFoundMap = x => ({
+        videoList: getFilteredVideoList(
+            g(x, 'page', 'GALS_INFO', 'ids'),
+            g(x, 'page', 'GALS_INFO', 'items')
+        ),
+    }),
 
     getPageDataParamsOptionsModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         // for now it is the only option we use
@@ -344,7 +344,9 @@ const
             allTagsBlock: PropTypes.number.isOptional,
             modelsABCBlockText: PropTypes.number.isOptional,
             modelsABCBlockThumbs: PropTypes.number.isOptional,
-            galsFacets: PropTypes.number.isOptional,
+            updateSponsorURL: PropTypes.number.isOptional,
+            updateExtraURL: PropTypes.number.isOptional,
+            searchSponsors: PropTypes.number.isOptional,
         }).isOptional,
     }),
 
@@ -389,11 +391,21 @@ const
             getAllNichesMap,
         ]),
         niche: Object.freeze([
-            deepFreeze({blocks: {allTagsBlock: 1, galsFacets: 1}}),
+            deepFreeze({blocks: {
+                allTagsBlock: 1,
+                searchSponsors: 1,
+                updateExtraURL: 1,
+                updateSponsorURL: 1,
+            }}),
             getNicheMap,
         ]),
         allMovies: Object.freeze([
-            deepFreeze({blocks: {allTagsBlock: 1, galsFacets: 1}}),
+            deepFreeze({blocks: {
+                allTagsBlock: 1,
+                searchSponsors: 1,
+                updateExtraURL: 1,
+                updateSponsorURL: 1,
+            }}),
             getAllMoviesMap,
         ]),
         pornstars: Object.freeze([
@@ -401,11 +413,16 @@ const
             getPornstarsMap,
         ]),
         pornstar: Object.freeze([
-            deepFreeze({blocks: {modelsABCBlockText: 1, modelsABCBlockThumbs: 1, galsFacets: 1}}),
+            deepFreeze({blocks: {
+                modelsABCBlockText: 1,
+                modelsABCBlockThumbs: 1,
+                updateExtraURL: 1,
+                updateSponsorURL: 1,
+            }}),
             getPornstarMap,
         ]),
         favorite: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1}}),
+            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
             getFavoriteMap,
         ]),
         favoritePornstars: Object.freeze([
@@ -413,16 +430,20 @@ const
             getFavoritePornstarsMap,
         ]),
         video: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1}}),
+            deepFreeze({blocks: {searchSponsors: 1, updateExtraURL: 1, updateSponsorURL: 1}}),
             getVideoPageMap,
         ]),
         findVideos: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1}}),
+            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
             getFindVideosMap,
         ]),
         site: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1}}),
+            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
             getSiteMap,
+        ]),
+        notFound: Object.freeze([
+            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
+            getNotFoundMap,
         ]),
     }),
 

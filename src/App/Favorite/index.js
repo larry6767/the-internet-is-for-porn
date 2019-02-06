@@ -17,6 +17,7 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
+    breakpoints,
 } from '../helpers'
 
 import {immutableI18nButtonsModel, routerContextModel} from '../models'
@@ -49,6 +50,7 @@ const
 
     Favorite = ({
         classes,
+        cb,
         isSSR,
         i18nButtons,
         i18nLabelShowing,
@@ -78,6 +80,7 @@ const
                     </Typography>
                     <ControlBar
                         isSSR={isSSR}
+                        cb={cb}
                         i18nButtons={i18nButtons}
                         i18nLabelShowing={i18nLabelShowing}
                         linkBuilder={controlLinkBuilder}
@@ -114,6 +117,7 @@ export default compose(
     connect(
         state => ({
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
@@ -151,6 +155,7 @@ export default compose(
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         isSSR: PropTypes.bool,
+        cb: PropTypes.oneOf(breakpoints),
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
         i18nLabelShowing: PropTypes.string,

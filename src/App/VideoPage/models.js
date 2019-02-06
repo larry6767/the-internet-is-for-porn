@@ -1,3 +1,5 @@
+import {Record} from 'immutable'
+
 import {
     ImmutablePropTypes,
     PropTypes,
@@ -10,6 +12,13 @@ import {
 } from '../models'
 
 const
+    OpenGraphDataRecord = Record({
+        title: null,
+        thumb: null,
+        tags: null,
+        duration: null,
+    }),
+
     model = process.env.NODE_ENV === 'production' ? null : {
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
@@ -28,4 +37,5 @@ const
 export {
     stateModel,
     dataModel,
+    OpenGraphDataRecord,
 }
