@@ -19,6 +19,8 @@ const
 
         sponsor: PropTypes.string,
 
+        extra_link: PropTypes.shape({link: PropTypes.string}),
+
         // example: ["1", "2", "3", ..., "10"],
         // looks like it is a list of numbers actually
         thumbs: PropTypes.arrayOf(PropTypes.string),
@@ -63,7 +65,7 @@ const
 
     // get incoming property by verified key (which must be presented in the model)
     getProp = process.env.NODE_ENV === 'production' ? g :
-        (src, propKey) => g(src, g(incomingModelPropsKeys, propKey)),
+        (src, propKey, ...xs) => g(src, g(incomingModelPropsKeys, propKey), ...xs),
 
     // `shape` instead of `exact` because we may just ignore some of the fields
     incomingModel = process.env.NODE_ENV === 'production' ? null :
@@ -79,6 +81,7 @@ export default (ids, items) => map(getOrderedVideoList(ids, items), x => {
         length = Number(getProp(x, 'length')),
         url = getProp(x, 'url'),
         internalUrlMatches = url.match(internalLinkReg),
+        extraLink = getProp(x, 'extra_link', 'link').match(/q=(.+)&/),
 
         result = {
             id: Number(getProp(x, 'id')),
@@ -90,6 +93,7 @@ export default (ids, items) => map(getOrderedVideoList(ids, items), x => {
 
             title: getProp(x, 'title'),
             sponsorName: getProp(x, 'sponsor'),
+            sponsorLink: extraLink ? extraLink[1] : `${getProp(x, 'sponsor')} porn`,
             tags: getProp(x, 'tags'),
 
             tagsShort: getProp(x, 'tags').reduce((acc, tag) => {

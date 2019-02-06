@@ -248,8 +248,7 @@ export default compose(
 
         getProviderLink: props => x => routerGetters.findVideos.link(
             g(props, 'routerContext'),
-            {searchQuery: `${ig(x, 'sponsorName')}${
-                g(ig(x, 'tags'), 'size') ? ` ${ig(x, 'tags', 0)}` : ''}`},
+            {searchQuery: ig(x, 'sponsorLink')},
             ['searchQuery'],
         ),
     }),

@@ -346,6 +346,7 @@ const
             modelsABCBlockText: PropTypes.number.isOptional,
             modelsABCBlockThumbs: PropTypes.number.isOptional,
             updateSponsorURL: PropTypes.number.isOptional,
+            updateExtraURL: PropTypes.number.isOptional,
             searchSponsors: PropTypes.number.isOptional,
         }).isOptional,
     }),
@@ -391,11 +392,21 @@ const
             getAllNichesMap,
         ]),
         niche: Object.freeze([
-            deepFreeze({blocks: {allTagsBlock: 1, searchSponsors: 1, updateSponsorURL: 1}}),
+            deepFreeze({blocks: {
+                allTagsBlock: 1,
+                searchSponsors: 1,
+                updateExtraURL: 1,
+                updateSponsorURL: 1,
+            }}),
             getNicheMap,
         ]),
         allMovies: Object.freeze([
-            deepFreeze({blocks: {allTagsBlock: 1, searchSponsors: 1, updateSponsorURL: 1}}),
+            deepFreeze({blocks: {
+                allTagsBlock: 1,
+                searchSponsors: 1,
+                updateExtraURL: 1,
+                updateSponsorURL: 1,
+            }}),
             getAllMoviesMap,
         ]),
         pornstars: Object.freeze([
@@ -404,12 +415,15 @@ const
         ]),
         pornstar: Object.freeze([
             deepFreeze({blocks: {
-                modelsABCBlockText: 1, modelsABCBlockThumbs: 1, updateSponsorURL: 1
+                modelsABCBlockText: 1,
+                modelsABCBlockThumbs: 1,
+                updateExtraURL: 1,
+                updateSponsorURL: 1,
             }}),
             getPornstarMap,
         ]),
         favorite: Object.freeze([
-            deepFreeze({blocks: {updateSponsorURL: 1}}),
+            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
             getFavoriteMap,
         ]),
         favoritePornstars: Object.freeze([
@@ -417,19 +431,19 @@ const
             getFavoritePornstarsMap,
         ]),
         video: Object.freeze([
-            deepFreeze({blocks: {searchSponsors: 1, updateSponsorURL: 1}}),
+            deepFreeze({blocks: {searchSponsors: 1, updateExtraURL: 1, updateSponsorURL: 1}}),
             getVideoPageMap,
         ]),
         findVideos: Object.freeze([
-            deepFreeze({blocks: {updateSponsorURL: 1}}),
+            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
             getFindVideosMap,
         ]),
         site: Object.freeze([
-            deepFreeze({blocks: {updateSponsorURL: 1}}),
+            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
             getSiteMap,
         ]),
         notFound: Object.freeze([
-            deepFreeze({blocks: {updateSponsorURL: 1}}),
+            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
             getNotFoundMap,
         ]),
     }),
