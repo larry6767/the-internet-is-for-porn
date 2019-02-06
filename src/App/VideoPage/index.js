@@ -83,6 +83,7 @@ const
 
         inlineAdvertisementIsShowed: null,
         reportDialogIsOpen: null,
+        openGraphData: null,
         pageText: null,
         gallery: null,
         videoList: null,
@@ -190,7 +191,10 @@ const
             : data.get('isLoading')
             ? <CircularProgress/>
             : <Content>
-                <PageTextHelmet pageText={ig(data, 'pageText')}/>
+                <PageTextHelmet
+                    pageText={ig(data, 'pageText')}
+                    openGraphData={ig(data, 'openGraphData')}
+                />
                 <PageWrapper>
                     <PlayerSection>
                         <Typography

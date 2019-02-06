@@ -186,3 +186,35 @@ export default (data, pageUrl, publishedTemplate, sponsors) => {
 
     return result
 }
+
+export const
+    openGraphDataModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
+        title: PropTypes.string,
+        thumb: PropTypes.string,
+        tags: PropTypes.arrayOf(PropTypes.string),
+        duration: PropTypes.number,
+    }),
+
+    getOpenGraphData = data => {
+        if (process.env.NODE_ENV !== 'production') {
+            assertPropTypes(
+                incomingGalleryModel,
+                data,
+                'getOpenGraphData',
+                'original source gallery data'
+            )
+        }
+
+        const
+            result = {
+                title: getProp(data, 'title'),
+                thumb: getProp(data, 'thumb_url'),
+                tags: getProp(data, 'tags'),
+                duration: Number(getProp(data, 'length')),
+            }
+
+        if (process.env.NODE_ENV !== 'production')
+            assertPropTypes(openGraphDataModel, result, 'getOpenGraphData', 'result gallery data')
+
+        return result
+    }

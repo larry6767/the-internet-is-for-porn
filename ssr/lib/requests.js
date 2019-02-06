@@ -25,6 +25,7 @@ import {
     incomingGalleryModel,
     publishedTemplateModel,
     galleryModel,
+    openGraphDataModel,
 } from './helpers/requests/getGallery'
 
 import {
@@ -38,6 +39,7 @@ import {
     getArchiveFilms,
     getModelInfo,
     getGallery,
+    getOpenGraphData,
     getSponsorsList,
 } from './helpers/requests'
 import {sponsors} from '../fixtures' // TODO get rid of this
@@ -249,6 +251,7 @@ const
     }),
 
     mappedVideoPageModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape({
+        openGraphData: openGraphDataModel,
         gallery: galleryModel,
         pageText: videoPageTextModel,
         videoList: PropTypes.arrayOf(videoItemModel),
@@ -260,6 +263,7 @@ const
 
         const
             result = {
+                openGraphData: getOpenGraphData(g(x, 'page', 'GALLERY')),
                 gallery: getGallery(
                     g(x, 'page', 'GALLERY'),
                     g(x, 'page', 'PAGE_URL'),

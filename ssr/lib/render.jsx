@@ -5,7 +5,6 @@ import {Provider} from 'react-redux'
 import {all} from 'redux-saga/effects'
 import {StaticRouter} from 'react-router'
 import {renderToString} from 'react-dom/server'
-import Immutable from 'immutable'
 import {ServerStyleSheet} from 'styled-components'
 import {SheetsRegistry} from 'jss'
 import JssProvider from 'react-jss/lib/JssProvider'
@@ -13,15 +12,15 @@ import {createGenerateClassName} from '@material-ui/core/styles'
 
 import {
     plainProvedGet as g,
-    immutableProvedGet as ig,
     getRouterContext,
     getPageTextToHeadTags,
+    getOpenGraphToHeadTags,
     PropTypes,
     assertPropTypes,
 } from '../App/helpers'
 
 import {getPureDomain} from '../App/helpers/hostLocale'
-import {buildLocalePageCodes, getLegacyOrientationPrefixes, logRequestError} from './helpers'
+import {getLegacyOrientationPrefixes, logRequestError} from './helpers'
 import {getPageData as requestPageData} from './requests'
 import {proxiedHeaders} from './backend-proxy'
 import LegacyRedirectsRouterBuilder from './legacy-redirects'
@@ -63,6 +62,7 @@ const
                 saga: PropTypes.func.isOptional,
                 statusCodeResolver: PropTypes.func.isOptional,
                 pageTextResolver: PropTypes.func,
+                openGraphDataResolver: PropTypes.func.isOptional,
             }),
         ])
 
@@ -171,8 +171,19 @@ export default (
             res.status(staticRouterContext.statusCodeResolver(store.getState()))
 
         const
-            pageText = staticRouterContext.pageTextResolver(store.getState()),
+            pageText = staticRouterContext.pageTextResolver(store.getState())
+
+        let
             headTags = getPageTextToHeadTags(pageText).map(x => renderToString(x)).join('\n')
+
+        if (staticRouterContext.hasOwnProperty('openGraphDataResolver')) {
+            const
+                openGraphData = staticRouterContext.openGraphDataResolver(store.getState()),
+                openGraphTags = getOpenGraphToHeadTags(openGraphData).map(x =>
+                    renderToString(x)).join('\n')
+
+            headTags = headTags + openGraphTags
+        }
 
         const
             serverStyleSheet = new ServerStyleSheet(),

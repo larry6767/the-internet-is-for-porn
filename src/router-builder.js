@@ -724,6 +724,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                     x.saga = loadVideoPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', 'videoPage', 'isFailed'])
                     x.pageTextResolver = state => ig(state, ['app', 'videoPage', 'pageText'])
+                    x.openGraphDataResolver = state =>
+                        ig(state, ['app', 'videoPage', 'openGraphData'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
