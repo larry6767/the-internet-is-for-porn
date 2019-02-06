@@ -88,7 +88,7 @@ const
             pageNumber: x.page.PAGE_NUMBER,
             pagesCount: x.page.PAGES_COUNT,
             pageText: getPageText(x.page.PAGE_TEXT),
-            sponsorsList: getSponsorsList(sponsors), // TODO get rid of this
+            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')),
             tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
 
             tagArchiveList: getTagArchiveList(
@@ -132,7 +132,7 @@ const
             pageNumber: g(x, 'page', 'PAGE_NUMBER'),
             pagesCount: g(x, 'page', 'PAGES_COUNT'),
             pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
-            sponsorsList: getSponsorsList(sponsors), // TODO get rid of this
+            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')),
             tagList: getTagListByLetters(g(x, 'page', 'TAGS_BY_LETTERS', 'letters')),
 
             tagArchiveList: getTagArchiveList(
@@ -268,8 +268,7 @@ const
                     g(x, 'page', 'GALLERY'),
                     g(x, 'page', 'PAGE_URL'),
                     g(x, 'page', 'TIME_AGO'),
-                    // g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')
-                    sponsors // TODO get rid of this
+                    g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')
                 ),
 
                 pageText: getVideoPageText(g(x, 'page', 'PAGE_TEXT')),
@@ -346,8 +345,8 @@ const
             allTagsBlock: PropTypes.number.isOptional,
             modelsABCBlockText: PropTypes.number.isOptional,
             modelsABCBlockThumbs: PropTypes.number.isOptional,
-            galsFacets: PropTypes.number.isOptional,
             updateSponsorURL: PropTypes.number.isOptional,
+            searchSponsors: PropTypes.number.isOptional,
         }).isOptional,
     }),
 
@@ -392,11 +391,11 @@ const
             getAllNichesMap,
         ]),
         niche: Object.freeze([
-            deepFreeze({blocks: {allTagsBlock: 1, galsFacets: 1, updateSponsorURL: 1}}),
+            deepFreeze({blocks: {allTagsBlock: 1, searchSponsors: 1, updateSponsorURL: 1}}),
             getNicheMap,
         ]),
         allMovies: Object.freeze([
-            deepFreeze({blocks: {allTagsBlock: 1, galsFacets: 1, updateSponsorURL: 1}}),
+            deepFreeze({blocks: {allTagsBlock: 1, searchSponsors: 1, updateSponsorURL: 1}}),
             getAllMoviesMap,
         ]),
         pornstars: Object.freeze([
@@ -405,12 +404,12 @@ const
         ]),
         pornstar: Object.freeze([
             deepFreeze({blocks: {
-                modelsABCBlockText: 1, modelsABCBlockThumbs: 1, galsFacets: 1, updateSponsorURL: 1
+                modelsABCBlockText: 1, modelsABCBlockThumbs: 1, updateSponsorURL: 1
             }}),
             getPornstarMap,
         ]),
         favorite: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1, updateSponsorURL: 1}}),
+            deepFreeze({blocks: {updateSponsorURL: 1}}),
             getFavoriteMap,
         ]),
         favoritePornstars: Object.freeze([
@@ -418,19 +417,19 @@ const
             getFavoritePornstarsMap,
         ]),
         video: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1, updateSponsorURL: 1}}),
+            deepFreeze({blocks: {searchSponsors: 1, updateSponsorURL: 1}}),
             getVideoPageMap,
         ]),
         findVideos: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1, updateSponsorURL: 1}}),
+            deepFreeze({blocks: {updateSponsorURL: 1}}),
             getFindVideosMap,
         ]),
         site: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1, updateSponsorURL: 1}}),
+            deepFreeze({blocks: {updateSponsorURL: 1}}),
             getSiteMap,
         ]),
         notFound: Object.freeze([
-            deepFreeze({blocks: {galsFacets: 1, updateSponsorURL: 1}}),
+            deepFreeze({blocks: {updateSponsorURL: 1}}),
             getNotFoundMap,
         ]),
     }),

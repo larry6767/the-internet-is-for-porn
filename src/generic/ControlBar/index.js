@@ -239,9 +239,10 @@ const
         pageNumber,
         pagesCount,
         linkBuilder,
+        favoriteLinkBuilder,
         i18nButtons,
     }) => <Fragment>
-        {pagesCount === 1 ? null :
+        {pagesCount === 1 || pagesCount === 0 ? null :
             <Pagination
                 cb={cb}
                 pageNumber={pageNumber}
@@ -251,12 +252,12 @@ const
             />}
 
         <WrappedButton
-            link={linkBuilder('favorite')}
+            link={favoriteLinkBuilder('favorite')}
             text={ig(i18nButtons, 'favoriteMovies')}
         />
 
         <WrappedButton
-            link={linkBuilder('favoritePornstars')}
+            link={favoriteLinkBuilder('favoritePornstars')}
             text={ig(i18nButtons, 'favoritePornstars')}
         />
     </Fragment>),
@@ -314,7 +315,8 @@ const
                     cb={cb}
                     pageNumber={pageNumber}
                     pagesCount={pagesCount}
-                    linkBuilder={favoriteLinkBuilder}
+                    linkBuilder={linkBuilder}
+                    favoriteLinkBuilder={favoriteLinkBuilder}
                     i18nButtons={i18nButtons}
                 />
                 : <NicheControlBar
