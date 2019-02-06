@@ -83,5 +83,9 @@ export const muiStyles = theme => ({
     chip: {
         margin: '0 16px 8px 0',
         height: 24,
+
+        [theme.breakpoints.down('xs')]: {
+            margin: '0 8px 8px 0',
+        }
     },
 })

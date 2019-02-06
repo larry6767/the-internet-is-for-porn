@@ -289,14 +289,12 @@ const
                                 {renderIframe('sidebar1', currentWidth)}
                                 {renderIframe('sidebar2', currentWidth)}
                             </Advertisement>
-                            {ccb(cb, sm) === -1
-                                ? null
-                                : <TagsWrapper>
+                            <TagsWrapper>
                                 {data.getIn(['gallery', 'tags'])
                                     ? data.getIn(['gallery', 'tags']).map(x =>
                                         renderTag(classes, cb, x, getTagLink))
                                     : null}
-                            </TagsWrapper>}
+                            </TagsWrapper>
                         </VideoPlayer>
                     </PlayerSection>
                     <RelatedVideos>

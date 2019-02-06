@@ -272,6 +272,12 @@ export const TagsWrapper = styled.div`
     align-items: center;
     flex-wrap: wrap;
     padding: 10px;
+
+    ${({theme}) => theme.media.mobile`
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 10px 0;
+    `}
 `
 
 export const SponsorLink = styled.a`
