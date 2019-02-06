@@ -42,7 +42,6 @@ import {
     getOpenGraphData,
     getSponsorsList,
 } from './helpers/requests'
-import {sponsors} from '../fixtures' // TODO get rid of this
 
 const
     getHomeMap = x => ({
