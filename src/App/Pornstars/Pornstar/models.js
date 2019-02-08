@@ -44,25 +44,25 @@ const
 
 
                     birthday: nullable(exact({
-                        dateBirthD: nullable(PropTypes.number),
-                        dateBirthM: nullable(PropTypes.number),
-                        dateBirthY: nullable(PropTypes.number),
+                        dateBirthD: PropTypes.number,
+                        dateBirthM: PropTypes.number,
+                        dateBirthY: PropTypes.number,
                     })),
 
                     lifetime: nullable(exact({
-                        dateBirth: nullable(PropTypes.number),
-                        dateDeath: nullable(PropTypes.number),
+                        dateBirth: PropTypes.number,
+                        dateDeath: PropTypes.number,
                     })),
 
                     careerTime: nullable(exact({
-                        dateCareerBegin: nullable(PropTypes.number),
-                        dateCareerEnd: nullable(PropTypes.number),
+                        dateCareerBegin: PropTypes.number,
+                        dateCareerEnd: PropTypes.number,
                     })),
 
                     penis: nullable(exact({ // gay
-                        penisCircumcision: nullable(PropTypes.number),
-                        penisSize: nullable(PropTypes.number),
-                        penisSizeType: nullable(PropTypes.number),
+                        penisCircumcision: PropTypes.number,
+                        penisSize: PropTypes.number,
+                        penisSizeType: PropTypes.number,
                     })),
                 }
 
@@ -118,27 +118,13 @@ export const
         waist: null,
         weight: null,
 
-        birthday: new (Record({
-            dateBirthD: null,
-            dateBirthM: null,
-            dateBirthY: null,
-        })),
+        birthday: null,
 
-        lifetime: new (Record({
-            dateBirth: null,
-            dateDeath: null,
-        })),
+        lifetime: null,
 
-        careerTime: new (Record({
-            dateCareerBegin: null,
-            dateCareerEnd: null,
-        })),
+        careerTime: null,
 
-        penis: new (Record({ // gay
-            penisCircumcision: null,
-            penisSize: null,
-            penisSizeType: null,
-        })),
+        penis: null,
     }),
 
     PornstarInfoRecord = Record({
