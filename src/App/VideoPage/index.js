@@ -2,7 +2,7 @@
 import {Record} from 'immutable'
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {compose, lifecycle, withHandlers, withState} from 'recompose'
+import {compose, lifecycle, withHandlers, withState, branch, renderNothing} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, reset as resetForm} from 'redux-form/immutable'
 import {animateScroll} from 'react-scroll'
@@ -186,9 +186,9 @@ const
         handleSubmit, pristine, reset, cb, currentWidth, i18nButtons, i18nRelatedVideo,
         i18nLabelProvidedBy, setPlayerRef,
     }) => <Page>
-        { data.get('isFailed')
+        { ig(data, 'isFailed')
             ? <ErrorContent/>
-            : data.get('isLoading')
+            : ig(data, 'isLoading')
             ? <CircularProgress/>
             : <Content>
                 <PageTextHelmet
@@ -334,7 +334,9 @@ const
     </Page>,
 
     setNewPageFlow = props => {
-        props.scrollToPlayer()
+        if (ig(props.data, 'isLoaded'))
+            props.scrollToPlayer()
+
         props.setNewText(getHeaderText(g(props, 'data'), true, false))
     },
 
@@ -425,8 +427,10 @@ export default compose(
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
             if (
-                (areWeSwitchedOnPage(this.props, nextProps) && g(nextProps, 'playerRef') !== null) ||
                 (
+                    areWeSwitchedOnPage(this.props, nextProps) &&
+                    g(nextProps, 'playerRef') !== null
+                ) || (
                     g(this.props, 'data', 'isLoaded') &&
                     g(this.props, 'playerRef') === null &&
                     g(nextProps, 'playerRef') !== null
@@ -441,5 +445,13 @@ export default compose(
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
         i18nButtons: immutableI18nButtonsModel,
-    })
+    }),
+    branch(
+        props => !(
+            ig(props.data, 'isLoading') ||
+            ig(props.data, 'isLoaded') ||
+            ig(props.data, 'isFailed')
+        ),
+        renderNothing
+    )
 )(VideoPage)
