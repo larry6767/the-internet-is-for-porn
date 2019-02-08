@@ -10,7 +10,10 @@ import {
 } from '@material-ui/core'
 import Favorite from '@material-ui/icons/Favorite'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
-import {plainProvedGet as g} from '../../../helpers'
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+} from '../../../helpers'
 import {
     InfoWrapper,
     ThumbWrapper,
@@ -22,36 +25,36 @@ import {
 import {muiStyles} from './assets/muiStyles'
 
 const
-    renderTableRow = (x, idx, classes) => <TableRow key={x.get('key')}>
+    renderTableRow = (v, k, i18nPornstarInfoParameters, classes) => !v ? null : <TableRow key={`${k}-row`}>
         <TableCell
             component="td"
             classes={{
                 root: classes.tableCellRoot
             }}
         >
-            {x.get('key')}
+            {ig(i18nPornstarInfoParameters, k)}
         </TableCell>
-        <TableCell component="td">{x.get('value')}</TableCell>
+        <TableCell component="td">{v}</TableCell>
     </TableRow>,
 
     Info = ({
-        classes, modelId, modelInfo, modelThumb, modelInfoHandler,
+        classes, i18nPornstarInfoParameters, pornstarInfo, pornstarInfoForTable, modelInfoHandler,
         modelInfoIsOpen, favoritePornstarList, currentBreakpoint, isSSR,
         addToFavoriteHandler, removeFromFavoriteHandler,
     }) => <InfoWrapper>
         <ThumbWrapper>
-            <Thumb thumb={modelThumb}/>
+            <Thumb thumb={ig(pornstarInfo, 'thumbUrl')}/>
             <InfoBar>
                 <Like>
-                    {favoritePornstarList.find(id => id === modelId)
+                    {favoritePornstarList.find(id => id === ig(pornstarInfo, 'id'))
                         ? <Favorite
                             classes={{root: g(classes, 'favoriteIcon')}}
-                            data-favorite-pornstar-id={modelId}
+                            data-favorite-pornstar-id={ig(pornstarInfo, 'id')}
                             onClick={removeFromFavoriteHandler}
                         />
                         : <FavoriteBorder
                             classes={{root: g(classes, 'favoriteBorderIcon')}}
-                            data-favorite-pornstar-id={modelId}
+                            data-favorite-pornstar-id={ig(pornstarInfo, 'id')}
                             onClick={addToFavoriteHandler}
                         />
                     }
@@ -76,15 +79,16 @@ const
             <Paper>
                 <Table>
                     <TableBody>
-                        {modelInfo.map((x, idx) =>
-                            isSSR
+                        {pornstarInfoForTable.toSeq().map((v, k) =>
+                            renderTableRow(v, k, i18nPornstarInfoParameters, classes)).valueSeq()}
+
+                            {/* isSSR
                                 ? renderTableRow(x, idx, classes)
                                 : x.get('value') && modelInfoIsOpen
                                 ? renderTableRow(x, idx, classes)
                                 : idx < 4 && !(currentBreakpoint === 'xxs' || currentBreakpoint === 'xs')
                                 ? renderTableRow(x, idx, classes)
-                                : null
-                        )}
+                                : null */}
                     </TableBody>
                 </Table>
             </Paper>

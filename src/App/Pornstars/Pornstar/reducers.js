@@ -2,7 +2,7 @@ import {fromJS, List} from 'immutable'
 
 import {provedHandleActions, plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
 import {PageTextRecord} from '../../models'
-import {stateModel} from './models'
+import {stateModel, PornstarInfoForTableRecord, PornstarInfoRecord} from './models'
 import actions from './actions'
 
 export default
@@ -21,9 +21,8 @@ export default
             itemsCount: 0,
             videoList: List(),
             modelsList: List(),
-            modelId: 0,
-            modelInfo: List(),
-            modelThumb: '',
+            pornstarInfoForTable: PornstarInfoForTableRecord(),
+            pornstarInfo: PornstarInfoRecord(),
         }),
         [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
@@ -39,9 +38,10 @@ export default
             itemsCount: g(payload, 'data', 'itemsCount'),
             videoList: List(fromJS(g(payload, 'data', 'videoList'))),
             modelsList: List(fromJS(g(payload, 'data', 'modelsList'))),
-            modelId: g(payload, 'data', 'modelId'),
-            modelInfo: List(fromJS(g(payload, 'data', 'modelInfo'))),
-            modelThumb: g(payload, 'data', 'modelThumb'),
+            pornstarInfoForTable: PornstarInfoForTableRecord(
+                fromJS(g(payload, 'data', 'pornstarInfoForTable'))
+            ),
+            pornstarInfo: PornstarInfoRecord(fromJS(g(payload, 'data', 'pornstarInfo'))),
         }),
         [g(actions, 'loadPageFailure')]: state => state.merge({
             isLoading: false,
@@ -56,9 +56,8 @@ export default
             itemsCount: 0,
             videoList: List(),
             modelsList: List(),
-            modelId: 0,
-            modelInfo: List(),
-            modelThumb: '',
+            pornstarInfoForTable: PornstarInfoForTableRecord(),
+            pornstarInfo: PornstarInfoRecord(),
         }),
         [g(actions, 'setNewSort')]: (state, {payload}) =>
             state.set('currentSort', g(payload, 'newSortValue')),
@@ -78,7 +77,6 @@ export default
         itemsCount: 0,
         videoList: [],
         modelsList: [],
-        modelId: 0,
-        modelInfo: [],
-        modelThumb: '',
+        pornstarInfoForTable: PornstarInfoForTableRecord(),
+        pornstarInfo: PornstarInfoRecord(),
     }))
