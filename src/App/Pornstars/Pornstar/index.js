@@ -15,13 +15,18 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
+    breakpoints,
 } from '../../helpers'
 
 import {
     routerContextModel,
     immutableI18nOrderingModel,
     immutableI18nButtonsModel,
+    immutableI18nPornstarInfoParametersModel,
+    PageTextRecord,
 } from '../../models'
+
+import {PornstarInfoRecord} from './models'
 
 import {dataModel} from './models'
 import {routerGetters} from '../../../router-builder'
@@ -41,8 +46,8 @@ import actions from './actions'
 
 const
     Pornstar = ({
-        cb, i18nOrdering, i18nButtons, i18nLabelShowing, data, chooseSort,
-        isSSR, modelInfoHandler, modelInfoIsOpen, favoritePornstarList,
+        cb, i18nOrdering, i18nButtons, i18nLabelShowing, i18nPornstarInfoParameters,
+        data, chooseSort, isSSR, modelInfoHandler, modelInfoIsOpen, favoritePornstarList,
         controlLinkBuilder, modelLinkBuilder,
         addToFavoriteHandler, removeFromFavoriteHandler,
     }) => <Page>
@@ -62,13 +67,13 @@ const
                         {data.getIn(['pageText', 'listHeader'])}
                     </Typography>
                     <Info
-                        modelId={ig(data, 'modelId')}
-                        modelThumb={ig(data, 'modelThumb')}
-                        modelInfo={ig(data, 'modelInfo')}
+                        i18nPornstarInfoParameters={i18nPornstarInfoParameters}
+                        pornstarInfo={ig(data, 'pornstarInfo')}
+                        pornstarInfoForTable={ig(data, 'pornstarInfoForTable')}
                         modelInfoHandler={modelInfoHandler}
                         modelInfoIsOpen={modelInfoIsOpen}
                         favoritePornstarList={favoritePornstarList}
-                        currentBreakpoint={cb}
+                        cb={cb}
                         isSSR={isSSR}
                         addToFavoriteHandler={addToFavoriteHandler}
                         removeFromFavoriteHandler={removeFromFavoriteHandler}
@@ -107,7 +112,7 @@ const
 
         lastPageRequestParams: null,
 
-        pageText: null,
+        pageText: PageTextRecord(),
 
         pageNumber: null,
         pagesCount: null,
@@ -118,9 +123,8 @@ const
 
         videoList: null,
         modelsList: null,
-        modelId: null,
-        modelInfo: null,
-        modelThumb: null,
+        pornstarInfoForTable: null,
+        pornstarInfo: PornstarInfoRecord(),
     }),
 
     setNewPageFlow = (prevProps, nextProps) => {
@@ -148,6 +152,7 @@ export default compose(
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
+            i18nPornstarInfoParameters: ig(state, 'app', 'locale', 'i18n', 'pornstarInfoParameters'),
             modelInfoIsOpen: ig(state, 'app', 'pornstars', 'pornstar', 'modelInfoIsOpen'),
             favoritePornstarList: ig(state, 'app', 'ui', 'favoritePornstarList'),
         }),
@@ -218,12 +223,13 @@ export default compose(
         },
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        cb: PropTypes.string,
+        cb: PropTypes.oneOf(breakpoints),
         data: dataModel,
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
         i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,
+        i18nPornstarInfoParameters: immutableI18nPornstarInfoParametersModel,
         modelInfoIsOpen: PropTypes.bool,
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
 

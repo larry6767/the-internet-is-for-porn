@@ -16,6 +16,7 @@ export {
     i18nButtonsModel, immutableI18nButtonsModel,
     i18nFooterModel, immutableI18nFooterModel,
     i18nReportModel, immutableI18nReportModel,
+    i18nPornstarInfoParametersModel, immutableI18nPornstarInfoParametersModel,
     i18nOrientationModel, immutableI18nOrientationModel,
     i18nModel, immutableI18nModel,
     ssrLocaleRouterModel, ssrImmutableLocaleRouterModel,

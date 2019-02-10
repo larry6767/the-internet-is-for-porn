@@ -2,6 +2,9 @@ export const muiStyles = theme => ({
     typography: {
         color: theme.palette.primary.contrastText
     },
+    typographyBold: {
+        fontWeight: 'bold',
+    },
     typographyTitle: {
         overflow: 'hidden',
         textOverflow: 'ellipsis',

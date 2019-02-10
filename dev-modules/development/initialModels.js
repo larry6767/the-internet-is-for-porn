@@ -187,6 +187,42 @@ const
         })
     },
 
+    i18nPornstarInfoParametersBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            alias: PropTypes.string,
+            astrologicalSign: PropTypes.string,
+            bodyHair: PropTypes.string,
+            boobsFake: PropTypes.string,
+            breast: PropTypes.string,
+            breastSizeType: PropTypes.string,
+            city: PropTypes.string,
+            colorEye: PropTypes.string,
+            colorHair: PropTypes.string,
+            country: PropTypes.string,
+            cupSize: PropTypes.string,
+            ethnicity: PropTypes.string,
+            extra: PropTypes.string,
+            height: PropTypes.string,
+            hip: PropTypes.string,
+            name: PropTypes.string,
+            physiqueCustom: PropTypes.string,
+            piercings: PropTypes.string,
+            profession: PropTypes.string,
+            sexualRole: PropTypes.string,
+            shoeSize: PropTypes.string,
+            tatoos: PropTypes.string,
+            waist: PropTypes.string,
+            weight: PropTypes.string,
+            birthday: PropTypes.string,
+            lifetime: PropTypes.string,
+            careerTime: PropTypes.string,
+            penis: PropTypes.string,
+        })
+    },
+
     i18nOrientationModelBuilder = isImmutable => {
         const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
@@ -222,6 +258,9 @@ const
     i18nReportModel = i18nReportModelBuilder(false),
     immutableI18nReportModel = i18nReportModelBuilder(true),
 
+    i18nPornstarInfoParametersModel = i18nPornstarInfoParametersBuilder(false),
+    immutableI18nPornstarInfoParametersModel = i18nPornstarInfoParametersBuilder(true),
+
     i18nOrientationModel = i18nOrientationModelBuilder(false),
     immutableI18nOrientationModel = i18nOrientationModelBuilder(true),
 
@@ -238,6 +277,9 @@ const
             buttons: isImmutable ? immutableI18nButtonsModel : i18nButtonsModel,
             footer: isImmutable ? immutableI18nFooterModel : i18nFooterModel,
             report: isImmutable ? immutableI18nReportModel : i18nReportModel,
+            pornstarInfoParameters: isImmutable
+                ? immutableI18nPornstarInfoParametersModel
+                : i18nPornstarInfoParametersModel,
             orientation: isImmutable ? immutableI18nOrientationModel : i18nOrientationModel,
         })
     }
@@ -251,6 +293,7 @@ export {
     i18nButtonsModel, immutableI18nButtonsModel,
     i18nFooterModel, immutableI18nFooterModel,
     i18nReportModel, immutableI18nReportModel,
+    i18nPornstarInfoParametersModel, immutableI18nPornstarInfoParametersModel,
     i18nOrientationModel, immutableI18nOrientationModel,
 }
 

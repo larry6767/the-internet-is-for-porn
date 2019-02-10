@@ -5,8 +5,7 @@ export const InfoWrapper = styled.section`
     margin-bottom: 15px;
     flex-shrink: 0;
 
-    ${({theme}) => theme.media.xs`flex-direction: column;`}
-    ${({theme}) => theme.media.xxs`flex-direction: column;`}
+    ${({theme}) => theme.media.mobile`flex-wrap: wrap;`}
 `
 
 export const ThumbWrapper = styled.div`
@@ -14,6 +13,16 @@ export const ThumbWrapper = styled.div`
     display: flex;
     flex-direction: column;
     margin-right: 20px;
+    flex-shrink: 0;
+`
+
+export const MobileInfo = styled.div`
+    display: none;
+    flex-direction: column;
+    flex-grow: 1;
+    width: calc(100% - 150px);
+
+    ${({theme}) => theme.media.mobile`display: flex;`}
 `
 
 export const DataWrapper = styled.div`
@@ -21,8 +30,8 @@ export const DataWrapper = styled.div`
     flex-direction: column;
     flex-grow: 1;
 
-    ${({theme, modelInfoIsOpen}) => modelInfoIsOpen ? theme.media.xs`margin-top: 20px;` : ''}
-    ${({theme, modelInfoIsOpen}) => modelInfoIsOpen ? theme.media.xxs`margin-top: 20px;` : ''}
+    ${({theme, modelInfoIsOpen}) => modelInfoIsOpen
+        ? theme.media.mobile`width: 100%; margin-top: 20px;` : ''}
 `
 
 export const Thumb = styled.div`
@@ -32,7 +41,7 @@ export const Thumb = styled.div`
     background: ${({thumb}) => `url(${thumb})`};
     background-size: cover;
     border-radius: 1px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 
     &::after {
         content: '';
