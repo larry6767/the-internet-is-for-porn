@@ -66,6 +66,11 @@ const
                     },
                 },
             },
+            MuiTableRow: {
+                root: {
+                    height: 40,
+                },
+            },
         },
     })
 
