@@ -7,10 +7,11 @@ export const muiStyles = theme => ({
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
+        lineHeight: 2,
     },
     itemRoot: {
-        paddingTop: 5,
-        paddingBottom: 5,
+        paddingTop: 4,
+        paddingBottom: 4,
         paddingRight: 0,
         paddingLeft: 5,
     },

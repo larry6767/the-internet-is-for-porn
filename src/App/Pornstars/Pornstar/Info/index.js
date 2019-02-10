@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {compose} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import {
@@ -8,6 +8,7 @@ import {
     TableBody,
     TableRow,
     TableCell,
+    Typography,
 } from '@material-ui/core'
 import Favorite from '@material-ui/icons/Favorite'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
@@ -16,6 +17,7 @@ import {
     immutableProvedGet as ig,
     breakpoints,
     breakpointXS as xs,
+    breakpointSM as sm,
     compareCurrentBreakpoint as ccb,
     setPropTypes,
     PropTypes,
@@ -26,6 +28,7 @@ import {immutablePornstarInfoModel, immutablePornstarInfoForTableModel} from '..
 import {
     InfoWrapper,
     ThumbWrapper,
+    MobileInfo,
     DataWrapper,
     Thumb,
     InfoBar,
@@ -34,6 +37,8 @@ import {
 import {muiStyles} from './assets/muiStyles'
 
 const
+    paramsQuantityForMobile = 3,
+
     renderTableRow = (v, k, i18nPornstarInfoParameters, classes) => <TableRow key={`${k}-row`}>
         <TableCell
             component="td"
@@ -90,18 +95,50 @@ const
                 </Button> : null}
             </InfoBar>
         </ThumbWrapper>
+        <MobileInfo>
+            {ccb(cb, sm) === -1
+                ? pornstarInfoForTable.mapEntries(([k, v], idx) => [
+                    idx <= paramsQuantityForMobile
+                        ? <Fragment>
+                            <Typography
+                                variant="body1"
+                                classes={{
+                                    root: classes.typographyBold,
+                                }}
+                            >
+                                {`${ig(i18nPornstarInfoParameters, k)}: `}
+                            </Typography>
+                            <Typography
+                                variant="body1"
+                                gutterBottom
+                            >
+                                {v}
+                            </Typography>
+                        </Fragment>
+                        : null,
+                    null
+                ]).keySeq()
+                : null}
+        </MobileInfo>
         <DataWrapper modelInfoIsOpen={modelInfoIsOpen}>
             <Paper>
                 <Table>
                     <TableBody>
-                        {pornstarInfoForTable.mapEntries(([k, v], idx) => [
-                            isSSR || modelInfoIsOpen
-                                ? renderTableRow(v, k, i18nPornstarInfoParameters, classes)
-                                : idx < 4 && ccb(cb, xs) === 1
-                                ? renderTableRow(v, k, i18nPornstarInfoParameters, classes)
-                                : null,
-                            null
-                        ]).keySeq()}
+                        {ccb(cb, sm) === -1 && modelInfoIsOpen
+                            ? pornstarInfoForTable.mapEntries(([k, v], idx) => [
+                                idx > paramsQuantityForMobile
+                                    ? renderTableRow(v, k, i18nPornstarInfoParameters, classes)
+                                    : null,
+                                null
+                            ]).keySeq()
+                            : pornstarInfoForTable.mapEntries(([k, v], idx) => [
+                                isSSR || modelInfoIsOpen
+                                    ? renderTableRow(v, k, i18nPornstarInfoParameters, classes)
+                                    : idx < 5 && ccb(cb, xs) === 1
+                                    ? renderTableRow(v, k, i18nPornstarInfoParameters, classes)
+                                    : null,
+                                null
+                            ]).keySeq()}
                     </TableBody>
                 </Table>
             </Paper>
