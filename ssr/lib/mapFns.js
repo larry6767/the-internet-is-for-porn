@@ -235,7 +235,10 @@ export const
                     true
                 ),
                 pornstarInfo: getPornstarInfo(g(x, 'page', 'MODEL_INFO')),
-                pornstarInfoForTable: getPornstarInfoForTable(g(x, 'page', 'MODEL_INFO')),
+                pornstarInfoForTable: getPornstarInfoForTable(
+                    g(x, 'page', 'MODEL_INFO'),
+                    g(x, 'page', 'MONTHS_NAMES'),
+                ),
             }
 
         if (process.env.NODE_ENV !== 'production')

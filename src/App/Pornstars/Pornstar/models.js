@@ -13,57 +13,38 @@ const
     pornstarInfoForTableModelBuilder = process.env.NODE_ENV === 'production' ? null :
         (isImmutable) => {
             const
-                exact = isImmutable ? ImmutablePropTypes.exactRecordOf : PropTypes.exact,
-                nullable = PropTypes.nullable,
+                exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
 
                 props = {
-                    alias: nullable(PropTypes.string),
-                    astrologicalSign: nullable(PropTypes.number),
-                    bodyHair: nullable(PropTypes.string),
-                    boobsFake: nullable(PropTypes.number),
-                    breast: nullable(PropTypes.number),
-                    breastSizeType: nullable(PropTypes.number), // shemale
-                    city: nullable(PropTypes.string),
-                    colorEye: nullable(PropTypes.string),
-                    colorHair: nullable(PropTypes.string),
-                    country: nullable(PropTypes.string),
-                    cupSize: nullable(PropTypes.string),
-                    ethnicity: nullable(PropTypes.string),
-                    extra: nullable(PropTypes.string),
-                    height: nullable(PropTypes.number),
-                    hip: nullable(PropTypes.number),
-                    name: nullable(PropTypes.string),
-                    physiqueCustom: nullable(PropTypes.string),
-                    piercings: nullable(PropTypes.string),
-                    profession: nullable(PropTypes.string),
-                    sexualRole: nullable(PropTypes.number),
-                    shoeSize: nullable(PropTypes.number),
-                    tatoos: nullable(PropTypes.string),
-                    waist: nullable(PropTypes.number),
-                    weight: nullable(PropTypes.number),
+                    alias: PropTypes.string.isOptional,
+                    astrologicalSign: PropTypes.string.isOptional,
+                    bodyHair: PropTypes.string.isOptional,
+                    boobsFake: PropTypes.string.isOptional,
+                    breast: PropTypes.number.isOptional,
+                    breastSizeType: PropTypes.string.isOptional,
+                    city: PropTypes.string.isOptional,
+                    colorEye: PropTypes.string.isOptional,
+                    colorHair: PropTypes.string.isOptional,
+                    country: PropTypes.string.isOptional,
+                    cupSize: PropTypes.string.isOptional,
+                    ethnicity: PropTypes.string.isOptional,
+                    extra: PropTypes.string.isOptional,
+                    height: PropTypes.number.isOptional,
+                    hip: PropTypes.number.isOptional,
+                    name: PropTypes.string.isOptional,
+                    physiqueCustom: PropTypes.string.isOptional,
+                    piercings: PropTypes.string.isOptional,
+                    profession: PropTypes.string.isOptional,
+                    sexualRole: PropTypes.string.isOptional,
+                    shoeSize: PropTypes.number.isOptional,
+                    tatoos: PropTypes.string.isOptional,
+                    waist: PropTypes.number.isOptional,
+                    weight: PropTypes.number.isOptional,
 
-
-                    birthday: nullable(exact({
-                        dateBirthD: PropTypes.number,
-                        dateBirthM: PropTypes.number,
-                        dateBirthY: PropTypes.number,
-                    })),
-
-                    lifetime: nullable(exact({
-                        dateBirth: PropTypes.number,
-                        dateDeath: PropTypes.number,
-                    })),
-
-                    careerTime: nullable(exact({
-                        dateCareerBegin: PropTypes.number,
-                        dateCareerEnd: PropTypes.number,
-                    })),
-
-                    penis: nullable(exact({ // gay
-                        penisCircumcision: PropTypes.number,
-                        penisSize: PropTypes.number,
-                        penisSizeType: PropTypes.number,
-                    })),
+                    birthday: PropTypes.string.isOptional,
+                    lifetime: PropTypes.string.isOptional,
+                    careerTime: PropTypes.string.isOptional,
+                    penis: PropTypes.string.isOptional,
                 }
 
             return exact(props)
@@ -91,41 +72,6 @@ export const
 
     pornstarInfoModel = process.env.NODE_ENV === 'production' ? null :
         pornstarInfoModelBuilder(false),
-
-    PornstarInfoForTableRecord = Record({
-        alias: null,
-        astrologicalSign: null,
-        bodyHair: null,
-        boobsFake: null,
-        breast: null,
-        breastSizeType: null, // shemale
-        city: null,
-        colorEye: null,
-        colorHair: null,
-        country: null,
-        cupSize: null,
-        ethnicity: null,
-        extra: null,
-        height: null,
-        hip: null,
-        name: null,
-        physiqueCustom: null,
-        piercings: null,
-        profession: null,
-        sexualRole: null,
-        shoeSize: null,
-        tatoos: null,
-        waist: null,
-        weight: null,
-
-        birthday: null,
-
-        lifetime: null,
-
-        careerTime: null,
-
-        penis: null,
-    }),
 
     PornstarInfoRecord = Record({
         id: 0,
@@ -167,6 +113,8 @@ const
         ImmutablePropTypes.exactRecordOf(model)
 
 export {
+    immutablePornstarInfoForTableModel,
+    immutablePornstarInfoModel,
     stateModel,
     dataModel,
 }

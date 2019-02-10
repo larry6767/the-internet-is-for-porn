@@ -15,6 +15,7 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
+    breakpoints,
 } from '../../helpers'
 
 import {
@@ -25,10 +26,7 @@ import {
     PageTextRecord,
 } from '../../models'
 
-import {
-    PornstarInfoForTableRecord,
-    PornstarInfoRecord,
-} from './models'
+import {PornstarInfoRecord} from './models'
 
 import {dataModel} from './models'
 import {routerGetters} from '../../../router-builder'
@@ -75,7 +73,7 @@ const
                         modelInfoHandler={modelInfoHandler}
                         modelInfoIsOpen={modelInfoIsOpen}
                         favoritePornstarList={favoritePornstarList}
-                        currentBreakpoint={cb}
+                        cb={cb}
                         isSSR={isSSR}
                         addToFavoriteHandler={addToFavoriteHandler}
                         removeFromFavoriteHandler={removeFromFavoriteHandler}
@@ -125,7 +123,7 @@ const
 
         videoList: null,
         modelsList: null,
-        pornstarInfoForTable: PornstarInfoForTableRecord(),
+        pornstarInfoForTable: null,
         pornstarInfo: PornstarInfoRecord(),
     }),
 
@@ -225,7 +223,7 @@ export default compose(
         },
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        cb: PropTypes.string,
+        cb: PropTypes.oneOf(breakpoints),
         data: dataModel,
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,

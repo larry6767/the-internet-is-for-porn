@@ -61,6 +61,7 @@ const
                             classes={{root: g(classes, 'typographyQuantity')}}
                         >
                             {`${ig(x, 'itemsCount')} Films`}
+                            {/* TODO need localize */}
                         </Typography>
                     </InfoBar>
                 </Link>

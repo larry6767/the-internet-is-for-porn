@@ -1,8 +1,8 @@
-import {fromJS, List} from 'immutable'
+import {fromJS, List, OrderedMap} from 'immutable'
 
 import {provedHandleActions, plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
 import {PageTextRecord} from '../../models'
-import {stateModel, PornstarInfoForTableRecord, PornstarInfoRecord} from './models'
+import {stateModel, PornstarInfoRecord} from './models'
 import actions from './actions'
 
 export default
@@ -21,7 +21,7 @@ export default
             itemsCount: 0,
             videoList: List(),
             modelsList: List(),
-            pornstarInfoForTable: PornstarInfoForTableRecord(),
+            pornstarInfoForTable: OrderedMap(),
             pornstarInfo: PornstarInfoRecord(),
         }),
         [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
@@ -38,9 +38,7 @@ export default
             itemsCount: g(payload, 'data', 'itemsCount'),
             videoList: List(fromJS(g(payload, 'data', 'videoList'))),
             modelsList: List(fromJS(g(payload, 'data', 'modelsList'))),
-            pornstarInfoForTable: PornstarInfoForTableRecord(
-                fromJS(g(payload, 'data', 'pornstarInfoForTable'))
-            ),
+            pornstarInfoForTable: fromJS(OrderedMap(g(payload, 'data', 'pornstarInfoForTable'))),
             pornstarInfo: PornstarInfoRecord(fromJS(g(payload, 'data', 'pornstarInfo'))),
         }),
         [g(actions, 'loadPageFailure')]: state => state.merge({
@@ -56,7 +54,7 @@ export default
             itemsCount: 0,
             videoList: List(),
             modelsList: List(),
-            pornstarInfoForTable: PornstarInfoForTableRecord(),
+            pornstarInfoForTable: OrderedMap(),
             pornstarInfo: PornstarInfoRecord(),
         }),
         [g(actions, 'setNewSort')]: (state, {payload}) =>
@@ -77,6 +75,6 @@ export default
         itemsCount: 0,
         videoList: [],
         modelsList: [],
-        pornstarInfoForTable: PornstarInfoForTableRecord(),
+        pornstarInfoForTable: OrderedMap(),
         pornstarInfo: PornstarInfoRecord(),
     }))

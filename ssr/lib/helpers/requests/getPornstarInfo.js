@@ -1,6 +1,7 @@
-import {mapValues} from 'lodash'
+import {mapValues, pick} from 'lodash'
 
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
+import {pornstarInfoForTableModel} from '../../../App/Pornstars/Pornstar/models'
 
 const
     pornstarInfoModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
@@ -57,55 +58,6 @@ export const
         PropTypes.shape(pornstarInfoModelProps),
 
     // result model
-    pornstarInfoForTableModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
-        alias: PropTypes.nullable(PropTypes.string),
-        astrologicalSign: PropTypes.nullable(PropTypes.number),
-        bodyHair: PropTypes.nullable(PropTypes.string),
-        boobsFake: PropTypes.nullable(PropTypes.number),
-        breast: PropTypes.nullable(PropTypes.number),
-        breastSizeType: PropTypes.nullable(PropTypes.number), // shemale
-        city: PropTypes.nullable(PropTypes.string),
-        colorEye: PropTypes.nullable(PropTypes.string),
-        colorHair: PropTypes.nullable(PropTypes.string),
-        country: PropTypes.nullable(PropTypes.string),
-        cupSize: PropTypes.nullable(PropTypes.string),
-        ethnicity: PropTypes.nullable(PropTypes.string),
-        extra: PropTypes.nullable(PropTypes.string),
-        height: PropTypes.nullable(PropTypes.number),
-        hip: PropTypes.nullable(PropTypes.number),
-        name: PropTypes.nullable(PropTypes.string),
-        physiqueCustom: PropTypes.nullable(PropTypes.string),
-        piercings: PropTypes.nullable(PropTypes.string),
-        profession: PropTypes.nullable(PropTypes.string),
-        sexualRole: PropTypes.nullable(PropTypes.number),
-        shoeSize: PropTypes.nullable(PropTypes.number),
-        tatoos: PropTypes.nullable(PropTypes.string),
-        waist: PropTypes.nullable(PropTypes.number),
-        weight: PropTypes.nullable(PropTypes.number),
-
-        birthday: PropTypes.nullable(PropTypes.shape({
-            dateBirthD: PropTypes.nullable(PropTypes.number),
-            dateBirthM: PropTypes.nullable(PropTypes.number),
-            dateBirthY: PropTypes.nullable(PropTypes.number),
-        })),
-
-        lifetime: PropTypes.nullable(PropTypes.shape({
-            dateBirth: PropTypes.nullable(PropTypes.number),
-            dateDeath: PropTypes.nullable(PropTypes.number),
-        })),
-
-        careerTime: PropTypes.nullable(PropTypes.shape({
-            dateCareerBegin: PropTypes.nullable(PropTypes.number),
-            dateCareerEnd: PropTypes.nullable(PropTypes.number),
-        })),
-
-        penis: PropTypes.nullable(PropTypes.shape({ // gay
-            penisCircumcision: PropTypes.nullable(PropTypes.number),
-            penisSize: PropTypes.nullable(PropTypes.number),
-            penisSizeType: PropTypes.nullable(PropTypes.number),
-        })),
-    }),
-
     pornstarInfoModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         id: PropTypes.number,
         // idTag: PropTypes.number,
@@ -125,10 +77,90 @@ const
 
     getNumber = process.env.NODE_ENV === 'production' ? g :
         (src, propKey, ...xs) =>
-            Number(g(src, g(pornstarInfoModelPropsKeys, propKey), ...xs)) || null
+            Number(g(src, g(pornstarInfoModelPropsKeys, propKey), ...xs)) || null,
+
+    getAstrologicalSign = v => v === null ? null
+        : v === 1 ? 'Aries ♈'
+        : v === 2 ? 'Taurus ♉'
+        : v === 3 ? 'Gemini ♊'
+        : v === 4 ? 'Cancer ♋'
+        : v === 5 ? 'Leo ♌'
+        : v === 6 ? 'Virgo ♍'
+        : v === 7 ? 'Libra ♎'
+        : v === 8 ? 'Scorpio ♏'
+        : v === 9 ? 'Sagittarius ♐'
+        : v === 10 ? 'Capricorn ♑'
+        : v === 11 ? 'Aquarius ♒'
+        : v === 12 ? 'Pisces ♓'
+        : 'Unknown ?',
+
+    getBoobsFake = v => v === null ? null
+        : v === 1 ? 'Fake'
+        : v === 2 ? 'Natural'
+        : 'Unknown',
+
+    getBreastSizeType = v => v === null ? null
+        : v === 2 ? 'Small'
+        : v === 5 ? 'Medium'
+        : v === 7 ? 'Big'
+        : 'Unknown',
+
+    getSexualRole = v => v === null ? null
+        : v === 1 ? 'Active'
+        : v === 2 ? 'Switch Hitter'
+        : v === 3 ? 'Bottom'
+        : 'Unknown',
+
+    getPenisSizeType = v => v === null ? null // TODO need to match the keys and values
+        : v === 2 ? 'Small '
+        : v === 5 ? 'Medium '
+        : v === 7 ? 'Big '
+        : 'Unknown ',
+
+    getPenisCircumcision = v => v === null ? null
+        : v === 1 ? 'Circumcised'
+        : v === 2 ? 'Not Circumcised'
+        : 'Unknown',
+
+    getPenis = (data, sizeTypeKey, sizeKey, circumcisionKey) => {
+        const
+            sizeTypeValue = getPenisSizeType(getNumber(data, sizeTypeKey)),
+            sizeValue = getNumber(data, sizeKey),
+            circumcisionValue = getPenisCircumcision(getNumber(data, circumcisionKey))
+
+        if (sizeTypeValue || sizeValue || circumcisionValue)
+            return `${sizeTypeValue ? `${sizeTypeValue }` : ''}${
+                sizeValue ? `${sizeValue} cm ` : ''}${
+                    circumcisionValue ? `${circumcisionValue}` : ''}`
+        else
+            return null
+    },
+
+    getBirthday = (data, monthsNames, dayKey, monthKey, yearKey) => {
+        const
+            dayValue = getNumber(data, dayKey),
+            monthValue = g(monthsNames, getNumber(data, monthKey)),
+            yearValue = getNumber(data, yearKey)
+
+        if (dayValue || monthValue || yearValue)
+            return `${dayValue} ${monthValue} ${yearValue}`
+        else
+            return null
+    },
+
+    getTimePeriod = (data, startKey, endKey) => {
+        const
+            startValue = getNumber(data, startKey),
+            endValue = getNumber(data, endKey)
+
+        if (startValue || endValue)
+            return `${startValue ? startValue : 'Unknown'} - ${endValue ? endValue : 'Unknown'}`
+        else
+            return null
+    }
 
 export const
-    getPornstarInfoForTable = data => {
+    getPornstarInfoForTable = (data, monthsNames) => {
         if (process.env.NODE_ENV !== 'production') {
             assertPropTypes(
                 incomingPornstarInfoModel,
@@ -138,14 +170,14 @@ export const
             )
         }
 
-        const
+        let
             result = {
                 alias: getString(data, 'alias'),
-                astrologicalSign: getNumber(data, 'astrological_sign'),
+                astrologicalSign: getAstrologicalSign(getNumber(data, 'astrological_sign')),
                 bodyHair: getString(data, 'body_hair'),
-                boobsFake: getNumber(data, 'boobs_fake'),
+                boobsFake: getBoobsFake(getNumber(data, 'boobs_fake')),
                 breast: getNumber(data, 'breast'),
-                breastSizeType: getNumber(data, 'breast_size_type'), // shemale
+                breastSizeType: getBreastSizeType(getNumber(data, 'breast_size_type')),
                 city: getString(data, 'city'),
                 colorEye: getString(data, 'color_eye'),
                 colorHair: getString(data, 'color_hair'),
@@ -159,64 +191,22 @@ export const
                 physiqueCustom: getString(data, 'physique_custom'),
                 piercings: getString(data, 'piercings'),
                 profession: getString(data, 'profession'),
-                sexualRole: getNumber(data, 'sexual_role'),
+                sexualRole: getSexualRole(getNumber(data, 'sexual_role')),
                 shoeSize: getNumber(data, 'shoe_size'),
                 tatoos: getString(data, 'tatoos'),
                 waist: getNumber(data, 'waist'),
                 weight: getNumber(data, 'weight'),
+                // complex params
+                birthday: getBirthday(data, monthsNames, 'dt_birth_d', 'dt_birth_m', 'dt_birth_y'),
+                lifetime: getTimePeriod(data, 'dt_birth', 'dt_death'),
+                careerTime: getTimePeriod(data, 'dt_career_begin', 'dt_career_end'),
+                penis: getPenis(data, 'penis_size_type', 'penis_size', 'penis_circumcision'),
             }
 
-        if ( // set 'null' or get complex parameters for birthday
-            getNumber(data, 'dt_birth_d') ||
-            getNumber(data, 'dt_birth_m') ||
-            getNumber(data, 'dt_birth_y')
-        )
-            result.birthday = {
-                dateBirthD: getNumber(data, 'dt_birth_d'),
-                dateBirthM: getNumber(data, 'dt_birth_m'),
-                dateBirthY: getNumber(data, 'dt_birth_y'),
-            }
-        else
-            result.birthday = null
+        const
+            keysArray = Object.keys(result).filter(x => g(result, x) !== null)
 
-
-        if ( // set 'null' or get complex parameters for lifetime
-            getNumber(data, 'dt_birth') ||
-            getNumber(data, 'dt_death')
-        )
-            result.lifetime = {
-                dateBirth: getNumber(data, 'dt_birth'),
-                dateDeath: getNumber(data, 'dt_death'),
-            }
-        else
-            result.lifetime = null
-
-
-        if ( // set 'null' or get complex parameters for careerTime
-            getNumber(data, 'dt_career_begin') ||
-            getNumber(data, 'dt_career_end')
-        )
-            result.careerTime = {
-                dateCareerBegin: getNumber(data, 'dt_career_begin'),
-                dateCareerEnd: getNumber(data, 'dt_career_end'),
-            }
-        else
-            result.careerTime = null
-
-
-        if ( // set 'null' or get complex parameters for penis
-            getNumber(data, 'penis_circumcision') ||
-            getNumber(data, 'penis_size') ||
-            getNumber(data, 'penis_size_type')
-        )
-            result.penis = { // gay
-                penisCircumcision: getNumber(data, 'penis_circumcision'),
-                penisSize: getNumber(data, 'penis_size'),
-                penisSizeType: getNumber(data, 'penis_size_type'),
-            }
-        else
-            result.penis = null
-
+        result = pick(result, keysArray)
 
         if (process.env.NODE_ENV !== 'production')
             assertPropTypes(
@@ -247,7 +237,6 @@ export const
                 thumbUrl: getString(data, 'thumb_url'),
                 // urlGalleries: getString(data, 'url_galleries'),
             }
-
 
         if (process.env.NODE_ENV !== 'production')
             assertPropTypes(
