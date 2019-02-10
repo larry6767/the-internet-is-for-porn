@@ -139,11 +139,11 @@ const
     getBirthday = (data, monthsNames, dayKey, monthKey, yearKey) => {
         const
             dayValue = getNumber(data, dayKey),
-            monthValue = g(monthsNames, getNumber(data, monthKey)),
+            monthValue = getNumber(data, monthKey),
             yearValue = getNumber(data, yearKey)
 
         if (dayValue || monthValue || yearValue)
-            return `${dayValue} ${monthValue} ${yearValue}`
+            return `${dayValue} ${monthValue ? g(monthsNames, monthValue) : ''} ${yearValue}`
         else
             return null
     },
@@ -172,35 +172,34 @@ export const
 
         let
             result = {
+                name: getString(data, 'name'),
                 alias: getString(data, 'alias'),
+                birthday: getBirthday(data, monthsNames, 'dt_birth_d', 'dt_birth_m', 'dt_birth_y'),
                 astrologicalSign: getAstrologicalSign(getNumber(data, 'astrological_sign')),
-                bodyHair: getString(data, 'body_hair'),
-                boobsFake: getBoobsFake(getNumber(data, 'boobs_fake')),
-                breast: getNumber(data, 'breast'),
-                breastSizeType: getBreastSizeType(getNumber(data, 'breast_size_type')),
+                lifetime: getTimePeriod(data, 'dt_birth', 'dt_death'),
+                profession: getString(data, 'profession'),
+                country: getString(data, 'country'),
                 city: getString(data, 'city'),
+                ethnicity: getString(data, 'ethnicity'),
                 colorEye: getString(data, 'color_eye'),
                 colorHair: getString(data, 'color_hair'),
-                country: getString(data, 'country'),
-                cupSize: getString(data, 'cup_size'),
-                ethnicity: getString(data, 'ethnicity'),
-                extra: getString(data, 'extra'),
                 height: getNumber(data, 'height'),
-                hip: getNumber(data, 'hip'),
-                name: getString(data, 'name'),
-                physiqueCustom: getString(data, 'physique_custom'),
-                piercings: getString(data, 'piercings'),
-                profession: getString(data, 'profession'),
-                sexualRole: getSexualRole(getNumber(data, 'sexual_role')),
+                weight: getNumber(data, 'weight'),
+                breast: getNumber(data, 'breast'),
+                breastSizeType: getBreastSizeType(getNumber(data, 'breast_size_type')),
+                cupSize: getString(data, 'cup_size'),
+                boobsFake: getBoobsFake(getNumber(data, 'boobs_fake')),
                 shoeSize: getNumber(data, 'shoe_size'),
                 tatoos: getString(data, 'tatoos'),
+                piercings: getString(data, 'piercings'),
                 waist: getNumber(data, 'waist'),
-                weight: getNumber(data, 'weight'),
-                // complex params
-                birthday: getBirthday(data, monthsNames, 'dt_birth_d', 'dt_birth_m', 'dt_birth_y'),
-                lifetime: getTimePeriod(data, 'dt_birth', 'dt_death'),
-                careerTime: getTimePeriod(data, 'dt_career_begin', 'dt_career_end'),
+                hip: getNumber(data, 'hip'),
                 penis: getPenis(data, 'penis_size_type', 'penis_size', 'penis_circumcision'),
+                bodyHair: getString(data, 'body_hair'),
+                physiqueCustom: getString(data, 'physique_custom'),
+                sexualRole: getSexualRole(getNumber(data, 'sexual_role')),
+                careerTime: getTimePeriod(data, 'dt_career_begin', 'dt_career_end'),
+                extra: getString(data, 'extra'),
             }
 
         const

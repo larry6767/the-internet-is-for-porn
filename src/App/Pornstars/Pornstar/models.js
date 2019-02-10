@@ -16,6 +16,7 @@ const
                 exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
 
                 props = {
+                    name: PropTypes.string.isOptional,
                     alias: PropTypes.string.isOptional,
                     astrologicalSign: PropTypes.string.isOptional,
                     bodyHair: PropTypes.string.isOptional,
@@ -31,7 +32,6 @@ const
                     extra: PropTypes.string.isOptional,
                     height: PropTypes.number.isOptional,
                     hip: PropTypes.number.isOptional,
-                    name: PropTypes.string.isOptional,
                     physiqueCustom: PropTypes.string.isOptional,
                     piercings: PropTypes.string.isOptional,
                     profession: PropTypes.string.isOptional,
