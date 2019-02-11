@@ -32,6 +32,15 @@ export const DataWrapper = styled.div`
 
     ${({theme, modelInfoIsOpen}) => modelInfoIsOpen
         ? theme.media.mobile`width: 100%; margin-top: 20px;` : ''}
+
+    html.is-loading & * {
+        display: none;
+    }
+
+    html.is-loading & {
+        background: ${({theme}) => theme.palette.prerender.gag};
+        border-radius: 4px;
+    }
 `
 
 export const Thumb = styled.div`
@@ -41,7 +50,7 @@ export const Thumb = styled.div`
     background: ${({thumb}) => `url(${thumb})`};
     background-size: cover;
     border-radius: 1px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 
     &::after {
         content: '';
@@ -54,6 +63,17 @@ export const InfoBar = styled.div`
     display: flex;
     align-items: center;
     min-height: 27px;
+
+    html.is-loading & * {
+        display: none;
+    }
+
+    html.is-loading & {
+        background: ${({theme}) => theme.palette.prerender.gag};
+        border-radius: 4px;
+        width: 130px;
+        height: 34px;
+    }
 `
 
 export const Like = styled.div`

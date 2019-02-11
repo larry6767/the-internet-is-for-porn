@@ -68,6 +68,7 @@ const
                     </Typography>
                     <Info
                         i18nPornstarInfoParameters={i18nPornstarInfoParameters}
+                        i18nButtons={i18nButtons}
                         pornstarInfo={ig(data, 'pornstarInfo')}
                         pornstarInfoForTable={ig(data, 'pornstarInfoForTable')}
                         modelInfoHandler={modelInfoHandler}

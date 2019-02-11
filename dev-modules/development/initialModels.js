@@ -143,6 +143,8 @@ const
             addToFavorite: PropTypes.string,
             removeFromFavorite: PropTypes.string,
             cancel: PropTypes.string,
+            showInfo: PropTypes.string,
+            hideInfo: PropTypes.string,
         })
     },
 

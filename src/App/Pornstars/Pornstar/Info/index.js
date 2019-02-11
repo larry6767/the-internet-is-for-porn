@@ -23,7 +23,7 @@ import {
     PropTypes,
     ImmutablePropTypes,
 } from '../../../helpers'
-import {immutableI18nPornstarInfoParametersModel} from '../../../models'
+import {immutableI18nPornstarInfoParametersModel, immutableI18nButtonsModel} from '../../../models'
 import {immutablePornstarInfoModel, immutablePornstarInfoForTableModel} from '../models'
 import {
     InfoWrapper,
@@ -56,6 +56,7 @@ const
         isSSR,
         cb,
         i18nPornstarInfoParameters,
+        i18nButtons,
         pornstarInfo,
         pornstarInfoForTable,
         favoritePornstarList,
@@ -89,9 +90,9 @@ const
                     }}
                     onClick={modelInfoHandler}
                 >
-                    {modelInfoIsOpen /* TODO localize */
-                        ? 'hide info'
-                        : 'show info'}
+                    {modelInfoIsOpen
+                        ? ig(i18nButtons, 'hideInfo')
+                        : ig(i18nButtons, 'showInfo')}
                 </Button> : null}
             </InfoBar>
         </ThumbWrapper>
@@ -148,7 +149,7 @@ const
 
 export default compose(
     withStyles(muiStyles),
-    setPropTypes({
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.exact({
             typography: PropTypes.string,
             typographyTitle: PropTypes.string,
@@ -160,6 +161,7 @@ export default compose(
         isSSR: PropTypes.bool,
         cb: PropTypes.oneOf(breakpoints),
         i18nPornstarInfoParameters: immutableI18nPornstarInfoParametersModel,
+        i18nButtons: immutableI18nButtonsModel,
         pornstarInfo: immutablePornstarInfoModel,
         pornstarInfoForTable: immutablePornstarInfoForTableModel,
         modelInfoIsOpen: PropTypes.bool,

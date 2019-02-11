@@ -66,6 +66,9 @@ const theme = Object.freeze({
             dark: '#00a53b',
             contrastText: '#000000',
         }),
+        prerender: Object.freeze({
+            gag: '#dbdbdb',
+        }),
     }),
     media: Object.freeze(Object.keys(breakPoints).reduce(
         (acc, current) =>

@@ -72,11 +72,13 @@ const
         Object.freeze(mapValues(pornstarInfoModelProps, (x, k) => k)),
 
     // get incoming property by verified key (which must be presented in the model) or return 'null'
-    getString = process.env.NODE_ENV === 'production' ? g :
-        (src, propKey, ...xs) => g(src, g(pornstarInfoModelPropsKeys, propKey), ...xs) || null,
+    getString = process.env.NODE_ENV === 'production'
+        ? (src, propKey, ...xs) => g(src, propKey, ...xs) || null
+        : (src, propKey, ...xs) => g(src, g(pornstarInfoModelPropsKeys, propKey), ...xs) || null,
 
-    getNumber = process.env.NODE_ENV === 'production' ? g :
-        (src, propKey, ...xs) =>
+    getNumber = process.env.NODE_ENV === 'production'
+        ? (src, propKey, ...xs) => Number(g(src, propKey, ...xs)) || null
+        : (src, propKey, ...xs) =>
             Number(g(src, g(pornstarInfoModelPropsKeys, propKey), ...xs)) || null,
 
     getAstrologicalSign = v => v === null ? null

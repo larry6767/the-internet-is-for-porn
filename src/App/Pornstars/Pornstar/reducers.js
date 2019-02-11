@@ -38,7 +38,7 @@ export default
             itemsCount: g(payload, 'data', 'itemsCount'),
             videoList: List(fromJS(g(payload, 'data', 'videoList'))),
             modelsList: List(fromJS(g(payload, 'data', 'modelsList'))),
-            pornstarInfoForTable: fromJS(OrderedMap(g(payload, 'data', 'pornstarInfoForTable'))),
+            pornstarInfoForTable: OrderedMap(g(payload, 'data', 'pornstarInfoForTable')),
             pornstarInfo: PornstarInfoRecord(fromJS(g(payload, 'data', 'pornstarInfo'))),
         }),
         [g(actions, 'loadPageFailure')]: state => state.merge({
