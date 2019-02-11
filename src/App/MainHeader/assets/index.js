@@ -52,10 +52,6 @@ export const SearchWrapper = styled(Wrapper)`
         width: 100%;
         & > * { display: block; width: 100%; text-align: center; }
     `}
-    ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xs`
-        width: 100%;
-        & > * { display: block; width: 100%; text-align: center; }
-    `}
     ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xxs`
         display: block;
         width: 100%;
@@ -68,11 +64,8 @@ export const SearchWrapper = styled(Wrapper)`
         ${({theme}) => theme.media.sm`width: calc(100% - 150px);`}
         & > form {
             ${({theme}) => theme.media.mobile`display: none;`}
-            ${({theme}) => theme.media.xs`display: none;`}
-            ${({theme}) => theme.media.xxs`display: none;`}
         }
-        ${({theme}) => theme.media.xs`width: 100%; min-height: 0; & > * {margin-top: 8px;}`}
-        ${({theme}) => theme.media.xxs`width: 100%; min-height: 0; & > * {margin-top: 8px;}`}
+        ${({theme}) => theme.media.mobile`width: 100%; min-height: 0; & > * {margin-top: 8px;}`}
     }
 `
 
@@ -82,13 +75,12 @@ export const NavigationWrapper = styled(Wrapper)`
     justify-content: space-between;
 
     ${({theme}) => theme.media.sm`padding-left: 0;`}
-    ${({isSSR}) => !g(isSSR, []) ? null : 'padding-left: 0; width: 100%;'}
+    ${({isSSR}) => !g(isSSR, []) ? null : 'padding-left: 0;'}
 
     html.is-loading & {
         padding-left: 177px;
         ${({theme}) => theme.media.sm`padding-left: 0;`}
-        ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xs`display: none;`}
-        ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xxs`display: none;`}
+        ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.mobile`display: none;`}
     }
 `
 
@@ -101,8 +93,6 @@ export const Logo = styled.img`
     ${({theme}) => theme.media.sm`width: 135px; height: 37px;`}
     ${({theme}) => theme.media.mobile`margin: 0 10px; width: 135px; height: 37px;`}
     ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.mobile`margin: 0;`}
-    ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xs`margin: 0;`}
-    ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xxs`margin: 0;`}
 `
 
 export const Icon = styled.div`
@@ -133,11 +123,12 @@ export const Icon = styled.div`
 
 export const BottomInner = styled.div`
     border-bottom: 1px solid ${({theme}) => theme.palette.primary.light};
+    display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;
     margin: 0 auto;
-    ${({isSSR}) => `display: ${g(isSSR, []) ? 'block' : 'flex'};`}
+    ${({isSSR}) => `flex-wrap: ${g(isSSR, []) ? 'wrap' : 'no-wrap'};`}
     ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}
 `
