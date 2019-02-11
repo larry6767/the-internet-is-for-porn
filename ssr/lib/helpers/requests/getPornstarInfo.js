@@ -159,7 +159,40 @@ const
             return `${startValue ? startValue : 'Unknown'} - ${endValue ? endValue : 'Unknown'}`
         else
             return null
-    }
+    },
+
+    keysOrder = Object.freeze([
+        'name',
+        'alias',
+        'birthday',
+        'astrologicalSign',
+        'lifetime',
+        'profession',
+        'country',
+        'city',
+        'ethnicity',
+        'colorEye',
+        'colorHair',
+        'height',
+        'weight',
+        'breast',
+        'breastSizeType',
+        'cupSize',
+        'boobsFake',
+        'shoeSize',
+        'tatoos',
+        'piercings',
+        'waist',
+        'hip',
+        'penis',
+        'bodyHair',
+        'physiqueCustom',
+        'sexualRole',
+        'careerTime',
+        'extra',
+    ]),
+
+    validKeysModel = PropTypes.arrayOf(PropTypes.oneOf(keysOrder))
 
 export const
     getPornstarInfoForTable = (data, monthsNames) => {
@@ -204,10 +237,20 @@ export const
                 extra: getString(data, 'extra'),
             }
 
-        const
-            keysArray = Object.keys(result).filter(x => g(result, x) !== null)
+        // checking for case we added a new key to a model for result (`pornstarInfoForTableModel`)
+        // but forgot to add it to `keysOrder`.
+        if (process.env.NODE_ENV !== 'production')
+            assertPropTypes(
+                validKeysModel,
+                Object.keys(result),
+                'getPornstarInfoForTable',
+                'only allowed keys in result'
+            )
 
-        result = pick(result, keysArray)
+        const
+            filteredKeysOrder = keysOrder.filter(k => g(result, k) !== null)
+
+        result = pick(result, filteredKeysOrder)
 
         if (process.env.NODE_ENV !== 'production')
             assertPropTypes(
@@ -217,7 +260,10 @@ export const
                 'result data for info of pornstar'
             )
 
-        return result
+        return {
+            data: result,
+            keysOrder: filteredKeysOrder,
+        }
     },
 
     getPornstarInfo = data => {

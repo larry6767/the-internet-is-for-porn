@@ -8,7 +8,7 @@ import {
     plainProvedGet as g,
     immutableProvedGet as ig,
 } from '../helpers'
-import {routerGetters} from '../../router-builder'
+import routerGetters from '../routerGetters'
 import errorActions from '../../generic/ErrorMessage/actions'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'

@@ -19,7 +19,7 @@ import {
 
 import {routerContextModel} from '../models'
 import {dataModel} from './models'
-import {routerGetters} from '../../router-builder'
+import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ErrorContent from '../../generic/ErrorContent'
@@ -114,5 +114,5 @@ export default compose(
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
         linkBuilder: PropTypes.func,
-    }),
+    })
 )(Pornstars)

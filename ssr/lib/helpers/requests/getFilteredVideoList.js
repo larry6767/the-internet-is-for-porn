@@ -2,7 +2,7 @@ import {map, mapValues} from 'lodash'
 
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
 import {videoItemModel} from '../../../generic/VideoItem/models'
-import {getOrderedVideoList} from './index'
+import getOrderedVideoList from './getOrderedVideoList'
 
 const
     internalLinkReg = /^(\/[^\/]+)?\/vid-(\d+)\/[^\/]+.htm$/,

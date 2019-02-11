@@ -1,6 +1,8 @@
 import {Record} from 'immutable'
 
-import {PropTypes, ImmutablePropTypes} from './helpers'
+// WARNING! Some helper(s) depend(s) on this module, avoid recursive dependencies!
+import {PropTypes} from './helpers/propTypes'
+import {ImmutablePropTypes} from './helpers/propTypes/immutable'
 
 import {
     immutableLocaleRouterModel,

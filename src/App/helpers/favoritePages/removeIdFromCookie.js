@@ -1,5 +1,8 @@
 import {replace} from 'lodash'
-import {getCookie, setCookie, deleteCookie} from '../'
+
+import getCookie from '../cookie/getCookie'
+import setCookie from '../cookie/setCookie'
+import deleteCookie from '../cookie/deleteCookie'
 
 export default (cookieName, id) => {
     const

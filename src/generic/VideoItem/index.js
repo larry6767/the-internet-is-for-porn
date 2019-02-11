@@ -20,7 +20,7 @@ import {
     breakpoints,
 } from '../../App/helpers'
 
-import {routerGetters} from '../../router-builder'
+import routerGetters from '../../App/routerGetters'
 import {routerContextModel} from '../../App/models'
 import actions from '../../App/actions'
 import {muiStyles} from './assets/muiStyles'

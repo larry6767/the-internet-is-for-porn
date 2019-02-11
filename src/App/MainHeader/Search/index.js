@@ -19,7 +19,7 @@ import {
 } from '../../helpers'
 
 import {immutableI18nSearchModel, routerContextModel} from '../../models'
-import {routerGetters} from '../../../router-builder'
+import routerGetters from '../../routerGetters'
 import {SearchForm, SearchButton} from './assets'
 import {muiStyles} from './assets/muiStyles'
 import actions from './actions'

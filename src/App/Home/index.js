@@ -30,7 +30,7 @@ import {
 
 import {immutableI18nOrderingModel, routerContextModel} from '../models'
 import {dataModel} from './models'
-import {routerGetters} from '../../router-builder'
+import routerGetters from '../routerGetters'
 import ErrorContent from '../../generic/ErrorContent'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'

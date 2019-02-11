@@ -104,7 +104,7 @@ const
                             <Typography
                                 variant="body1"
                                 classes={{
-                                    root: classes.typographyBold,
+                                    root: g(classes, 'typographyBold'),
                                 }}
                             >
                                 {`${ig(i18nPornstarInfoParameters, k)}: `}
@@ -152,6 +152,7 @@ export default compose(
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.exact({
             typography: PropTypes.string,
+            typographyBold: PropTypes.string,
             typographyTitle: PropTypes.string,
             favoriteBorderIcon: PropTypes.string,
             favoriteIcon: PropTypes.string,

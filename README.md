@@ -14,6 +14,7 @@ _In development…_
 
 - [Style guide](docs/style-guide.md)
 - [About our redux store](docs/redux-store.md)
+- [About helpers](docs/helpers.md)
 
 ## Recommended working environment
 
