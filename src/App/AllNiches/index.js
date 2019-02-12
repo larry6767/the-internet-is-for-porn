@@ -25,6 +25,7 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
+    voidPagePlug,
 } from '../helpers'
 
 import {routerContextModel} from '../models'
@@ -156,5 +157,6 @@ export default compose(
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
         getChildLink: PropTypes.func,
-    })
+    }),
+    voidPagePlug
 )(AllNiches)

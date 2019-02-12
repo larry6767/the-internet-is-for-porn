@@ -18,6 +18,7 @@ import {
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
     breakpoints,
+    voidPagePlug,
 } from '../helpers'
 
 import {immutableI18nButtonsModel, routerContextModel} from '../models'
@@ -165,4 +166,5 @@ export default compose(
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
     }),
+    voidPagePlug
 )(Favorite)

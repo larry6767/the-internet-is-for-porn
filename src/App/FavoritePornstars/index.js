@@ -17,6 +17,7 @@ import {
     areWeSwitchedOnPage,
     breakpoints,
     PropTypes,
+    voidPagePlug,
 } from '../helpers'
 
 import {
@@ -166,4 +167,5 @@ export default compose(
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
     }),
+    voidPagePlug
 )(FavoritePornstars)

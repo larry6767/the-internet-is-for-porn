@@ -64,7 +64,7 @@ const
                 />
                 <PageWrapper>
                     <Typography variant="h4" gutterBottom>
-                        {data.getIn(['pageText', 'listHeader'])}
+                        {ig(data, 'pageText', 'listHeader')}
                     </Typography>
                     <Info
                         i18nPornstarInfoParameters={i18nPornstarInfoParameters}

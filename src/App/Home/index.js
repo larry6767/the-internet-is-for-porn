@@ -26,6 +26,7 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
+    voidPagePlug,
 } from '../helpers'
 
 import {immutableI18nOrderingModel, routerContextModel} from '../models'
@@ -215,5 +216,6 @@ export default compose(
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
-    })
+    }),
+    voidPagePlug
 )(Home)

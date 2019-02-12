@@ -15,6 +15,7 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
+    voidPagePlug,
 } from '../helpers'
 
 import {routerContextModel} from '../models'
@@ -115,4 +116,5 @@ export default compose(
         setNewText: PropTypes.func,
         linkBuilder: PropTypes.func,
     }),
+    voidPagePlug
 )(Pornstars)

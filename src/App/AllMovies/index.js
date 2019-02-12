@@ -16,6 +16,7 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
+    voidPagePlug,
 } from '../helpers'
 
 import {immutableI18nButtonsModel} from '../models'
@@ -231,4 +232,5 @@ export default compose(
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         i18nButtons: immutableI18nButtonsModel,
     }),
+    voidPagePlug
 )(AllMovies)

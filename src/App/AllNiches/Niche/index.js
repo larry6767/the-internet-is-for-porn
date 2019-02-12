@@ -16,6 +16,7 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
+    voidPagePlug,
 } from '../../helpers'
 
 import {
@@ -265,4 +266,5 @@ export default compose(
         listsArchiveLinkBuilder: PropTypes.func,
         sponsorLinkBuilder: PropTypes.func,
     }),
+    voidPagePlug
 )(Niche)

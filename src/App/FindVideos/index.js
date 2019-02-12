@@ -14,6 +14,7 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
+    voidPagePlug,
 } from '../helpers'
 
 import {routerGetters} from '../../router-builder'
@@ -72,7 +73,7 @@ const
                             root: classes.typographyTitle
                         }}
                     >
-                        {data.getIn(['pageText', 'listHeader'])}
+                        {ig(data, 'pageText', 'listHeader')}
                     </Typography>
                     <ControlBar
                         cb={currentBreakpoint}
@@ -153,5 +154,6 @@ export default compose(
             setNewPageFlow(this.props, nextProps)
         },
     }),
-    withStyles(muiStyles)
+    withStyles(muiStyles),
+    voidPagePlug
 )(FindVideos)
