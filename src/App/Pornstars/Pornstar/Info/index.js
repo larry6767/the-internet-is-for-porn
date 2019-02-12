@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {compose, withPropsOnChange, withState, withHandlers} from 'recompose'
+import {compose, withPropsOnChange, withState, withHandlers, onlyUpdateForKeys} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 
 import {
@@ -60,7 +60,7 @@ const
         i18nPornstarInfoParameters,
         i18nButtons,
         pornstarInfo,
-        favoritePornstarList,
+        isThisModelFavorite,
         infoTableMobileItems,
         infoTableItems,
         addToFavoriteHandler,
@@ -72,7 +72,7 @@ const
             <Thumb thumb={ig(pornstarInfo, 'thumbUrl')}/>
             <InfoBar>
                 <Like>
-                    {favoritePornstarList.find(id => id === ig(pornstarInfo, 'id'))
+                    {isThisModelFavorite
                         ? <Favorite
                             classes={g(classedBounds, 'favoriteIcon')}
                             data-favorite-pornstar-id={ig(pornstarInfo, 'id')}
@@ -182,6 +182,21 @@ export default compose(
 
         return {infoTableItems: eitherDesktopOrMobileRestItems}
     }),
+    withPropsOnChange(['pornstarInfo', 'favoritePornstarList'], props => ({
+        isThisModelFavorite: Boolean(
+            g(props, 'favoritePornstarList').find(id => id === ig(g(props, 'pornstarInfo'), 'id'))
+        ),
+    })),
+    onlyUpdateForKeys([
+        'cb',
+        'pornstarInfo',
+        'isThisModelFavorite',
+        'infoTableMobileItems',
+        'infoTableItems',
+        'addToFavoriteHandler',
+        'removeFromFavoriteHandler',
+        'modelInfoIsOpened',
+    ]),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.exact({
             typography: PropTypes.string,
@@ -207,6 +222,7 @@ export default compose(
         pornstarInfo: immutablePornstarInfoModel,
         pornstarInfoForTable: immutablePornstarInfoForTableModel,
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
+        isThisModelFavorite: PropTypes.bool,
 
         infoTableMobileItems: PropTypes.nullable(ImmutablePropTypes.seq),
         infoTableItems: ImmutablePropTypes.seq,
