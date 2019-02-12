@@ -1,5 +1,7 @@
 import g from './plain/provedGet'
-import {routerGetters} from '../../router-builder'
+
+// WARNING! Be careful! Avoid recursive dependencies!
+import routerGetters from '../routerGetters'
 
 // A helper for <Navigation> and <BurgerMenu>
 export default props => navKey => {

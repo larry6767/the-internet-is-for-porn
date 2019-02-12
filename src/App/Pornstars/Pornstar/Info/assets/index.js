@@ -30,7 +30,7 @@ export const DataWrapper = styled.div`
     flex-direction: column;
     flex-grow: 1;
 
-    ${({theme, modelInfoIsOpen}) => modelInfoIsOpen
+    ${({theme, modelInfoIsOpened}) => modelInfoIsOpened
         ? theme.media.mobile`width: 100%; margin-top: 20px;` : ''}
 
     html.is-loading & * {

@@ -1,6 +1,8 @@
 import {set} from 'lodash'
 
 import g from './plain/provedGet'
+
+// WARNING! Be careful! Avoid recursive dependencies!
 import {pageKeys} from '../models'
 
 const

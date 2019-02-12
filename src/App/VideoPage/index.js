@@ -2,7 +2,7 @@
 import {Record} from 'immutable'
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {compose, lifecycle, withHandlers, withState, branch, renderNothing} from 'recompose'
+import {compose, lifecycle, withHandlers, withState} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, reset as resetForm} from 'redux-form/immutable'
 import {animateScroll} from 'react-scroll'
@@ -26,9 +26,10 @@ import {
     breakpointMD as md,
     areWeSwitchedOnPage,
     getHeaderText,
+    voidPagePlug,
 } from '../helpers'
 
-import {routerGetters} from '../../router-builder'
+import routerGetters from '../routerGetters'
 
 import {immutableI18nButtonsModel} from '../models'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
@@ -446,12 +447,5 @@ export default compose(
         isSSR: PropTypes.bool,
         i18nButtons: immutableI18nButtonsModel,
     }),
-    branch(
-        props => !(
-            ig(props.data, 'isLoading') ||
-            ig(props.data, 'isLoaded') ||
-            ig(props.data, 'isFailed')
-        ),
-        renderNothing
-    )
+    voidPagePlug
 )(VideoPage)

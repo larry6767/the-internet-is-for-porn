@@ -1,415 +1,69 @@
-import {get, padStart, flatten, difference} from 'lodash'
+import {get, flatten} from 'lodash'
 import React from 'react'
 import {Route, Switch} from 'react-router-dom'
-import queryString from 'query-string'
 import {compose} from 'recompose'
-
-import status500 from './App/helpers/status500BranchResolver'
 
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
-    PropTypes,
-    assertPropTypes,
     setPropTypes,
     get404PageText,
     getPageRequestParams,
-} from './App/helpers'
+} from '../helpers'
 
-import {routerContextModel, orientationCodes, defaultOrientationCode} from './App/models'
+import status500 from '../helpers/status500BranchResolver'
 
-import Home from './App/Home'
-import homeActions from './App/Home/actions'
-import {loadHomeFlow} from './App/Home/sagas'
+import {routerContextModel, orientationCodes, defaultOrientationCode} from '../models'
 
-import AllNiches from './App/AllNiches'
-import allNichesActions from './App/AllNiches/actions'
-import {loadAllNichesPageFlow} from './App/AllNiches/sagas'
+import Home from '../Home'
+import homeActions from '../Home/actions'
+import {loadHomeFlow} from '../Home/sagas'
 
-import Niche from './App/AllNiches/Niche'
-import nicheActions from './App/AllNiches/Niche/actions'
-import {loadNichePageFlow} from './App/AllNiches/Niche/sagas'
+import AllNiches from '../AllNiches'
+import allNichesActions from '../AllNiches/actions'
+import {loadAllNichesPageFlow} from '../AllNiches/sagas'
 
-import AllMovies from './App/AllMovies'
-import allMoviesActions from './App/AllMovies/actions'
-import {loadAllMoviesPageFlow} from './App/AllMovies/sagas'
+import Niche from '../AllNiches/Niche'
+import nicheActions from '../AllNiches/Niche/actions'
+import {loadNichePageFlow} from '../AllNiches/Niche/sagas'
 
-import Pornstars from './App/Pornstars'
-import pornstarsActions from './App/Pornstars/actions'
-import {loadPornstarsPageFlow} from './App/Pornstars/sagas'
+import AllMovies from '../AllMovies'
+import allMoviesActions from '../AllMovies/actions'
+import {loadAllMoviesPageFlow} from '../AllMovies/sagas'
 
-import Pornstar from './App/Pornstars/Pornstar'
-import pornstarActions from './App/Pornstars/Pornstar/actions'
-import {loadPornstarPageFlow} from './App/Pornstars/Pornstar/sagas'
+import Pornstars from '../Pornstars'
+import pornstarsActions from '../Pornstars/actions'
+import {loadPornstarsPageFlow} from '../Pornstars/sagas'
 
-import Favorite from './App/Favorite'
-import favoriteActions from './App/Favorite/actions'
-import {loadFavoritePageFlow} from './App/Favorite/sagas'
+import Pornstar from '../Pornstars/Pornstar'
+import pornstarActions from '../Pornstars/Pornstar/actions'
+import {loadPornstarPageFlow} from '../Pornstars/Pornstar/sagas'
 
-import FavoritePornstars from './App/FavoritePornstars'
-import favoritePornstarsActions from './App/FavoritePornstars/actions'
-import {loadFavoritePornstarsPageFlow} from './App/FavoritePornstars/sagas'
+import Favorite from '../Favorite'
+import favoriteActions from '../Favorite/actions'
+import {loadFavoritePageFlow} from '../Favorite/sagas'
 
-import VideoPage from './App/VideoPage'
-import videoPageActions from './App/VideoPage/actions'
-import {loadVideoPageFlow} from './App/VideoPage/sagas'
+import FavoritePornstars from '../FavoritePornstars'
+import favoritePornstarsActions from '../FavoritePornstars/actions'
+import {loadFavoritePornstarsPageFlow} from '../FavoritePornstars/sagas'
 
-import FindVideos from './App/FindVideos'
-import findVideosActions from './App/FindVideos/actions'
-import {loadFindVideosPageFlow} from './App/FindVideos/sagas'
+import VideoPage from '../VideoPage'
+import videoPageActions from '../VideoPage/actions'
+import {loadVideoPageFlow} from '../VideoPage/sagas'
 
-import Site from './App/Site'
-import siteActions from './App/Site/actions'
-import {loadSitePageFlow} from './App/Site/sagas'
+import FindVideos from '../FindVideos'
+import findVideosActions from '../FindVideos/actions'
+import {loadFindVideosPageFlow} from '../FindVideos/sagas'
 
-import NotFound from './App/NotFound'
-import notFoundActions from './App/NotFound/actions'
-import {loadNotFoundPageFlow} from './App/NotFound/sagas'
+import Site from '../Site'
+import siteActions from '../Site/actions'
+import {loadSitePageFlow} from '../Site/sagas'
 
-const
-    getQs = r => queryString.parse(ig(r, 'location', 'search')),
+import NotFound from '../NotFound'
+import notFoundActions from '../NotFound/actions'
+import {loadNotFoundPageFlow} from '../NotFound/sagas'
 
-    renderQs = qs => g(Object.keys(qs), 'length') > 0 ? `?${
-        queryString.stringify(qs).replace(/%2B/g, '+').replace(/%20/g, '+')}` : '',
-
-    prepareQsParamsModel = process.env.NODE_ENV === 'production' ? null :
-        PropTypes.exact({
-            ordering: PropTypes.string.isOptional,
-            pagination: PropTypes.number.isOptional,
-            searchQuery: PropTypes.string.isOptional,
-        }),
-
-    allowedQsKeysModel = process.env.NODE_ENV === 'production' ? null :
-        PropTypes.arrayOf(PropTypes.oneOf(['ordering', 'pagination', 'searchQuery'])),
-
-    prepareQs = (r, qsParams, allowedQsKeys = []) => {
-        const
-            customAllowedQsKeysModel = process.env.NODE_ENV === 'production' ? null :
-                PropTypes.arrayOf(PropTypes.oneOf(allowedQsKeys))
-
-        if (process.env.NODE_ENV !== 'production') {
-            assertPropTypes(
-                customAllowedQsKeysModel,
-                Object.keys(qsParams),
-                'prepareQs',
-                'qsParams'
-            )
-            assertPropTypes(
-                allowedQsKeysModel,
-                allowedQsKeys,
-                'prepareQs',
-                'allowedQsKeys'
-            )
-            assertPropTypes(
-                prepareQsParamsModel,
-                qsParams,
-                'prepareQs',
-                'qsParams'
-            )
-        }
-
-        const
-            qs = getQs(r),
-            localizedAllowedQsKeys = allowedQsKeys.map(x => ig(r, 'router', x, 'qsKey')),
-            localizedNotAllowedQsKeys = difference(Object.keys(qs), localizedAllowedQsKeys)
-
-        localizedNotAllowedQsKeys.forEach(x => {
-            delete qs[x]
-        })
-
-        if (qsParams.hasOwnProperty('ordering')) {
-            const
-                ordering = g(qsParams, 'ordering'),
-                qsKey = ig(r, 'router', 'ordering', 'qsKey')
-
-            qs[qsKey] = ig(r, 'router', 'ordering', ordering, 'qsValue')
-        }
-
-        if (qsParams.hasOwnProperty('pagination') && g(qsParams, 'pagination') !== null) {
-            const
-                pagination = g(qsParams, 'pagination'),
-                qsKey = ig(r, 'router', 'pagination', 'qsKey')
-
-            qs[qsKey] = pagination
-        }
-
-        if (qsParams.hasOwnProperty('searchQuery')) {
-            const
-                searchQuery = g(qsParams, 'searchQuery'),
-                qsKey = ig(r, 'router', 'searchQuery', 'qsKey')
-
-            qs[qsKey] = searchQuery
-        }
-
-        return qs
-    }
-
-export const
-    // The `r` argument is this store branch: `app.locale.router`.
-    routerGetters = Object.freeze({
-        home: Object.freeze({
-            path: (r, orientationCode) => {
-                const orientationPfx = ig(r, 'router', 'orientation', orientationCode)
-                return `${orientationPfx}/`
-            },
-            link: r => {
-                const orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation'))
-                return `${orientationPfx}/`
-            },
-        }),
-
-        allNiches: Object.freeze({
-            path: (r, orientationCode) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
-                    allNiches = ig(r, 'router', 'routes', 'allNiches', 'section')
-
-                return `${orientationPfx}/${allNiches}`
-            },
-            link: r => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
-                    allNiches = ig(r, 'router', 'routes', 'allNiches', 'section')
-
-                return `${orientationPfx}/${allNiches}`
-            },
-        }),
-        niche: Object.freeze({
-            path: (r, orientationCode) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
-                    niche = ig(r, 'router', 'routes', 'niche', 'section')
-
-                return `${orientationPfx}/${niche}/:child`
-            },
-            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
-                    niche = ig(r, 'router', 'routes', 'niche', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
-
-                return `${orientationPfx}/${niche}/${child}${renderQs(qs)}`
-            },
-        }),
-        nicheArchive: Object.freeze({
-            path: (r, orientationCode) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
-                    niche = ig(r, 'router', 'routes', 'niche', 'section'),
-                    archive = ig(r, 'router', 'routes', 'archive', 'label')
-
-                return `${orientationPfx}/${niche}/:child/${archive}/(\\d{4})-(\\d{2})`
-            },
-            link: (
-                r, child, year, month, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys
-            ) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
-                    niche = ig(r, 'router', 'routes', 'niche', 'section'),
-                    archive = ig(r, 'router', 'routes', 'archive', 'label'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
-
-                year = padStart(year, 4, '0')
-                month = padStart(month, 2, '0')
-                return `${orientationPfx
-                    }/${niche}/${child}/${archive}/${year}-${month}${renderQs(qs)}`
-            }
-        }),
-
-        allMovies: Object.freeze({
-            path: (r, orientationCode) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
-                    allMovies = ig(r, 'router', 'routes', 'allMovies', 'section')
-
-                return `${orientationPfx}/${allMovies}`
-            },
-            link: (r, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
-                    allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
-
-                return `${orientationPfx}/${allMovies}${renderQs(qs)}`
-            },
-        }),
-        allMoviesArchive: Object.freeze({
-            path: (r, orientationCode) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
-                    allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
-                    archive = ig(r, 'router', 'routes', 'archive', 'label')
-
-                return `${orientationPfx}/${allMovies}/${archive}/(\\d{4})-(\\d{2})`
-            },
-            link: (r, year, month, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
-                    allMovies = ig(r, 'router', 'routes', 'allMovies', 'section'),
-                    archive = ig(r, 'router', 'routes', 'archive', 'label'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
-
-                year = padStart(year, 4, '0')
-                month = padStart(month, 2, '0')
-                return `${orientationPfx}/${allMovies}/${archive}/${year}-${month}${renderQs(qs)}`
-            },
-        }),
-
-        pornstars: Object.freeze({
-            path: (r, orientationCode) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
-                    pornstars = ig(r, 'router', 'routes', 'pornstars', 'section')
-
-                return `${orientationPfx}/${pornstars}`
-            },
-            link: r => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
-                    pornstars = ig(r, 'router', 'routes', 'pornstars', 'section')
-
-                return `${orientationPfx}/${pornstars}`
-            },
-        }),
-        pornstar: Object.freeze({
-            path: (r, orientationCode) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
-                    pornstar = ig(r, 'router', 'routes', 'pornstar', 'section')
-
-                return `${orientationPfx}/${pornstar}/:child`
-            },
-            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
-                    pornstar = ig(r, 'router', 'routes', 'pornstar', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
-
-                return `${orientationPfx}/${pornstar}/${child}${renderQs(qs)}`
-            },
-        }),
-
-        // there's no routes for specific orientations for favorite pages for now
-        favorite: Object.freeze({
-            path: r => {
-                const favorite = ig(r, 'router', 'routes', 'favorite', 'section')
-                return `/${favorite}`
-            },
-            link: (r, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
-                const
-                    favorite = ig(r, 'router', 'routes', 'favorite', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
-
-                return `/${favorite}${renderQs(qs)}`
-            },
-        }),
-        favoritePornstars: Object.freeze({
-            path: r => {
-                const favoritePornstars = ig(r, 'router', 'routes', 'favoritePornstars', 'section')
-                return `/${favoritePornstars}`
-            },
-            link: (r, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
-                const
-                    favoritePornstars = ig(r, 'router', 'routes', 'favoritePornstars', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
-
-                return `/${favoritePornstars}${renderQs(qs)}`
-            },
-        }),
-
-        video: Object.freeze({
-            path: (r, orientationCode) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
-                    video = ig(r, 'router', 'routes', 'video', 'section')
-
-                return `${orientationPfx}/${video}/:child/:subchild`
-            },
-            link: (r, videoId, title) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
-                    video = ig(r, 'router', 'routes', 'video', 'section')
-
-                return `${orientationPfx}/${video}/${videoId}/${title.replace(/ /g, '-')
-                    .replace(/\./g, '').replace(/%/g, '').replace(/-+/g, '-')}`
-            },
-        }),
-
-        findVideos: Object.freeze({
-            path: (r, orientationCode) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
-                    findVideos = ig(r, 'router', 'routes', 'findVideos', 'section')
-
-                return `${orientationPfx}/${findVideos}`
-            },
-            link: (r, qsParams={/*ordering:'…', pagination:1, searchQuery:''*/}, allowedQsKeys) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
-                    findVideos = ig(r, 'router', 'routes', 'findVideos', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
-
-                return `${orientationPfx}/${findVideos}${renderQs(qs)}`
-            },
-        }),
-
-        site: Object.freeze({
-            path: (r, orientationCode) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', orientationCode),
-                    site = ig(r, 'router', 'routes', 'site', 'section')
-
-                return `${orientationPfx}/${site}/:child`
-            },
-            link: (r, child, qsParams={/*ordering:'…', pagination:1*/}, allowedQsKeys) => {
-                const
-                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
-                    site = ig(r, 'router', 'routes', 'site', 'section'),
-                    qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
-
-                return `${orientationPfx}/${site}/${child}${renderQs(qs)}`
-            },
-        }),
-
-        notFound: Object.freeze({
-            path: () => '*',
-            link: () => '*',
-        }),
-    })
-
-const
-    getterModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
-        path: PropTypes.func,
-        link: PropTypes.func,
-    }),
-
-    routerGettersModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
-        home: getterModel,
-
-        allNiches: getterModel,
-        niche: getterModel,
-        nicheArchive: getterModel,
-
-        allMovies: getterModel,
-        allMoviesArchive: getterModel,
-
-        pornstars: getterModel,
-        pornstar: getterModel,
-
-        favorite: getterModel,
-        favoritePornstars: getterModel,
-
-        video: getterModel,
-
-        findVideos: getterModel,
-
-        site: getterModel,
-
-        notFound: getterModel,
-    })
-
-if (process.env.NODE_ENV !== 'production')
-    assertPropTypes(routerGettersModel, routerGetters, 'router-builder', 'routerGetters')
+import routerGetters from '../routerGetters'
 
 // `staticContext` is for only for Server-Side Rendering here.
 // `staticContext.isPreRouting` means we don't need to render any component

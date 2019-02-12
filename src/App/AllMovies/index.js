@@ -20,7 +20,7 @@ import {
 } from '../helpers'
 
 import {immutableI18nButtonsModel} from '../models'
-import {routerGetters} from '../../router-builder'
+import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import ControlBar from '../../generic/ControlBar'

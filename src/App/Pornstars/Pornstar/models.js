@@ -1,4 +1,3 @@
-import {Record} from 'immutable'
 import {ImmutablePropTypes, PropTypes} from '../../helpers'
 
 import {
@@ -50,9 +49,9 @@ const
         },
 
     pornstarInfoModelBuilder = process.env.NODE_ENV === 'production' ? null :
-        (isImmutable) => {
+        isImmutable => {
             const
-                exact = isImmutable ? ImmutablePropTypes.exactRecordOf : PropTypes.exact,
+                exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
 
                 props = {
                     id: PropTypes.number,
@@ -70,12 +69,7 @@ export const
         pornstarInfoForTableModelBuilder(false),
 
     pornstarInfoModel = process.env.NODE_ENV === 'production' ? null :
-        pornstarInfoModelBuilder(false),
-
-    PornstarInfoRecord = Record({
-        id: 0,
-        thumbUrl: '',
-    })
+        pornstarInfoModelBuilder(false)
 
 const
     immutablePornstarInfoForTableModel = process.env.NODE_ENV === 'production' ? null :
@@ -84,11 +78,10 @@ const
     immutablePornstarInfoModel = process.env.NODE_ENV === 'production' ? null :
         pornstarInfoModelBuilder(true),
 
-    model = process.env.NODE_ENV === 'production' ? null : {
+    model = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
-        modelInfoIsOpen: PropTypes.bool,
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageNumber: PropTypes.number,
         pageText: immutablePageTextModel,
@@ -102,18 +95,12 @@ const
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
         modelsList: immutableModelsListWithLetterModel,
         pornstarInfoForTable: immutablePornstarInfoForTableModel,
-        pornstarInfo: immutablePornstarInfoModel,
-    },
-
-    stateModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exact(model),
-
-    dataModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exactRecordOf(model)
+        pornstarInfoForTableKeysOrder: ImmutablePropTypes.listOf(PropTypes.string),
+        pornstarInfo: PropTypes.nullable(immutablePornstarInfoModel),
+    })
 
 export {
     immutablePornstarInfoForTableModel,
     immutablePornstarInfoModel,
-    stateModel,
-    dataModel,
+    model,
 }
