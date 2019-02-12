@@ -2,11 +2,11 @@ import {fromJS, List, Map} from 'immutable'
 
 import {provedHandleActions, plainProvedGet as g} from '../../helpers'
 import {PageTextRecord} from '../../models'
-import {stateModel} from './models'
+import {model} from './models'
 import actions from './actions'
 
 export default
-    provedHandleActions(stateModel, {
+    provedHandleActions(model, {
         [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,

@@ -51,7 +51,7 @@ const
     }) => <Fragment>
         <PageTextHelmet pageText={ig(data, 'pageText')}/>
         <Lists
-            currentBreakpoint={cb}
+            cb={cb}
             modelsList={ig(data, 'modelsList')}
             modelLinkBuilder={modelLinkBuilder}
         />

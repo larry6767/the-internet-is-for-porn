@@ -1,6 +1,4 @@
-// TODO: this page needs propTypes
 import React, {Fragment} from 'react'
-import {Record} from 'immutable'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
@@ -11,14 +9,17 @@ import {
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
+    PropTypes,
     setPropTypes,
     getHeaderText,
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
+    breakpoints,
 } from '../helpers'
 
-import {immutableI18nButtonsModel} from '../models'
+import {model} from './models'
+import {immutableI18nButtonsModel, immutableI18nOrderingModel, routerContextModel} from '../models'
 import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
@@ -33,33 +34,9 @@ import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
 const
-    DataRecord = Record({
-        isLoading: null,
-        isLoaded: null,
-        isFailed: null,
-
-        currentPage: null,
-        lastPageRequestParams: null,
-
-        pageNumber: null,
-        pageText: null,
-        pagesCount: null,
-
-        sponsorsList: null,
-        tagList: null,
-        tagArchiveList: null,
-        sortList: null,
-        currentSort: null,
-        archiveFilms: null,
-        tagArchiveListOlder: null,
-        tagArchiveListNewer: null,
-        itemsCount: null,
-        videoList: null,
-    }),
-
     AllMovies = ({
         classes,
-        currentBreakpoint,
+        cb,
         i18nOrdering,
         i18nButtons,
         data,
@@ -77,17 +54,13 @@ const
     }) => <Fragment>
         <PageTextHelmet pageText={ig(data, 'pageText')}/>
         <Lists
-            currentBreakpoint={currentBreakpoint}
-
+            cb={cb}
             sponsorsList={ig(data, 'sponsorsList')}
             sponsorLinkBuilder={sponsorLinkBuilder}
-
             tagList={ig(data, 'tagList')}
             tagLinkBuilder={listsTagLinkBuilder}
-
             tagArchiveList={ig(data, 'tagArchiveList')}
             archiveLinkBuilder={listsArchiveLinkBuilder}
-
             i18nListNichesHeader={i18nListNichesHeader}
             i18nListArchiveHeader={i18nListArchiveHeader}
         />
@@ -102,7 +75,7 @@ const
                 {data.getIn(['pageText', 'listHeader'])}
             </Typography>
             <ControlBar
-                cb={currentBreakpoint}
+                cb={cb}
                 linkBuilder={controlLinkBuilder}
                 archiveLinkBuilder={controlArchiveLinkBuilder}
                 backFromArchiveLinkBuilder={controlBackFromArchiveLinkBuilder}
@@ -144,8 +117,8 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: DataRecord(ig(state, 'app', 'allMovies')),
+            cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            data: ig(state, 'app', 'allMovies'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
@@ -222,7 +195,27 @@ export default compose(
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        cb: PropTypes.oneOf(breakpoints),
+        data: model,
+        isSSR: PropTypes.bool,
+        routerContext: routerContextModel,
+        i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,
+        i18nListNichesHeader: PropTypes.string,
+        i18nListArchiveHeader: PropTypes.string,
+        i18nLabelShowing: PropTypes.string,
+
+        loadPageRequest: PropTypes.func,
+        loadPage: PropTypes.func,
+        setNewText: PropTypes.func,
+        setNewSort: PropTypes.func,
+        chooseSort: PropTypes.func,
+        controlLinkBuilder: PropTypes.func,
+        controlArchiveLinkBuilder: PropTypes.func,
+        controlBackFromArchiveLinkBuilder: PropTypes.func,
+        listsTagLinkBuilder: PropTypes.func,
+        listsArchiveLinkBuilder: PropTypes.func,
+        sponsorLinkBuilder: PropTypes.func,
     }),
     loadingWrapper
 )(AllMovies)

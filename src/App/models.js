@@ -105,6 +105,44 @@ const
         })
     },
 
+    tagArchiveListModelBuilder = process.env.NODE_ENV === 'production' ? null : isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
+            listOf = isImmutable ? ImmutablePropTypes.listOf : PropTypes.arrayOf
+
+        return listOf(exact({
+            archiveDate: PropTypes.number,
+            year: PropTypes.number,
+            month: PropTypes.string,
+            monthNumber: PropTypes.number,
+            itemsCount: PropTypes.number,
+            url: PropTypes.string,
+        }))
+    },
+
+    sortListModelBuilder = process.env.NODE_ENV === 'production' ? null : isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
+            listOf = isImmutable ? ImmutablePropTypes.listOf : PropTypes.arrayOf
+
+        return listOf(exact({
+            isActive: PropTypes.bool,
+            code: PropTypes.string,
+        }))
+    },
+
+    tagArchiveListOlderOrNewerModelBuilder = process.env.NODE_ENV === 'production' ? null :
+        isImmutable => {
+            const
+                exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
+                nullable = PropTypes.nullable
+
+            return nullable(exact({
+                month: PropTypes.string,
+                year: PropTypes.string,
+            }))
+        },
+
     modelsListModelBuilder = process.env.NODE_ENV === 'production' ? null :
         (isImmutable, withLetter) => {
             const
@@ -149,6 +187,22 @@ export const
         archiveFilmsModelBuilder(false),
     immutableArchiveFilmsModel = process.env.NODE_ENV === 'production' ? null :
         archiveFilmsModelBuilder(true),
+
+    tagArchiveListModel = process.env.NODE_ENV === 'production' ? null :
+        tagArchiveListModelBuilder(false),
+    immutableTagArchiveListModel = process.env.NODE_ENV === 'production' ? null :
+        tagArchiveListModelBuilder(true),
+
+    sortListModel = process.env.NODE_ENV === 'production' ? null :
+        sortListModelBuilder(false),
+    immutableSortListModel = process.env.NODE_ENV === 'production' ? null :
+        sortListModelBuilder(true),
+
+    tagArchiveListOlderOrNewerModel = process.env.NODE_ENV === 'production' ? null :
+        tagArchiveListOlderOrNewerModelBuilder(false),
+    immutableTagArchiveListOlderOrNewerModel = process.env.NODE_ENV === 'production' ? null :
+        tagArchiveListOlderOrNewerModelBuilder(true),
+
 
     immutablePageTextModel = process.env.NODE_ENV === 'production' ? null :
         ImmutablePropTypes.exactRecordOf({

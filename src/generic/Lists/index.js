@@ -1,15 +1,22 @@
 import React from 'react'
+import {compose} from 'recompose'
 import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
 import ArrowRight from '@material-ui/icons/ChevronRight'
 
+import ListSubheader from '@material-ui/core/ListSubheader'
+import ListComponent from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+
 import {
-    ListSubheader,
-    List as ListComponent,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-} from '@material-ui/core'
+    PropTypes,
+    setPropTypes,
+    breakpoints,
+    breakpointSM as sm,
+    compareCurrentBreakpoint as ccb,
+} from '../../App/helpers'
 
 import {ListsInner} from './assets'
 import {muiStyles} from './assets/muiStyles'
@@ -117,7 +124,7 @@ const
 
     Lists = ({
         classes,
-        currentBreakpoint,
+        cb,
 
         sponsorsList,
         sponsorLinkBuilder,
@@ -134,9 +141,7 @@ const
         i18nListNichesHeader,
         i18nListArchiveHeader,
     }) =>
-        currentBreakpoint === 'md'
-        || currentBreakpoint === 'lg'
-        || currentBreakpoint === 'XL'
+        ccb(cb, sm) === 1
             ? <ListsInner>
                 { sponsorsList ? <ListComponent
                     component="nav"
@@ -177,4 +182,9 @@ const
                 /> : null }
             </ListsInner> : null
 
-export default withStyles(muiStyles)(Lists)
+export default compose(
+    withStyles(muiStyles),
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        cb: PropTypes.oneOf(breakpoints)
+    })
+)(Lists)
