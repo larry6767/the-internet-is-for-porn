@@ -1,6 +1,6 @@
 import {fromJS, Map, List} from 'immutable'
 
-import {provedHandleActions, plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
+import {provedHandleActions, plainProvedGet as g} from '../../helpers'
 import {PageTextRecord} from '../../models'
 import {model} from './models'
 import actions from './actions'
@@ -11,7 +11,6 @@ export default
             isLoading: true,
             isLoaded: false,
             isFailed: false,
-            modelInfoIsOpen: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: 1,
             pageText: PageTextRecord(),
@@ -29,7 +28,6 @@ export default
             isLoading: false,
             isLoaded: true,
             isFailed: false,
-            modelInfoIsOpen: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: g(payload, 'data', 'pageNumber'),
             pageText: PageTextRecord(g(payload, 'data', 'pageText')),
@@ -47,7 +45,6 @@ export default
             isLoading: false,
             isLoaded: false,
             isFailed: true,
-            modelInfoIsOpen: false,
             pageNumber: 1,
             pageText: PageTextRecord(),
             pagesCount: 1,
@@ -63,13 +60,10 @@ export default
 
         [g(actions, 'setNewSort')]: (state, {payload}) =>
             state.set('currentSort', g(payload, 'newSortValue')),
-        [g(actions, 'toggleModelInfo')]: state =>
-            state.set('modelInfoIsOpen', !ig(state, 'modelInfoIsOpen')),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
         isFailed: false,
-        modelInfoIsOpen: false,
         lastPageRequestParams: null,
         pageNumber: 1,
         pageText: PageTextRecord(), // TODO FIXME only `Map` or `List` are allowed in store

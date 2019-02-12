@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {compose, withPropsOnChange} from 'recompose'
+import {compose, withPropsOnChange, withState, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 
 import {
@@ -61,12 +61,12 @@ const
         i18nButtons,
         pornstarInfo,
         favoritePornstarList,
-        modelInfoIsOpen,
         infoTableMobileItems,
         infoTableItems,
-        modelInfoHandler,
         addToFavoriteHandler,
         removeFromFavoriteHandler,
+        modelInfoIsOpened,
+        toggleModelInfoIsOpened,
     }) => <InfoWrapper>
         <ThumbWrapper>
             <Thumb thumb={ig(pornstarInfo, 'thumbUrl')}/>
@@ -85,20 +85,20 @@ const
                         />
                     }
                 </Like>
-                {!isSSR ? <Button
+                {isSSR ? null : <Button
                     variant="outlined"
                     color="primary"
                     classes={g(classedBounds, 'buttonMore')}
-                    onClick={modelInfoHandler}
+                    onClick={toggleModelInfoIsOpened}
                 >
-                    {modelInfoIsOpen
+                    {modelInfoIsOpened
                         ? ig(i18nButtons, 'hideInfo')
                         : ig(i18nButtons, 'showInfo')}
-                </Button> : null}
+                </Button>}
             </InfoBar>
         </ThumbWrapper>
         <MobileInfo>{infoTableMobileItems}</MobileInfo>
-        <DataWrapper modelInfoIsOpen={modelInfoIsOpen}>
+        <DataWrapper modelInfoIsOpened={modelInfoIsOpened}>
             <Paper>
                 <Table>
                     <TableBody>{infoTableItems}</TableBody>
@@ -147,17 +147,22 @@ export default compose(
 
         return {infoTableMobileItems: mobileInfoItems}
     }),
-    withPropsOnChange(['cb', 'modelInfoIsOpen', 'pornstarInfoForTable'], props => {
+    withState('modelInfoIsOpened', 'setModelInfoIsOpened', false),
+    withHandlers({
+        toggleModelInfoIsOpened: props => () =>
+            props.setModelInfoIsOpened(!g(props, 'modelInfoIsOpened')),
+    }),
+    withPropsOnChange(['cb', 'modelInfoIsOpened', 'pornstarInfoForTable'], props => {
         const
             cb = g(props, 'cb'),
             isMobile = ccb(cb, sm) === -1,
-            modelInfoIsOpen = g(props, 'modelInfoIsOpen'),
+            modelInfoIsOpened = g(props, 'modelInfoIsOpened'),
             pornstarInfoForTable = g(props, 'pornstarInfoForTable'),
             i18nPornstarInfoParameters = g(props, 'i18nPornstarInfoParameters'),
             classedBounds = g(props, 'classedBounds'),
 
             eitherDesktopOrMobileRestItems =
-                isMobile && modelInfoIsOpen
+                isMobile && modelInfoIsOpened
 
                 ? pornstarInfoForTable.mapEntries(([k, v], idx) => [
                     idx > paramsQuantityForMobile
@@ -167,7 +172,7 @@ export default compose(
                 ]).keySeq()
 
                 : pornstarInfoForTable.mapEntries(([k, v], idx) => [
-                    g(props, 'isSSR') || modelInfoIsOpen
+                    g(props, 'isSSR') || modelInfoIsOpened
                         ? renderTableRow(v, k, i18nPornstarInfoParameters, classedBounds)
                         : idx < paramsShrinkedQuantityForDesktop && ccb(cb, xs) === 1
                         ? renderTableRow(v, k, i18nPornstarInfoParameters, classedBounds)
@@ -201,14 +206,16 @@ export default compose(
         i18nButtons: immutableI18nButtonsModel,
         pornstarInfo: immutablePornstarInfoModel,
         pornstarInfoForTable: immutablePornstarInfoForTableModel,
-        modelInfoIsOpen: PropTypes.bool,
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
 
         infoTableMobileItems: PropTypes.nullable(ImmutablePropTypes.seq),
         infoTableItems: ImmutablePropTypes.seq,
 
-        modelInfoHandler: PropTypes.func,
         addToFavoriteHandler: PropTypes.func,
         removeFromFavoriteHandler: PropTypes.func,
+
+        modelInfoIsOpened: PropTypes.bool,
+        setModelInfoIsOpened: PropTypes.func,
+        toggleModelInfoIsOpened: PropTypes.func,
     })
 )(Info)

@@ -45,7 +45,7 @@ import actions from './actions'
 const
     Pornstar = ({
         cb, i18nOrdering, i18nButtons, i18nLabelShowing, i18nPornstarInfoParameters,
-        data, chooseSort, isSSR, modelInfoHandler, modelInfoIsOpen, favoritePornstarList,
+        data, chooseSort, isSSR, favoritePornstarList,
         controlLinkBuilder, modelLinkBuilder,
         addToFavoriteHandler, removeFromFavoriteHandler,
         orderedPornstarInfoForTable,
@@ -70,8 +70,6 @@ const
                         i18nButtons={i18nButtons}
                         pornstarInfo={ig(data, 'pornstarInfo')}
                         pornstarInfoForTable={ig(orderedPornstarInfoForTable, [])}
-                        modelInfoHandler={modelInfoHandler}
-                        modelInfoIsOpen={modelInfoIsOpen}
                         favoritePornstarList={favoritePornstarList}
                         cb={cb}
                         isSSR={isSSR}
@@ -133,12 +131,10 @@ export default compose(
             i18nPornstarInfoParameters:
                 ig(state, 'app', 'locale', 'i18n', 'pornstarInfoParameters'),
 
-            modelInfoIsOpen: ig(state, 'app', 'pornstars', 'pornstar', 'modelInfoIsOpen'),
             favoritePornstarList: ig(state, 'app', 'ui', 'favoritePornstarList'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
-            toggleModelInfo: g(actions, 'toggleModelInfo'),
             setNewSort: g(actions, 'setNewSort'),
             setNewText: g(headerActions, 'setNewText'),
             addPornstarToFavorite: g(appActions, 'addPornstarToFavorite'),
@@ -166,8 +162,6 @@ export default compose(
     })),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-
-        modelInfoHandler: props => state => props.toggleModelInfo(state),
 
         chooseSort: props => newSortValue => props.setNewSort({
             newSortValue,
@@ -227,13 +221,10 @@ export default compose(
         i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,
         i18nPornstarInfoParameters: immutableI18nPornstarInfoParametersModel,
-        modelInfoIsOpen: PropTypes.bool,
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
 
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
-        toggleModelInfo: PropTypes.func,
-        modelInfoHandler: PropTypes.func,
         setNewText: PropTypes.func,
         setNewSort: PropTypes.func,
         chooseSort: PropTypes.func,
