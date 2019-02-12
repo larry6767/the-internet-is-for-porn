@@ -1,5 +1,5 @@
 export {
     Page,
     Content,
-    PageWrapper,
+    PageWrapperNextToList,
 } from '../../../../generic/assets'

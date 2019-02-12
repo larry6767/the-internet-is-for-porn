@@ -37,7 +37,7 @@ import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
 
 import Info from './Info'
-import {Page, Content, PageWrapper} from './assets'
+import {Page, Content, PageWrapperNextToList} from './assets'
 import appActions from '../../../App/actions'
 import headerActions from '../../MainHeader/actions'
 import actions from './actions'
@@ -61,7 +61,7 @@ const
                     modelsList={ig(data, 'modelsList')}
                     modelLinkBuilder={modelLinkBuilder}
                 />
-                <PageWrapper>
+                <PageWrapperNextToList>
                     <Typography variant="h4" gutterBottom>
                         {ig(data, 'pageText', 'listHeader')}
                     </Typography>
@@ -97,7 +97,7 @@ const
                     <VideoList
                         videoList={ig(data, 'videoList')}
                     />
-                </PageWrapper>
+                </PageWrapperNextToList>
             </Content>
         }
     </Page>,

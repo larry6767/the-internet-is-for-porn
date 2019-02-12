@@ -56,8 +56,6 @@ const
     Info = ({
         classedBounds,
         isSSR,
-        cb,
-        i18nPornstarInfoParameters,
         i18nButtons,
         pornstarInfo,
         isThisModelFavorite,

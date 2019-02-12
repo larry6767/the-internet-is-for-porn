@@ -20,9 +20,15 @@ export const Content = styled.div`
     align-self: flex-start;
 `
 
-export const PageWrapper = styled.div`
+export const PageWrapper = styled.section`
     display: flex;
     flex-direction: column;
     width: 100%;
     flex-shrink: 1;
+`
+
+export const PageWrapperNextToList = styled(PageWrapper)`
+    width: calc(100% - 230px);
+    ${({theme}) => theme.media.sm`width: 100%`}
+    ${({theme}) => theme.media.mobile`width: 100%`}
 `

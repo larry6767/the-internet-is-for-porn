@@ -34,7 +34,7 @@ import ErrorContent from '../../../generic/ErrorContent'
 import PageTextHelmet from '../../../generic/PageTextHelmet'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
-import {Page, Content, PageWrapper} from './assets'
+import {Page, Content, PageWrapperNextToList} from './assets'
 import headerActions from '../../MainHeader/actions'
 import actions from './actions'
 
@@ -77,7 +77,7 @@ const
                     i18nListNichesHeader={i18nListNichesHeader}
                     i18nListArchiveHeader={i18nListArchiveHeader}
                 />
-                <PageWrapper>
+                <PageWrapperNextToList>
                     <Typography variant="h4" gutterBottom>
                         {ig(data, 'pageText', 'listHeader')}
                     </Typography>
@@ -103,7 +103,7 @@ const
                     <VideoList
                         videoList={ig(data, 'videoList')}
                     />
-                </PageWrapper>
+                </PageWrapperNextToList>
             </Content>
         }
     </Page>,
