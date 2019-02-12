@@ -1,10 +1,10 @@
 // TODO: this page needs propTypes
-import React from 'react'
+import React, {Fragment} from 'react'
 import {Record} from 'immutable'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, withProps} from 'recompose'
-import {withStyles} from '@material-ui/core'
-import {CircularProgress, Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
 
 import {
     getHeaderWithOrientation,
@@ -16,19 +16,18 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
-    voidPagePlug,
 } from '../helpers'
 
 import {immutableI18nButtonsModel} from '../models'
 import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
+import loadingWrapper from '../../generic/loadingWrapper'
 import ControlBar from '../../generic/ControlBar'
-import ErrorContent from '../../generic/ErrorContent'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import Lists from '../../generic/Lists'
 import VideoList from '../../generic/VideoList'
-import {Page, Content, PageWrapperNextToList} from './assets'
+import {PageWrapperNextToList} from './assets'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
@@ -75,64 +74,57 @@ const
         i18nListNichesHeader,
         i18nListArchiveHeader,
         i18nLabelShowing,
-    }) => <Page>
-        { ig(data, 'isFailed')
-            ? <ErrorContent/>
-            : ig(data, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <PageTextHelmet pageText={ig(data, 'pageText')}/>
-                <Lists
-                    currentBreakpoint={currentBreakpoint}
+    }) => <Fragment>
+        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <Lists
+            currentBreakpoint={currentBreakpoint}
 
-                    sponsorsList={ig(data, 'sponsorsList')}
-                    sponsorLinkBuilder={sponsorLinkBuilder}
+            sponsorsList={ig(data, 'sponsorsList')}
+            sponsorLinkBuilder={sponsorLinkBuilder}
 
-                    tagList={ig(data, 'tagList')}
-                    tagLinkBuilder={listsTagLinkBuilder}
+            tagList={ig(data, 'tagList')}
+            tagLinkBuilder={listsTagLinkBuilder}
 
-                    tagArchiveList={ig(data, 'tagArchiveList')}
-                    archiveLinkBuilder={listsArchiveLinkBuilder}
+            tagArchiveList={ig(data, 'tagArchiveList')}
+            archiveLinkBuilder={listsArchiveLinkBuilder}
 
-                    i18nListNichesHeader={i18nListNichesHeader}
-                    i18nListArchiveHeader={i18nListArchiveHeader}
-                />
-                <PageWrapperNextToList>
-                    <Typography
-                        variant="h4"
-                        gutterBottom
-                        classes={{
-                            root: classes.typographyTitle
-                        }}
-                    >
-                        {data.getIn(['pageText', 'listHeader'])}
-                    </Typography>
-                    <ControlBar
-                        cb={currentBreakpoint}
-                        linkBuilder={controlLinkBuilder}
-                        archiveLinkBuilder={controlArchiveLinkBuilder}
-                        backFromArchiveLinkBuilder={controlBackFromArchiveLinkBuilder}
-                        i18nOrdering={i18nOrdering}
-                        i18nButtons={i18nButtons}
-                        i18nLabelShowing={i18nLabelShowing}
-                        chooseSort={chooseSort}
-                        isSSR={isSSR}
-                        pagesCount={ig(data, 'pagesCount')}
-                        pageNumber={ig(data, 'pageNumber')}
-                        itemsCount={ig(data, 'itemsCount')}
-                        sortList={ig(data, 'sortList')}
-                        currentSort={ig(data, 'currentSort')}
-                        archiveFilms={ig(data, 'archiveFilms')}
-                        tagArchiveListOlder={ig(data, 'tagArchiveListOlder')}
-                        tagArchiveListNewer={ig(data, 'tagArchiveListNewer')}
-                    />
-                    <VideoList
-                        videoList={ig(data, 'videoList')}
-                    />
-                </PageWrapperNextToList>
-            </Content>
-        }
-    </Page>,
+            i18nListNichesHeader={i18nListNichesHeader}
+            i18nListArchiveHeader={i18nListArchiveHeader}
+        />
+        <PageWrapperNextToList>
+            <Typography
+                variant="h4"
+                gutterBottom
+                classes={{
+                    root: classes.typographyTitle
+                }}
+            >
+                {data.getIn(['pageText', 'listHeader'])}
+            </Typography>
+            <ControlBar
+                cb={currentBreakpoint}
+                linkBuilder={controlLinkBuilder}
+                archiveLinkBuilder={controlArchiveLinkBuilder}
+                backFromArchiveLinkBuilder={controlBackFromArchiveLinkBuilder}
+                i18nOrdering={i18nOrdering}
+                i18nButtons={i18nButtons}
+                i18nLabelShowing={i18nLabelShowing}
+                chooseSort={chooseSort}
+                isSSR={isSSR}
+                pagesCount={ig(data, 'pagesCount')}
+                pageNumber={ig(data, 'pageNumber')}
+                itemsCount={ig(data, 'itemsCount')}
+                sortList={ig(data, 'sortList')}
+                currentSort={ig(data, 'currentSort')}
+                archiveFilms={ig(data, 'archiveFilms')}
+                tagArchiveListOlder={ig(data, 'tagArchiveListOlder')}
+                tagArchiveListNewer={ig(data, 'tagArchiveListNewer')}
+            />
+            <VideoList
+                videoList={ig(data, 'videoList')}
+            />
+        </PageWrapperNextToList>
+    </Fragment>,
 
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
@@ -232,5 +224,5 @@ export default compose(
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         i18nButtons: immutableI18nButtonsModel,
     }),
-    voidPagePlug
+    loadingWrapper
 )(AllMovies)

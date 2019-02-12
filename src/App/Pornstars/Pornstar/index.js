@@ -1,7 +1,7 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, withProps, withPropsOnChange} from 'recompose'
-import {CircularProgress, Typography} from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 import {remove} from 'immutable'
 
 import {
@@ -16,7 +16,6 @@ import {
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
     breakpoints,
-    voidPagePlug,
 } from '../../helpers'
 
 import {
@@ -29,15 +28,15 @@ import {
 import {model, immutablePornstarInfoForTableModel} from './models'
 import routerGetters from '../../routerGetters'
 import sectionPortal from '../../MainHeader/Navigation/sectionPortal'
+import loadingWrapper from '../../../generic/loadingWrapper'
 import orientationPortal from '../../MainHeader/Niche/orientationPortal'
 import ControlBar from '../../../generic/ControlBar'
-import ErrorContent from '../../../generic/ErrorContent'
 import PageTextHelmet from '../../../generic/PageTextHelmet'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
 
 import Info from './Info'
-import {Page, Content, PageWrapperNextToList} from './assets'
+import {PageWrapperNextToList} from './assets'
 import appActions from '../../../App/actions'
 import headerActions from '../../MainHeader/actions'
 import actions from './actions'
@@ -49,58 +48,51 @@ const
         controlLinkBuilder, modelLinkBuilder,
         addToFavoriteHandler, removeFromFavoriteHandler,
         orderedPornstarInfoForTable,
-    }) => <Page>
-        { ig(data, 'isFailed')
-            ? <ErrorContent/>
-            : ig(data, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <PageTextHelmet pageText={ig(data, 'pageText')}/>
-                <Lists
-                    currentBreakpoint={cb}
-                    modelsList={ig(data, 'modelsList')}
-                    modelLinkBuilder={modelLinkBuilder}
-                />
-                <PageWrapperNextToList>
-                    <Typography variant="h4" gutterBottom>
-                        {ig(data, 'pageText', 'listHeader')}
-                    </Typography>
-                    <Info
-                        i18nPornstarInfoParameters={i18nPornstarInfoParameters}
-                        i18nButtons={i18nButtons}
-                        pornstarInfo={ig(data, 'pornstarInfo')}
-                        pornstarInfoForTable={ig(orderedPornstarInfoForTable, [])}
-                        favoritePornstarList={favoritePornstarList}
-                        cb={cb}
-                        isSSR={isSSR}
-                        addToFavoriteHandler={addToFavoriteHandler}
-                        removeFromFavoriteHandler={removeFromFavoriteHandler}
-                    />
-                    <ControlBar
-                        cb={cb}
-                        i18nOrdering={i18nOrdering}
-                        i18nButtons={i18nButtons}
-                        i18nLabelShowing={i18nLabelShowing}
-                        chooseSort={chooseSort}
-                        isSSR={isSSR}
-                        pagesCount={ig(data, 'pagesCount')}
-                        pageNumber={ig(data, 'pageNumber')}
-                        itemsCount={ig(data, 'itemsCount')}
-                        sortList={ig(data, 'sortList')}
-                        currentSort={ig(data, 'currentSort')}
-                        archiveFilms={null}
-                        tagArchiveListOlder={null}
-                        tagArchiveListNewer={null}
-                        linkBuilder={controlLinkBuilder}
-                        archiveLinkBuilder={null}
-                    />
-                    <VideoList
-                        videoList={ig(data, 'videoList')}
-                    />
-                </PageWrapperNextToList>
-            </Content>
-        }
-    </Page>,
+    }) => <Fragment>
+        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <Lists
+            currentBreakpoint={cb}
+            modelsList={ig(data, 'modelsList')}
+            modelLinkBuilder={modelLinkBuilder}
+        />
+        <PageWrapperNextToList>
+            <Typography variant="h4" gutterBottom>
+                {ig(data, 'pageText', 'listHeader')}
+            </Typography>
+            <Info
+                i18nPornstarInfoParameters={i18nPornstarInfoParameters}
+                i18nButtons={i18nButtons}
+                pornstarInfo={ig(data, 'pornstarInfo')}
+                pornstarInfoForTable={ig(orderedPornstarInfoForTable, [])}
+                favoritePornstarList={favoritePornstarList}
+                cb={cb}
+                isSSR={isSSR}
+                addToFavoriteHandler={addToFavoriteHandler}
+                removeFromFavoriteHandler={removeFromFavoriteHandler}
+            />
+            <ControlBar
+                cb={cb}
+                i18nOrdering={i18nOrdering}
+                i18nButtons={i18nButtons}
+                i18nLabelShowing={i18nLabelShowing}
+                chooseSort={chooseSort}
+                isSSR={isSSR}
+                pagesCount={ig(data, 'pagesCount')}
+                pageNumber={ig(data, 'pageNumber')}
+                itemsCount={ig(data, 'itemsCount')}
+                sortList={ig(data, 'sortList')}
+                currentSort={ig(data, 'currentSort')}
+                archiveFilms={null}
+                tagArchiveListOlder={null}
+                tagArchiveListNewer={null}
+                linkBuilder={controlLinkBuilder}
+                archiveLinkBuilder={null}
+            />
+            <VideoList
+                videoList={ig(data, 'videoList')}
+            />
+        </PageWrapperNextToList>
+    </Fragment>,
 
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
@@ -235,5 +227,5 @@ export default compose(
         removeFromFavoriteHandler: PropTypes.func,
         removePornstarFromFavorite: PropTypes.func,
     }),
-    voidPagePlug
+    loadingWrapper
 )(Pornstar)

@@ -1,8 +1,8 @@
 // TODO: this page needs propTypes
-import React from 'react'
+import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, withProps} from 'recompose'
-import {CircularProgress, Typography} from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 import {Record} from 'immutable'
 
 import {
@@ -16,7 +16,6 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
-    voidPagePlug,
 } from '../../helpers'
 
 import {
@@ -29,12 +28,12 @@ import {dataModel} from './models'
 import routerGetters from '../../routerGetters'
 import orientationPortal from '../../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../../MainHeader/Navigation/sectionPortal'
+import loadingWrapper from '../../../generic/loadingWrapper'
 import ControlBar from '../../../generic/ControlBar'
-import ErrorContent from '../../../generic/ErrorContent'
 import PageTextHelmet from '../../../generic/PageTextHelmet'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
-import {Page, Content, PageWrapperNextToList} from './assets'
+import {PageWrapperNextToList} from './assets'
 import headerActions from '../../MainHeader/actions'
 import actions from './actions'
 
@@ -55,58 +54,51 @@ const
         i18nListNichesHeader,
         i18nListArchiveHeader,
         i18nLabelShowing,
-    }) => <Page>
-        { ig(data, 'isFailed')
-            ? <ErrorContent/>
-            : ig(data, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <PageTextHelmet pageText={ig(data, 'pageText')}/>
-                <Lists
-                    currentBreakpoint={currentBreakpoint}
+    }) => <Fragment>
+        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <Lists
+            currentBreakpoint={currentBreakpoint}
 
-                    sponsorsList={ig(data, 'sponsorsList')}
-                    sponsorLinkBuilder={sponsorLinkBuilder}
+            sponsorsList={ig(data, 'sponsorsList')}
+            sponsorLinkBuilder={sponsorLinkBuilder}
 
-                    tagList={ig(data, 'tagList')}
-                    tagLinkBuilder={listsTagLinkBuilder}
+            tagList={ig(data, 'tagList')}
+            tagLinkBuilder={listsTagLinkBuilder}
 
-                    tagArchiveList={ig(data, 'tagArchiveList')}
-                    archiveLinkBuilder={listsArchiveLinkBuilder}
+            tagArchiveList={ig(data, 'tagArchiveList')}
+            archiveLinkBuilder={listsArchiveLinkBuilder}
 
-                    i18nListNichesHeader={i18nListNichesHeader}
-                    i18nListArchiveHeader={i18nListArchiveHeader}
-                />
-                <PageWrapperNextToList>
-                    <Typography variant="h4" gutterBottom>
-                        {ig(data, 'pageText', 'listHeader')}
-                    </Typography>
-                    <ControlBar
-                        cb={currentBreakpoint}
-                        linkBuilder={controlLinkBuilder}
-                        archiveLinkBuilder={controlArchiveLinkBuilder}
-                        backFromArchiveLinkBuilder={controlBackFromArchiveLinkBuilder}
-                        i18nOrdering={i18nOrdering}
-                        i18nButtons={i18nButtons}
-                        i18nLabelShowing={i18nLabelShowing}
-                        chooseSort={chooseSort}
-                        isSSR={isSSR}
-                        pagesCount={ig(data, 'pagesCount')}
-                        pageNumber={ig(data, 'pageNumber')}
-                        itemsCount={ig(data, 'itemsCount')}
-                        sortList={ig(data, 'sortList')}
-                        currentSort={ig(data, 'currentSort')}
-                        archiveFilms={ig(data, 'archiveFilms')}
-                        tagArchiveListOlder={ig(data, 'tagArchiveListOlder')}
-                        tagArchiveListNewer={ig(data, 'tagArchiveListNewer')}
-                    />
-                    <VideoList
-                        videoList={ig(data, 'videoList')}
-                    />
-                </PageWrapperNextToList>
-            </Content>
-        }
-    </Page>,
+            i18nListNichesHeader={i18nListNichesHeader}
+            i18nListArchiveHeader={i18nListArchiveHeader}
+        />
+        <PageWrapperNextToList>
+            <Typography variant="h4" gutterBottom>
+                {ig(data, 'pageText', 'listHeader')}
+            </Typography>
+            <ControlBar
+                cb={currentBreakpoint}
+                linkBuilder={controlLinkBuilder}
+                archiveLinkBuilder={controlArchiveLinkBuilder}
+                backFromArchiveLinkBuilder={controlBackFromArchiveLinkBuilder}
+                i18nOrdering={i18nOrdering}
+                i18nButtons={i18nButtons}
+                i18nLabelShowing={i18nLabelShowing}
+                chooseSort={chooseSort}
+                isSSR={isSSR}
+                pagesCount={ig(data, 'pagesCount')}
+                pageNumber={ig(data, 'pageNumber')}
+                itemsCount={ig(data, 'itemsCount')}
+                sortList={ig(data, 'sortList')}
+                currentSort={ig(data, 'currentSort')}
+                archiveFilms={ig(data, 'archiveFilms')}
+                tagArchiveListOlder={ig(data, 'tagArchiveListOlder')}
+                tagArchiveListNewer={ig(data, 'tagArchiveListNewer')}
+            />
+            <VideoList
+                videoList={ig(data, 'videoList')}
+            />
+        </PageWrapperNextToList>
+    </Fragment>,
 
     DataRecord = Record({
         isLoading: null,
@@ -266,5 +258,5 @@ export default compose(
         listsArchiveLinkBuilder: PropTypes.func,
         sponsorLinkBuilder: PropTypes.func,
     }),
-    voidPagePlug
+    loadingWrapper
 )(Niche)

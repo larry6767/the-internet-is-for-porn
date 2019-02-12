@@ -1,13 +1,15 @@
 // TODO: this page needs refactoring (propTypes, ig, g, etc)
 import {Record} from 'immutable'
-import React from 'react'
+import React, {Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {compose, lifecycle, withHandlers, withState} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, reset as resetForm} from 'redux-form/immutable'
 import {animateScroll} from 'react-scroll'
-import {withStyles} from '@material-ui/core'
-import {CircularProgress, Typography, Button, Chip} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import Chip from '@material-ui/core/Chip'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
 import HomeIcon from '@material-ui/icons/Home'
@@ -26,7 +28,6 @@ import {
     breakpointMD as md,
     areWeSwitchedOnPage,
     getHeaderText,
-    voidPagePlug,
 } from '../helpers'
 
 import routerGetters from '../routerGetters'
@@ -34,7 +35,7 @@ import routerGetters from '../routerGetters'
 import {immutableI18nButtonsModel} from '../models'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import ErrorContent from '../../generic/ErrorContent'
+import loadingWrapper from '../../generic/loadingWrapper'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import VideoList from '../../generic/VideoList'
 import ReportDialog from './ReportDialog'
@@ -45,8 +46,6 @@ import appActions from '../actions'
 import {muiStyles} from './assets/muiStyles'
 
 import {
-    Page,
-    Content,
     PageWrapper,
     PlayerSection,
     VideoPlayer,
@@ -186,153 +185,146 @@ const
         toggleReportDialogHandler, getTagLink, pageUrl,
         handleSubmit, pristine, reset, cb, currentWidth, i18nButtons, i18nRelatedVideo,
         i18nLabelProvidedBy, setPlayerRef,
-    }) => <Page>
-        { ig(data, 'isFailed')
-            ? <ErrorContent/>
-            : ig(data, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <PageTextHelmet
-                    pageText={ig(data, 'pageText')}
-                    openGraphData={ig(data, 'openGraphData')}
-                />
-                <PageWrapper>
-                    <PlayerSection>
-                        <Typography
-                            variant="h4"
-                            gutterBottom
-                            classes={{
-                                root: classes.typographyTitle
-                            }}
-                        >
-                            {`${data.getIn(['gallery', 'title'])} ${
-                                data.getIn(['pageText', 'galleryTitle'])}`}
-                        </Typography>
-                        {ccb(cb, sm) === -1
-                            ? null
-                            : <ProvidedBy
-                                classes={classes}
-                                data={data}
-                                withLabel={true}
-                                i18nLabelProvidedBy={i18nLabelProvidedBy}
-                            />}
-                        <VideoPlayer ref={g(setPlayerRef, [])}>
-                            <VideoWrapper>
-                                <Video>
-                                    {(data.get('inlineAdvertisementIsShowed') && !isSSR)
-                                        ? <InlineAdvertisementWrapper>
-                                            <InlineAdvertisement
-                                                currentWidth={currentWidth}
-                                            >
-                                                <CloseAdvertisement
-                                                    onClick={closeAdvertisementHandler}
-                                                />
-                                                {renderIframe('invideo', currentWidth)}
-                                            </InlineAdvertisement>
-                                        </InlineAdvertisementWrapper>
-                                        : null}
-                                    {renderIframe(
-                                        data.getIn(['gallery', 'urlForIframe']),
-                                        null,
-                                        'isVideo'
-                                    )}
-                                </Video>
-                                <ControlPanel>
-                                    <ControlPanelBlock>
-                                        {!isSSR
-                                            ? renderFavoriteButton(
-                                                classes, data, favoriteVideoList,
-                                                addVideoToFavoriteHandler,
-                                                removeVideoFromFavoriteHandler, i18nButtons,
-                                            )
-                                            : null}
-                                        <Link to="/" className={classes.routerLink}>
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                classes={{
-                                                    root: classes.buttonRoot
-                                                }}
-                                            >
-                                                <HomeIcon
-                                                    classes={{root: classes.homeIcon}}
-                                                />
-                                                {ig(i18nButtons, 'backToMainPage')}
-                                            </Button>
-                                        </Link>
-                                        {ccb(cb, sm) === -1
-                                            ? <ProvidedBy
-                                                classes={classes}
-                                                data={data}
-                                            />
-                                            : null}
-                                    </ControlPanelBlock>
-                                    <ControlPanelBlock>
-                                        {!isSSR
-                                            ? <Button
-                                                variant="contained"
-                                                color="primary"
-                                                classes={{
-                                                    root: classes.buttonReport
-                                                }}
-                                                onClick={toggleReportDialogHandler}
-                                            >
-                                                <ReportIcon
-                                                    classes={{root: classes.reportIcon}}
-                                                />
-                                                {ig(i18nButtons, 'report')}
-                                            </Button>
-                                            : null}
-                                    </ControlPanelBlock>
-                                </ControlPanel>
-                            </VideoWrapper>
-                            <Advertisement>
-                                {renderIframe('sidebar1', currentWidth)}
-                                {renderIframe('sidebar2', currentWidth)}
-                            </Advertisement>
-                            <TagsWrapper>
-                                {data.getIn(['gallery', 'tags'])
-                                    ? data.getIn(['gallery', 'tags']).map(x =>
-                                        renderTag(classes, cb, x, getTagLink))
+    }) => <Fragment>
+        <PageTextHelmet
+            pageText={ig(data, 'pageText')}
+            openGraphData={ig(data, 'openGraphData')}
+        />
+        <PageWrapper>
+            <PlayerSection>
+                <Typography
+                    variant="h4"
+                    gutterBottom
+                    classes={{
+                        root: classes.typographyTitle
+                    }}
+                >
+                    {`${data.getIn(['gallery', 'title'])} ${
+                        data.getIn(['pageText', 'galleryTitle'])}`}
+                </Typography>
+                {ccb(cb, sm) === -1
+                    ? null
+                    : <ProvidedBy
+                        classes={classes}
+                        data={data}
+                        withLabel={true}
+                        i18nLabelProvidedBy={i18nLabelProvidedBy}
+                    />}
+                <VideoPlayer ref={g(setPlayerRef, [])}>
+                    <VideoWrapper>
+                        <Video>
+                            {(data.get('inlineAdvertisementIsShowed') && !isSSR)
+                                ? <InlineAdvertisementWrapper>
+                                    <InlineAdvertisement
+                                        currentWidth={currentWidth}
+                                    >
+                                        <CloseAdvertisement
+                                            onClick={closeAdvertisementHandler}
+                                        />
+                                        {renderIframe('invideo', currentWidth)}
+                                    </InlineAdvertisement>
+                                </InlineAdvertisementWrapper>
+                                : null}
+                            {renderIframe(
+                                data.getIn(['gallery', 'urlForIframe']),
+                                null,
+                                'isVideo'
+                            )}
+                        </Video>
+                        <ControlPanel>
+                            <ControlPanelBlock>
+                                {!isSSR
+                                    ? renderFavoriteButton(
+                                        classes, data, favoriteVideoList,
+                                        addVideoToFavoriteHandler,
+                                        removeVideoFromFavoriteHandler, i18nButtons,
+                                    )
                                     : null}
-                            </TagsWrapper>
-                        </VideoPlayer>
-                    </PlayerSection>
-                    <RelatedVideos>
-                        <Typography
-                            variant="h4"
-                            gutterBottom
-                            classes={{
-                                root: classes.typographyTitle
-                            }}
-                        >
-                            {i18nRelatedVideo}
-                        </Typography>
-                        <VideoList
-                            videoList={data.get('videoList')}
-                        />
-                    </RelatedVideos>
-                    <BottomAdvertisement>
-                        {renderIframe('bottom1', currentWidth)}
-                        {renderIframe('bottom2', currentWidth)}
-                        {ccb(cb, md) === -1
-                            ? null
-                            : renderIframe('bottom3', currentWidth)}
-                    </BottomAdvertisement>
-                </PageWrapper>
-                <ReportDialog
-                    i18nButtons={i18nButtons}
-                    data={data}
-                    toggleReportDialogHandler={toggleReportDialogHandler}
-                    pageUrl={pageUrl}
-                    fieldNamesArray={fieldNamesArray}
-                    handleSubmit={handleSubmit}
-                    pristine={pristine}
-                    reset={reset}
+                                <Link to="/" className={classes.routerLink}>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        classes={{
+                                            root: classes.buttonRoot
+                                        }}
+                                    >
+                                        <HomeIcon
+                                            classes={{root: classes.homeIcon}}
+                                        />
+                                        {ig(i18nButtons, 'backToMainPage')}
+                                    </Button>
+                                </Link>
+                                {ccb(cb, sm) === -1
+                                    ? <ProvidedBy
+                                        classes={classes}
+                                        data={data}
+                                    />
+                                    : null}
+                            </ControlPanelBlock>
+                            <ControlPanelBlock>
+                                {!isSSR
+                                    ? <Button
+                                        variant="contained"
+                                        color="primary"
+                                        classes={{
+                                            root: classes.buttonReport
+                                        }}
+                                        onClick={toggleReportDialogHandler}
+                                    >
+                                        <ReportIcon
+                                            classes={{root: classes.reportIcon}}
+                                        />
+                                        {ig(i18nButtons, 'report')}
+                                    </Button>
+                                    : null}
+                            </ControlPanelBlock>
+                        </ControlPanel>
+                    </VideoWrapper>
+                    <Advertisement>
+                        {renderIframe('sidebar1', currentWidth)}
+                        {renderIframe('sidebar2', currentWidth)}
+                    </Advertisement>
+                    <TagsWrapper>
+                        {data.getIn(['gallery', 'tags'])
+                            ? data.getIn(['gallery', 'tags']).map(x =>
+                                renderTag(classes, cb, x, getTagLink))
+                            : null}
+                    </TagsWrapper>
+                </VideoPlayer>
+            </PlayerSection>
+            <RelatedVideos>
+                <Typography
+                    variant="h4"
+                    gutterBottom
+                    classes={{
+                        root: classes.typographyTitle
+                    }}
+                >
+                    {i18nRelatedVideo}
+                </Typography>
+                <VideoList
+                    videoList={data.get('videoList')}
                 />
-            </Content>
-        }
-    </Page>,
+            </RelatedVideos>
+            <BottomAdvertisement>
+                {renderIframe('bottom1', currentWidth)}
+                {renderIframe('bottom2', currentWidth)}
+                {ccb(cb, md) === -1
+                    ? null
+                    : renderIframe('bottom3', currentWidth)}
+            </BottomAdvertisement>
+        </PageWrapper>
+        <ReportDialog
+            i18nButtons={i18nButtons}
+            data={data}
+            toggleReportDialogHandler={toggleReportDialogHandler}
+            pageUrl={pageUrl}
+            fieldNamesArray={fieldNamesArray}
+            handleSubmit={handleSubmit}
+            pristine={pristine}
+            reset={reset}
+        />
+    </Fragment>,
 
     setNewPageFlow = props => {
         if (ig(props.data, 'isLoaded'))
@@ -447,5 +439,5 @@ export default compose(
         isSSR: PropTypes.bool,
         i18nButtons: immutableI18nButtonsModel,
     }),
-    voidPagePlug
+    loadingWrapper
 )(VideoPage)

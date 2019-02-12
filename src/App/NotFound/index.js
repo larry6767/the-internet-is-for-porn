@@ -1,8 +1,7 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
-import {withStyles} from '@material-ui/core'
-import {CircularProgress} from '@material-ui/core'
+// import {withStyles} from '@material-ui/core/styles'
 import {Record} from 'immutable'
 
 import {
@@ -17,19 +16,18 @@ import {
     doesItHaveToBeReloaded,
     // areWeSwitchedOnPage,
     get404PageText,
-    voidPagePlug,
 } from '../helpers'
 
 // import {immutableI18nButtonsModel, routerContextModel} from '../models'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import ErrorContent from '../../generic/ErrorContent'
+import loadingWrapper from '../../generic/loadingWrapper'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import VideoList from '../../generic/VideoList'
-import {Page, Content, PageWrapper} from './assets'
+import {PageWrapper} from './assets'
 // import headerActions from '../MainHeader/actions'
 import actions from './actions'
-import {muiStyles} from './assets/muiStyles'
+// import {muiStyles} from './assets/muiStyles'
 
 const
     DataRecord = Record({
@@ -46,21 +44,14 @@ const
         videoList: null,
     }),
 
-    Favorite = ({data}) => <Page>
-        { ig(data, 'isFailed')
-            ? <ErrorContent/>
-            : ig(data, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <PageTextHelmet pageText={get404PageText()}/>
-                <PageWrapper>
-                    <VideoList
-                        videoList={ig(data, 'videoList')}
-                    />
-                </PageWrapper>
-            </Content>
-        }
-    </Page>,
+    Favorite = ({data}) => <Fragment>
+        <PageTextHelmet pageText={get404PageText()}/>
+        <PageWrapper>
+            <VideoList
+                videoList={ig(data, 'videoList')}
+            />
+        </PageWrapper>
+    </Fragment>,
 
     // setNewPageFlow = (prevProps, nextProps) => {
     //     if (areWeSwitchedOnPage(prevProps, nextProps))
@@ -102,12 +93,12 @@ export default compose(
             // setNewPageFlow(this.props, nextProps)
         },
     }),
-    withStyles(muiStyles),
+    // withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         data: ImmutablePropTypes.record, // TODO better type
 
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
     }),
-    voidPagePlug
+    loadingWrapper
 )(Favorite)

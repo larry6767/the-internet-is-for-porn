@@ -14,6 +14,10 @@ export const Page = styled.section`
     ${({theme}) => theme.media.mobile`padding: 10px;`}
 `
 
+export const AllNichesPage = styled(Page)`
+    ${({theme}) => theme.media.xs`flex-wrap: wrap; justify-content: center;`}
+`
+
 export const Content = styled.div`
     display: flex;
     width: 100%;

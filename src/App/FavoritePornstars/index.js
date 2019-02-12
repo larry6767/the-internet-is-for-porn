@@ -1,9 +1,9 @@
 // TODO: this page needs refactoring (propTypes, ig, ext)
-import React from 'react'
+import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
-import {withStyles} from '@material-ui/core'
-import {CircularProgress, Typography} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
 import {Record, Map, List} from 'immutable'
 
 import {
@@ -17,7 +17,6 @@ import {
     areWeSwitchedOnPage,
     breakpoints,
     PropTypes,
-    voidPagePlug,
 } from '../helpers'
 
 import {
@@ -28,11 +27,11 @@ import {
 import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
+import loadingWrapper from '../../generic/loadingWrapper'
 import ControlBar from '../../generic/ControlBar'
-import ErrorContent from '../../generic/ErrorContent'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import PornstarList from '../../generic/PornstarList'
-import {Page, Content, PageWrapper} from './assets'
+import {PageWrapper} from './assets'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
@@ -62,47 +61,40 @@ const
         controlFavoriteLinkBuilder,
         data,
         linkBuilder,
-    }) => <Page>
-        { ig(data, 'isFailed')
-            ? <ErrorContent/>
-            : ig(data, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <PageTextHelmet pageText={ig(data, 'pageText')}/>
-                <PageWrapper>
-                    <Typography
-                        variant="h4"
-                        gutterBottom
-                        classes={{
-                            root: g(classes, 'typographyTitle')
-                        }}
-                    >
-                        {g(ig(data, 'modelsList'), 'size')
-                            ? `${(ig(data, 'pageText', 'listHeader') || '')
-                                .replace(/[0-9]/g, '')}${g(ig(data, 'modelsList'), 'size')}`
-                            : ig(data, 'pageText', 'listHeaderEmpty')
-                        }
-                    </Typography>
-                    <ControlBar
-                        isSSR={isSSR}
-                        cb={cb}
-                        i18nButtons={i18nButtons}
-                        i18nLabelShowing={i18nLabelShowing}
-                        linkBuilder={controlLinkBuilder}
-                        favoriteLinkBuilder={controlFavoriteLinkBuilder}
-                        pagesCount={ig(data, 'pagesCount')}
-                        pageNumber={ig(data, 'pageNumber')}
-                        itemsCount={ig(data, 'itemsCount')}
-                        favoriteButtons={true}
-                    />
-                    <PornstarList
-                        linkBuilder={linkBuilder}
-                        pornstarList={ig(data, 'modelsList')}
-                    />
-                </PageWrapper>
-            </Content>
-        }
-    </Page>,
+    }) => <Fragment>
+        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <PageWrapper>
+            <Typography
+                variant="h4"
+                gutterBottom
+                classes={{
+                    root: g(classes, 'typographyTitle')
+                }}
+            >
+                {g(ig(data, 'modelsList'), 'size')
+                    ? `${(ig(data, 'pageText', 'listHeader') || '')
+                        .replace(/[0-9]/g, '')}${g(ig(data, 'modelsList'), 'size')}`
+                    : ig(data, 'pageText', 'listHeaderEmpty')
+                }
+            </Typography>
+            <ControlBar
+                isSSR={isSSR}
+                cb={cb}
+                i18nButtons={i18nButtons}
+                i18nLabelShowing={i18nLabelShowing}
+                linkBuilder={controlLinkBuilder}
+                favoriteLinkBuilder={controlFavoriteLinkBuilder}
+                pagesCount={ig(data, 'pagesCount')}
+                pageNumber={ig(data, 'pageNumber')}
+                itemsCount={ig(data, 'itemsCount')}
+                favoriteButtons={true}
+            />
+            <PornstarList
+                linkBuilder={linkBuilder}
+                pornstarList={ig(data, 'modelsList')}
+            />
+        </PageWrapper>
+    </Fragment>,
 
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
@@ -167,5 +159,5 @@ export default compose(
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
     }),
-    voidPagePlug
+    loadingWrapper
 )(FavoritePornstars)

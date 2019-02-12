@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
 import {Record} from 'immutable'
-import {CircularProgress, Typography} from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 
 import {
     getHeaderWithOrientation,
@@ -15,7 +15,6 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
-    voidPagePlug,
 } from '../helpers'
 
 import {routerContextModel} from '../models'
@@ -23,33 +22,26 @@ import {dataModel} from './models'
 import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import ErrorContent from '../../generic/ErrorContent'
+import loadingWrapper from '../../generic/loadingWrapper'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import PornstarList from '../../generic/PornstarList'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
-import {Page, Content, PageWrapper} from './assets'
+import {PageWrapper} from './assets'
 
 const
-    Pornstars = ({data, linkBuilder, i18nPornstarsHeader}) => <Page>
-        { ig(data, 'isFailed')
-            ? <ErrorContent/>
-            : ig(data, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <PageTextHelmet pageText={ig(data, 'pageText')}/>
-                <PageWrapper>
-                    <Typography variant="h4" gutterBottom>
-                        {i18nPornstarsHeader}
-                    </Typography>
-                    <PornstarList
-                        linkBuilder={linkBuilder}
-                        pornstarList={ig(data, 'modelsList')}
-                    />
-                </PageWrapper>
-            </Content>
-        }
-    </Page>,
+    Pornstars = ({data, linkBuilder, i18nPornstarsHeader}) => <Fragment>
+        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <PageWrapper>
+            <Typography variant="h4" gutterBottom>
+                {i18nPornstarsHeader}
+            </Typography>
+            <PornstarList
+                linkBuilder={linkBuilder}
+                pornstarList={ig(data, 'modelsList')}
+            />
+        </PageWrapper>
+    </Fragment>,
 
     DataRecord = Record({
         isLoading: null,
@@ -116,5 +108,5 @@ export default compose(
         setNewText: PropTypes.func,
         linkBuilder: PropTypes.func,
     }),
-    voidPagePlug
+    loadingWrapper
 )(Pornstars)

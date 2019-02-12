@@ -1,5 +1,1 @@
-export {
-    Page,
-    Content,
-    PageWrapper,
-} from '../../../generic/assets'
+export {PageWrapper} from '../../../generic/assets'
