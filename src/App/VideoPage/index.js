@@ -26,8 +26,8 @@ import {
     compareCurrentBreakpoint as ccb,
     breakpointSM as sm,
     breakpointMD as md,
-    areWeSwitchedOnPage,
     getHeaderText,
+    lifecycleForPageWithRefs,
 } from '../helpers'
 
 import routerGetters from '../routerGetters'
@@ -409,30 +409,7 @@ export default compose(
         onSubmit: (formData, dispatch) => dispatch(actions.sendReportRequest(formData)),
         onSubmitSuccess: (values, dispatch) => dispatch(resetForm('reportForm')),
     }),
-    lifecycle({
-        componentDidMount() {
-            loadPageFlow(this.props)
-            if (areWeSwitchedOnPage(null, this.props) && g(this.props, 'playerRef') !== null) {
-                setNewPageFlow(this.props)
-            }
-        },
-
-        componentWillReceiveProps(nextProps) {
-            loadPageFlow(nextProps)
-            if (
-                (
-                    areWeSwitchedOnPage(this.props, nextProps) &&
-                    g(nextProps, 'playerRef') !== null
-                ) || (
-                    g(this.props, 'data', 'isLoaded') &&
-                    g(this.props, 'playerRef') === null &&
-                    g(nextProps, 'playerRef') !== null
-                )
-            ) {
-                setNewPageFlow(nextProps)
-            }
-        },
-    }),
+    lifecycleForPageWithRefs(loadPageFlow, setNewPageFlow, ['playerRef']),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,

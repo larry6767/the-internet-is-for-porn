@@ -37,6 +37,7 @@ export {default as buildRequestBody} from './buildRequestBody'
 export {default as obtainPageData} from './obtainPageData'
 export {default as doesItHaveToBeReloaded} from './doesItHaveToBeReloaded'
 export {default as areWeSwitchedOnPage} from './areWeSwitchedOnPage'
+export {default as lifecycleForPageWithRefs} from './lifecycleForPageWithRefs'
 
 // favorite pages helpers
 export {default as addToList} from './favoritePages/addToList'

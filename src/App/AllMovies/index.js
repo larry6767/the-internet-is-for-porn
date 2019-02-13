@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {compose, lifecycle, withHandlers, withProps} from 'recompose'
+import {compose, withHandlers, withProps, withState} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 
@@ -14,7 +14,7 @@ import {
     getHeaderText,
     getPageRequestParams,
     doesItHaveToBeReloaded,
-    areWeSwitchedOnPage,
+    lifecycleForPageWithRefs,
     breakpoints,
 } from '../helpers'
 
@@ -51,9 +51,12 @@ const
         i18nListNichesHeader,
         i18nListArchiveHeader,
         i18nLabelShowing,
+        setListsRef,
+        setPageWrapperRef,
     }) => <Fragment>
         <PageTextHelmet pageText={ig(data, 'pageText')}/>
         <Lists
+            ref={setListsRef}
             cb={cb}
             sponsorsList={ig(data, 'sponsorsList')}
             sponsorLinkBuilder={sponsorLinkBuilder}
@@ -64,7 +67,7 @@ const
             i18nListNichesHeader={i18nListNichesHeader}
             i18nListArchiveHeader={i18nListArchiveHeader}
         />
-        <PageWrapperNextToList>
+        <PageWrapperNextToList ref={setPageWrapperRef}>
             <Typography
                 variant="h4"
                 gutterBottom
@@ -99,9 +102,8 @@ const
         </PageWrapperNextToList>
     </Fragment>,
 
-    setNewPageFlow = (prevProps, nextProps) => {
-        if (areWeSwitchedOnPage(prevProps, nextProps))
-            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+    setNewPageFlow = props => {
+        props.setNewText(getHeaderText(g(props, 'data'), true))
     },
 
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
@@ -133,6 +135,8 @@ export default compose(
             setNewText: g(headerActions, 'setNewText'),
         }
     ),
+    withState('listsRef', 'setListsRef', null),
+    withState('pageWrapperRef', 'setPageWrapperRef', null),
     withProps(props => ({
         archiveParams: !(props.match.params[0] && props.match.params[1]) ? null : {
             year: Number(g(props, 'match', 'params', 0)),
@@ -182,17 +186,7 @@ export default compose(
         sponsorLinkBuilder: props => sponsor =>
             routerGetters.site.link(g(props, 'routerContext'), sponsor, null)
     }),
-    lifecycle({
-        componentDidMount() {
-            loadPageFlow(this.props)
-            setNewPageFlow(null, this.props)
-        },
-
-        componentWillReceiveProps(nextProps) {
-            loadPageFlow(nextProps)
-            setNewPageFlow(this.props, nextProps)
-        },
-    }),
+    lifecycleForPageWithRefs(loadPageFlow, setNewPageFlow, ['listsRef', 'pageWrapperRef']),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         cb: PropTypes.oneOf(breakpoints),

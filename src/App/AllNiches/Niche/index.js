@@ -1,7 +1,7 @@
 // TODO: this page needs propTypes
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {compose, lifecycle, withHandlers, withProps} from 'recompose'
+import {compose, withHandlers, withProps, withState} from 'recompose'
 import Typography from '@material-ui/core/Typography'
 
 import {
@@ -14,7 +14,7 @@ import {
     PropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
-    areWeSwitchedOnPage,
+    lifecycleForPageWithRefs,
     breakpoints,
 } from '../../helpers'
 
@@ -100,9 +100,8 @@ const
         </PageWrapperNextToList>
     </Fragment>,
 
-    setNewPageFlow = (prevProps, nextProps) => {
-        if (areWeSwitchedOnPage(prevProps, nextProps))
-            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+    setNewPageFlow = props => {
+        props.setNewText(getHeaderText(g(props, 'data'), true))
     },
 
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
@@ -134,6 +133,8 @@ export default compose(
             setNewText: g(headerActions, 'setNewText'),
         }
     ),
+    withState('listsRef', 'setListsRef', null),
+    withState('pageWrapperRef', 'setPageWrapperRef', null),
     withProps(props => ({
         nicheCode: g(props, 'match', 'params', 'child'),
         archiveParams:
@@ -199,17 +200,7 @@ export default compose(
         sponsorLinkBuilder: props => sponsor =>
             routerGetters.site.link(g(props, 'routerContext'), sponsor, null)
     }),
-    lifecycle({
-        componentDidMount() {
-            loadPageFlow(this.props)
-            setNewPageFlow(null, this.props)
-        },
-
-        componentWillReceiveProps(nextProps) {
-            loadPageFlow(nextProps)
-            setNewPageFlow(this.props, nextProps)
-        },
-    }),
+    lifecycleForPageWithRefs(loadPageFlow, setNewPageFlow, ['listsRef', 'pageWrapperRef']),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         cb: PropTypes.oneOf(breakpoints),
         data: model,
