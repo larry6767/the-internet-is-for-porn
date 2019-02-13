@@ -8,5 +8,5 @@ export const ListsInner = styled.div`
     overflow-y: auto;
     ${'' /* TODO need to get real header+footer height from props */}
     min-height: calc(100vh - 373px);
-    max-height: ${({maxHeight}) => `${maxHeight}px`}
+    max-height: ${({maxHeight}) => `${maxHeight ? `${maxHeight}px` : 'auto'}`}
 `

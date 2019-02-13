@@ -187,5 +187,6 @@ export default compose(
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         cb: PropTypes.oneOf(breakpoints),
+        maxHeight: PropTypes.nullable(PropTypes.number),
     })
 )(Lists)

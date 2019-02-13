@@ -59,9 +59,9 @@ const
 
     }) => <Fragment>
         <PageTextHelmet pageText={ig(data, 'pageText')}/>
-        {!pageWrapperRef ? null : <Lists
+        {!pageWrapperRef && !isSSR ? null : <Lists
             cb={cb}
-            maxHeight={g(pageWrapperRef, 'clientHeight')}
+            maxHeight={!isSSR ? g(pageWrapperRef, 'clientHeight') : null}
             sponsorsList={ig(data, 'sponsorsList')}
             sponsorLinkBuilder={sponsorLinkBuilder}
             tagList={ig(data, 'tagList')}
@@ -221,7 +221,9 @@ export default compose(
         i18nListNichesHeader: PropTypes.string,
         i18nListArchiveHeader: PropTypes.string,
         i18nLabelShowing: PropTypes.string,
-        pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(Element)),
+        pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(
+            typeof Element === 'undefined' ? () => {} : Element // plug for SSR
+        )),
 
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,

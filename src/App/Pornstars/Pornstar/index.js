@@ -50,9 +50,9 @@ const
         orderedPornstarInfoForTable, setPageWrapperRef, pageWrapperRef,
     }) => <Fragment>
         <PageTextHelmet pageText={ig(data, 'pageText')}/>
-        {!pageWrapperRef ? null : <Lists
+        {!pageWrapperRef && !isSSR ? null : <Lists
             cb={cb}
-            maxHeight={g(pageWrapperRef, 'clientHeight')}
+            maxHeight={!isSSR ? g(pageWrapperRef, 'clientHeight') : null}
             modelsList={ig(data, 'modelsList')}
             modelLinkBuilder={modelLinkBuilder}
         />}
@@ -216,7 +216,9 @@ export default compose(
         i18nButtons: immutableI18nButtonsModel,
         i18nPornstarInfoParameters: immutableI18nPornstarInfoParametersModel,
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
-        pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(Element)),
+        pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(
+            typeof Element === 'undefined' ? () => {} : Element // plug for SSR
+        )),
 
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
