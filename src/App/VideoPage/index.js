@@ -2,7 +2,7 @@
 import {Record} from 'immutable'
 import React, {Fragment} from 'react'
 import {Link} from 'react-router-dom'
-import {compose, lifecycle, withHandlers, withState} from 'recompose'
+import {compose, withHandlers, withState} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, reset as resetForm} from 'redux-form/immutable'
 import {animateScroll} from 'react-scroll'

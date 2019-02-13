@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {compose, withHandlers, withProps, withPropsOnChange, withState} from 'recompose'
+import {compose, withHandlers, withProps, withPropsOnChange, withState, lifecycle} from 'recompose'
 import Typography from '@material-ui/core/Typography'
 import {remove} from 'immutable'
 
@@ -14,7 +14,7 @@ import {
     ImmutablePropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
-    lifecycleForPageWithRefs,
+    areWeSwitchedOnPage,
     breakpoints,
 } from '../../helpers'
 
@@ -47,15 +47,16 @@ const
         data, chooseSort, isSSR, favoritePornstarList,
         controlLinkBuilder, modelLinkBuilder,
         addToFavoriteHandler, removeFromFavoriteHandler,
-        orderedPornstarInfoForTable,
+        orderedPornstarInfoForTable, setPageWrapperRef, pageWrapperRef,
     }) => <Fragment>
         <PageTextHelmet pageText={ig(data, 'pageText')}/>
-        <Lists
+        {!pageWrapperRef ? null : <Lists
             cb={cb}
+            maxHeight={g(pageWrapperRef, 'clientHeight')}
             modelsList={ig(data, 'modelsList')}
             modelLinkBuilder={modelLinkBuilder}
-        />
-        <PageWrapperNextToList>
+        />}
+        <PageWrapperNextToList ref={setPageWrapperRef}>
             <Typography variant="h4" gutterBottom>
                 {ig(data, 'pageText', 'listHeader')}
             </Typography>
@@ -94,8 +95,9 @@ const
         </PageWrapperNextToList>
     </Fragment>,
 
-    setNewPageFlow = props => {
-        props.setNewText(getHeaderText(g(props, 'data'), true))
+    setNewPageFlow = (prevProps, nextProps) => {
+        if (areWeSwitchedOnPage(prevProps, nextProps))
+            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
     },
 
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
@@ -132,7 +134,6 @@ export default compose(
             removePornstarFromFavorite: g(appActions, 'removePornstarFromFavorite'),
         }
     ),
-    withState('listsRef', 'setListsRef', null),
     withState('pageWrapperRef', 'setPageWrapperRef', null),
     withPropsOnChange(
         (prevProps, nextProps) =>
@@ -194,7 +195,17 @@ export default compose(
             props.removePornstarFromFavorite(ig(x, 'id'))
         },
     }),
-    lifecycleForPageWithRefs(loadPageFlow, setNewPageFlow, ['listsRef', 'pageWrapperRef']),
+    lifecycle({
+        componentDidMount() {
+            loadPageFlow(this.props)
+            setNewPageFlow(null, this.props)
+        },
+
+        componentWillReceiveProps(nextProps) {
+            loadPageFlow(nextProps)
+            setNewPageFlow(this.props, nextProps)
+        },
+    }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         cb: PropTypes.oneOf(breakpoints),
         data: model,
@@ -205,6 +216,7 @@ export default compose(
         i18nButtons: immutableI18nButtonsModel,
         i18nPornstarInfoParameters: immutableI18nPornstarInfoParametersModel,
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
+        pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(Element)),
 
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
@@ -217,6 +229,7 @@ export default compose(
         addPornstarToFavorite: PropTypes.func,
         removeFromFavoriteHandler: PropTypes.func,
         removePornstarFromFavorite: PropTypes.func,
+        setPageWrapperRef: PropTypes.func,
     }),
     loadingWrapper
 )(Pornstar)

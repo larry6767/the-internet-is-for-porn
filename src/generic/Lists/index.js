@@ -125,6 +125,7 @@ const
     Lists = ({
         classes,
         cb,
+        maxHeight,
 
         sponsorsList,
         sponsorLinkBuilder,
@@ -142,7 +143,7 @@ const
         i18nListArchiveHeader,
     }) =>
         ccb(cb, sm) === 1
-            ? <ListsInner>
+            ? <ListsInner maxHeight={maxHeight}>
                 { sponsorsList ? <ListComponent
                     component="nav"
                     subheader={
@@ -185,6 +186,6 @@ const
 export default compose(
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        cb: PropTypes.oneOf(breakpoints)
+        cb: PropTypes.oneOf(breakpoints),
     })
 )(Lists)

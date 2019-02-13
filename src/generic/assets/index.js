@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const Page = styled.section`
+    ${'' /* TODO need to get real header+footer height from props */}
     min-height: calc(100vh - 373px);
     display: flex;
     justify-content: center;
@@ -22,6 +23,7 @@ export const Content = styled.div`
     display: flex;
     width: 100%;
     align-self: flex-start;
+    align-items: flex-start;
 `
 
 export const PageWrapper = styled.section`

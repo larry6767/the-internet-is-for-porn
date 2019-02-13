@@ -1,7 +1,7 @@
 // TODO: this page needs propTypes
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {compose, withHandlers, withProps, withState} from 'recompose'
+import {compose, withHandlers, withProps, withState, lifecycle} from 'recompose'
 import Typography from '@material-ui/core/Typography'
 
 import {
@@ -14,7 +14,7 @@ import {
     PropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
-    lifecycleForPageWithRefs,
+    areWeSwitchedOnPage,
     breakpoints,
 } from '../../helpers'
 
@@ -54,24 +54,24 @@ const
         i18nListNichesHeader,
         i18nListArchiveHeader,
         i18nLabelShowing,
+        setPageWrapperRef,
+        pageWrapperRef,
+
     }) => <Fragment>
         <PageTextHelmet pageText={ig(data, 'pageText')}/>
-        <Lists
+        {!pageWrapperRef ? null : <Lists
             cb={cb}
-
+            maxHeight={g(pageWrapperRef, 'clientHeight')}
             sponsorsList={ig(data, 'sponsorsList')}
             sponsorLinkBuilder={sponsorLinkBuilder}
-
             tagList={ig(data, 'tagList')}
             tagLinkBuilder={listsTagLinkBuilder}
-
             tagArchiveList={ig(data, 'tagArchiveList')}
             archiveLinkBuilder={listsArchiveLinkBuilder}
-
             i18nListNichesHeader={i18nListNichesHeader}
             i18nListArchiveHeader={i18nListArchiveHeader}
-        />
-        <PageWrapperNextToList>
+        />}
+        <PageWrapperNextToList ref={setPageWrapperRef}>
             <Typography variant="h4" gutterBottom>
                 {ig(data, 'pageText', 'listHeader')}
             </Typography>
@@ -100,8 +100,9 @@ const
         </PageWrapperNextToList>
     </Fragment>,
 
-    setNewPageFlow = props => {
-        props.setNewText(getHeaderText(g(props, 'data'), true))
+    setNewPageFlow = (prevProps, nextProps) => {
+        if (areWeSwitchedOnPage(prevProps, nextProps))
+            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
     },
 
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
@@ -133,7 +134,6 @@ export default compose(
             setNewText: g(headerActions, 'setNewText'),
         }
     ),
-    withState('listsRef', 'setListsRef', null),
     withState('pageWrapperRef', 'setPageWrapperRef', null),
     withProps(props => ({
         nicheCode: g(props, 'match', 'params', 'child'),
@@ -200,7 +200,17 @@ export default compose(
         sponsorLinkBuilder: props => sponsor =>
             routerGetters.site.link(g(props, 'routerContext'), sponsor, null)
     }),
-    lifecycleForPageWithRefs(loadPageFlow, setNewPageFlow, ['listsRef', 'pageWrapperRef']),
+    lifecycle({
+        componentDidMount() {
+            loadPageFlow(this.props)
+            setNewPageFlow(null, this.props)
+        },
+
+        componentWillReceiveProps(nextProps) {
+            loadPageFlow(nextProps)
+            setNewPageFlow(this.props, nextProps)
+        },
+    }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         cb: PropTypes.oneOf(breakpoints),
         data: model,
@@ -211,6 +221,7 @@ export default compose(
         i18nListNichesHeader: PropTypes.string,
         i18nListArchiveHeader: PropTypes.string,
         i18nLabelShowing: PropTypes.string,
+        pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(Element)),
 
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
@@ -223,6 +234,7 @@ export default compose(
         listsTagLinkBuilder: PropTypes.func,
         listsArchiveLinkBuilder: PropTypes.func,
         sponsorLinkBuilder: PropTypes.func,
+        setPageWrapperRef: PropTypes.func,
     }),
     loadingWrapper
 )(Niche)
