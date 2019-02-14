@@ -9,8 +9,7 @@ export const Wrapper = styled.div`
 
     ${({theme}) => theme.media.sm`width: calc((100% - 10px) / 3)`}
     ${({theme}) => theme.media.xs`width: calc((100% - 5px) / 2)`}
-    ${({theme}) => theme.media.xxs`width: 100%;`}
-    ${({theme}) => theme.media.xxs`margin-right: 0;`}
+    ${({theme}) => theme.media.xxs`width: 100%; margin-right: 0;`}
 
     &:nth-of-type(4n) {
         ${({theme}) => theme.media.xl`margin-right: 0;`}
@@ -52,23 +51,26 @@ export const LoadingProgress = styled.div`
     transition: transform 1s;
 `
 
-export const VideoPreview = styled.div`
-    position: relative;
-    display: flex;
-    align-items: flex-end;
+const VideoPreviewCommon = styled.div`
     width: 100%;
-    background-color: ${({theme}) => theme.palette.primary.light};
-    background-image: ${({thumb}) => `url(${thumb})`};
-    background-size: cover;
-    background-repeat: no-repeat;
-    border-radius: 1px;
-    overflow: hidden;
 
     &::before {
         content: '';
         display: block;
         padding-top: 75%;
     }
+`
+
+export const VideoPreview = styled(VideoPreviewCommon)`
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    background-color: ${({theme}) => theme.palette.primary.light};
+    background-image: ${({thumb}) => `url(${thumb})`};
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 1px;
+    overflow: hidden;
 
     &:hover ${VideoPreviewBar} {
         transform: translateY(0px);
@@ -121,4 +123,29 @@ export const Duration = styled.div`
     background-color: ${({theme}) => theme.palette.primary.lightOpacity};
     border-radius: 1px;
     min-height: 35px;
+`
+
+// styles for plug
+
+export const VideoPreviewPlug = styled(VideoPreviewCommon)`
+    background: ${({theme}) => theme.palette.prerender.plug};
+`
+
+export const TitlePlug = styled.div`
+    width: 100%;
+    height: 20px;
+    margin: 2px 0;
+    background: ${({theme}) => theme.palette.prerender.plug};
+`
+
+export const ProviderLinkPlug = styled.div`
+    width: 40%;
+    height: 21px;
+    background: ${({theme}) => theme.palette.prerender.plug};
+`
+
+export const TagsPlug = styled.div`
+    width: 40%;
+    height: 21px;
+    background: ${({theme}) => theme.palette.prerender.plug};
 `

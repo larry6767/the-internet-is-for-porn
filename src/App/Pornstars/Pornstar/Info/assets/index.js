@@ -38,7 +38,7 @@ export const DataWrapper = styled.div`
     }
 
     html.is-loading & {
-        background: ${({theme}) => theme.palette.prerender.gag};
+        background: ${({theme}) => theme.palette.prerender.plug};
         border-radius: 4px;
     }
 `
@@ -69,7 +69,7 @@ export const InfoBar = styled.div`
     }
 
     html.is-loading & {
-        background: ${({theme}) => theme.palette.prerender.gag};
+        background: ${({theme}) => theme.palette.prerender.plug};
         border-radius: 4px;
         width: 130px;
         height: 34px;

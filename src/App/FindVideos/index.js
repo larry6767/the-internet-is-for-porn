@@ -147,5 +147,5 @@ export default compose(
         },
     }),
     withStyles(muiStyles),
-    loadingWrapper
+    loadingWrapper()
 )(FindVideos)

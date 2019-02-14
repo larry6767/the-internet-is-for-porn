@@ -238,5 +238,7 @@ export default compose(
         sponsorLinkBuilder: PropTypes.func,
         setPageWrapperRef: PropTypes.func,
     }),
-    loadingWrapper
+    loadingWrapper({
+        withLists: true,
+    })
 )(Niche)

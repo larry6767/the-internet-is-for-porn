@@ -100,5 +100,5 @@ export default compose(
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
     }),
-    loadingWrapper
+    loadingWrapper()
 )(Favorite)

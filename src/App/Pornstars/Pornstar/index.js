@@ -233,5 +233,7 @@ export default compose(
         removePornstarFromFavorite: PropTypes.func,
         setPageWrapperRef: PropTypes.func,
     }),
-    loadingWrapper
+    loadingWrapper({
+        withLists: true,
+    })
 )(Pornstar)

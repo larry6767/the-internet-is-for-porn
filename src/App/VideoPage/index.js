@@ -416,5 +416,5 @@ export default compose(
         isSSR: PropTypes.bool,
         i18nButtons: immutableI18nButtonsModel,
     }),
-    loadingWrapper
+    loadingWrapper()
 )(VideoPage)

@@ -63,7 +63,7 @@ export const SelectWrapper = styled.div`
     }
 
     html.is-loading & {
-        background: ${({theme}) => theme.palette.prerender.gag};
+        background: ${({theme}) => theme.palette.prerender.plug};
         border-radius: 4px;
         width: 110px;
         height: 40px;

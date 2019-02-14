@@ -32,7 +32,7 @@ import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import {allNichesLoadingWrapper} from '../../generic/loadingWrapper'
+import loadingWrapper from '../../generic/loadingWrapper'
 import {PageWrapper} from './assets'
 import {muiStyles} from './assets/muiStyles'
 
@@ -147,5 +147,7 @@ export default compose(
         setNewText: PropTypes.func,
         getChildLink: PropTypes.func,
     }),
-    allNichesLoadingWrapper
+    loadingWrapper({
+        isAllNiches: true,
+    })
 )(AllNiches)

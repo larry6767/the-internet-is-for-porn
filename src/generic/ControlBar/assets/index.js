@@ -20,7 +20,7 @@ export const SortWrapper = styled.div`
     }
 
     html.is-loading & {
-        background: ${({theme}) => theme.palette.prerender.gag};
+        background: ${({theme}) => theme.palette.prerender.plug};
         border-radius: 4px;
         width: 145.5px;
         height: 37px;
@@ -65,4 +65,19 @@ export const InlinedSelectionItem = styled.a`
         border-radius: 0 4px 4px 0;
         border-left: none;
     }
+`
+
+// styles for plug
+
+export const ShowedElementsPlug = styled.div`
+    width: 150px;
+    height: 20px;
+    margin: 2px 0 6px;
+    background: ${({theme}) => theme.palette.prerender.plug};
+`
+
+export const SortPlug = styled.div`
+    width: 160px;
+    height: 36px;
+    background: ${({theme}) => theme.palette.prerender.plug};
 `

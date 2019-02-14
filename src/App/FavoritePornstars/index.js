@@ -159,5 +159,5 @@ export default compose(
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
     }),
-    loadingWrapper
+    loadingWrapper()
 )(FavoritePornstars)

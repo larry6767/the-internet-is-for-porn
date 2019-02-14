@@ -21,3 +21,12 @@ export const ButtonsList = styled.div`
         margin-bottom: 8px;
     `}
 `
+
+export const PaginationPlug = styled.div`
+    width: 100%;
+    max-width: 405px;
+    height: 36px;
+    margin-right: 15px;
+    margin-bottom: 12px;
+    background: ${({theme}) => theme.palette.prerender.plug}
+`
