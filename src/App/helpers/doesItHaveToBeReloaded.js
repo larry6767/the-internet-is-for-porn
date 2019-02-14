@@ -3,6 +3,7 @@ import PropTypes from './propTypes'
 import ImmutablePropTypes from './propTypes/immutable'
 import {assertPropTypes} from './propTypes/check'
 
+// WARNING! Be careful! Avoid recursive dependencies!
 import {pageRequestParamsModel} from '../models'
 
 const
@@ -16,7 +17,7 @@ const
     // Could be `Map` from store of some component's filtering `Record`,
     // only `.getIn` method is required for compatibility.
     dataModel = process.env.NODE_ENV === 'production' ? null : PropTypes.oneOfType([
-        ImmutablePropTypes.mapOf(dataModelProps),
+        ImmutablePropTypes.shape(dataModelProps),
         ImmutablePropTypes.recordOf(dataModelProps),
     ])
 

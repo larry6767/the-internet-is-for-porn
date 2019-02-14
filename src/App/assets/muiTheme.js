@@ -13,6 +13,7 @@ const
             secondary: {...theme.palette.secondary},
             error: {...theme.palette.error},
             success: {...theme.palette.success},
+            prerender: {...theme.palette.prerender},
         },
         typography: {
             useNextVariants: true,

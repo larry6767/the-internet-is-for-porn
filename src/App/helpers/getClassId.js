@@ -1,8 +1,9 @@
 import {find} from 'lodash'
-import {
-    PropTypes,
-    assertPropTypes,
-} from '.'
+
+import {PropTypes} from './propTypes'
+import {assertPropTypes} from './propTypes/check'
+
+// WARNING! Be careful! Avoid recursive dependencies!
 import {orientationCodes} from '../models'
 
 const

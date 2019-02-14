@@ -21,7 +21,7 @@ import {
     immutableI18nOrientationModel,
 } from '../../models'
 
-import {routerGetters} from '../../../router-builder'
+import routerGetters from '../../routerGetters'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 

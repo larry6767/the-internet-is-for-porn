@@ -15,6 +15,7 @@ import {
     setPropTypes,
 } from '../../App/helpers'
 
+import {immutableI18nButtonsModel} from '../../App/models'
 import actions from '../../App/actions'
 import {muiStyles} from './assets/muiStyles'
 import {List, PornstarItem, Thumb, InfoBar, Like} from './assets'
@@ -22,6 +23,7 @@ import {List, PornstarItem, Thumb, InfoBar, Like} from './assets'
 const
     PornstarList = ({
         classes,
+        i18nButtons,
         pornstarList,
         favoritePornstarList,
         addToFavoriteHandler,
@@ -60,7 +62,7 @@ const
                             variant="body2"
                             classes={{root: g(classes, 'typographyQuantity')}}
                         >
-                            {`${ig(x, 'itemsCount')} Films`}
+                            {`${ig(x, 'itemsCount')} ${ig(i18nButtons, 'favoriteMovies')}`}
                             {/* TODO need localize */}
                         </Typography>
                     </InfoBar>
@@ -73,6 +75,7 @@ export default compose(
     connect(
         state => ({
             favoritePornstarList: ig(state, 'app', 'ui', 'favoritePornstarList'),
+            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
         }),
         {
             addPornstarToFavorite: g(actions, 'addPornstarToFavorite'),
@@ -109,6 +112,7 @@ export default compose(
             favoriteIcon: PropTypes.string,
         }),
 
+        i18nButtons: immutableI18nButtonsModel,
         linkBuilder: PropTypes.func,
         addPornstarToFavorite: PropTypes.func,
         removePornstarFromFavorite: PropTypes.func,

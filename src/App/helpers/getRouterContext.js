@@ -2,6 +2,8 @@ import {Record, fromJS} from 'immutable'
 
 import ig from './immutable/provedGet'
 import {assertPropTypes} from './propTypes/check'
+
+// WARNING! Be careful! Avoid recursive dependencies!
 import {routerContextModel, ssrRouterContextModel} from '../models'
 
 const

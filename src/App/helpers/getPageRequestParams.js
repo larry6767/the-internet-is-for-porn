@@ -6,6 +6,7 @@ import g from './plain/provedGet'
 import ig from './immutable/provedGet'
 import {assertPropTypes} from './propTypes/check'
 
+// WARNING! Be careful! Avoid recursive dependencies!
 import {pageRequestParamsModel} from '../models'
 
 export default (routerContext, match, isSitePage = false) => {

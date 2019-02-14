@@ -215,6 +215,12 @@ export const
 
         const
             sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS')),
+
+            pornstarInfoForTable = getPornstarInfoForTable(
+                g(x, 'page', 'MODEL_INFO'),
+                g(x, 'page', 'MONTHS_NAMES'),
+            ),
+
             result = {
                 pageNumber: g(x, 'page', 'PAGE_NUMBER'),
                 pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
@@ -235,10 +241,8 @@ export const
                     true
                 ),
                 pornstarInfo: getPornstarInfo(g(x, 'page', 'MODEL_INFO')),
-                pornstarInfoForTable: getPornstarInfoForTable(
-                    g(x, 'page', 'MODEL_INFO'),
-                    g(x, 'page', 'MONTHS_NAMES'),
-                ),
+                pornstarInfoForTable: g(pornstarInfoForTable, 'data'),
+                pornstarInfoForTableKeysOrder: g(pornstarInfoForTable, 'keysOrder'),
             }
 
         if (process.env.NODE_ENV !== 'production')

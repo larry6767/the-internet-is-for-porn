@@ -72,11 +72,13 @@ const
         Object.freeze(mapValues(pornstarInfoModelProps, (x, k) => k)),
 
     // get incoming property by verified key (which must be presented in the model) or return 'null'
-    getString = process.env.NODE_ENV === 'production' ? g :
-        (src, propKey, ...xs) => g(src, g(pornstarInfoModelPropsKeys, propKey), ...xs) || null,
+    getString = process.env.NODE_ENV === 'production'
+        ? (src, propKey, ...xs) => g(src, propKey, ...xs) || null
+        : (src, propKey, ...xs) => g(src, g(pornstarInfoModelPropsKeys, propKey), ...xs) || null,
 
-    getNumber = process.env.NODE_ENV === 'production' ? g :
-        (src, propKey, ...xs) =>
+    getNumber = process.env.NODE_ENV === 'production'
+        ? (src, propKey, ...xs) => Number(g(src, propKey, ...xs)) || null
+        : (src, propKey, ...xs) =>
             Number(g(src, g(pornstarInfoModelPropsKeys, propKey), ...xs)) || null,
 
     getAstrologicalSign = v => v === null ? null
@@ -157,7 +159,40 @@ const
             return `${startValue ? startValue : 'Unknown'} - ${endValue ? endValue : 'Unknown'}`
         else
             return null
-    }
+    },
+
+    keysOrder = Object.freeze([
+        'name',
+        'alias',
+        'birthday',
+        'astrologicalSign',
+        'lifetime',
+        'profession',
+        'country',
+        'city',
+        'ethnicity',
+        'colorEye',
+        'colorHair',
+        'height',
+        'weight',
+        'breast',
+        'breastSizeType',
+        'cupSize',
+        'boobsFake',
+        'shoeSize',
+        'tatoos',
+        'piercings',
+        'waist',
+        'hip',
+        'penis',
+        'bodyHair',
+        'physiqueCustom',
+        'sexualRole',
+        'careerTime',
+        'extra',
+    ]),
+
+    validKeysModel = PropTypes.arrayOf(PropTypes.oneOf(keysOrder))
 
 export const
     getPornstarInfoForTable = (data, monthsNames) => {
@@ -202,10 +237,20 @@ export const
                 extra: getString(data, 'extra'),
             }
 
-        const
-            keysArray = Object.keys(result).filter(x => g(result, x) !== null)
+        // checking for case we added a new key to a model for result (`pornstarInfoForTableModel`)
+        // but forgot to add it to `keysOrder`.
+        if (process.env.NODE_ENV !== 'production')
+            assertPropTypes(
+                validKeysModel,
+                Object.keys(result),
+                'getPornstarInfoForTable',
+                'only allowed keys in result'
+            )
 
-        result = pick(result, keysArray)
+        const
+            filteredKeysOrder = keysOrder.filter(k => g(result, k) !== null)
+
+        result = pick(result, filteredKeysOrder)
 
         if (process.env.NODE_ENV !== 'production')
             assertPropTypes(
@@ -215,7 +260,10 @@ export const
                 'result data for info of pornstar'
             )
 
-        return result
+        return {
+            data: result,
+            keysOrder: filteredKeysOrder,
+        }
     },
 
     getPornstarInfo = data => {

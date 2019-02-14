@@ -8,8 +8,9 @@ import {
     plainProvedGet as g,
     setPropTypes,
 } from '../App/helpers'
+
 import {ssrRouterContextModel, orientationCodes} from '../App/models'
-import {routerGetters} from '../router-builder'
+import routerGetters from '../App/routerGetters'
 import nichesRedirects from '../fixtures/legacy-redirects/niches-redirects.json'
 
 const

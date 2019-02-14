@@ -1,4 +1,5 @@
-import {immutableProvedGet as ig, plainProvedGet as g} from './'
+import ig from './immutable/provedGet'
+import g from './plain/provedGet'
 
 export default (data, isImmutable = false, withTitle = true) =>
     isImmutable ? {

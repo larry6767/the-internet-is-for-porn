@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {compose, lifecycle, withHandlers, withProps} from 'recompose'
-import {CircularProgress, Typography} from '@material-ui/core'
-import {Record, remove} from 'immutable'
+import {compose, withHandlers, withProps, withPropsOnChange, withState, lifecycle} from 'recompose'
+import Typography from '@material-ui/core/Typography'
+import {remove} from 'immutable'
 
 import {
     getHeaderText,
@@ -23,23 +23,20 @@ import {
     immutableI18nOrderingModel,
     immutableI18nButtonsModel,
     immutableI18nPornstarInfoParametersModel,
-    PageTextRecord,
 } from '../../models'
 
-import {PornstarInfoRecord} from './models'
-
-import {dataModel} from './models'
-import {routerGetters} from '../../../router-builder'
+import {model, immutablePornstarInfoForTableModel} from './models'
+import routerGetters from '../../routerGetters'
 import sectionPortal from '../../MainHeader/Navigation/sectionPortal'
+import loadingWrapper from '../../../generic/loadingWrapper'
 import orientationPortal from '../../MainHeader/Niche/orientationPortal'
 import ControlBar from '../../../generic/ControlBar'
-import ErrorContent from '../../../generic/ErrorContent'
 import PageTextHelmet from '../../../generic/PageTextHelmet'
 import Lists from '../../../generic/Lists'
 import VideoList from '../../../generic/VideoList'
 
 import Info from './Info'
-import {Page, Content, PageWrapper} from './assets'
+import {PageWrapperNextToList} from './assets'
 import appActions from '../../../App/actions'
 import headerActions from '../../MainHeader/actions'
 import actions from './actions'
@@ -47,85 +44,56 @@ import actions from './actions'
 const
     Pornstar = ({
         cb, i18nOrdering, i18nButtons, i18nLabelShowing, i18nPornstarInfoParameters,
-        data, chooseSort, isSSR, modelInfoHandler, modelInfoIsOpen, favoritePornstarList,
+        data, chooseSort, isSSR, favoritePornstarList,
         controlLinkBuilder, modelLinkBuilder,
         addToFavoriteHandler, removeFromFavoriteHandler,
-    }) => <Page>
-        { ig(data, 'isFailed')
-            ? <ErrorContent/>
-            : ig(data, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <PageTextHelmet pageText={ig(data, 'pageText')}/>
-                <Lists
-                    currentBreakpoint={cb}
-                    modelsList={ig(data, 'modelsList')}
-                    modelLinkBuilder={modelLinkBuilder}
-                />
-                <PageWrapper>
-                    <Typography variant="h4" gutterBottom>
-                        {data.getIn(['pageText', 'listHeader'])}
-                    </Typography>
-                    <Info
-                        i18nPornstarInfoParameters={i18nPornstarInfoParameters}
-                        pornstarInfo={ig(data, 'pornstarInfo')}
-                        pornstarInfoForTable={ig(data, 'pornstarInfoForTable')}
-                        modelInfoHandler={modelInfoHandler}
-                        modelInfoIsOpen={modelInfoIsOpen}
-                        favoritePornstarList={favoritePornstarList}
-                        cb={cb}
-                        isSSR={isSSR}
-                        addToFavoriteHandler={addToFavoriteHandler}
-                        removeFromFavoriteHandler={removeFromFavoriteHandler}
-                    />
-                    <ControlBar
-                        cb={cb}
-                        i18nOrdering={i18nOrdering}
-                        i18nButtons={i18nButtons}
-                        i18nLabelShowing={i18nLabelShowing}
-                        chooseSort={chooseSort}
-                        isSSR={isSSR}
-                        pagesCount={ig(data, 'pagesCount')}
-                        pageNumber={ig(data, 'pageNumber')}
-                        itemsCount={ig(data, 'itemsCount')}
-                        sortList={ig(data, 'sortList')}
-                        currentSort={ig(data, 'currentSort')}
-                        archiveFilms={null}
-                        tagArchiveListOlder={null}
-                        tagArchiveListNewer={null}
-                        linkBuilder={controlLinkBuilder}
-                        archiveLinkBuilder={null}
-                    />
-                    <VideoList
-                        videoList={ig(data, 'videoList')}
-                    />
-                </PageWrapper>
-            </Content>
-        }
-    </Page>,
-
-    DataRecord = Record({
-        isLoading: null,
-        isLoaded: null,
-        isFailed: null,
-        modelInfoIsOpen: null,
-
-        lastPageRequestParams: null,
-
-        pageText: PageTextRecord(),
-
-        pageNumber: null,
-        pagesCount: null,
-        itemsCount: null,
-
-        sortList: null,
-        currentSort: null,
-
-        videoList: null,
-        modelsList: null,
-        pornstarInfoForTable: null,
-        pornstarInfo: PornstarInfoRecord(),
-    }),
+        orderedPornstarInfoForTable, setPageWrapperRef, pageWrapperRef,
+    }) => <Fragment>
+        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        {!pageWrapperRef && !isSSR ? null : <Lists
+            cb={cb}
+            maxHeight={!isSSR ? g(pageWrapperRef, 'clientHeight') : null}
+            modelsList={ig(data, 'modelsList')}
+            modelLinkBuilder={modelLinkBuilder}
+        />}
+        <PageWrapperNextToList ref={setPageWrapperRef}>
+            <Typography variant="h4" gutterBottom>
+                {ig(data, 'pageText', 'listHeader')}
+            </Typography>
+            <Info
+                i18nPornstarInfoParameters={i18nPornstarInfoParameters}
+                i18nButtons={i18nButtons}
+                pornstarInfo={ig(data, 'pornstarInfo')}
+                pornstarInfoForTable={ig(orderedPornstarInfoForTable, [])}
+                favoritePornstarList={favoritePornstarList}
+                cb={cb}
+                isSSR={isSSR}
+                addToFavoriteHandler={addToFavoriteHandler}
+                removeFromFavoriteHandler={removeFromFavoriteHandler}
+            />
+            <ControlBar
+                cb={cb}
+                i18nOrdering={i18nOrdering}
+                i18nButtons={i18nButtons}
+                i18nLabelShowing={i18nLabelShowing}
+                chooseSort={chooseSort}
+                isSSR={isSSR}
+                pagesCount={ig(data, 'pagesCount')}
+                pageNumber={ig(data, 'pageNumber')}
+                itemsCount={ig(data, 'itemsCount')}
+                sortList={ig(data, 'sortList')}
+                currentSort={ig(data, 'currentSort')}
+                archiveFilms={null}
+                tagArchiveListOlder={null}
+                tagArchiveListNewer={null}
+                linkBuilder={controlLinkBuilder}
+                archiveLinkBuilder={null}
+            />
+            <VideoList
+                videoList={ig(data, 'videoList')}
+            />
+        </PageWrapperNextToList>
+    </Fragment>,
 
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
@@ -146,23 +114,41 @@ export default compose(
     connect(
         state => ({
             cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: DataRecord(ig(state, 'app', 'pornstars', 'pornstar')),
+            data: ig(state, 'app', 'pornstars', 'pornstar'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
-            i18nPornstarInfoParameters: ig(state, 'app', 'locale', 'i18n', 'pornstarInfoParameters'),
-            modelInfoIsOpen: ig(state, 'app', 'pornstars', 'pornstar', 'modelInfoIsOpen'),
+
+            i18nPornstarInfoParameters:
+                ig(state, 'app', 'locale', 'i18n', 'pornstarInfoParameters'),
+
             favoritePornstarList: ig(state, 'app', 'ui', 'favoritePornstarList'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
-            toggleModelInfo: g(actions, 'toggleModelInfo'),
             setNewSort: g(actions, 'setNewSort'),
             setNewText: g(headerActions, 'setNewText'),
             addPornstarToFavorite: g(appActions, 'addPornstarToFavorite'),
             removePornstarFromFavorite: g(appActions, 'removePornstarFromFavorite'),
+        }
+    ),
+    withState('pageWrapperRef', 'setPageWrapperRef', null),
+    withPropsOnChange(
+        (prevProps, nextProps) =>
+            ig(prevProps.data, 'pornstarInfoForTable') !==
+            ig(nextProps.data, 'pornstarInfoForTable'),
+
+        props => {
+            const
+                keysOrder = ig(props.data, 'pornstarInfoForTableKeysOrder')
+
+            return {
+                orderedPornstarInfoForTable:
+                    ig(props.data, 'pornstarInfoForTable')
+                        .sortBy((v, k) => keysOrder.indexOf(k)),
+            }
         }
     ),
     withProps(props => ({
@@ -170,8 +156,6 @@ export default compose(
     })),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-
-        modelInfoHandler: props => state => props.toggleModelInfo(state),
 
         chooseSort: props => newSortValue => props.setNewSort({
             newSortValue,
@@ -224,19 +208,20 @@ export default compose(
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         cb: PropTypes.oneOf(breakpoints),
-        data: dataModel,
+        data: model,
+        orderedPornstarInfoForTable: immutablePornstarInfoForTableModel,
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
         i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,
         i18nPornstarInfoParameters: immutableI18nPornstarInfoParametersModel,
-        modelInfoIsOpen: PropTypes.bool,
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
+        pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(
+            typeof Element === 'undefined' ? () => {} : Element // plug for SSR
+        )),
 
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
-        toggleModelInfo: PropTypes.func,
-        modelInfoHandler: PropTypes.func,
         setNewText: PropTypes.func,
         setNewSort: PropTypes.func,
         chooseSort: PropTypes.func,
@@ -246,5 +231,7 @@ export default compose(
         addPornstarToFavorite: PropTypes.func,
         removeFromFavoriteHandler: PropTypes.func,
         removePornstarFromFavorite: PropTypes.func,
+        setPageWrapperRef: PropTypes.func,
     }),
+    loadingWrapper
 )(Pornstar)

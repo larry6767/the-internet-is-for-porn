@@ -11,8 +11,7 @@ export const NicheBlock = styled.div`
 
     html.is-loading & {
         display: none;
-        ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xs`display: block;`}
-        ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.xxs`display: block;`}
+        ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.mobile`display: block;`}
     }
 `
 
@@ -34,10 +33,6 @@ export const NicheMobile = styled.nav`
         theme.media.sm`margin-left: 0; padding-bottom: 0; width: 100%;`}
     ${({theme, isSSR}) => !g(isSSR, []) ? null :
         theme.media.mobile`margin-left: 0; padding-bottom: 0; width: 100%;`}
-    ${({theme, isSSR}) => !g(isSSR, []) ? null :
-        theme.media.xs`margin-left: 0; padding-bottom: 0; width: 100%;`}
-    ${({theme, isSSR}) => !g(isSSR, []) ? null :
-        theme.media.xxs`margin-left: 0; padding-bottom: 0; width: 100%;`}
 `
 
 export const NicheMobileItem = styled.a`

@@ -1,10 +1,6 @@
 import styled from 'styled-components'
 
-export {
-    Page,
-    Content,
-    PageWrapper,
-} from '../../../generic/assets'
+export {PageWrapper} from '../../../generic/assets'
 
 export const PlayerSection = styled.section`
     margin-bottom: 40px;

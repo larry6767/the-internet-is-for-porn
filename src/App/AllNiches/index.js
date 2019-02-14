@@ -1,18 +1,15 @@
 import {Record} from 'immutable'
-import React from 'react'
+import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
 import {Link} from 'react-router-dom'
 import FolderIcon from '@material-ui/icons/Folder'
 
-import {
-    List as ListComponent,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    CircularProgress,
-    Typography,
-} from '@material-ui/core'
+import ListComponent from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import Typography from '@material-ui/core/Typography'
 
 import {
     getHeaderText,
@@ -29,14 +26,14 @@ import {
 
 import {routerContextModel} from '../models'
 import {dataModel} from './models'
-import ErrorContent from '../../generic/ErrorContent'
 import PageTextHelmet from '../../generic/PageTextHelmet'
-import {routerGetters} from '../../router-builder'
+import routerGetters from '../routerGetters'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import {AllNichesPage, Content, PageWrapper} from './assets'
+import {allNichesLoadingWrapper} from '../../generic/loadingWrapper'
+import {PageWrapper} from './assets'
 import {muiStyles} from './assets/muiStyles'
 
 const
@@ -65,31 +62,24 @@ const
         </ListItem>
     </Link>,
 
-    AllNiches = ({classes, data, getChildLink, i18nAllNichesHeader}) => <AllNichesPage>
-        { ig(data, 'isFailed')
-            ? <ErrorContent/>
-            : ig(data, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <PageTextHelmet pageText={ig(data, 'pageText')}/>
-                <PageWrapper>
-                    <Typography variant="h4" gutterBottom>
-                        {i18nAllNichesHeader}
-                    </Typography>
-                    <ListComponent
-                        component="div"
-                        classes={{
-                            root: g(classes, 'root')
-                        }}
-                    >
-                        {ig(data, 'nichesList').map(x =>
-                            renderListItemLink(x, classes, getChildLink)
-                        )}
-                    </ListComponent>
-                </PageWrapper>
-            </Content>
-        }
-    </AllNichesPage>,
+    AllNiches = ({classes, data, getChildLink, i18nAllNichesHeader}) => <Fragment>
+        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <PageWrapper>
+            <Typography variant="h4" gutterBottom>
+                {i18nAllNichesHeader}
+            </Typography>
+            <ListComponent
+                component="div"
+                classes={{
+                    root: g(classes, 'root')
+                }}
+            >
+                {ig(data, 'nichesList').map(x =>
+                    renderListItemLink(x, classes, getChildLink)
+                )}
+            </ListComponent>
+        </PageWrapper>
+    </Fragment>,
 
     DataRecord = Record({
         isLoading: null,
@@ -156,5 +146,6 @@ export default compose(
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
         getChildLink: PropTypes.func,
-    })
+    }),
+    allNichesLoadingWrapper
 )(AllNiches)

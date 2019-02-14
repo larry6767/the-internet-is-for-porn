@@ -1,4 +1,5 @@
-import {getCookie, setCookie} from '../'
+import getCookie from '../cookie/getCookie'
+import setCookie from '../cookie/setCookie'
 
 import ig from '../immutable/provedGet'
 

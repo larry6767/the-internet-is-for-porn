@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
-import {compose} from 'recompose'
+import {compose, withPropsOnChange, withState, withHandlers, onlyUpdateForKeys} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
+
 import {
     Button,
     Paper,
@@ -10,8 +11,10 @@ import {
     TableCell,
     Typography,
 } from '@material-ui/core'
+
 import Favorite from '@material-ui/icons/Favorite'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
+
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -23,8 +26,11 @@ import {
     PropTypes,
     ImmutablePropTypes,
 } from '../../../helpers'
-import {immutableI18nPornstarInfoParametersModel} from '../../../models'
+
+import {immutableI18nPornstarInfoParametersModel, immutableI18nButtonsModel} from '../../../models'
 import {immutablePornstarInfoModel, immutablePornstarInfoForTableModel} from '../models'
+import {muiStyles} from './assets/muiStyles'
+
 import {
     InfoWrapper,
     ThumbWrapper,
@@ -34,112 +40,66 @@ import {
     InfoBar,
     Like,
 } from './assets'
-import {muiStyles} from './assets/muiStyles'
 
 const
     paramsQuantityForMobile = 3,
+    paramsShrinkedQuantityForDesktop = 5,
 
-    renderTableRow = (v, k, i18nPornstarInfoParameters, classes) => <TableRow key={`${k}-row`}>
-        <TableCell
-            component="td"
-            classes={{
-                root: classes.tableCellRoot
-            }}
-        >
-            {ig(i18nPornstarInfoParameters, k)}
-        </TableCell>
-        <TableCell component="td">{v}</TableCell>
-    </TableRow>,
+    renderTableRow = (v, k, i18nPornstarInfoParameters, classedBounds) =>
+        <TableRow key={`${k}-row`}>
+            <TableCell component="td" classes={g(classedBounds, 'tableCellRoot')}>
+                {ig(i18nPornstarInfoParameters, k)}
+            </TableCell>
+            <TableCell component="td">{v}</TableCell>
+        </TableRow>,
 
     Info = ({
-        classes,
+        classedBounds,
         isSSR,
-        cb,
-        i18nPornstarInfoParameters,
+        i18nButtons,
         pornstarInfo,
-        pornstarInfoForTable,
-        favoritePornstarList,
-        modelInfoIsOpen,
-        modelInfoHandler,
+        isThisModelFavorite,
+        infoTableMobileItems,
+        infoTableItems,
         addToFavoriteHandler,
         removeFromFavoriteHandler,
+        modelInfoIsOpened,
+        toggleModelInfoIsOpened,
     }) => <InfoWrapper>
         <ThumbWrapper>
             <Thumb thumb={ig(pornstarInfo, 'thumbUrl')}/>
             <InfoBar>
                 <Like>
-                    {favoritePornstarList.find(id => id === ig(pornstarInfo, 'id'))
+                    {isThisModelFavorite
                         ? <Favorite
-                            classes={{root: g(classes, 'favoriteIcon')}}
+                            classes={g(classedBounds, 'favoriteIcon')}
                             data-favorite-pornstar-id={ig(pornstarInfo, 'id')}
                             onClick={removeFromFavoriteHandler}
                         />
                         : <FavoriteBorder
-                            classes={{root: g(classes, 'favoriteBorderIcon')}}
+                            classes={g(classedBounds, 'favoriteBorderIcon')}
                             data-favorite-pornstar-id={ig(pornstarInfo, 'id')}
                             onClick={addToFavoriteHandler}
                         />
                     }
                 </Like>
-                {!isSSR ? <Button
+                {isSSR ? null : <Button
                     variant="outlined"
                     color="primary"
-                    classes={{
-                        root: classes.buttonMore
-                    }}
-                    onClick={modelInfoHandler}
+                    classes={g(classedBounds, 'buttonMore')}
+                    onClick={toggleModelInfoIsOpened}
                 >
-                    {modelInfoIsOpen /* TODO localize */
-                        ? 'hide info'
-                        : 'show info'}
-                </Button> : null}
+                    {modelInfoIsOpened
+                        ? ig(i18nButtons, 'hideInfo')
+                        : ig(i18nButtons, 'showInfo')}
+                </Button>}
             </InfoBar>
         </ThumbWrapper>
-        <MobileInfo>
-            {ccb(cb, sm) === -1
-                ? pornstarInfoForTable.mapEntries(([k, v], idx) => [
-                    idx <= paramsQuantityForMobile
-                        ? <Fragment>
-                            <Typography
-                                variant="body1"
-                                classes={{
-                                    root: classes.typographyBold,
-                                }}
-                            >
-                                {`${ig(i18nPornstarInfoParameters, k)}: `}
-                            </Typography>
-                            <Typography
-                                variant="body1"
-                                gutterBottom
-                            >
-                                {v}
-                            </Typography>
-                        </Fragment>
-                        : null,
-                    null
-                ]).keySeq()
-                : null}
-        </MobileInfo>
-        <DataWrapper modelInfoIsOpen={modelInfoIsOpen}>
+        <MobileInfo>{infoTableMobileItems}</MobileInfo>
+        <DataWrapper modelInfoIsOpened={modelInfoIsOpened}>
             <Paper>
                 <Table>
-                    <TableBody>
-                        {ccb(cb, sm) === -1 && modelInfoIsOpen
-                            ? pornstarInfoForTable.mapEntries(([k, v], idx) => [
-                                idx > paramsQuantityForMobile
-                                    ? renderTableRow(v, k, i18nPornstarInfoParameters, classes)
-                                    : null,
-                                null
-                            ]).keySeq()
-                            : pornstarInfoForTable.mapEntries(([k, v], idx) => [
-                                isSSR || modelInfoIsOpen
-                                    ? renderTableRow(v, k, i18nPornstarInfoParameters, classes)
-                                    : idx < 5 && ccb(cb, xs) === 1
-                                    ? renderTableRow(v, k, i18nPornstarInfoParameters, classes)
-                                    : null,
-                                null
-                            ]).keySeq()}
-                    </TableBody>
+                    <TableBody>{infoTableItems}</TableBody>
                 </Table>
             </Paper>
         </DataWrapper>
@@ -148,25 +108,128 @@ const
 
 export default compose(
     withStyles(muiStyles),
-    setPropTypes({
+    withPropsOnChange([], props => ({
+        classedBounds: Object.freeze({
+            tableCellRoot: Object.freeze({root: g(props, 'classes', 'tableCellRoot')}),
+            favoriteIcon: Object.freeze({root: g(props, 'classes', 'favoriteIcon')}),
+            favoriteBorderIcon: Object.freeze({root: g(props, 'classes', 'favoriteBorderIcon')}),
+            buttonMore: Object.freeze({root: g(props, 'classes', 'buttonMore')}),
+        }),
+    })),
+    withPropsOnChange(['cb', 'pornstarInfoForTable'], props => {
+        const
+            cb = g(props, 'cb'),
+            isMobile = ccb(cb, sm) === -1
+
+        if (!isMobile)
+            return {infoTableMobileItems: null}
+
+        const
+            classes = g(props, 'classes'),
+            typographyBold = Object.freeze({root: g(classes, 'typographyBold')}),
+            pornstarInfoForTable = g(props, 'pornstarInfoForTable'),
+            i18nPornstarInfoParameters = g(props, 'i18nPornstarInfoParameters'),
+
+            mobileInfoItems =
+                pornstarInfoForTable.mapEntries(([k, v], idx) => [
+                    idx <= paramsQuantityForMobile
+                        ? <Fragment>
+                            <Typography variant="body1" classes={typographyBold}>
+                                {`${ig(i18nPornstarInfoParameters, k)}: `}
+                            </Typography>
+                            <Typography variant="body1" gutterBottom>{v}</Typography>
+                        </Fragment>
+                        : null,
+                    null
+                ]).keySeq()
+
+        return {infoTableMobileItems: mobileInfoItems}
+    }),
+    withState('modelInfoIsOpened', 'setModelInfoIsOpened', false),
+    withHandlers({
+        toggleModelInfoIsOpened: props => () =>
+            props.setModelInfoIsOpened(!g(props, 'modelInfoIsOpened')),
+    }),
+    withPropsOnChange(['cb', 'modelInfoIsOpened', 'pornstarInfoForTable'], props => {
+        const
+            cb = g(props, 'cb'),
+            isMobile = ccb(cb, sm) === -1,
+            modelInfoIsOpened = g(props, 'modelInfoIsOpened'),
+            pornstarInfoForTable = g(props, 'pornstarInfoForTable'),
+            i18nPornstarInfoParameters = g(props, 'i18nPornstarInfoParameters'),
+            classedBounds = g(props, 'classedBounds'),
+
+            eitherDesktopOrMobileRestItems =
+                isMobile && modelInfoIsOpened
+
+                ? pornstarInfoForTable.mapEntries(([k, v], idx) => [
+                    idx > paramsQuantityForMobile
+                        ? renderTableRow(v, k, i18nPornstarInfoParameters, classedBounds)
+                        : null,
+                    null
+                ]).keySeq()
+
+                : pornstarInfoForTable.mapEntries(([k, v], idx) => [
+                    g(props, 'isSSR') || modelInfoIsOpened
+                        ? renderTableRow(v, k, i18nPornstarInfoParameters, classedBounds)
+                        : idx < paramsShrinkedQuantityForDesktop && ccb(cb, xs) === 1
+                        ? renderTableRow(v, k, i18nPornstarInfoParameters, classedBounds)
+                        : null,
+                    null
+                ]).keySeq()
+
+        return {infoTableItems: eitherDesktopOrMobileRestItems}
+    }),
+    withPropsOnChange(['pornstarInfo', 'favoritePornstarList'], props => ({
+        isThisModelFavorite: Boolean(
+            g(props, 'favoritePornstarList').find(id => id === ig(g(props, 'pornstarInfo'), 'id'))
+        ),
+    })),
+    onlyUpdateForKeys([
+        'cb',
+        'pornstarInfo',
+        'isThisModelFavorite',
+        'infoTableMobileItems',
+        'infoTableItems',
+        'addToFavoriteHandler',
+        'removeFromFavoriteHandler',
+        'modelInfoIsOpened',
+    ]),
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.exact({
             typography: PropTypes.string,
+            typographyBold: PropTypes.string,
             typographyTitle: PropTypes.string,
             favoriteBorderIcon: PropTypes.string,
             favoriteIcon: PropTypes.string,
             buttonMore: PropTypes.string,
             tableCellRoot: PropTypes.string,
         }),
+
+        classedBounds: PropTypes.exact({
+            tableCellRoot: PropTypes.object,
+            favoriteIcon: PropTypes.object,
+            favoriteBorderIcon: PropTypes.object,
+            buttonMore: PropTypes.object,
+        }),
+
         isSSR: PropTypes.bool,
         cb: PropTypes.oneOf(breakpoints),
         i18nPornstarInfoParameters: immutableI18nPornstarInfoParametersModel,
+        i18nButtons: immutableI18nButtonsModel,
         pornstarInfo: immutablePornstarInfoModel,
         pornstarInfoForTable: immutablePornstarInfoForTableModel,
-        modelInfoIsOpen: PropTypes.bool,
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
+        isThisModelFavorite: PropTypes.bool,
 
-        modelInfoHandler: PropTypes.func,
+        infoTableMobileItems: PropTypes.nullable(ImmutablePropTypes.seq),
+        infoTableItems: ImmutablePropTypes.seq,
+
         addToFavoriteHandler: PropTypes.func,
         removeFromFavoriteHandler: PropTypes.func,
+
+        modelInfoIsOpened: PropTypes.bool,
+        setModelInfoIsOpened: PropTypes.func,
+        toggleModelInfoIsOpened: PropTypes.func,
     })
 )(Info)

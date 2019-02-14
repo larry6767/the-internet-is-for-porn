@@ -14,7 +14,8 @@ import {
     Item,
     InlinedSelectionWrap,
     InlinedSelectionList,
-    InlinedSelectionItem
+    InlinedSelectionItem,
+    SelectWrapper,
 } from './assets'
 
 const
@@ -72,8 +73,8 @@ const
         siteLocalesState,
         currentLanguage,
         chooseLanguage
-    }) =>
-        ig(siteLocalesState, 'isFailed')
+    }) => <SelectWrapper>
+        {ig(siteLocalesState, 'isFailed')
         ? <Chip
             label="Failed to load site locales!"
             icon={<WarningIcon/>}
@@ -94,7 +95,8 @@ const
             siteLocales={siteLocales}
             currentLanguage={currentLanguage}
             chooseLanguage={chooseLanguage}
-        />,
+        />}
+    </SelectWrapper>,
 
     SiteLocalesStateRecord = Record({
         isLoading: false,

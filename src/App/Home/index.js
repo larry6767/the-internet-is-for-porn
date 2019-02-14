@@ -1,18 +1,15 @@
-import React from 'react'
+import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
 import {Record} from 'immutable'
 import {Link} from 'react-router-dom'
 import PermIdentityIcon from '@material-ui/icons/PermIdentity'
 
-import {
-    List as ListComponent,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    CircularProgress,
-    Typography,
-} from '@material-ui/core'
+import ListComponent from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import Typography from '@material-ui/core/Typography'
 
 import {
     getHeaderWithOrientation,
@@ -30,24 +27,16 @@ import {
 
 import {immutableI18nOrderingModel, routerContextModel} from '../models'
 import {dataModel} from './models'
-import {routerGetters} from '../../router-builder'
-import ErrorContent from '../../generic/ErrorContent'
+import routerGetters from '../routerGetters'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
+import loadingWrapper from '../../generic/loadingWrapper'
 import {muiStyles} from './assets/muiStyles'
 import actions from './actions'
 import headerActions from '../MainHeader/actions'
 
-import {
-    Page,
-    Content,
-    PageWrapper,
-    LetterIcon,
-    NichesList,
-    Niche,
-    NicheImage,
-} from './assets'
+import {PageWrapper, LetterIcon, NichesList, Niche, NicheImage} from './assets'
 
 const
     renderListItemLink = (x, idx, arr, classes, routerContext) => <Link
@@ -82,60 +71,53 @@ const
     Home = ({
         classes, data, routerContext,
         i18nNichesHeader, i18nPornstarsHeader,
-    }) => <Page>
-        { ig(data, 'isFailed')
-            ? <ErrorContent/>
-            : ig(data, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <PageTextHelmet pageText={ig(data, 'pageText')}/>
-                <PageWrapper>
-                    <Typography variant="h4" gutterBottom>
-                        {i18nNichesHeader}
-                    </Typography>
-                    <NichesList>
-                        {ig(data, 'nichesList').map(x => <Niche key={ig(x, 'id')}>
-                            <Link
-                                to={routerGetters.niche.link(
-                                    routerContext,
-                                    ig(x, 'subPage'),
-                                    null
-                                )}
-                                key={ig(x, 'id')}
-                                className={g(classes, 'routerLink')}
-                            >
-                                <NicheImage thumb={ig(x, 'thumb')}/>
-                                <Typography
-                                    variant="body1"
-                                    gutterBottom
-                                    classes={{
-                                        root: g(classes, 'nicheTitleTypography')
-                                    }}
-                                >{ig(x, 'name')}</Typography>
-                            </Link>
-                        </Niche>)}
-                    </NichesList>
-                    <Typography variant="h4" gutterBottom>
-                        {i18nPornstarsHeader}
-                    </Typography>
-                    <ListComponent
-                        component="div"
-                        classes={{
-                            root: g(classes, 'root')
-                        }}
+    }) => <Fragment>
+        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <PageWrapper>
+            <Typography variant="h4" gutterBottom>
+                {i18nNichesHeader}
+            </Typography>
+            <NichesList>
+                {ig(data, 'nichesList').map(x => <Niche key={ig(x, 'id')}>
+                    <Link
+                        to={routerGetters.niche.link(
+                            routerContext,
+                            ig(x, 'subPage'),
+                            null
+                        )}
+                        key={ig(x, 'id')}
+                        className={g(classes, 'routerLink')}
                     >
-                        {ig(data, 'pornstarsList').map((x, idx) => renderListItemLink(
-                            x,
-                            idx,
-                            ig(data, 'pornstarsList'),
-                            classes,
-                            routerContext
-                        ))}
-                    </ListComponent>
-                </PageWrapper>
-            </Content>
-        }
-    </Page>,
+                        <NicheImage thumb={ig(x, 'thumb')}/>
+                        <Typography
+                            variant="body1"
+                            gutterBottom
+                            classes={{
+                                root: g(classes, 'nicheTitleTypography')
+                            }}
+                        >{ig(x, 'name')}</Typography>
+                    </Link>
+                </Niche>)}
+            </NichesList>
+            <Typography variant="h4" gutterBottom>
+                {i18nPornstarsHeader}
+            </Typography>
+            <ListComponent
+                component="div"
+                classes={{
+                    root: g(classes, 'root')
+                }}
+            >
+                {ig(data, 'pornstarsList').map((x, idx) => renderListItemLink(
+                    x,
+                    idx,
+                    ig(data, 'pornstarsList'),
+                    classes,
+                    routerContext
+                ))}
+            </ListComponent>
+        </PageWrapper>
+    </Fragment>,
 
     HomeRecord = Record({
         isLoading: null,
@@ -215,5 +197,6 @@ export default compose(
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
-    })
+    }),
+    loadingWrapper
 )(Home)

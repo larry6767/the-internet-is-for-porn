@@ -1,4 +1,4 @@
-import {ImmutablePropTypes, PropTypes} from '../../helpers'
+import {ImmutablePropTypes, PropTypes} from '../helpers'
 
 import {
     immutableArchiveFilmsModel,
@@ -8,9 +8,9 @@ import {
     immutableTagArchiveListModel,
     immutableSortListModel,
     immutableTagArchiveListOlderOrNewerModel,
-} from '../../models'
+} from '../models'
 
-import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
+import {immutableVideoItemModel} from '../../generic/VideoItem/models'
 
 export const
     model = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
@@ -18,11 +18,10 @@ export const
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
         currentPage: PropTypes.string,
-        currentSubPage: PropTypes.string,
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageNumber: PropTypes.number,
-        pagesCount: PropTypes.number,
         pageText: immutablePageTextModel,
+        pagesCount: PropTypes.number,
         sponsorsList: ImmutablePropTypes.listOf(PropTypes.string),
         tagList: immutableNichesListModel,
         tagArchiveList: immutableTagArchiveListModel,

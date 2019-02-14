@@ -56,3 +56,18 @@ export const InlinedSelectionItem = styled.a`
         border-radius: 0 4px 4px 0;
     }
 `
+
+export const SelectWrapper = styled.div`
+    html.is-loading & * {
+        display: none;
+    }
+
+    html.is-loading & {
+        background: ${({theme}) => theme.palette.prerender.gag};
+        border-radius: 4px;
+        width: 110px;
+        height: 40px;
+
+        ${({theme}) => theme.media.mobile`display: none;`
+    }
+`

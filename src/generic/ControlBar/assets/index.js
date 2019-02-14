@@ -14,6 +14,17 @@ export const SortWrapper = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 12px;
+
+    html.is-loading & * {
+        display: none;
+    }
+
+    html.is-loading & {
+        background: ${({theme}) => theme.palette.prerender.gag};
+        border-radius: 4px;
+        width: 145.5px;
+        height: 37px;
+    }
 `
 export const InlinedSelectionWrap = styled.div`
     display: block;

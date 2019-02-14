@@ -1,5 +1,1 @@
-export {
-    Page,
-    Content,
-    PageWrapper,
-} from '../../../../generic/assets'
+export {PageWrapperNextToList} from '../../../../generic/assets'

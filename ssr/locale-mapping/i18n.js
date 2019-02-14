@@ -53,6 +53,8 @@ const
                 addToFavorite: 'Add to favorite',
                 removeFromFavorite: 'Remove from favorite',
                 cancel: 'Cancel',
+                showInfo: 'Show info',
+                hideInfo: 'Hide info',
             },
             footer: {
                 forParents: 'Parents — Protect your children from adult content \
@@ -177,6 +179,8 @@ const
                 addToFavorite: 'Zu den Favoriten hinzufügen',
                 removeFromFavorite: 'Aus Favoriten entfernen',
                 cancel: 'Stornieren',
+                showInfo: 'Zeige',
+                hideInfo: 'Ausblenden',
             },
             footer: {
                 forParents: 'Eltern - Schützen sie Ihre Kinder vor Pornografie mit der Hilfe \
@@ -304,6 +308,8 @@ const
                 addToFavorite: 'Aggiungi ai favoriti',
                 removeFromFavorite: 'Rimuovi dai preferiti',
                 cancel: 'Annulla',
+                showInfo: 'Mostra',
+                hideInfo: 'Nascondi',
             },
             footer: {
                 forParents: 'Genitori – Proteggete i vostri bambini dai contenuti per adulti \
@@ -429,6 +435,8 @@ const
                 addToFavorite: 'À Favoris',
                 removeFromFavorite: 'De Favoris',
                 cancel: 'Annuler',
+                showInfo: 'Afficher',
+                hideInfo: 'Masquer',
             },
             footer: {
                 forParents: 'Protégez votre enfant et votre famille de la pornographie avec \
@@ -555,6 +563,8 @@ const
                 addToFavorite: 'Agregar a "Favoritos',
                 removeFromFavorite: 'Eliminar de favorito',
                 cancel: 'Cancelar',
+                showInfo: 'Mostrar',
+                hideInfo: 'Ocultar',
             },
             footer: {
                 forParents: 'Los padres - Proteja a sus hijos del contenido para adultos con \
@@ -681,6 +691,8 @@ const
                 addToFavorite: 'para Favoritos',
                 removeFromFavorite: 'dos Favoritos',
                 cancel: 'Cancelar',
+                showInfo: 'Mostrar',
+                hideInfo: 'Ocultar',
             },
             footer: {
                 forParents: 'Mantem as tuas crianças protegidas online, utiliza estes serviços \
@@ -806,6 +818,8 @@ const
                 addToFavorite: 'från Favoriter',
                 removeFromFavorite: 'till Favoriter',
                 cancel: 'Annullera',
+                showInfo: 'Visa info',
+                hideInfo: 'Dölja info',
             },
             footer: {
                 forParents: 'Barnsäkert och föräldrakontroll från vuxeninnehåll \
@@ -930,6 +944,8 @@ const
                 addToFavorite: 'naar Favorieten',
                 removeFromFavorite: 'uit Favorieten',
                 cancel: 'Annuleren',
+                showInfo: 'Toon info',
+                hideInfo: 'Verbergen',
             },
             footer: {
                 forParents: 'Kindveiligheid en ouderlijk toezicht op inhoud voor \
@@ -1056,6 +1072,8 @@ const
                 addToFavorite: 'Suosikkeihin',
                 removeFromFavorite: 'Suosikeista',
                 cancel: 'Peruuttaa',
+                showInfo: 'Näytä',
+                hideInfo: 'Piilota',
             },
             footer: {
                 forParents: 'Vanhemmat - Suojelkaa lapsianne aikuissisällöltä näillä palveluilla:',
@@ -1181,6 +1199,8 @@ const
                 addToFavorite: 'В избранное',
                 removeFromFavorite: 'Из избранного',
                 cancel: 'Отменить',
+                showInfo: 'Развернуть',
+                hideInfo: 'Скрыть',
             },
             footer: {
                 forParents: 'Родители - Защитите детей от посещения сайтов для взрослых с \
@@ -1305,6 +1325,8 @@ const
                 addToFavorite: 'Favorilere git',
                 removeFromFavorite: 'Favoriler den',
                 cancel: 'Iptal etmek',
+                showInfo: 'Göster',
+                hideInfo: 'Gizle',
             },
             footer: {
                 forParents: 'Çocuklarınızı internette güvende tutun. Aşağıdaki hizmetleri \

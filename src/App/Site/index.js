@@ -1,10 +1,10 @@
 // TODO: this page needs propTypes
-import React from 'react'
+import React, {Fragment} from 'react'
 import {Record} from 'immutable'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {withStyles} from '@material-ui/core'
-import {CircularProgress, Typography} from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 
 import {
     getHeaderText,
@@ -16,14 +16,14 @@ import {
     areWeSwitchedOnPage,
 } from '../helpers'
 
-import {routerGetters} from '../../router-builder'
+import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
+import loadingWrapper from '../../generic/loadingWrapper'
 import ControlBar from '../../generic/ControlBar'
-import ErrorContent from '../../generic/ErrorContent'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import VideoList from '../../generic/VideoList'
-import {Page, Content, PageWrapper} from './assets'
+import {PageWrapper} from './assets'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
@@ -57,48 +57,41 @@ const
         chooseSort,
         isSSR,
         controlLinkBuilder,
-    }) => <Page>
-        { ig(data, 'isFailed')
-            ? <ErrorContent/>
-            : ig(data, 'isLoading')
-            ? <CircularProgress/>
-            : <Content>
-                <PageTextHelmet pageText={ig(data, 'pageText')}/>
-                <PageWrapper>
-                    <Typography
-                        variant="h4"
-                        gutterBottom
-                        classes={{
-                            root: classes.typographyTitle
-                        }}
-                    >
-                        {data.getIn(['pageText', 'listHeader'])}
-                    </Typography>
-                    <ControlBar
-                        cb={currentBreakpoint}
-                        i18nOrdering={i18nOrdering}
-                        i18nButtons={i18nButtons}
-                        i18nLabelShowing={i18nLabelShowing}
-                        chooseSort={chooseSort}
-                        isSSR={isSSR}
-                        pagesCount={ig(data, 'pagesCount')}
-                        pageNumber={ig(data, 'pageNumber')}
-                        itemsCount={ig(data, 'itemsCount')}
-                        sortList={ig(data, 'sortList')}
-                        currentSort={ig(data, 'currentSort')}
-                        archiveFilms={null}
-                        tagArchiveListOlder={null}
-                        tagArchiveListNewer={null}
-                        linkBuilder={controlLinkBuilder}
-                        archiveLinkBuilder={null}
-                    />
-                    <VideoList
-                        videoList={ig(data, 'videoList')}
-                    />
-                </PageWrapper>
-            </Content>
-        }
-    </Page>,
+    }) => <Fragment>
+        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <PageWrapper>
+            <Typography
+                variant="h4"
+                gutterBottom
+                classes={{
+                    root: classes.typographyTitle
+                }}
+            >
+                {ig(data, 'pageText', 'listHeader')}
+            </Typography>
+            <ControlBar
+                cb={currentBreakpoint}
+                i18nOrdering={i18nOrdering}
+                i18nButtons={i18nButtons}
+                i18nLabelShowing={i18nLabelShowing}
+                chooseSort={chooseSort}
+                isSSR={isSSR}
+                pagesCount={ig(data, 'pagesCount')}
+                pageNumber={ig(data, 'pageNumber')}
+                itemsCount={ig(data, 'itemsCount')}
+                sortList={ig(data, 'sortList')}
+                currentSort={ig(data, 'currentSort')}
+                archiveFilms={null}
+                tagArchiveListOlder={null}
+                tagArchiveListNewer={null}
+                linkBuilder={controlLinkBuilder}
+                archiveLinkBuilder={null}
+            />
+            <VideoList
+                videoList={ig(data, 'videoList')}
+            />
+        </PageWrapper>
+    </Fragment>,
 
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
@@ -160,5 +153,6 @@ export default compose(
             setNewPageFlow(this.props, nextProps)
         },
     }),
-    withStyles(muiStyles)
+    withStyles(muiStyles),
+    loadingWrapper
 )(Site)
