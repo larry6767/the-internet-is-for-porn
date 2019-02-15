@@ -51,6 +51,11 @@ const
         modelsList: List(),
     }),
 
+    favoriteButtons = {
+        movies: false,
+        pornstars: true,
+    },
+
     FavoritePornstars = ({
         classes,
         isSSR,
@@ -87,7 +92,7 @@ const
                 pagesCount={ig(data, 'pagesCount')}
                 pageNumber={ig(data, 'pageNumber')}
                 itemsCount={ig(data, 'itemsCount')}
-                favoriteButtons={true}
+                favoriteButtons={favoriteButtons}
             />
             <PornstarList
                 linkBuilder={linkBuilder}
@@ -159,5 +164,8 @@ export default compose(
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
     }),
-    loadingWrapper()
+    loadingWrapper({
+        withControlBar: true,
+        withPornstarList: true,
+    })
 )(FavoritePornstars)

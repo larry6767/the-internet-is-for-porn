@@ -48,6 +48,11 @@ const
         videoList: null,
     }),
 
+    favoriteButtons = {
+        movies: true,
+        pornstars: false,
+    },
+
     Favorite = ({
         classes,
         cb,
@@ -83,7 +88,7 @@ const
                 pagesCount={ig(data, 'pagesCount')}
                 pageNumber={ig(data, 'pageNumber')}
                 itemsCount={ig(data, 'itemsCount')}
-                favoriteButtons={true}
+                favoriteButtons={favoriteButtons}
             />
             <VideoList
                 videoList={ig(data, 'videoList')}
@@ -158,5 +163,7 @@ export default compose(
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
     }),
-    loadingWrapper()
+    loadingWrapper({
+        withControlBar: true,
+    })
 )(Favorite)

@@ -233,6 +233,10 @@ const
         pagesCount: PropTypes.number,
         linkBuilder: PropTypes.func,
         i18nButtons: immutableI18nButtonsModel,
+        favoriteButtons: PropTypes.exact({
+            movies: PropTypes.bool,
+            pornstars: PropTypes.bool,
+        }),
     })(({
         classes,
         cb,
@@ -241,6 +245,7 @@ const
         linkBuilder,
         favoriteLinkBuilder,
         i18nButtons,
+        favoriteButtons,
     }) => <Fragment>
         {pagesCount === 1 || pagesCount === 0 ? null :
             <Pagination
@@ -254,11 +259,13 @@ const
         <WrappedButton
             link={favoriteLinkBuilder('favorite')}
             text={ig(i18nButtons, 'favoriteMovies')}
+            variant={g(favoriteButtons, 'movies') ? 'contained' : 'outlined'}
         />
 
         <WrappedButton
             link={favoriteLinkBuilder('favoritePornstars')}
             text={ig(i18nButtons, 'favoritePornstars')}
+            variant={g(favoriteButtons, 'pornstars') ? 'contained' : 'outlined'}
         />
     </Fragment>),
 
@@ -318,6 +325,7 @@ const
                     linkBuilder={linkBuilder}
                     favoriteLinkBuilder={favoriteLinkBuilder}
                     i18nButtons={i18nButtons}
+                    favoriteButtons={favoriteButtons}
                 />
                 : <NicheControlBar
                     classes={classes}
@@ -380,6 +388,9 @@ export default compose(
             year: PropTypes.string,
         }).isOptional,
 
-        favoriteButtons: PropTypes.bool.isOptional, // could be not presented at all
+        favoriteButtons: PropTypes.exact({
+            movies: PropTypes.bool,
+            pornstars: PropTypes.bool,
+        }).isOptional, // could be not presented at all
     }),
 )(ControlBar)

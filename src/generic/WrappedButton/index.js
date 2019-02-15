@@ -19,9 +19,10 @@ const
         link,
         text,
         marginRight0 = false,
+        variant,
     }) => <Link to={link} className={g(classes, 'link')}>
         <Button
-            variant="outlined"
+            variant={variant ? variant : 'outlined'}
             color="primary"
             classes={{
                 root: marginRight0 ? g(classes, 'buttonRootMR0') : g(classes, 'buttonRoot'),
@@ -42,5 +43,6 @@ export default compose(
         link: PropTypes.string,
         text: PropTypes.string,
         marginRight0: PropTypes.bool.isOptional,
+        variant: PropTypes.string.isOptional,
     }),
 )(WrappedButton)
