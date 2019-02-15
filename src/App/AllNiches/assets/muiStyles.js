@@ -6,6 +6,8 @@ export const muiStyles = (theme, {data, currentBreakpoint}) => {
 
     return {
         root: {
+            boxSizing: 'borderBox',
+            overflow: 'hidden',
             width: ig(data, 'isLoading') ? 'auto' : '100%',
             display: 'grid',
             gridAutoFlow: 'column',

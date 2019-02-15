@@ -228,5 +228,7 @@ export default compose(
     }),
     loadingWrapper({
         withLists: true,
+        withControlBar: true,
+        withMoviesList: true,
     })
 )(AllMovies)

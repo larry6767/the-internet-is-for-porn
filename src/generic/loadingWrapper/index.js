@@ -2,7 +2,7 @@ import React from 'react'
 import {compose, branch, renderNothing} from 'recompose'
 import {immutableProvedGet as ig} from '../../App/helpers'
 import ErrorContent from '../../generic/ErrorContent'
-import {Page, AllNichesPage, Content} from '../assets'
+import {Page, Content} from '../assets'
 import LoadingPlug from '../LoadingPlug'
 
 const
@@ -25,14 +25,9 @@ const
             <WrappedComponent {...props}/>
         </Content>,
 
-    loadingWrapper = plugOptions => WrappedComponent => props =>
-        // not g(plugOptions, 'isAllNiches') because it's optional value
-        plugOptions.isAllNiches ? <AllNichesPage>
-            {renderLoading(plugOptions, WrappedComponent, props)}
-        </AllNichesPage>
-        : <Page>
-            {renderLoading(plugOptions, WrappedComponent, props)}
-        </Page>
+    loadingWrapper = plugOptions => WrappedComponent => props => <Page>
+        {renderLoading(plugOptions, WrappedComponent, props)}
+    </Page>
 
 export default (plugOptions = {}) => compose(
     voidPagePlug,

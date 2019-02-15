@@ -279,3 +279,12 @@ export const TagsWrapper = styled.div`
 export const SponsorLink = styled.a`
     color: ${({theme}) => theme.palette.primary.main};
 `
+
+// styles for plug
+
+export const VideoPlayerPlug = styled.div`
+    width: 100%;
+    height: 675px;
+    margin-bottom: 40px;
+    background: ${({theme}) => theme.palette.prerender.plug};
+`

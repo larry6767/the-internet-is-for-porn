@@ -22,18 +22,16 @@ export const NichesList = styled.ul`
     ${({theme}) => theme.media.mobile`margin: 0 0 20px;`}
 `
 
-export const Niche = styled.div`
+const NicheCommon = styled.div`
     display: flex;
     flex-direction: column;
     width: calc((100% - 15px) / 4);
     margin-right: 5px;
     margin-bottom: 5px;
-    cursor: pointer;
 
     ${({theme}) => theme.media.sm`width: calc((100% - 10px) / 3)`}
     ${({theme}) => theme.media.xs`width: calc((100% - 5px) / 2)`}
-    ${({theme}) => theme.media.xxs`width: 100%;`}
-    ${({theme}) => theme.media.xxs`margin-right: 0;`}
+    ${({theme}) => theme.media.xxs`width: 100%;margin-right: 0;`}
 
     &:nth-of-type(4n) {
         ${({theme}) => theme.media.xl`margin-right: 0;`}
@@ -50,17 +48,12 @@ export const Niche = styled.div`
     }
 `
 
-export const NicheImage = styled.div`
-    position: relative;
-    display: flex;
-    align-items: flex-end;
+export const Niche = styled(NicheCommon)`
+    cursor: pointer;
+`
+
+const NicheImageCommon = styled.div`
     width: 100%;
-    background-color: ${({theme}) => theme.palette.primary.dark};
-    background-image: ${({thumb}) => `url(${thumb})`};
-    background-size: cover;
-    background-repeat: no-repeat;
-    border-radius: 1px;
-    overflow: hidden;
     margin-bottom: 5px;
 
     &::before {
@@ -70,6 +63,34 @@ export const NicheImage = styled.div`
     }
 `
 
+export const NicheImage = styled(NicheImageCommon)`
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    background-color: ${({theme}) => theme.palette.primary.dark};
+    background-image: ${({thumb}) => `url(${thumb})`};
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 1px;
+    overflow: hidden;
+`
+
 export const NicheTitle = styled.div`
     display: flex;
+`
+
+// styles for plug
+
+export const NichePlug = styled(NicheCommon)`
+
+`
+
+export const NicheImagePlug = styled(NicheImageCommon)`
+    background: ${({theme}) => theme.palette.prerender.plug};
+`
+
+export const TypographyPlug = styled.div`
+    width: 100%;
+    height: 30px;
+    background: ${({theme}) => theme.palette.prerender.plug};
 `

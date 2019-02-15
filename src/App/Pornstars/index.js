@@ -108,5 +108,7 @@ export default compose(
         setNewText: PropTypes.func,
         linkBuilder: PropTypes.func,
     }),
-    loadingWrapper()
+    loadingWrapper({
+        withPornstarList: true,
+    })
 )(Pornstars)

@@ -235,5 +235,8 @@ export default compose(
     }),
     loadingWrapper({
         withLists: true,
+        withPornstarInfo: true,
+        withControlBar: true,
+        withMoviesList: true,
     })
 )(Pornstar)

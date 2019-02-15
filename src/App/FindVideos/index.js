@@ -147,5 +147,8 @@ export default compose(
         },
     }),
     withStyles(muiStyles),
-    loadingWrapper()
+    loadingWrapper({
+        withControlBar: true,
+        withMoviesList: true,
+    })
 )(FindVideos)

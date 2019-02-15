@@ -100,5 +100,7 @@ export default compose(
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
     }),
-    loadingWrapper()
+    loadingWrapper({
+        withMoviesList: true,
+    })
 )(Favorite)

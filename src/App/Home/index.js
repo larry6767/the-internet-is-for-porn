@@ -198,5 +198,7 @@ export default compose(
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
     }),
-    loadingWrapper()
+    loadingWrapper({
+        isHome: true,
+    })
 )(Home)

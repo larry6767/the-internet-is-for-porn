@@ -165,5 +165,6 @@ export default compose(
     }),
     loadingWrapper({
         withControlBar: true,
+        withMoviesList: true,
     })
 )(Favorite)
