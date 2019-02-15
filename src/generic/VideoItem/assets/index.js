@@ -136,16 +136,22 @@ export const TitlePlug = styled.div`
     height: 20px;
     margin: 2px 0;
     background: ${({theme}) => theme.palette.prerender.plug};
+
+    ${({theme}) => theme.media.mobile`height: 18px;`};
 `
 
 export const ProviderLinkPlug = styled.div`
     width: 40%;
     height: 21px;
     background: ${({theme}) => theme.palette.prerender.plug};
+
+    ${({theme}) => theme.media.mobile`height: 18px;`};
 `
 
 export const TagsPlug = styled.div`
     width: 40%;
     height: 21px;
     background: ${({theme}) => theme.palette.prerender.plug};
+
+    ${({theme}) => theme.media.mobile`height: 18px;`};
 `

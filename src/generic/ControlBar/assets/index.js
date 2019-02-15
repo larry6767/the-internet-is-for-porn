@@ -15,6 +15,8 @@ export const SortWrapper = styled.div`
     align-items: center;
     margin-bottom: 12px;
 
+    ${({theme}) => theme.media.mobile`margin-bottom: 8px;`};
+
     html.is-loading & * {
         display: none;
     }
@@ -74,10 +76,14 @@ export const ShowedElementsPlug = styled.div`
     height: 20px;
     margin: 2px 0 6px;
     background: ${({theme}) => theme.palette.prerender.plug};
+
+    ${({theme}) => theme.media.mobile`height: 18px;`};
 `
 
 export const SortPlug = styled.div`
     width: 160px;
     height: 36px;
     background: ${({theme}) => theme.palette.prerender.plug};
+
+    ${({theme}) => theme.media.mobile`height: 30px; margin-bottom: 8px;`};
 `

@@ -28,5 +28,7 @@ export const PaginationPlug = styled.div`
     height: 36px;
     margin-right: 15px;
     margin-bottom: 12px;
-    background: ${({theme}) => theme.palette.prerender.plug}
+    background: ${({theme}) => theme.palette.prerender.plug};
+
+    ${({theme}) => theme.media.mobile`height: 30px; margin-bottom: 8px;`};
 `

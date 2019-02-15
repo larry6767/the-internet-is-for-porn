@@ -93,4 +93,6 @@ export const TypographyPlug = styled.div`
     width: 100%;
     height: 30px;
     background: ${({theme}) => theme.palette.prerender.plug};
+
+    ${({theme}) => theme.media.mobile`height: 26px;`};
 `

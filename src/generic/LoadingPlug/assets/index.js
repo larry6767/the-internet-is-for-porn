@@ -14,4 +14,7 @@ export const PageTitlePlug = styled.div`
     height: 39px;
     margin-bottom: 12px;
     background: ${({theme}) => theme.palette.prerender.plug};
+
+    ${({theme}) => theme.media.sm`height: 28px; margin-bottom: 8.5px;`};
+    ${({theme}) => theme.media.mobile`height: 23px; margin-bottom: 7px;`};
 `

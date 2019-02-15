@@ -20,4 +20,7 @@ export const ListsPlug = styled(ListsInnerCommon)`
     width: 219px;
     align-self: stretch;
     background: ${({theme}) => theme.palette.prerender.plug};
+
+    ${({theme}) => theme.media.sm`display: none;`};
+    ${({theme}) => theme.media.mobile`display: none;`};
 `

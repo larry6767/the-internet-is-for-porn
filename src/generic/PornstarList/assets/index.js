@@ -76,6 +76,8 @@ export const TypographyPlug = styled.div`
     height: 17px;
     margin: 6px 0 2px;
     background: ${({theme}) => theme.palette.prerender.plug};
+
+    ${({theme}) => theme.media.mobile`margin: 2px 0;`};
 `
 
 export const InfoBarPlug = styled.div`
