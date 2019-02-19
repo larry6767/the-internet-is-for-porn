@@ -1,7 +1,6 @@
 import {fromJS, Map, List} from 'immutable'
 
 import {provedHandleActions, plainProvedGet as g} from '../../helpers'
-import {PageTextRecord} from '../../models'
 import {model} from './models'
 import actions from './actions'
 
@@ -13,7 +12,7 @@ export default
             isFailed: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: 1,
-            pageText: PageTextRecord(),
+            pageText: Map(),
             pagesCount: 1,
             sortList: List(),
             currentSort: null,
@@ -30,7 +29,7 @@ export default
             isFailed: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: g(payload, 'data', 'pageNumber'),
-            pageText: PageTextRecord(g(payload, 'data', 'pageText')),
+            pageText: Map(g(payload, 'data', 'pageText')),
             pagesCount: g(payload, 'data', 'pagesCount'),
             sortList: List(fromJS(g(payload, 'data', 'sortList'))),
             currentSort: g(payload, 'data', 'currentSort'),
@@ -46,7 +45,7 @@ export default
             isLoaded: false,
             isFailed: true,
             pageNumber: 1,
-            pageText: PageTextRecord(),
+            pageText: Map(),
             pagesCount: 1,
             sortList: List(),
             currentSort: null,
@@ -66,7 +65,7 @@ export default
         isFailed: false,
         lastPageRequestParams: null,
         pageNumber: 1,
-        pageText: PageTextRecord(), // TODO FIXME only `Map` or `List` are allowed in store
+        pageText: {},
         pagesCount: 1,
         sortList: [],
         currentSort: null,

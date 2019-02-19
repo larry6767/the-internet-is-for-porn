@@ -1,7 +1,6 @@
 import {fromJS, List, Map} from 'immutable'
 
 import {provedHandleActions, plainProvedGet as g} from '../../helpers'
-import {PageTextRecord} from '../../models'
 import {model} from './models'
 import actions from './actions'
 
@@ -16,7 +15,7 @@ export default
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: 1,
             pagesCount: 1,
-            pageText: PageTextRecord(),
+            pageText: Map(),
             sponsorsList: List(),
             tagList: List(),
             tagArchiveList: List(),
@@ -43,7 +42,7 @@ export default
                 lastPageRequestParams: g(payload, 'pageRequestParams'),
                 pageNumber: g(payload, 'data', 'pageNumber'),
                 pagesCount: g(payload, 'data', 'pagesCount'),
-                pageText: PageTextRecord(g(payload, 'data', 'pageText')),
+                pageText: Map(g(payload, 'data', 'pageText')),
                 sponsorsList: List(fromJS(g(payload, 'data', 'sponsorsList'))),
                 tagList: List(fromJS(g(payload, 'data', 'tagList'))),
                 tagArchiveList: List(fromJS(g(payload, 'data', 'tagArchiveList'))),
@@ -64,7 +63,7 @@ export default
             currentSubPage: '',
             pageNumber: 1,
             pagesCount: 1,
-            pageText: PageTextRecord(),
+            pageText: Map(),
             sponsorsList: List(),
             tagList: List(),
             tagArchiveList: List(),
@@ -87,7 +86,7 @@ export default
         lastPageRequestParams: null,
         pageNumber: 1,
         pagesCount: 1,
-        pageText: PageTextRecord(),
+        pageText: {},
         sponsorsList: List(),
         tagList: [],
         tagArchiveList: [],

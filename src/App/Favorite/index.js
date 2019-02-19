@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import {Record} from 'immutable'
 
 import {
     getHeaderText,
@@ -12,7 +11,6 @@ import {
     plainProvedGet as g,
     immutableProvedGet as ig,
     PropTypes,
-    ImmutablePropTypes,
     setPropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
@@ -20,6 +18,7 @@ import {
     breakpoints,
 } from '../helpers'
 
+import {model} from './models'
 import {immutableI18nButtonsModel, routerContextModel} from '../models'
 import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
@@ -34,20 +33,6 @@ import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
 const
-    DataRecord = Record({
-        isLoading: null,
-        isLoaded: null,
-        isFailed: null,
-
-        lastPageRequestParams: null,
-
-        pageText: null,
-        pageNumber: null,
-        pagesCount: null,
-        itemsCount: null,
-        videoList: null,
-    }),
-
     favoriteButtons = {
         movies: true,
         pornstars: false,
@@ -119,7 +104,7 @@ export default compose(
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
-            data: DataRecord(ig(state, 'app', 'favorite')),
+            data: ig(state, 'app', 'favorite'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -157,7 +142,7 @@ export default compose(
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
         i18nLabelShowing: PropTypes.string,
-        data: ImmutablePropTypes.record, // TODO better type
+        data: model,
         controlLinkBuilder: PropTypes.func,
         controlFavoriteLinkBuilder: PropTypes.func,
         loadPageRequest: PropTypes.func,

@@ -1,5 +1,4 @@
 // TODO: this page needs refactoring (propTypes, ig, g, etc)
-import {Record} from 'immutable'
 import React, {Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {compose, withHandlers, withState} from 'recompose'
@@ -69,27 +68,6 @@ import {
 
 const
     fieldNamesArray = ['op', '_cid', '_gid', '_url'], // hidden field names for report request
-
-    VideoPageRecord = Record({
-        isLoading: null,
-        isLoaded: null,
-        isFailed: null,
-
-        reportIsSending: null,
-        reportIsSent: null,
-        reportIsNotSent: null,
-
-        lastPageRequestParams: null,
-
-        inlineAdvertisementIsShowed: null,
-        reportDialogIsOpen: null,
-        openGraphData: null,
-        pageText: null,
-        gallery: null,
-        videoList: null,
-        currentHref: null,
-        currentTime: null,
-    }),
 
     renderFavoriteButton = (
         classes, data, favoriteVideoList,
@@ -348,7 +326,7 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            data: VideoPageRecord(state.getIn(['app', 'videoPage'])),
+            data: state.getIn(['app', 'videoPage']),
             isSSR: state.getIn(['app', 'ssr', 'isSSR']),
             routerContext: getRouterContext(state),
             pageUrl: state.getIn(['router', 'location', 'pathname']),

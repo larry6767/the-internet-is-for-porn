@@ -2,8 +2,6 @@ import {fromJS, List, Map} from 'immutable'
 import {handleActions} from 'redux-actions'
 
 import {plainProvedGet as g} from '../helpers'
-import {PageTextRecord} from '../models'
-import {OpenGraphDataRecord} from './models'
 import actions from './actions'
 // TODO: this reducer needs provedHandleActions
 export default
@@ -15,8 +13,8 @@ export default
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
-            pageText: PageTextRecord(),
-            openGraphData: OpenGraphDataRecord(),
+            pageText: Map(),
+            openGraphData: Map(),
             gallery: Map(),
             videoList: List(),
         }),
@@ -27,8 +25,8 @@ export default
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
-            pageText: PageTextRecord(fromJS(g(payload, 'data', 'pageText'))),
-            openGraphData: OpenGraphDataRecord(fromJS(g(payload, 'data', 'openGraphData'))),
+            pageText: Map(fromJS(g(payload, 'data', 'pageText'))),
+            openGraphData: Map(fromJS(g(payload, 'data', 'openGraphData'))),
             gallery: Map(fromJS(g(payload, 'data', 'gallery'))),
             videoList: List(fromJS(g(payload, 'data', 'videoList'))),
 
@@ -43,8 +41,8 @@ export default
             isFailed: true,
             inlineAdvertisementIsShowed: true,
             reportDialogIsOpen: false,
-            pageText: PageTextRecord(),
-            openGraphData: OpenGraphDataRecord(),
+            pageText: Map(),
+            openGraphData: Map(),
             gallery: Map(),
             videoList: List(),
         }),
@@ -82,8 +80,8 @@ export default
         lastPageRequestParams: null,
         inlineAdvertisementIsShowed: true,
         reportDialogIsOpen: false,
-        pageText: PageTextRecord(),
-        openGrapgData: OpenGraphDataRecord(),
+        pageText: {},
+        openGrapgData: {},
         gallery: {
             /*
             id: 0,

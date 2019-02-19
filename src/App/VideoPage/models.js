@@ -1,5 +1,4 @@
-import {Record} from 'immutable'
-
+// TODO need to finish model
 import {
     ImmutablePropTypes,
     PropTypes,
@@ -12,30 +11,20 @@ import {
 } from '../models'
 
 const
-    OpenGraphDataRecord = Record({
-        title: null,
-        thumb: null,
-        tags: null,
-        duration: null,
-    }),
+    immutableOpenGraphDataModel = ImmutablePropTypes.exact({
+        title: PropTypes.string,
+        thumb: PropTypes.string,
+        tags: ImmutablePropTypes.listOf(PropTypes.string),
+        duration: PropTypes.string,
+    })
 
-    model = process.env.NODE_ENV === 'production' ? null : {
+export const
+    model = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageText: immutablePageTextModel,
         modelsList: immutableModelsListModel,
-    },
-
-    stateModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exact(model),
-
-    dataModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exactRecordOf(model)
-
-export {
-    stateModel,
-    dataModel,
-    OpenGraphDataRecord,
-}
+        openGraphData: immutableOpenGraphDataModel,
+    })

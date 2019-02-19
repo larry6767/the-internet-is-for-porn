@@ -1,4 +1,3 @@
-import {Record} from 'immutable'
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
@@ -25,7 +24,7 @@ import {
 } from '../helpers'
 
 import {routerContextModel} from '../models'
-import {dataModel} from './models'
+import {model} from './models'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import routerGetters from '../routerGetters'
 import headerActions from '../MainHeader/actions'
@@ -81,17 +80,6 @@ const
         </PageWrapper>
     </Fragment>,
 
-    DataRecord = Record({
-        isLoading: null,
-        isLoaded: null,
-        isFailed: null,
-
-        lastPageRequestParams: null,
-
-        nichesList: null,
-        pageText: null,
-    }),
-
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
             nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
@@ -111,7 +99,7 @@ export default compose(
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: DataRecord(ig(state, 'app', 'niches', 'all')),
+            data: ig(state, 'app', 'niches', 'all'),
             i18nAllNichesHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'allNiches'),
             routerContext: getRouterContext(state),
         }),
@@ -138,7 +126,7 @@ export default compose(
     withStylesProps(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         currentBreakpoint: PropTypes.string,
-        data: dataModel,
+        data: model,
         i18nAllNichesHeader: PropTypes.string,
         routerContext: routerContextModel,
 

@@ -1,18 +1,17 @@
-import {fromJS, List} from 'immutable'
+import {fromJS, List, Map} from 'immutable'
 
 import {plainProvedGet as g, provedHandleActions} from '../helpers'
-import {PageTextRecord} from '../models'
-import {stateModel} from './models'
+import {model} from './models'
 import actions from './actions'
 
 export default
-    provedHandleActions(stateModel, {
+    provedHandleActions(model, {
         [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
-            pageText: PageTextRecord(),
+            pageText: Map(),
             nichesList: List(),
             pornstarsList: List(),
         }),
@@ -21,7 +20,7 @@ export default
             isLoaded: true,
             isFailed: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
-            pageText: PageTextRecord(g(payload, 'data', 'pageText')),
+            pageText: Map(g(payload, 'data', 'pageText')),
             nichesList: List(fromJS(g(payload, 'data', 'nichesList'))),
             pornstarsList: List(fromJS(g(payload, 'data', 'pornstarsList'))),
         }),
@@ -29,7 +28,7 @@ export default
             isLoading: false,
             isLoaded: false,
             isFailed: true,
-            pageText: PageTextRecord(),
+            pageText: Map(),
             nichesList: List(),
             pornstarsList: List(),
         }),
@@ -38,7 +37,7 @@ export default
         isLoaded: false,
         isFailed: false,
         lastPageRequestParams: null,
-        pageText: PageTextRecord(),
+        pageText: {},
         nichesList: [],
         pornstarsList: []
     }))

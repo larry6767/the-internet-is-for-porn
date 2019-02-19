@@ -1,7 +1,6 @@
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
-import {Record} from 'immutable'
 import {Link} from 'react-router-dom'
 import PermIdentityIcon from '@material-ui/icons/PermIdentity'
 
@@ -26,7 +25,7 @@ import {
 } from '../helpers'
 
 import {immutableI18nOrderingModel, routerContextModel} from '../models'
-import {dataModel} from './models'
+import {model} from './models'
 import routerGetters from '../routerGetters'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
@@ -119,19 +118,6 @@ const
         </PageWrapper>
     </Fragment>,
 
-    HomeRecord = Record({
-        isLoading: null,
-        isLoaded: null,
-        isFailed: null,
-
-        lastPageRequestParams: null,
-
-        pageText: null,
-
-        nichesList: null,
-        pornstarsList: null,
-    }),
-
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
             nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
@@ -151,7 +137,7 @@ export default compose(
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: HomeRecord(ig(state, 'app', 'home')),
+            data: ig(state, 'app', 'home'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nNichesHeader: getHeaderWithOrientation(state, 'niches'),
@@ -188,7 +174,7 @@ export default compose(
             root: PropTypes.string,
         }),
         currentBreakpoint: PropTypes.string,
-        data: dataModel,
+        data: model,
         routerContext: routerContextModel,
         i18nOrdering: immutableI18nOrderingModel,
         i18nNichesHeader: PropTypes.string,

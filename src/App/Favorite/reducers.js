@@ -1,39 +1,22 @@
-import {fromJS, List} from 'immutable'
+import {fromJS, List, Map} from 'immutable'
 
 import {
     addToList,
     removeFromList,
     plainProvedGet as g,
     provedHandleActions,
-    ImmutablePropTypes,
-    PropTypes,
 } from '../helpers'
-
-import {PageTextRecord, immutablePageTextModel, pageRequestParamsModel} from '../models'
-import {immutableVideoItemModel} from '../../generic/VideoItem/models'
+import {model} from './models'
 import actions from './actions'
 
-const
-    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
-        isLoading: PropTypes.bool,
-        isLoaded: PropTypes.bool,
-        isFailed: PropTypes.bool,
-        lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
-        pageText: immutablePageTextModel,
-        pageNumber: PropTypes.number,
-        pagesCount: PropTypes.number,
-        itemsCount: PropTypes.number,
-        videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
-    })
-
 export default
-    provedHandleActions(stateModel, {
+    provedHandleActions(model, {
         [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
-            pageText: PageTextRecord(),
+            pageText: Map(),
             pageNumber: 1,
             pagesCount: 1,
             itemsCount: 0,
@@ -44,7 +27,7 @@ export default
             isLoaded: true,
             isFailed: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
-            pageText: PageTextRecord(g(payload, 'data', 'pageText')),
+            pageText: Map(g(payload, 'data', 'pageText')),
             pageNumber: g(payload, 'data', 'pageNumber'),
             pagesCount: g(payload, 'data', 'pagesCount'),
             itemsCount: g(payload, 'data', 'itemsCount'),
@@ -55,7 +38,7 @@ export default
             isLoaded: false,
             isFailed: true,
             pageNumber: 1,
-            pageText: PageTextRecord(),
+            pageText: Map(),
             pagesCount: 1,
             itemsCount: 0,
             videoList: List(),
@@ -69,7 +52,7 @@ export default
         isLoaded: false,
         isFailed: false,
         lastPageRequestParams: null,
-        pageText: PageTextRecord(),
+        pageText: {},
         pageNumber: 1,
         pagesCount: 1,
         itemsCount: 0,

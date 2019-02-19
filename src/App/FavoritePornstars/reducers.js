@@ -1,43 +1,16 @@
-import {fromJS, List} from 'immutable'
+import {fromJS, List, Map} from 'immutable'
 
 import {
     addToList,
     removeFromList,
     plainProvedGet as g,
-    PropTypes,
-    ImmutablePropTypes,
     provedHandleActions,
 } from '../helpers'
-
-import {
-    immutablePageTextModel,
-    PageTextRecord,
-    immutableModelsListModel,
-    pageRequestParamsModel,
-} from '../models'
-
+import {model} from './models'
 import actions from './actions'
 
-const
-    stateModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exact({
-            isLoading: PropTypes.bool,
-            isLoaded: PropTypes.bool,
-            isFailed: PropTypes.bool,
-
-            lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
-
-            pageText: immutablePageTextModel,
-            modelsList: immutableModelsListModel,
-
-            // TODO: get rid of that shit below (pornstars not supposed to have pagination)
-            pageNumber: PropTypes.number,
-            pagesCount: PropTypes.number,
-            itemsCount: PropTypes.number,
-        })
-
 export default
-    provedHandleActions(stateModel, {
+    provedHandleActions(model, {
         [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
@@ -45,7 +18,7 @@ export default
 
             lastPageRequestParams: g(payload, 'pageRequestParams'),
 
-            pageText: PageTextRecord(),
+            pageText: Map(),
             modelsList: List(),
 
             pageNumber: 1,
@@ -59,7 +32,7 @@ export default
 
             lastPageRequestParams: g(payload, 'pageRequestParams'),
 
-            pageText: PageTextRecord(g(payload, 'data', 'pageText')),
+            pageText: Map(g(payload, 'data', 'pageText')),
             modelsList: List(fromJS(g(payload, 'data', 'modelsList'))),
 
             pageNumber: g(payload, 'data', 'pageNumber'),
@@ -71,7 +44,7 @@ export default
             isLoaded: false,
             isFailed: true,
 
-            pageText: PageTextRecord(),
+            pageText: Map(),
             modelsList: List(),
 
             pageNumber: 1,
@@ -89,7 +62,7 @@ export default
 
         lastPageRequestParams: null,
 
-        pageText: PageTextRecord(),
+        pageText: {},
         modelsList: [],
 
         pageNumber: 1,

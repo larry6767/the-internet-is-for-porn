@@ -1,37 +1,18 @@
-import {fromJS, List} from 'immutable'
+import {fromJS, List, Map} from 'immutable'
 
-import {ImmutablePropTypes, PropTypes, provedHandleActions, plainProvedGet as g} from '../helpers'
-import {immutablePageTextModel, PageTextRecord, pageRequestParamsModel} from '../models'
-import {immutableVideoItemModel} from '../../generic/VideoItem/models'
+import {provedHandleActions, plainProvedGet as g} from '../helpers'
+import {model} from './models'
 import actions from './actions'
 
-const
-    stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
-        isLoading: PropTypes.bool,
-        isLoaded: PropTypes.bool,
-        isFailed: PropTypes.bool,
-        lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
-        pageNumber: PropTypes.number,
-        pageText: immutablePageTextModel,
-        pagesCount: PropTypes.number,
-        sortList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
-            isActive: PropTypes.bool,
-            code: PropTypes.string,
-        })),
-        currentSort: PropTypes.nullable(PropTypes.string),
-        itemsCount: PropTypes.number,
-        videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
-    })
-
 export default
-    provedHandleActions(stateModel, {
+    provedHandleActions(model, {
         [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: 1,
-            pageText: PageTextRecord(),
+            pageText: Map(),
             pagesCount: 1,
             sortList: List(),
             currentSort: null,
@@ -44,7 +25,7 @@ export default
             isFailed: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: g(payload, 'data', 'pageNumber'),
-            pageText: PageTextRecord(g(payload, 'data', 'pageText')),
+            pageText: Map(g(payload, 'data', 'pageText')),
             pagesCount: g(payload, 'data', 'pagesCount'),
             sortList: List(fromJS(g(payload, 'data', 'sortList'))),
             currentSort: g(payload, 'data', 'currentSort'),
@@ -56,7 +37,7 @@ export default
             isLoaded: false,
             isFailed: true,
             pageNumber: 1,
-            pageText: PageTextRecord(),
+            pageText: Map(),
             pagesCount: 1,
             sortList: List(),
             currentSort: null,
@@ -71,7 +52,7 @@ export default
         isFailed: false,
         lastPageRequestParams: null,
         pageNumber: 1,
-        pageText: PageTextRecord(),
+        pageText: {},
         pagesCount: 1,
         sortList: [],
         currentSort: null,
