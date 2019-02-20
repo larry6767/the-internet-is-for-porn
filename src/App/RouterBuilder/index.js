@@ -366,7 +366,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             key={`${orientationCode}-video`}
             path={routerGetters.video.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'allMovies'
+                const currentSection = 'video'
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const

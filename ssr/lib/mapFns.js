@@ -12,25 +12,11 @@ import {
     getVideoPageText,
 } from './helpers/requests/getPageText'
 
-import {
-    pornstarInfoModel,
-    pornstarInfoForTableModel,
-} from './helpers/requests/getPornstarInfo'
-
-import {
-    sortModel,
-} from './helpers/requests/getSortList'
-
-import {
-    modelsListWithLetterModel,
-} from './helpers/requests/getModelsList'
-
-import {
-    incomingGalleryModel,
-    publishedTemplateModel,
-    galleryModel,
-    openGraphDataModel,
-} from './helpers/requests/getGallery'
+import {pornstarInfoModel, pornstarInfoForTableModel} from './helpers/requests/getPornstarInfo'
+import {sortModel} from './helpers/requests/getSortList'
+import {modelsListWithLetterModel} from './helpers/requests/getModelsList'
+import {incomingGalleryModel, publishedTemplateModel} from './helpers/requests/getGallery'
+import {galleryModel, openGraphDataModel} from '../App/VideoPage/models'
 
 import {
     getTagList,

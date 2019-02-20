@@ -12,6 +12,7 @@ import videoPageSaga from './VideoPage/sagas'
 import findVideosSaga from './FindVideos/sagas'
 import siteSaga from './Site/sagas'
 import notFoundSaga from './NotFound/sagas'
+import reportDialogSaga from './ReportDialog/sagas'
 
 import {
     getIdsForInitialFavoriteList,
@@ -81,5 +82,6 @@ export default function* saga() {
         findVideosSaga(),
         siteSaga(),
         notFoundSaga(),
+        reportDialogSaga(),
     ])
 }

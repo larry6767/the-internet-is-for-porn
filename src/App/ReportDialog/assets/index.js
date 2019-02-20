@@ -7,8 +7,8 @@ export const VideoBlock = styled.section`
 `
 
 export const Thumb = styled.div`
-    width: 258px;
-    height: 193px;
+    width: 215px;
+    height: 160px;
     background-size: cover;
     background-repeat: no-repeat;
     background-image: ${({thumb}) => `url(${thumb})`};

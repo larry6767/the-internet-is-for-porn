@@ -11,7 +11,7 @@ export const muiStyles = theme => ({
         margin: `20px 10px`,
         width: '100%',
     },
-    group: {
+    radioGroup: {
         display: 'grid',
         gridAutoFlow: 'column',
         gridTemplateRows: 'repeat(5, 1fr)',

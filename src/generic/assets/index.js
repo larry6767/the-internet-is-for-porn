@@ -1,4 +1,9 @@
 import styled from 'styled-components'
+import {Link} from 'react-router-dom'
+
+export const StyledLink = styled(Link)`
+    text-decoration: none;
+`
 
 export const Page = styled.section`
     ${'' /* TODO need to get real header+footer height from props */}

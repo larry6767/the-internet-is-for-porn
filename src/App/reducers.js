@@ -22,6 +22,7 @@ import videoPageReducer from './VideoPage/reducers'
 import findVideosReducer from './FindVideos/reducers'
 import siteReducer from './Site/reducers'
 import notFoundReducer from './NotFound/reducers'
+import reportDialogReducer from './ReportDialog/reducers'
 import actions from './actions'
 import {immutableLocaleRouterModel, immutableI18nModel} from './models'
 
@@ -46,6 +47,7 @@ export default combineReducers({
     findVideos: findVideosReducer,
     site: siteReducer,
     notFound: notFoundReducer,
+    reportDialog: reportDialogReducer,
 
     ui: provedHandleActions(stateModel, {
         [g(actions, 'resize')]: (state, action) => state.merge({

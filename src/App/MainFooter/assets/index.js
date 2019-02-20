@@ -46,9 +46,3 @@ export const Link = styled.a`
         text-decoration: underline;
     }
 `
-
-export const QRCodeBlock = styled.div`
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-`
