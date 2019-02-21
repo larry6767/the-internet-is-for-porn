@@ -281,7 +281,7 @@ export default compose(
         state => ({
             cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            data: ig(state, 'app', 'videoPage'),
+            data: ig(state, 'app', 'video'),
             routerContext: getRouterContext(state),
             favoriteVideoList: ig(state, 'app', 'ui', 'favoriteVideoList'),
             currentWidth: ig(state, 'app', 'ui', 'currentWidth'),

@@ -1,3 +1,4 @@
+import {includes} from 'lodash'
 import React, {Fragment} from 'react'
 import {compose, withHandlers, withPropsOnChange, withState} from 'recompose'
 import {connect} from 'react-redux'
@@ -39,6 +40,8 @@ import {
 
 import {muiStyles} from './assets/muiStyles'
 import actions from './actions'
+
+import {NICHE, ALL_MOVIES, PORNSTAR, VIDEO} from '../constants'
 
 const
     renderTableRow = (k, v, classedBounds) => <TableRow>
@@ -223,13 +226,7 @@ export default compose(
     connect(
         state => {
             const
-                pagesWithTagId = [
-                    'allMovies',
-                    'allMoviesArchive',
-                    'niche',
-                    'nicheArchive',
-                    'pornstar'
-                ],
+                pagesWithTagId = [ALL_MOVIES, NICHE, PORNSTAR],
                 currentSection = ig(state, 'app', 'mainHeader', 'navigation', 'currentSection'),
                 result = {
                     data: ig(state, 'app', 'reportDialog'),
@@ -238,11 +235,11 @@ export default compose(
                     pageUrl: ig(state, 'router', 'location', 'pathname'),
                 }
 
-            result.gallery = currentSection !== 'video' ? null :
-                result.gallery = GalleryRecord(ig(state, 'app', 'videoPage', 'gallery'))
+            result.gallery = currentSection !== VIDEO ? null :
+                result.gallery = GalleryRecord(ig(state, 'app', currentSection, 'gallery'))
                 // this Record above needs because we don't need all data from original gallery
 
-            result.tagId = pagesWithTagId.indexOf(currentSection) === -1 ? null :
+            result.tagId = ! includes(pagesWithTagId, currentSection) ? null :
                 result.tagId = ig(state, 'app', currentSection, 'tagId')
 
             return result

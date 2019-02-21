@@ -1,4 +1,4 @@
-import {mapValues} from 'lodash'
+import {mapValues, uniq} from 'lodash'
 
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
 
@@ -145,7 +145,7 @@ export default (data, pageUrl, publishedTemplate, sponsors) => {
             thumbMask: getProp(data, 'thumb_url').replace(/-\d+.jpg/, '-{num}.jpg'),
             thumbs: getProp(data, 'thumbs').map(x => Number(x)),
             firstThumb: Number(getProp(data, 'thumb_top')),
-            tags: getProp(data, 'tags'),
+            tags: uniq(getProp(data, 'tags')),
             // This is for very small string under a video preview,
             // it's usually only one single tag.
             tagsShort: getProp(data, 'tags').reduce((acc, tag) => {

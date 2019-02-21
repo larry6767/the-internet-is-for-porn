@@ -65,6 +65,21 @@ import {loadNotFoundPageFlow} from '../NotFound/sagas'
 
 import routerGetters from '../routerGetters'
 
+import {
+    HOME,
+    ALL_NICHES,
+    NICHE,
+    ALL_MOVIES,
+    PORNSTARS,
+    PORNSTAR,
+    FAVORITE,
+    FAVORITE_PORNSTARS,
+    VIDEO,
+    FIND_VIDEOS,
+    SITE,
+    NOT_FOUND,
+} from '../constants'
+
 // `staticContext` is for only for Server-Side Rendering here.
 // `staticContext.isPreRouting` means we don't need to render any component
 // (using just `null` plugs) but to just prepare meta info for SSR
@@ -72,11 +87,11 @@ import routerGetters from '../routerGetters'
 const RouterBuilder = ({routerContext: r}) => <Switch>
     {/* home */}
     {orientationCodes.map(orientationCode => <Route
-        key={`${orientationCode}-home`}
+        key={`${orientationCode}-${HOME}`}
         exact
         path={routerGetters.home.path(r, orientationCode)}
         render={props => {
-            const currentSection = 'home'
+            const currentSection = HOME
 
             if (get(props, ['staticContext', 'isPreRouting'])) {
                 const
@@ -86,8 +101,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                     action = homeActions.loadPageRequest({pageRequestParams})
 
                 x.saga = loadHomeFlow.bind(null, action)
-                x.statusCodeResolver = status500(['app', 'home', 'isFailed'])
-                x.pageTextResolver = state => ig(state, ['app', 'home', 'pageText'])
+                x.statusCodeResolver = status500(['app', HOME, 'isFailed'])
+                x.pageTextResolver = state => ig(state, ['app', HOME, 'pageText'])
                 x.currentOrientation = orientationCode
                 x.currentSection = currentSection
                 return null
@@ -103,11 +118,11 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     {/* all niches */}
     {flatten(orientationCodes.map(orientationCode => [
         <Route
-            key={`${orientationCode}-allNiches`}
+            key={`${orientationCode}-${ALL_NICHES}`}
             exact
             path={routerGetters.allNiches.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'allNiches'
+                const currentSection = ALL_NICHES
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -117,8 +132,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                         action = allNichesActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadAllNichesPageFlow.bind(null, action)
-                    x.statusCodeResolver = status500(['app', 'allNiches', 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', 'allNiches', 'pageText'])
+                    x.statusCodeResolver = status500(['app', ALL_NICHES, 'isFailed'])
+                    x.pageTextResolver = state => ig(state, ['app', ALL_NICHES, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -131,10 +146,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             }}
         />,
         <Route
-            key={`${orientationCode}-nicheArchive`}
+            key={`${orientationCode}-${NICHE}Archive`}
             path={routerGetters.nicheArchive.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'niche'
+                const currentSection = NICHE
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -144,8 +159,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                         action = nicheActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadNichePageFlow.bind(null, action)
-                    x.statusCodeResolver = status500(['app', 'niche', 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', 'niche', 'pageText'])
+                    x.statusCodeResolver = status500(['app', NICHE, 'isFailed'])
+                    x.pageTextResolver = state => ig(state, ['app', NICHE, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -158,10 +173,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             }}
         />,
         <Route
-            key={`${orientationCode}-niche`}
+            key={`${orientationCode}-${NICHE}`}
             path={routerGetters.niche.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'niche'
+                const currentSection = NICHE
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -171,8 +186,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                         action = nicheActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadNichePageFlow.bind(null, action)
-                    x.statusCodeResolver = status500(['app', 'niche', 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', 'niche', 'pageText'])
+                    x.statusCodeResolver = status500(['app', NICHE, 'isFailed'])
+                    x.pageTextResolver = state => ig(state, ['app', NICHE, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -189,11 +204,11 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     {/* all movies */}
     {flatten(orientationCodes.map(orientationCode => [
         <Route
-            key={`${orientationCode}-allMovies`}
+            key={`${orientationCode}-${ALL_MOVIES}`}
             exact
             path={routerGetters.allMovies.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'allMovies'
+                const currentSection = ALL_MOVIES
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -203,8 +218,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                         action = allMoviesActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadAllMoviesPageFlow.bind(null, action)
-                    x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', 'allMovies', 'pageText'])
+                    x.statusCodeResolver = status500(['app', ALL_MOVIES, 'isFailed'])
+                    x.pageTextResolver = state => ig(state, ['app', ALL_MOVIES, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -217,10 +232,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             }}
         />,
         <Route
-            key={`${orientationCode}-allMovies-archive`}
+            key={`${orientationCode}-${ALL_MOVIES}Archive`}
             path={routerGetters.allMoviesArchive.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'allMovies'
+                const currentSection = ALL_MOVIES
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -230,8 +245,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                         action = allMoviesActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadAllMoviesPageFlow.bind(null, action)
-                    x.statusCodeResolver = status500(['app', 'allMovies', 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', 'allMovies', 'pageText'])
+                    x.statusCodeResolver = status500(['app', ALL_MOVIES, 'isFailed'])
+                    x.pageTextResolver = state => ig(state, ['app', ALL_MOVIES, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -248,11 +263,11 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     {/* pornstars */}
     {flatten(orientationCodes.map(orientationCode => [
         <Route
-            key={`${orientationCode}-pornstars`}
+            key={`${orientationCode}-${PORNSTARS}`}
             exact
             path={routerGetters.pornstars.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'pornstars'
+                const currentSection = PORNSTARS
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -262,8 +277,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                         action = pornstarsActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadPornstarsPageFlow.bind(null, action)
-                    x.statusCodeResolver = status500(['app', 'pornstars', 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', 'pornstars', 'pageText'])
+                    x.statusCodeResolver = status500(['app', PORNSTARS, 'isFailed'])
+                    x.pageTextResolver = state => ig(state, ['app', PORNSTARS, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -276,10 +291,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             }}
         />,
         <Route
-            key={`${orientationCode}-pornstar`}
+            key={`${orientationCode}-${PORNSTAR}`}
             path={routerGetters.pornstar.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'pornstar'
+                const currentSection = PORNSTAR
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -289,9 +304,9 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                         action = pornstarActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadPornstarPageFlow.bind(null, action)
-                    x.statusCodeResolver = status500(['app', 'pornstar', 'isFailed'])
+                    x.statusCodeResolver = status500(['app', PORNSTAR, 'isFailed'])
                     x.pageTextResolver = state =>
-                        ig(state, ['app', 'pornstar', 'pageText'])
+                        ig(state, ['app', PORNSTAR, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -314,7 +329,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
         for backend (converting passed values in request body in to cookie header).
     */}
     <Route exact path={routerGetters.favorite.path(r)} render={props => {
-        const currentSection = 'favorite'
+        const currentSection = FAVORITE
 
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
@@ -324,8 +339,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                 action = favoriteActions.loadPageRequest({pageRequestParams})
 
             x.saga = loadFavoritePageFlow.bind(null, action)
-            x.statusCodeResolver = status500(['app', 'favorite', 'isFailed'])
-            x.pageTextResolver = state => ig(state, ['app', 'favorite', 'pageText'])
+            x.statusCodeResolver = status500(['app', FAVORITE, 'isFailed'])
+            x.pageTextResolver = state => ig(state, ['app', FAVORITE, 'pageText'])
             x.currentSection = currentSection
             // x.currentOrientation = orientationCode
             return null
@@ -337,7 +352,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             />
     }}/>
     <Route path={routerGetters.favoritePornstars.path(r)} render={props => {
-        const currentSection = 'favorite'
+        const currentSection = FAVORITE_PORNSTARS
 
         if (get(props, ['staticContext', 'isPreRouting'])) {
             const
@@ -347,8 +362,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                 action = favoritePornstarsActions.loadPageRequest({pageRequestParams})
 
             x.saga = loadFavoritePornstarsPageFlow.bind(null, action)
-            x.statusCodeResolver = status500(['app', 'favorite', 'isFailed'])
-            x.pageTextResolver = state => ig(state, ['app', 'favorite', 'pageText'])
+            x.statusCodeResolver = status500(['app', FAVORITE_PORNSTARS, 'isFailed'])
+            x.pageTextResolver = state => ig(state, ['app', FAVORITE_PORNSTARS, 'pageText'])
             x.currentSection = currentSection
             // x.currentOrientation = orientationCode
             return null
@@ -363,10 +378,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     {/* video */}
     {orientationCodes.map(orientationCode =>
         <Route
-            key={`${orientationCode}-video`}
+            key={`${orientationCode}-${VIDEO}`}
             path={routerGetters.video.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'video'
+                const currentSection = VIDEO
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -376,10 +391,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                         action = videoPageActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadVideoPageFlow.bind(null, action)
-                    x.statusCodeResolver = status500(['app', 'videoPage', 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', 'videoPage', 'pageText'])
+                    x.statusCodeResolver = status500(['app', VIDEO, 'isFailed'])
+                    x.pageTextResolver = state => ig(state, ['app', VIDEO, 'pageText'])
                     x.openGraphDataResolver = state =>
-                        ig(state, ['app', 'videoPage', 'openGraphData'])
+                        ig(state, ['app', VIDEO, 'openGraphData'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -396,11 +411,11 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     {/* search */}
     {orientationCodes.map(orientationCode =>
         <Route
-            key={`${orientationCode}-findVideos`}
+            key={`${orientationCode}-${FIND_VIDEOS}`}
             exact
             path={routerGetters.findVideos.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'findVideos'
+                const currentSection = FIND_VIDEOS
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -410,8 +425,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                         action = findVideosActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadFindVideosPageFlow.bind(null, action)
-                    x.statusCodeResolver = status500(['app', 'findVideos', 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', 'findVideos', 'pageText'])
+                    x.statusCodeResolver = status500(['app', FIND_VIDEOS, 'isFailed'])
+                    x.pageTextResolver = state => ig(state, ['app', FIND_VIDEOS, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -428,11 +443,11 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     {/* site */}
     {orientationCodes.map(orientationCode =>
         <Route
-            key={`${orientationCode}-site`}
+            key={`${orientationCode}-${SITE}`}
             exact
             path={routerGetters.site.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'site'
+                const currentSection = SITE
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -442,8 +457,8 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
                         action = siteActions.loadPageRequest({pageRequestParams})
 
                     x.saga = loadSitePageFlow.bind(null, action)
-                    x.statusCodeResolver = status500(['app', 'site', 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', 'site', 'pageText'])
+                    x.statusCodeResolver = status500(['app', SITE, 'isFailed'])
+                    x.pageTextResolver = state => ig(state, ['app', SITE, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -460,10 +475,10 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
     {/* 404 */}
     {orientationCodes.map(orientationCode =>
         <Route
-            key={`${orientationCode}-notFound`}
+            key={`${orientationCode}-${NOT_FOUND}`}
             path={routerGetters.notFound.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'notFound'
+                const currentSection = NOT_FOUND
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const

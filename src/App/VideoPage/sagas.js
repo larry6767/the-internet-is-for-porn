@@ -25,7 +25,7 @@ export function* loadVideoPageFlow(action, ssrContext) {
 
         yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {
-        console.error('loadAllMoviesPageFlow is failed with exception:', err)
+        console.error('loadVideoPageFlow is failed with exception:', err)
         yield put(actions.loadPageFailure())
         yield put(errorActions.openErrorMessage())
     }
