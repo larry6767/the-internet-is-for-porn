@@ -264,7 +264,7 @@ export default compose(
         sendReportRequestHandler: props => event => {
             event.preventDefault()
             const
-                result = {
+                body = {
                     url: ig(props.data, 'currentHref'),
                     userUrl: ! g(props, 'gallery') ? g(props, 'userUrlValue') : null,
                     reason: g(props, 'reasonValue'),
@@ -273,7 +273,7 @@ export default compose(
                     tagId: g(props, 'tagId') ? g(props, 'tagId') : null,
                 }
 
-            console.log(result)
+            props.sendReportRequest(body)
         }
     }),
     withStyles(muiStyles),

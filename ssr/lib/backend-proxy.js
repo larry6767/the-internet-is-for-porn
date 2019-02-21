@@ -258,12 +258,14 @@ const
                 }
             )
 
-        const localeCode = g(req, 'body', 'localeCode')
+        const
+            localeCode = g(req, 'body', 'localeCode'),
+            orientationCode = g(req, 'body', 'orientationCode')
         unset(g(req, 'body'), 'localeCode')
         unset(g(req, 'body'), 'orientationCode')
         const body = g(req, 'body')
 
-        sendReportRequest(siteLocales, localeCode)({
+        sendReportRequest(siteLocales, localeCode, orientationCode)({
             headers: proxiedHeaders(siteLocales, localeCode)(req),
             body,
         })

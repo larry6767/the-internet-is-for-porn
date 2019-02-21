@@ -256,16 +256,16 @@ export const sendReport = (siteLocales, localeCode, orientationCode) => ({header
         preparedBody = {
             op: 'abuse_report',
             _cid: classId,
-            _url: g(x, 'url'),
-            'report-reason': g(x, 'reason'),
-            'report-comment': g(x, 'comment'),
+            _url: g(body, 'url'),
+            'report-reason': g(body, 'reason'),
+            'report-comment': g(body, 'comment'),
         }
 
-    if (body.userUrl) preparedBody['report-url'] = body.userUrl
-    if (body.tagId) preparedBody['_tid'] = body.tagId
-    if (body.galleryId) preparedBody['_gid'] = body.galleryId
+    if (g(body, 'userUrl')) preparedBody['report-url'] = g(body, 'userUrl')
+    if (g(body, 'tagId')) preparedBody['_tid'] = g(body, 'tagId')
+    if (g(body, 'galleryId')) preparedBody['_gid'] = g(body, 'galleryId')
 
-    fetch(
+    return fetch(
         backendUrlForReport(siteLocales, localeCode),
         {
             method: 'POST',
