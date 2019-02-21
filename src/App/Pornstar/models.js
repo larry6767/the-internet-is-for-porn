@@ -1,12 +1,12 @@
-import {ImmutablePropTypes, PropTypes} from '../../helpers'
+import {ImmutablePropTypes, PropTypes} from '../helpers'
 
 import {
     immutablePageTextModel,
     immutableModelsListWithLetterModel,
     pageRequestParamsModel,
-} from '../../models'
+} from '../models'
 
-import {immutableVideoItemModel} from '../../../generic/VideoItem/models'
+import {immutableVideoItemModel} from '../../generic/VideoItem/models'
 
 const
     pornstarInfoForTableModelBuilder = process.env.NODE_ENV === 'production' ? null :

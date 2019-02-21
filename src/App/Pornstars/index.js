@@ -60,7 +60,7 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            data: ig(state, 'app', 'pornstars', 'all'),
+            data: ig(state, 'app', 'pornstars'),
             routerContext: getRouterContext(state),
             i18nPornstarsHeader: getHeaderWithOrientation(state, 'pornstars'),
         }),

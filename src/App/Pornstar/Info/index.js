@@ -25,9 +25,9 @@ import {
     setPropTypes,
     PropTypes,
     ImmutablePropTypes,
-} from '../../../helpers'
+} from '../../helpers'
 
-import {immutableI18nPornstarInfoParametersModel, immutableI18nButtonsModel} from '../../../models'
+import {immutableI18nPornstarInfoParametersModel, immutableI18nButtonsModel} from '../../models'
 import {immutablePornstarInfoModel, immutablePornstarInfoForTableModel} from '../models'
 import {muiStyles} from './assets/muiStyles'
 

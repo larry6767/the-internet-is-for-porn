@@ -99,7 +99,7 @@ export default compose(
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: ig(state, 'app', 'niches', 'all'),
+            data: ig(state, 'app', 'allNiches'),
             i18nAllNichesHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'allNiches'),
             routerContext: getRouterContext(state),
         }),

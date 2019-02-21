@@ -16,29 +16,29 @@ import {
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
     breakpoints,
-} from '../../helpers'
+} from '../helpers'
 
 import {
     routerContextModel,
     immutableI18nOrderingModel,
     immutableI18nButtonsModel,
     immutableI18nPornstarInfoParametersModel,
-} from '../../models'
+} from '../models'
 
 import {model, immutablePornstarInfoForTableModel} from './models'
-import routerGetters from '../../routerGetters'
-import sectionPortal from '../../MainHeader/Navigation/sectionPortal'
-import loadingWrapper from '../../../generic/loadingWrapper'
-import orientationPortal from '../../MainHeader/Niche/orientationPortal'
-import ControlBar from '../../../generic/ControlBar'
-import PageTextHelmet from '../../../generic/PageTextHelmet'
-import Lists from '../../../generic/Lists'
-import VideoList from '../../../generic/VideoList'
+import routerGetters from '../routerGetters'
+import sectionPortal from '../MainHeader/Navigation/sectionPortal'
+import loadingWrapper from '../../generic/loadingWrapper'
+import orientationPortal from '../MainHeader/Niche/orientationPortal'
+import ControlBar from '../../generic/ControlBar'
+import PageTextHelmet from '../../generic/PageTextHelmet'
+import Lists from '../../generic/Lists'
+import VideoList from '../../generic/VideoList'
 
 import Info from './Info'
 import {PageWrapperNextToList} from './assets'
-import appActions from '../../../App/actions'
-import headerActions from '../../MainHeader/actions'
+import appActions from '../../App/actions'
+import headerActions from '../MainHeader/actions'
 import actions from './actions'
 
 const
@@ -114,7 +114,7 @@ export default compose(
     connect(
         state => ({
             cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: ig(state, 'app', 'pornstars', 'pornstar'),
+            data: ig(state, 'app', 'pornstar'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),

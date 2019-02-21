@@ -1,4 +1,4 @@
-import {createActions} from '../../helpers'
+import {createActions} from '../helpers'
 
 const actions = createActions('NICHE', [
     'LOAD_PAGE_REQUEST',

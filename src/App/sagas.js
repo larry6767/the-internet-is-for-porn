@@ -5,7 +5,9 @@ import homeSaga from './Home/sagas'
 import mainHeaderSaga from './MainHeader/sagas'
 import allMoviesSaga from './AllMovies/sagas'
 import allNichesSaga from './AllNiches/sagas'
+import nicheSaga from './Niche/sagas'
 import pornstarsSaga from './Pornstars/sagas'
+import pornstarSaga from './Pornstar/sagas'
 import favoriteSaga from './Favorite/sagas'
 import favoritePornstarsSaga from './FavoritePornstars/sagas'
 import videoPageSaga from './VideoPage/sagas'
@@ -74,8 +76,10 @@ export default function* saga() {
         homeSaga(),
         mainHeaderSaga(),
         allNichesSaga(),
+        nicheSaga(),
         allMoviesSaga(),
         pornstarsSaga(),
+        pornstarSaga(),
         favoriteSaga(),
         favoritePornstarsSaga(),
         videoPageSaga(),

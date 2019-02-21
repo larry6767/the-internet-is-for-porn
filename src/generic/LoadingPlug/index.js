@@ -4,7 +4,7 @@ import React, {Fragment} from 'react'
 import PornstarListPlug from '../PornstarList/PornstarListPlug'
 import HomePlug from '../../App/Home/HomePlug'
 import AllNichesPlug from '../../App/AllNiches/AllNichesPlug'
-import PornstarInfoPlug from '../../App/Pornstars/Pornstar/Info/PornstarInfoPlug'
+import PornstarInfoPlug from '../../App/Pornstar/Info/PornstarInfoPlug'
 import ControlBarPlug from '../ControlBar/ControlBarPlug'
 import VideoItemPlug from '../VideoItem/VideoItemPlug'
 

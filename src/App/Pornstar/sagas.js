@@ -7,11 +7,11 @@ import {
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
-} from '../../helpers'
+} from '../helpers'
 
-import routerGetters from '../../routerGetters'
-import errorActions from '../../../generic/ErrorMessage/actions'
-import headerActions from '../../MainHeader/actions'
+import routerGetters from '../routerGetters'
+import errorActions from '../../generic/ErrorMessage/actions'
+import headerActions from '../MainHeader/actions'
 import actions from './actions'
 
 export function* loadPornstarPageFlow(action, ssrContext) {

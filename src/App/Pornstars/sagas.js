@@ -8,7 +8,6 @@ import {
 } from '../helpers'
 import errorActions from '../../generic/ErrorMessage/actions'
 import headerActions from '../MainHeader/actions'
-import pornstarSaga from './Pornstar/sagas'
 import actions from './actions'
 
 export function* loadPornstarsPageFlow(action, ssrContext) {
@@ -31,5 +30,4 @@ export function* loadPornstarsPageFlow(action, ssrContext) {
 
 export default function* saga() {
     yield takeEvery(actions.loadPageRequest, loadPornstarsPageFlow)
-    yield pornstarSaga()
 }

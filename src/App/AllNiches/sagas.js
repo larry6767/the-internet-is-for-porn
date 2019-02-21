@@ -6,7 +6,6 @@ import {
     plainProvedGet as g,
     immutableProvedGet as ig,
 } from '../helpers'
-import nicheSaga from './Niche/sagas'
 import errorActions from '../../generic/ErrorMessage/actions'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
@@ -31,5 +30,4 @@ export function* loadAllNichesPageFlow(action, ssrContext) {
 
 export default function* saga() {
     yield takeEvery(actions.loadPageRequest, loadAllNichesPageFlow)
-    yield nicheSaga()
 }

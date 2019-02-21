@@ -16,7 +16,7 @@ import {
     setPropTypes,
 } from '../helpers'
 
-import {model} from '../Pornstars/Pornstar/models'
+import {model} from './models'
 import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'

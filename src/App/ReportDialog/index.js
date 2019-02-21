@@ -313,11 +313,11 @@ export default compose(
         }),
 
         data: model,
+        tagId: PropTypes.number.isOptional,
         gallery: galleryModel.isOptional,
         i18nButtons: immutableI18nButtonsModel,
         i18nReport: immutableI18nReportModel,
         pageUrl: PropTypes.string,
-        currentSection: PropTypes.string,
         commentValue: PropTypes.string,
         reasonValue: PropTypes.string,
 

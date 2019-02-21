@@ -1,15 +1,10 @@
-import {combineReducers} from 'redux-immutable'
 import {fromJS, List, Map} from 'immutable'
 
 import {provedHandleActions, plainProvedGet as g} from '../helpers'
 import {model} from './models'
 import actions from './actions'
-import nicheReducer from './Niche/reducers'
 
-export default combineReducers({
-    niche: nicheReducer,
-
-    all: provedHandleActions(model, {
+export default provedHandleActions(model, {
         [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
@@ -41,4 +36,3 @@ export default combineReducers({
         nichesList: [],
         pageText: {},
     }))
-})

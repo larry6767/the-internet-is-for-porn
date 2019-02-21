@@ -1,6 +1,6 @@
 import {fromJS, List, Map} from 'immutable'
 
-import {provedHandleActions, plainProvedGet as g} from '../../helpers'
+import {provedHandleActions, plainProvedGet as g} from '../helpers'
 import {model} from './models'
 import actions from './actions'
 

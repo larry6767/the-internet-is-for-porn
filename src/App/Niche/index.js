@@ -16,25 +16,25 @@ import {
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
     breakpoints,
-} from '../../helpers'
+} from '../helpers'
 
 import {
     immutableI18nOrderingModel,
     immutableI18nButtonsModel,
     routerContextModel,
-} from '../../models'
+} from '../models'
 
 import {model} from './models'
-import routerGetters from '../../routerGetters'
-import orientationPortal from '../../MainHeader/Niche/orientationPortal'
-import sectionPortal from '../../MainHeader/Navigation/sectionPortal'
-import loadingWrapper from '../../../generic/loadingWrapper'
-import ControlBar from '../../../generic/ControlBar'
-import PageTextHelmet from '../../../generic/PageTextHelmet'
-import Lists from '../../../generic/Lists'
-import VideoList from '../../../generic/VideoList'
+import routerGetters from '../routerGetters'
+import orientationPortal from '../MainHeader/Niche/orientationPortal'
+import sectionPortal from '../MainHeader/Navigation/sectionPortal'
+import loadingWrapper from '../../generic/loadingWrapper'
+import ControlBar from '../../generic/ControlBar'
+import PageTextHelmet from '../../generic/PageTextHelmet'
+import Lists from '../../generic/Lists'
+import VideoList from '../../generic/VideoList'
 import {PageWrapperNextToList} from './assets'
-import headerActions from '../../MainHeader/actions'
+import headerActions from '../MainHeader/actions'
 import actions from './actions'
 
 const
@@ -119,7 +119,7 @@ export default compose(
     connect(
         state => ({
             cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: ig(state, 'app', 'niches', 'niche'),
+            data: ig(state, 'app', 'niche'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),

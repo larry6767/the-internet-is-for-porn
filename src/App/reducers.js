@@ -14,8 +14,10 @@ import {
 import homeReducer from './Home/reducers'
 import mainHeaderReducer from './MainHeader/reducers'
 import allMoviesReducer from './AllMovies/reducers'
-import nichesReducer from './AllNiches/reducers'
+import allNichesReducer from './AllNiches/reducers'
+import nicheReducer from './Niche/reducers'
 import pornstarsReducer from './Pornstars/reducers'
+import pornstarReducer from './Pornstar/reducers'
 import favoriteReducer from './Favorite/reducers'
 import favoritePornstarsReducer from './FavoritePornstars/reducers'
 import videoPageReducer from './VideoPage/reducers'
@@ -38,9 +40,11 @@ const
 export default combineReducers({
     home: homeReducer,
     mainHeader: mainHeaderReducer,
-    niches: nichesReducer,
+    allNiches: allNichesReducer,
+    niche: nicheReducer,
     allMovies: allMoviesReducer,
     pornstars: pornstarsReducer,
+    pornstar: pornstarReducer,
     favorite: favoriteReducer,
     favoritePornstars: favoritePornstarsReducer,
     videoPage: videoPageReducer,
