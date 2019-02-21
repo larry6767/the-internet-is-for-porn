@@ -74,13 +74,13 @@ export default compose(
             ),
         }),
         {
-            toggleReportDialog: g(reportDialogActions, 'toggleReportDialog'),
+            toggleReportDialogFlow: g(reportDialogActions, 'toggleReportDialogFlow'),
         }
     ),
     withHandlers({
         toggleReportDialogHandler: props => event => {
             event.preventDefault()
-            props.toggleReportDialog()
+            props.toggleReportDialogFlow()
         }
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
@@ -88,7 +88,7 @@ export default compose(
         i18nButtons: immutableI18nButtonsModel,
         domain: PropTypes.string,
 
-        toggleReportDialog: PropTypes.func,
+        toggleReportDialogFlow: PropTypes.func,
         toggleReportDialogHandler: PropTypes.func,
     }),
 )(MainFooter)

@@ -295,7 +295,7 @@ export default compose(
             closeAdvertisement: g(actions, 'closeAdvertisement'),
             addVideoToFavorite: g(appActions, 'addVideoToFavorite'),
             removeVideoFromFavorite: g(appActions, 'removeVideoFromFavorite'),
-            toggleReportDialog: g(reportDialogActions, 'toggleReportDialog'),
+            toggleReportDialogFlow: g(reportDialogActions, 'toggleReportDialogFlow'),
         }
     ),
     withState('playerRef', 'setPlayerRef', null),
@@ -313,7 +313,7 @@ export default compose(
             props.removeVideoFromFavorite(ig(props.data, 'gallery', 'id'))
         },
         toggleReportDialogHandler: props => () => {
-            props.toggleReportDialog()
+            props.toggleReportDialogFlow()
         },
         getTagLink: props => searchQuery => routerGetters.findVideos.link(
             g(props, 'routerContext'),
@@ -398,7 +398,7 @@ export default compose(
         getTagLink: PropTypes.func,
         sponsorLinkBuilder: PropTypes.func,
         scrollToPlayer: PropTypes.func,
-        toggleReportDialog: PropTypes.func,
+        toggleReportDialogFlow: PropTypes.func,
         toggleReportDialogHandler: PropTypes.func,
     }),
     loadingWrapper({

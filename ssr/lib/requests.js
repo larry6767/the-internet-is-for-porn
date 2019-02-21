@@ -250,18 +250,34 @@ export const getSiteLocales = async () => {
     }
 }
 
-export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => fetch(
-    backendUrlForReport(siteLocales, localeCode),
-    {
-        method: 'POST',
-        headers,
-        body:
-            Object.keys(formData).reduce(
-                (fd, k) => (fd.append(k, g(formData, k)), fd),
-                new FormData()
-            ),
-    }
-).then(fetchResponseExtractor(() => new Error().stack))
+export const sendReport = (siteLocales, localeCode, orientationCode) => ({headers, body}) => {
+    const
+        classId = getClassId(orientationCode),
+        preparedBody = {
+            op: 'abuse_report',
+            _cid: classId,
+            _url: g(x, 'url'),
+            'report-reason': g(x, 'reason'),
+            'report-comment': g(x, 'comment'),
+        }
+
+    if (body.userUrl) preparedBody['report-url'] = body.userUrl
+    if (body.tagId) preparedBody['_tid'] = body.tagId
+    if (body.galleryId) preparedBody['_gid'] = body.galleryId
+
+    fetch(
+        backendUrlForReport(siteLocales, localeCode),
+        {
+            method: 'POST',
+            headers,
+            body:
+                Object.keys(preparedBody).reduce(
+                    (fd, k) => (fd.append(k, g(preparedBody, k)), fd),
+                    new FormData()
+                ),
+        }
+    ).then(fetchResponseExtractor(() => new Error().stack))
+}
 
 export const getSearchSuggestions = (siteLocales, localeCode, orientationCode) =>
     async ({headers, formData}) => {

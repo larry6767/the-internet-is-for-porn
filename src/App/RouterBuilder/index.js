@@ -134,7 +134,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             key={`${orientationCode}-nicheArchive`}
             path={routerGetters.nicheArchive.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'allNiches'
+                const currentSection = 'nicheArchive'
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -161,7 +161,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             key={`${orientationCode}-niche`}
             path={routerGetters.niche.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'allNiches'
+                const currentSection = 'niche'
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -220,7 +220,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             key={`${orientationCode}-allMovies-archive`}
             path={routerGetters.allMoviesArchive.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'allMovies'
+                const currentSection = 'allMoviesArchive'
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -279,7 +279,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             key={`${orientationCode}-pornstar`}
             path={routerGetters.pornstar.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'pornstars'
+                const currentSection = 'pornstar'
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const
@@ -400,7 +400,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
             exact
             path={routerGetters.findVideos.path(r, orientationCode)}
             render={props => {
-                const currentSection = 'allMovies'
+                const currentSection = 'findVideos'
 
                 if (get(props, ['staticContext', 'isPreRouting'])) {
                     const

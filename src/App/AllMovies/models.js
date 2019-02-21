@@ -17,6 +17,7 @@ export const
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
+        tagId: PropTypes.number,
         currentPage: PropTypes.string,
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageNumber: PropTypes.number,

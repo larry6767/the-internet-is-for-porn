@@ -74,6 +74,7 @@ export const
             archiveFilms = get(g(x, 'page', 'ACTIVE_NAV_TABS'), ['tag_archive_gals'], null)
 
         return {
+            tagId: g(x, 'page', 'TAG_ID'),
             currentPage: x.page.TAG_URL_NAME,
             pageNumber: x.page.PAGE_NUMBER,
             pagesCount: x.page.PAGES_COUNT,
@@ -117,6 +118,7 @@ export const
             archiveFilms = get(g(x, 'page', 'ACTIVE_NAV_TABS'), ['tag_archive_gals'], null)
 
         return {
+            tagId: g(x, 'page', 'TAG_ID'),
             currentPage: 'all-niches',
             currentSubPage: g(x, 'page', 'TAG_URL_NAME'),
             pageNumber: g(x, 'page', 'PAGE_NUMBER'),
@@ -183,6 +185,7 @@ export const
     }),
 
     mappedPornstarModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape({
+        tagId: PropTypes.number,
         pageNumber: PropTypes.number,
         pageText: pageTextModel,
         pagesCount: PropTypes.number,
@@ -208,6 +211,7 @@ export const
             ),
 
             result = {
+                tagId: g(x, 'page', 'TAG_ID'),
                 pageNumber: g(x, 'page', 'PAGE_NUMBER'),
                 pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
                 pagesCount: g(x, 'page', 'PAGES_COUNT'),

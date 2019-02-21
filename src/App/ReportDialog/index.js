@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {compose, withHandlers, withPropsOnChange} from 'recompose'
+import {compose, withHandlers, withPropsOnChange, withState} from 'recompose'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
@@ -100,21 +100,23 @@ const
         </Description>
     </VideoBlock>,
 
-    renderTextField = i18nReport => <TextField
+    renderTextField = (i18nReport, commentHandler, name) => <TextField
+        name={name}
         multiline
         fullWidth
         margin="normal"
         variant="filled"
         label={ig(i18nReport, 'commentLabel')}
         placeholder={ig(i18nReport, 'commentPlaceholder')}
+        onChange={commentHandler}
     />,
 
-    renderRadioButtons = (classedBounds, i18nReport, radioButtons) => <FormControl
+    renderRadioButtons = (classedBounds, i18nReport, radioButtons, handler) => <FormControl
         component="fieldset"
         classes={g(classedBounds, 'formControl')}
     >
         <FormLabel component="legend">{ig(i18nReport, 'radioLabel')}</FormLabel>
-        <RadioGroup classes={g(classedBounds, 'radioGroup')}>
+        <RadioGroup name="reason" classes={g(classedBounds, 'radioGroup')} onChange={handler}>
             {Object.keys(radioButtons).map(x => <FormControlLabel
                 key={x}
                 value={x}
@@ -123,8 +125,6 @@ const
             />)}
         </RadioGroup>
     </FormControl>,
-
-    fieldNamesArray = ['op', '_cid', '_gid', '_url'],
 
     ReportDialog = props => {
         const
@@ -146,23 +146,33 @@ const
             maxWidth={'md'}
             aria-labelledby="report-dialog"
         >
-            <form>
+            <form onSubmit={g(props, 'sendReportRequestHandler')}>
                 <DialogTitle id="report-dialog">{ig(props.i18nReport, 'title')}</DialogTitle>
                 <DialogContent>
-                    {/* getting without provedGet(g) because gallery is optional */}
-                    { ! props.gallery ? null : renderVideoBlock(
-                        g(props, 'classedBounds'),
+                    {g(props, 'gallery') ? <Fragment>
+                        {renderVideoBlock(
+                            g(props, 'classedBounds'),
+                            g(props, 'i18nReport'),
+                            g(props, 'gallery'),
+                            g(props, 'pageUrl'),
+                            ig(props.data, 'currentHref'),
+                            ig(props.data, 'currentTime'),
+                        )}
+                        <input type="hidden" name="galleryId" value={ig(props.gallery, 'id')}/>
+                    </Fragment>
+                    : renderTextField(
                         g(props, 'i18nReport'),
-                        g(props, 'gallery'),
-                        g(props, 'pageUrl'),
-                        ig(props.data, 'currentHref'),
-                        ig(props.data, 'currentTime'),
-                    )}
+                        g(props, 'userUrlHandler'),
+                        'userUrl')
+                    }
+
+                    <input type="hidden" name="url" value={ig(props.data, 'currentHref')}/>
 
                     {ig(props.data, 'isSent') ? null : renderRadioButtons(
                         g(props, 'classedBounds'),
                         g(props, 'i18nReport'),
                         radioButtons,
+                        g(props, 'reasonHandler'),
                     )}
 
                     {ig(props.data, 'isSent')
@@ -173,14 +183,13 @@ const
                             {ig(props.i18nReport, 'text')}
                         </DialogContentText>}
 
-                    {ig(props.data, 'isSent') ? null : renderTextField(g(props, 'i18nReport'))}
+                    {ig(props.data, 'isSent') ? null :
+                        renderTextField(g(props, 'i18nReport'), g(props, 'commentHandler'))}
 
                     { ! ig(props.data, 'isNotSent') ? null :
                         <DialogContentText classes={g(props.classedBounds, 'dialogFailureText')}>
                             {ig(props.i18nReport, 'failureText')}
                         </DialogContentText>}
-
-                    {fieldNamesArray.map(x => <input key={x} name={x} type="hidden"/>)}
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -214,6 +223,13 @@ export default compose(
     connect(
         state => {
             const
+                pagesWithTagId = [
+                    'allMovies',
+                    'allMoviesArchive',
+                    'niche',
+                    'nicheArchive',
+                    'pornstar'
+                ],
                 currentSection = ig(state, 'app', 'mainHeader', 'navigation', 'currentSection'),
                 result = {
                     data: ig(state, 'app', 'reportDialog'),
@@ -222,17 +238,46 @@ export default compose(
                     pageUrl: ig(state, 'router', 'location', 'pathname'),
                 }
 
-            if (currentSection === 'video')
+            result.gallery = currentSection !== 'video' ? null :
                 result.gallery = GalleryRecord(ig(state, 'app', 'videoPage', 'gallery'))
                 // this Record above needs because we don't need all data from original gallery
+
+            result.tagId = pagesWithTagId.indexOf(currentSection) === -1 ? null :
+                result.tagId = ig(state, 'app', currentSection, 'tagId')
+
             return result
         },
         {
-            toggleReportDialog: g(actions, 'toggleReportDialog'),
+            toggleReportDialogFlow: g(actions, 'toggleReportDialogFlow'),
+            sendReportRequest: g(actions, 'sendReportRequest'),
         }
     ),
+    withState('userUrlValue', 'setUserUrlValue', ''),
+    withState('commentValue', 'setCommentValue', ''),
+    withState('reasonValue', 'setReasonValue', 'reason_nothing'),
     withHandlers({
-        closeHandler: props => () => props.toggleReportDialog()
+        closeHandler: props => () => props.toggleReportDialogFlow(),
+
+        userUrlHandler: props => event => props.setUserUrlValue(event.target.value),
+
+        commentHandler: props => event => props.setCommentValue(event.target.value),
+
+        reasonHandler: props => (event, x) => props.setReasonValue(x),
+
+        sendReportRequestHandler: props => event => {
+            event.preventDefault()
+            const
+                result = {
+                    url: ig(props.data, 'currentHref'),
+                    userUrl: ! g(props, 'gallery') ? g(props, 'userUrlValue') : null,
+                    reason: g(props, 'reasonValue'),
+                    comment: g(props, 'commentValue'),
+                    galleryId: g(props, 'gallery') ? ig(props.gallery, 'id') : null,
+                    tagId: g(props, 'tagId') ? g(props, 'tagId') : null,
+                }
+
+            console.log(result)
+        }
     }),
     withStyles(muiStyles),
     withPropsOnChange([], props => ({
@@ -272,8 +317,14 @@ export default compose(
         i18nButtons: immutableI18nButtonsModel,
         i18nReport: immutableI18nReportModel,
         pageUrl: PropTypes.string,
+        currentSection: PropTypes.string,
+        commentValue: PropTypes.string,
+        reasonValue: PropTypes.string,
 
-        toggleReportDialog: PropTypes.func,
+        toggleReportDialogFlow: PropTypes.func,
         closeHandler: PropTypes.func,
+        sendReportRequestHandler: PropTypes.func,
+        setCommentValue: PropTypes.func,
+        setReasonValue: PropTypes.func,
     }),
 )(ReportDialog)

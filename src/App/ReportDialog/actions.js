@@ -1,6 +1,7 @@
 import {createActions} from '../helpers'
 
 const actions = createActions('DIALOG', [
+    'TOGGLE_REPORT_DIALOG_FLOW',
     'TOGGLE_REPORT_DIALOG',
     'SEND_REPORT_REQUEST',
     'SEND_REPORT_SUCCESS',

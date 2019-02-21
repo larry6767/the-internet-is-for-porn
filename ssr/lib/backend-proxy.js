@@ -261,18 +261,18 @@ const
         const localeCode = g(req, 'body', 'localeCode')
         unset(g(req, 'body'), 'localeCode')
         unset(g(req, 'body'), 'orientationCode')
-        const formData = g(req, 'body')
+        const body = g(req, 'body')
 
         sendReportRequest(siteLocales, localeCode)({
             headers: proxiedHeaders(siteLocales, localeCode)(req),
-            formData,
+            body,
         })
         .then(x => res.json(x).end())
         .catch(jsonThrow500(req, res))
     })({
         validTopLevelKeys: Object.freeze([
             'localeCode', 'orientationCode',
-            'op', '_cid', '_gid', '_url', 'report-reason', 'report-comment',
+            'comment', 'galleryId', 'tagId', 'reason', 'url', 'userUrl',
         ]),
     })
 

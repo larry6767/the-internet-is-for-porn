@@ -13,7 +13,7 @@ export function* sendReportFlow({payload: formData}) {
             reqData = yield select(x => ({
                 localeCode: ig(x, 'app', 'locale', 'localeCode'),
                 orientationCode: ig(x, 'app', 'mainHeader', 'niche', 'currentOrientation'),
-                ...formData.toJS()
+                ...formData
             })),
 
             data = yield fetch(`${BACKEND_URL}/send-report`, {
@@ -44,6 +44,23 @@ export function* sendReportFlow({payload: formData}) {
     }
 }
 
+export function* toggleReportDialogFlow() {
+    if ( ! (yield select(x => ig(x, 'app', 'reportDialog', 'isOpen'))))
+        yield put(actions.setTimeAndHref({
+            href: window.location.href,
+            time: new Date().toLocaleString("en-US", {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+            })
+        }))
+
+    yield put(actions.toggleReportDialog())
+}
+
 export default function* saga() {
     yield takeEvery(actions.sendReportRequest, sendReportFlow)
+    yield takeEvery(actions.toggleReportDialogFlow, toggleReportDialogFlow)
 }
