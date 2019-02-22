@@ -103,14 +103,14 @@ const
         </Description>
     </VideoBlock>,
 
-    renderTextField = (i18nReport, commentHandler, name) => <TextField
+    renderTextField = (i18nReport, commentHandler, name, label, placeholder) => <TextField
         name={name}
         multiline
         fullWidth
         margin="normal"
         variant="filled"
-        label={ig(i18nReport, 'commentLabel')}
-        placeholder={ig(i18nReport, 'commentPlaceholder')}
+        label={label}
+        placeholder={placeholder}
         onChange={commentHandler}
     />,
 
@@ -166,8 +166,10 @@ const
                     : renderTextField(
                         g(props, 'i18nReport'),
                         g(props, 'userUrlHandler'),
-                        'userUrl')
-                    }
+                        'userUrl',
+                        'URL',
+                        ig(props.i18nReport, 'userUrlPlaceholder'),
+                    )}
 
                     <input type="hidden" name="url" value={ig(props.data, 'currentHref')}/>
 
@@ -187,7 +189,13 @@ const
                         </DialogContentText>}
 
                     {ig(props.data, 'isSent') ? null :
-                        renderTextField(g(props, 'i18nReport'), g(props, 'commentHandler'))}
+                        renderTextField(
+                            g(props, 'i18nReport'),
+                            g(props, 'commentHandler'),
+                            'comment',
+                            ig(props.i18nReport, 'commentLabel'),
+                            ig(props.i18nReport, 'commentPlaceholder'),
+                        )}
 
                     { ! ig(props.data, 'isNotSent') ? null :
                         <DialogContentText classes={g(props.classedBounds, 'dialogFailureText')}>

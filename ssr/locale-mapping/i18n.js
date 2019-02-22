@@ -97,6 +97,7 @@ const
                 failureText: 'Something went wrong. Try again later',
                 commentLabel: 'Comment',
                 commentPlaceholder: 'Describe the problem',
+                userUrlPlaceholder: 'Insert a link to the page you want to report',
             },
             pornstarInfoParameters: {
                 alias: 'Aliases',
@@ -226,6 +227,7 @@ const
                 failureText: 'Etwas ist schief gelaufen. Versuchen Sie es später noch einmal',
                 commentLabel: 'Kommentar',
                 commentPlaceholder: 'Beschreibe das Problem',
+                userUrlPlaceholder: 'Fügen Sie einen Link zu der Seite ein, die Sie melden möchten',
             },
             pornstarInfoParameters: { // TODO
                 alias: 'Aliases',
@@ -353,6 +355,7 @@ const
                 failureText: 'Qualcosa è andato storto. Riprovare più tardi',
                 commentLabel: 'Commento',
                 commentPlaceholder: 'Descrivi il problema',
+                userUrlPlaceholder: 'Inserisci un link alla pagina che vuoi segnalare',
             },
             pornstarInfoParameters: { // TODO
                 alias: 'Aliases',
@@ -481,6 +484,7 @@ const
                 failureText: 'Quelque chose s\'est mal passé. Réessayez plus tard',
                 commentLabel: 'Commentaire',
                 commentPlaceholder: 'Décris le problème',
+                userUrlPlaceholder: 'Insérer un lien vers la page que vous souhaitez signaler',
             },
             pornstarInfoParameters: { // TODO
                 alias: 'Aliases',
@@ -609,6 +613,7 @@ const
                 failureText: 'Algo salió mal. Inténtalo más tarde',
                 commentLabel: 'Comentario',
                 commentPlaceholder: 'Describe el problema',
+                userUrlPlaceholder: 'Inserta un enlace a la página que quieres reportar',
             },
             pornstarInfoParameters: { // TODO
                 alias: 'Aliases',
@@ -736,6 +741,7 @@ const
                 failureText: 'Algo deu errado. Tente mais tarde',
                 commentLabel: 'Comente',
                 commentPlaceholder: 'Descreva o problema',
+                userUrlPlaceholder: 'Insira um link para a página que você deseja denunciar',
             },
             pornstarInfoParameters: { // TODO
                 alias: 'Aliases',
@@ -862,6 +868,7 @@ const
                 failureText: 'Något gick fel. Försök igen senare',
                 commentLabel: 'Kommentar',
                 commentPlaceholder: 'Beskriv problemet',
+                userUrlPlaceholder: 'Infoga en länk till den sida du vill rapportera',
             },
             pornstarInfoParameters: { // TODO
                 alias: 'Aliases',
@@ -990,6 +997,7 @@ const
                 failureText: 'Er is iets fout gegaan. Probeer het later opnieuw',
                 commentLabel: 'Commentaar',
                 commentPlaceholder: 'Beschrijf het probleem',
+                userUrlPlaceholder: 'Voeg een link in naar de pagina die u wilt rapporteren',
             },
             pornstarInfoParameters: { // TODO
                 alias: 'Aliases',
@@ -1117,6 +1125,7 @@ const
                 failureText: 'Jotain meni pieleen. Yritä myöhemmin uudelleen',
                 commentLabel: 'Kommentti',
                 commentPlaceholder: 'Kuvaile ongelmaa',
+                userUrlPlaceholder: 'Lisää linkki sivulle, josta haluat raportoida',
             },
             pornstarInfoParameters: { // TODO
                 alias: 'Aliases',
@@ -1243,6 +1252,7 @@ const
                 failureText: 'Что-то пошло не так. Попробуйте позже',
                 commentLabel: 'Комментарий',
                 commentPlaceholder: 'Опишите проблему',
+                userUrlPlaceholder: 'Вставте ссылку на страницу на которую вы хотите пожаловаться',
             },
             pornstarInfoParameters: {
                 alias: 'Псевдонимы',
@@ -1371,6 +1381,7 @@ const
                 failureText: 'Bir şeyler yanlış gitti. Daha sonra tekrar deneyin',
                 commentLabel: 'Yorum Yap',
                 commentPlaceholder: 'Sorunu tarif et',
+                userUrlPlaceholder: 'Bildirmek istediğiniz sayfaya bir link ekleyin',
             },
             pornstarInfoParameters: { // TODO
                 alias: 'Aliases',

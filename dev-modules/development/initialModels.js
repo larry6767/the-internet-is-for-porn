@@ -186,6 +186,7 @@ const
             failureText: PropTypes.string,
             commentLabel: PropTypes.string,
             commentPlaceholder: PropTypes.string,
+            userUrlPlaceholder: PropTypes.string,
         })
     },
 
