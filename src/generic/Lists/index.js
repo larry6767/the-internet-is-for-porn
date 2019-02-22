@@ -1,6 +1,5 @@
 import React from 'react'
-import {compose} from 'recompose'
-import {Link} from 'react-router-dom'
+import {compose, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import ArrowRight from '@material-ui/icons/ChevronRight'
 
@@ -12,21 +11,26 @@ import ListItemText from '@material-ui/core/ListItemText'
 
 import {
     PropTypes,
+    ImmutablePropTypes,
     setPropTypes,
     breakpoints,
     breakpointSM as sm,
+    plainProvedGet as g,
     compareCurrentBreakpoint as ccb,
 } from '../../App/helpers'
 
-import {ListsInner} from './assets'
+import {
+    immutableNichesListModel,
+    immutableTagArchiveListModel,
+    immutableModelsListWithLetterModel
+} from '../../App/models'
+import {ListsInner, StyledLink, Section, SectionInner} from './assets'
 import {muiStyles} from './assets/muiStyles'
 
 const
     // Generic list item component generator
-    renderItem =
-        (isSponsor, idKey, titleKey, countKey, subPage, year, month) =>
-        (x, classes, linkBuilder) =>
-        <Link
+    renderItem = (isSponsor, idKey, titleKey, countKey, subPage, year, month) =>
+        (x, classedBounds, linkBuilder) => <StyledLink
             to={
                 isSponsor
                 ? linkBuilder(x.toLowerCase())
@@ -35,30 +39,19 @@ const
                 : linkBuilder(x.get(subPage)) // niche link
             }
             key={isSponsor ? x : x.get(idKey)}
-            className={classes.routerLink}
         >
-            <ListItem
-                button
-                classes={{
-                    root: classes.itemRoot
-                }}
-            >
-                <ListItemIcon classes={{
-                    root: classes.iconRoot
-                }}>
+            <ListItem button classes={g(classedBounds, 'item')}>
+                <ListItemIcon classes={g(classedBounds, 'icon')}>
                     <ArrowRight/>
                 </ListItemIcon>
                 <ListItemText
                     inset
                     primary={isSponsor ? x : x.get(titleKey)}
                     secondary={isSponsor ? null : x.get(countKey)}
-                    classes={{
-                        root: classes.itemTextRoot,
-                        primary: classes.primaryTypography
-                    }}
+                    classes={g(classedBounds, 'listItemText')}
                 />
             </ListItem>
-        </Link>,
+        </StyledLink>,
 
     SponsorsListItem = renderItem(true),
 
@@ -69,7 +62,7 @@ const
 
     ModelsLetterListItem = renderItem(false, 'id', 'name', 'itemsCount', 'subPage', 'letter'),
 
-    ArchiveList = ({classes, tagArchiveList, linkBuilder, i18nListArchiveHeader}) => {
+    ArchiveList = ({classedBounds, tagArchiveList, linkBuilder, i18nListArchiveHeader}) => {
         const
             years = tagArchiveList
                 .groupBy(x => x.get('year'))
@@ -78,24 +71,19 @@ const
 
         return <ListComponent component="nav" subheader={<li/>}>
             {years.map((listByYear, year) =>
-                <li
-                    key={`section-${year}`}
-                    className={classes.listSection}
-                >
-                    <ul className={classes.ul}>
-                        <ListSubheader classes={{
-                            root: classes.listSubheader
-                        }}>
+                <Section key={`section-${year}`}>
+                    <SectionInner>
+                        <ListSubheader classes={g(classedBounds, 'listSubheader')}>
                             {`${i18nListArchiveHeader} ${year}`}
                         </ListSubheader>
-                        {listByYear.map(x => ArchiveYearListItem(x, classes, linkBuilder))}
-                    </ul>
-                </li>
+                        {listByYear.map(x => ArchiveYearListItem(x, classedBounds, linkBuilder))}
+                    </SectionInner>
+                </Section>
             ).toList()}
         </ListComponent>
     },
 
-    ModelsList = ({classes, modelsList, linkBuilder}) => {
+    ModelsList = ({classedBounds, modelsList, linkBuilder}) => {
         const
             letters = modelsList
                 .groupBy(x => x.get('letter'))
@@ -105,25 +93,20 @@ const
 
         return <ListComponent component="nav" subheader={<li/>}>
             {letters.map((listByYear, letter) =>
-                <li
-                    key={`section-${letter}`}
-                    className={classes.listSection}
-                >
-                    <ul className={classes.ul}>
-                        <ListSubheader classes={{
-                            root: classes.listSubheader
-                        }}>
+                <Section key={`section-${letter}`}>
+                    <SectionInner>
+                        <ListSubheader classes={g(classedBounds, 'listSubheader')}>
                             {`${letter}`}
                         </ListSubheader>
-                        {listByYear.map(x => ModelsLetterListItem(x, classes, linkBuilder))}
-                    </ul>
-                </li>
+                        {listByYear.map(x => ModelsLetterListItem(x, classedBounds, linkBuilder))}
+                    </SectionInner>
+                </Section>
             ).toList()}
         </ListComponent>
     },
 
     Lists = ({
-        classes,
+        classedBounds,
         cb,
         maxHeight,
 
@@ -147,46 +130,83 @@ const
                 { sponsorsList ? <ListComponent
                     component="nav"
                     subheader={
-                        <ListSubheader classes={{
-                            root: classes.listSubheader
-                        }}>
+                        <ListSubheader classes={g(classedBounds, 'listSubheader')}>
                             {i18nListArchiveHeader}
                         </ListSubheader>
                     }
                 >
-                    {sponsorsList.map(x => SponsorsListItem(x, classes, sponsorLinkBuilder))}
+                    {sponsorsList.map(x => SponsorsListItem(x, classedBounds, sponsorLinkBuilder))}
                 </ListComponent> : null }
 
                 { tagList ? <ListComponent
                     component="nav"
                     subheader={
-                        <ListSubheader classes={{
-                            root: classes.listSubheader
-                        }}>
+                        <ListSubheader classes={g(classedBounds, 'listSubheader')}>
                             {i18nListNichesHeader}
                         </ListSubheader>
                     }
                 >
-                    {tagList.map(x => NichesListItem(x, classes, tagLinkBuilder))}
+                    {tagList.map(x => NichesListItem(x, classedBounds, tagLinkBuilder))}
                 </ListComponent> : null }
 
                 { tagArchiveList ? <ArchiveList
-                    classes={classes}
+                    classedBounds={classedBounds}
                     tagArchiveList={tagArchiveList}
                     linkBuilder={archiveLinkBuilder}
                     i18nListArchiveHeader={i18nListArchiveHeader}
                 /> : null }
                 { modelsList ? <ModelsList
-                    classes={classes}
+                    classedBounds={classedBounds}
                     modelsList={modelsList}
                     linkBuilder={modelLinkBuilder}
                 /> : null }
             </ListsInner> : null
 
 export default compose(
+    onlyUpdateForKeys([]),
     withStyles(muiStyles),
+    withPropsOnChange([], props => ({
+        classedBounds: Object.freeze({
+            listSubheader: Object.freeze({root: g(props, 'classes', 'listSubheader')}),
+            item: Object.freeze({root: g(props, 'classes', 'itemRoot')}),
+            icon: Object.freeze({root: g(props, 'classes', 'iconRoot')}),
+            listItemText: Object.freeze({
+                root: g(props, 'classes', 'itemTextRoot'),
+                primary: g(props, 'classes', 'primaryTypography'),
+            })
+        }),
+    })),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        classes: PropTypes.exact({
+            listSubheader: PropTypes.string,
+            itemRoot:PropTypes.string,
+            iconRoot: PropTypes.string,
+            itemTextRoot: PropTypes.string,
+            primaryTypography: PropTypes.string,
+        }),
+        classedBounds: PropTypes.exact({
+            listSubheader: PropTypes.object,
+            item: PropTypes.object,
+            icon: PropTypes.object,
+            listItemText: PropTypes.object,
+        }),
+
         cb: PropTypes.oneOf(breakpoints),
         maxHeight: PropTypes.nullable(PropTypes.number),
+
+        sponsorsList: ImmutablePropTypes.listOf(PropTypes.string).isOptional,
+        sponsorLinkBuilder: PropTypes.func.isOptional,
+
+        tagList: immutableNichesListModel.isOptional,
+        tagLinkBuilder: PropTypes.func.isOptional,
+
+        tagArchiveList: immutableTagArchiveListModel.isOptional,
+        archiveLinkBuilder: PropTypes.func.isOptional,
+
+        modelsList: immutableModelsListWithLetterModel.isOptional,
+        modelLinkBuilder: PropTypes.func.isOptional,
+
+        i18nListNichesHeader: PropTypes.string,
+        i18nListArchiveHeader: PropTypes.string,
     })
 )(Lists)

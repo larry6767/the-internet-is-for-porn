@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+export {StyledLink} from '../../assets'
 
 const ListsInnerCommon = styled.div`
     margin-right: 10px;
@@ -23,4 +24,13 @@ export const ListsPlug = styled(ListsInnerCommon)`
 
     ${({theme}) => theme.media.sm`display: none;`};
     ${({theme}) => theme.media.mobile`display: none;`};
+`
+
+export const Section = styled.li`
+    background-color: 'inherit',
+`
+
+export const SectionInner = styled.ul`
+    background-color: 'inherit';
+    padding: 0;
 `

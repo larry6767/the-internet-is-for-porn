@@ -31,14 +31,4 @@ export const muiStyles = theme => ({
         overflow: 'hidden',
         textOverflow: 'ellipsis',
     },
-    listSection: {
-        backgroundColor: 'inherit',
-    },
-    ul: {
-        backgroundColor: 'inherit',
-        padding: 0,
-    },
-    routerLink: {
-        textDecoration: 'none'
-    },
 })
