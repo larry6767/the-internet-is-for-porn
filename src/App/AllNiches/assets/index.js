@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-export {PageWrapper} from '../../../generic/assets'
+export {PageWrapper, StyledLink} from '../../../generic/assets'
 
 export const ListComponentPlug = styled.div`
     box-sizing: border-box;

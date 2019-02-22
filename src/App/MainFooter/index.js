@@ -25,13 +25,13 @@ const
     MainFooter = props => <Footer>
         <FooterInner>
             <TextBlock>
-                <LinkList>
+                {g(props, 'isSSR') ? null : <LinkList>
                     <LinkItem>
                         <Link href={'#'} onClick={g(props, 'toggleReportDialogHandler')}>
                             {ig(props.i18nButtons, 'report')}
                         </Link>
                     </LinkItem>
-                </LinkList>
+                </LinkList>}
 
                 <Typography variant="body2" gutterBottom>
                     {ig(props.i18nFooter, 'forParents')}
@@ -60,6 +60,7 @@ const
 export default compose(
     connect(
         state => ({
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             i18nFooter: ig(state, 'app', 'locale', 'i18n', 'footer'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
 
@@ -84,6 +85,7 @@ export default compose(
         }
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        isSSR: PropTypes.bool,
         i18nFooter: immutableI18nFooterModel,
         i18nButtons: immutableI18nButtonsModel,
         domain: PropTypes.string,
