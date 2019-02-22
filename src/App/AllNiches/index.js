@@ -128,14 +128,14 @@ export default compose(
         }),
     })),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.shape({
+        classes: PropTypes.exact({
             listComponentRoot: PropTypes.string,
             itemGutters: PropTypes.string,
             listItemTextRoot: PropTypes.string,
             primaryTypography: PropTypes.string,
             secondaryTypography: PropTypes.string,
         }),
-        classedBounds: PropTypes.shape({
+        classedBounds: PropTypes.exact({
             listComponent: PropTypes.object,
             listItem: PropTypes.object,
             listItemText: PropTypes.object,

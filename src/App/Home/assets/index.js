@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export {PageWrapper} from '../../../generic/assets'
+export {PageWrapper, StyledLink} from '../../../generic/assets'
 
 export const LetterIcon = styled.div`
     width: 24px;

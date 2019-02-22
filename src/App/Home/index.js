@@ -1,7 +1,6 @@
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {compose, lifecycle, withHandlers} from 'recompose'
-import {Link} from 'react-router-dom'
+import {compose, lifecycle, withHandlers, withPropsOnChange, onlyUpdateForKeys} from 'recompose'
 import PermIdentityIcon from '@material-ui/icons/PermIdentity'
 
 import ListComponent from '@material-ui/core/List'
@@ -35,20 +34,14 @@ import {muiStyles} from './assets/muiStyles'
 import actions from './actions'
 import headerActions from '../MainHeader/actions'
 
-import {PageWrapper, LetterIcon, NichesList, Niche, NicheImage} from './assets'
+import {PageWrapper, LetterIcon, NichesList, Niche, NicheImage, StyledLink} from './assets'
 
 const
-    renderListItemLink = (x, idx, arr, classes, routerContext) => <Link
+    renderListItemLink = (x, idx, arr, classedBounds, routerContext) => <StyledLink
         to={routerGetters.pornstar.link(routerContext, ig(x, 'subPage'), null)}
         key={ig(x, 'id')}
-        className={g(classes, 'routerLink')}
     >
-        <ListItem
-            button
-            classes={{
-                gutters: g(classes, 'itemGutters'),
-            }}
-        >
+        <ListItem button classes={g(classedBounds, 'listItem')}>
             <ListItemIcon>
                 {idx !== 0 && ig(x, 'letter') === ig(arr, [(idx - 1), 'letter'])
                     ? <PermIdentityIcon></PermIdentityIcon>
@@ -56,19 +49,15 @@ const
 
             </ListItemIcon>
             <ListItemText
-                classes={{
-                    root: g(classes, 'listItemTextRoot'),
-                    primary: g(classes, 'primaryTypography'),
-                    secondary: g(classes, 'secondaryTypography')
-                }}
+                classes={g(classedBounds, 'listItemText')}
                 primary={ig(x, 'name')}
                 secondary={ig(x, 'itemsCount')}
             />
         </ListItem>
-    </Link>,
+    </StyledLink>,
 
     Home = ({
-        classes, data, routerContext,
+        classedBounds, data, routerContext,
         i18nNichesHeader, i18nPornstarsHeader,
     }) => <Fragment>
         <PageTextHelmet pageText={ig(data, 'pageText')}/>
@@ -78,24 +67,21 @@ const
             </Typography>
             <NichesList>
                 {ig(data, 'nichesList').map(x => <Niche key={ig(x, 'id')}>
-                    <Link
+                    <StyledLink
                         to={routerGetters.niche.link(
                             routerContext,
                             ig(x, 'subPage'),
                             null
                         )}
                         key={ig(x, 'id')}
-                        className={g(classes, 'routerLink')}
                     >
                         <NicheImage thumb={ig(x, 'thumb')}/>
                         <Typography
                             variant="body1"
                             gutterBottom
-                            classes={{
-                                root: g(classes, 'nicheTitleTypography')
-                            }}
+                            classes={g(classedBounds, 'nicheTitleTypography')}
                         >{ig(x, 'name')}</Typography>
-                    </Link>
+                    </StyledLink>
                 </Niche>)}
             </NichesList>
             <Typography variant="h4" gutterBottom>
@@ -103,15 +89,13 @@ const
             </Typography>
             <ListComponent
                 component="div"
-                classes={{
-                    root: g(classes, 'root')
-                }}
+                classes={g(classedBounds, 'listComponent')}
             >
                 {ig(data, 'pornstarsList').map((x, idx) => renderListItemLink(
                     x,
                     idx,
                     ig(data, 'pornstarsList'),
-                    classes,
+                    classedBounds,
                     routerContext
                 ))}
             </ListComponent>
@@ -123,7 +107,7 @@ const
             nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
     },
 
-    loadPageFlow = ({data, loadPage, setHeaderText, routerContext, match}) => {
+    loadPageFlow = ({data, loadPage, routerContext, match}) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
 
@@ -136,7 +120,7 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             data: ig(state, 'app', 'home'),
             routerContext: getRouterContext(state),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
@@ -148,6 +132,7 @@ export default compose(
             setNewText: g(headerActions, 'setNewText'),
         }
     ),
+    onlyUpdateForKeys(['data', 'cb']),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
     }),
@@ -163,17 +148,35 @@ export default compose(
         },
     }),
     withStylesProps(muiStyles),
+    withPropsOnChange([], props => ({
+        classedBounds: Object.freeze({
+            listComponent: Object.freeze({root: g(props, 'classes', 'listComponentRoot')}),
+            listItem: Object.freeze({gutters: g(props, 'classes', 'itemGutters')}),
+            listItemText: Object.freeze({
+                root: g(props, 'classes', 'listItemTextRoot'),
+                primary: g(props, 'classes', 'primaryTypography'),
+                secondary: g(props, 'classes', 'secondaryTypography'),
+            }),
+            nicheTitleTypography: Object.freeze({root: g(props, 'classes', 'nicheTitleTypography')}),
+        }),
+    })),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.shape({
-            routerLink: PropTypes.string,
+        classes: PropTypes.exact({
+            listComponentRoot: PropTypes.string,
             itemGutters: PropTypes.string,
             listItemTextRoot: PropTypes.string,
             primaryTypography: PropTypes.string,
             secondaryTypography: PropTypes.string,
             nicheTitleTypography: PropTypes.string,
-            root: PropTypes.string,
         }),
-        currentBreakpoint: PropTypes.string,
+        classedBounds: PropTypes.exact({
+            listComponent: PropTypes.object,
+            listItem: PropTypes.object,
+            listItemText: PropTypes.object,
+            nicheTitleTypography: PropTypes.object,
+        }),
+
+        cb: PropTypes.string,
         data: model,
         routerContext: routerContextModel,
         i18nOrdering: immutableI18nOrderingModel,
