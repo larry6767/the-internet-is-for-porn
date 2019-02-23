@@ -147,10 +147,13 @@ export default compose(
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
 
-        chooseSort: props => newSortValue => props.setNewSort({
-            newSortValue,
-            archiveParams: g(props, 'archiveParams'),
-        }),
+        chooseSort: props => event => {
+            event.preventDefault()
+            props.setNewSort({
+                newSortValue: event.target.value,
+                archiveParams: g(props, 'archiveParams'),
+            })
+        },
 
         controlLinkBuilder: props => qsParams =>
             g(props, 'archiveParams') === null

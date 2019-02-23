@@ -110,7 +110,13 @@ export default compose(
     ),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        chooseSort: props => newSortValue => props.setNewSort({newSortValue}),
+
+        chooseSort: props => event => {
+            event.preventDefault()
+            props.setNewSort({
+                newSortValue: event.target.value,
+            })
+        },
 
         controlLinkBuilder: props => qsParams => routerGetters.findVideos.link(
             g(props, 'routerContext'),

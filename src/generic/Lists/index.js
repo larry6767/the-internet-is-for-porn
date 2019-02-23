@@ -206,7 +206,7 @@ export default compose(
         modelsList: immutableModelsListWithLetterModel.isOptional,
         modelLinkBuilder: PropTypes.func.isOptional,
 
-        i18nListNichesHeader: PropTypes.string,
-        i18nListArchiveHeader: PropTypes.string,
+        i18nListNichesHeader: PropTypes.string.isOptional,
+        i18nListArchiveHeader: PropTypes.string.isOptional,
     })
 )(Lists)

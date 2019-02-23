@@ -113,10 +113,14 @@ export default compose(
     })),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        chooseSort: props => newSortValue => props.setNewSort({
-            newSortValue,
-            siteCode: g(props, 'siteCode'),
-        }),
+
+        chooseSort: props => event => {
+            event.preventDefault()
+            props.setNewSort({
+                newSortValue: event.target.value,
+                siteCode: g(props, 'siteCode'),
+            })
+        },
 
         controlLinkBuilder: props => qsParams => routerGetters.site.link(
             g(props, 'routerContext'),

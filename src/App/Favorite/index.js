@@ -74,6 +74,10 @@ const
                 pageNumber={ig(data, 'pageNumber')}
                 itemsCount={ig(data, 'itemsCount')}
                 favoriteButtons={favoriteButtons}
+                archiveFilms={null}
+                tagArchiveListOlder={null}
+                tagArchiveListNewer={null}
+                archiveLinkBuilder={null}
             />
             <VideoList
                 videoList={ig(data, 'videoList')}

@@ -157,10 +157,13 @@ export default compose(
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
 
-        chooseSort: props => newSortValue => props.setNewSort({
-            newSortValue,
-            pornstarCode: g(props, 'pornstarCode'),
-        }),
+        chooseSort: props => event => {
+            event.preventDefault()
+            props.setNewSort({
+                newSortValue: event.target.value,
+                pornstarCode: g(props, 'pornstarCode'),
+            })
+        },
 
         controlLinkBuilder: props => qsParams => routerGetters.pornstar.link(
             g(props, 'routerContext'),
