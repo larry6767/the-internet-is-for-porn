@@ -1,7 +1,5 @@
 import React, {Component, Fragment} from 'react'
-import {Link} from 'react-router-dom'
-import {connect} from 'react-redux'
-import {compose, withHandlers} from 'recompose'
+import {compose, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {replace, set} from 'lodash'
 import {withStyles} from '@material-ui/core/styles'
 import {Typography} from '@material-ui/core'
@@ -9,7 +7,6 @@ import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
 
 import {
-    getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
     ImmutablePropTypes,
@@ -20,13 +17,13 @@ import {
     breakpoints,
 } from '../../App/helpers'
 
-import routerGetters from '../../App/routerGetters'
-import {routerContextModel} from '../../App/models'
-import actions from '../../App/actions'
 import {muiStyles} from './assets/muiStyles'
 import {immutableVideoItemModel} from './models'
 
 import {
+    StyledLink,
+    ProviderLink,
+    NativeLink,
     Wrapper,
     VideoPreview,
     VideoPreviewBar,
@@ -96,46 +93,32 @@ class PreviewThumbs extends Component {
             thumb={ig(thumbsLinks, g(this, 'state', 'currentThumb'))}
             showed={g(this, 'state', 'showed')}
         >
-            {renderLink(
-                g(this.props, 'classes'),
-                g(this.props, 'x'),
-                g(this.props, 'getVideoLink')
-            )}
+            {renderLink(g(this.props, 'x'), g(this.props, 'getVideoLink'))}
         </VideoPreviewThumbs>
     }
 }
 
 const
-    renderLink = (
-        classes, x, getVideoLink
-    ) => typeof ig(x, 'videoPageRef') === 'string' // external resource
-        // eslint-disable-next-line
-        ? <a
-            href={ig(x, 'videoPageRef')}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={g(classes, 'routerLink')}
-        />
-        : <Link to={getVideoLink(x)} className={g(classes, 'routerLink')}/>,
+    renderLink = (x, getVideoLink) => typeof ig(x, 'videoPageRef') === 'string' // external resource
+        ? <NativeLink href={ig(x, 'videoPageRef')} target="_blank" rel="noopener noreferrer"/>
+        : <StyledLink to={getVideoLink(x)}/>,
 
-    renderProviderLink = (classes, x, getProviderLink, isInline = false) => <Link
+    renderProviderLink = (classes, x, getProviderLink, isInline = false) => <ProviderLink
         to={getProviderLink(x)}
-        className={isInline ? g(classes, 'routerLinkContrast') : g(classes, 'routerLinkGray')}
+        isInline={isInline}
     >
         <Typography
             variant="body2"
-            classes={{
-                root: isInline
-                    ? g(classes, 'typographySourceContrast') : g(classes, 'typographySource')
-            }}
+            className={isInline ? g(classes, 'typographySourceContrast') :
+                g(classes, 'typographySource')}
         >
             {ig(x, 'sponsorName')}
         </Typography>
-    </Link>,
+    </ProviderLink>,
 
     renderVideoPreview = (
         classes, x, cb, isSSR, addVideoToFavoriteHandler,
-        removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
+        removeVideoFromFavoriteHandler, isThisVideoFavorite, thumbsLinks,
         getProviderLink, getVideoLink,
     ) => <VideoPreview thumb={ig(x, 'thumb')}>
         {isSSR ? null : <Fragment>
@@ -148,31 +131,28 @@ const
             />
         </Fragment>}
 
-        {isSSR ? renderLink(classes, x, getVideoLink) : null}
+        {isSSR ? renderLink(x, getVideoLink) : null}
 
         <VideoPreviewBar>
             {isSSR ? null : ccb(cb, xs) === 0
                 ? renderProviderLink(classes, x, getProviderLink, true)
                 : <Like>
-                    {favoriteVideoList.find(id => id === ig(x, 'id'))
+                    {isThisVideoFavorite
                         ? <Favorite
-                            classes={{root: g(classes, 'favoriteIcon')}}
-                            onClick={removeVideoFromFavoriteHandler(ig(x, 'id'))}
+                            className={g(classes, 'favoriteIcon')}
+                            data-favorite-video-id={ig(x, 'id')}
+                            onClick={removeVideoFromFavoriteHandler}
                         />
                         : <FavoriteBorder
-                            classes={{root: g(classes, 'favoriteBorderIcon')}}
-                            onClick={addVideoToFavoriteHandler(x)}
+                            className={g(classes, 'favoriteBorderIcon')}
+                            data-favorite-video-id={ig(x, 'id')}
+                            onClick={addVideoToFavoriteHandler}
                         />
                     }
                 </Like>}
 
             <Duration>
-                <Typography
-                    variant="body2"
-                    classes={{
-                        root: g(classes, 'typography')
-                    }}
-                >
+                <Typography variant="body2" className={g(classes, 'typography')}>
                     {ig(x, 'duration')}
                 </Typography>
             </Duration>
@@ -181,7 +161,7 @@ const
 
     VideoItem = ({
         classes, x, cb, getVideoLink, getProviderLink, isSSR, addVideoToFavoriteHandler,
-        removeVideoFromFavoriteHandler, favoriteVideoList,
+        removeVideoFromFavoriteHandler, isThisVideoFavorite,
     }) => {
         const
             thumbsLinks = ig(x, 'thumbs').map(thumb => replace(ig(x, 'thumbMask'), '{num}', thumb))
@@ -189,16 +169,14 @@ const
         return <Wrapper>
             {renderVideoPreview(
                 classes, x, cb, isSSR, addVideoToFavoriteHandler,
-                removeVideoFromFavoriteHandler, favoriteVideoList, thumbsLinks,
+                removeVideoFromFavoriteHandler, isThisVideoFavorite, thumbsLinks,
                 getProviderLink, getVideoLink,
             )}
 
             <InfoBlock>
                 <Typography
                     variant="body1"
-                    classes={{
-                        root: g(classes, 'typographyTitle')
-                    }}
+                    className={g(classes, 'typographyTitle')}
                     title={ig(x, 'title')}
                 >
                     {ig(x, 'title')}
@@ -208,9 +186,7 @@ const
 
                     <Typography
                         variant="body2"
-                        classes={{
-                            root: g(classes, 'typographyTags')
-                        }}
+                        className={g(classes, 'typographyTags')}
                         title={ig(x, 'tags').join(', ')}
                     >
                         {ig(x, 'tagsShort')}
@@ -221,42 +197,25 @@ const
     }
 
 export default compose(
-    connect(
-        state => ({
-            favoriteVideoList: ig(state, 'app', 'ui', 'favoriteVideoList'),
-            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            routerContext: getRouterContext(state),
-            cb: state.getIn(['app', 'ui', 'currentBreakpoint']),
-        }),
-        dispatch => ({
-            addVideoToFavoriteHandler: video => e => {
-                e.preventDefault()
-                dispatch(actions.addVideoToFavorite(video))
-            },
-            removeVideoFromFavoriteHandler: id => e => {
-                e.preventDefault()
-                dispatch(actions.removeVideoFromFavorite(id))
-            }
-        })
-    ),
-    withHandlers({
-        getVideoLink: props => x => routerGetters.video.link(
-            g(props, 'routerContext'),
-            ig(x, 'videoPageRef'),
-            ig(x, 'title')
-        ),
-
-        getProviderLink: props => x => routerGetters.findVideos.link(
-            g(props, 'routerContext'),
-            {searchQuery: ig(x, 'sponsorLink')},
-            ['searchQuery'],
-        ),
-    }),
     withStyles(muiStyles),
+    withPropsOnChange(['x', 'favoriteVideoList'], props => ({
+        isThisVideoFavorite: Boolean(
+            g(props, 'favoriteVideoList').find(id => id === ig(g(props, 'x'), 'id'))
+        ),
+    })),
+    onlyUpdateForKeys(['cb', 'x', 'isThisVideoFavorite']),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.object,
+        classes: PropTypes.exact({
+            typography: PropTypes.string,
+            typographyTitle: PropTypes.string,
+            typographyTags: PropTypes.string,
+            typographySource: PropTypes.string,
+            typographySourceContrast: PropTypes.string,
+            favoriteBorderIcon: PropTypes.string,
+            favoriteIcon: PropTypes.string,
+        }),
+
         isSSR: PropTypes.bool,
-        routerContext: routerContextModel,
         cb: PropTypes.oneOf(breakpoints),
         x: immutableVideoItemModel,
         favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),

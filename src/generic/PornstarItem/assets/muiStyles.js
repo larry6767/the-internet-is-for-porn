@@ -1,13 +1,4 @@
 export const muiStyles = theme => ({
-    routerLink: {
-        display: 'inline-block',
-        textDecoration: 'none',
-        width: '100%',
-        height: '100%',
-    },
-    typography: {
-        color: theme.palette.primary.contrastText
-    },
     typographyTitle: {
         margin: '4px 2px 0',
         overflow: 'hidden',

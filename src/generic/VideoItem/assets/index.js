@@ -1,4 +1,29 @@
+import React from 'react'
 import styled from 'styled-components'
+import {Link} from 'react-router-dom'
+
+export const StyledLink = styled(Link)`
+    text-decoration: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+`
+
+export const ProviderLink = styled(({isInline, ...rest}) => <Link {...rest}/>)`
+    ${({theme, isInline}) =>
+        `color: ${isInline ? theme.palette.primary.contrastText : theme.palette.primary.dark}`}
+`
+
+export const NativeLink = styled.a`
+    text-decoration: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+`
 
 export const Wrapper = styled.div`
     display: flex;

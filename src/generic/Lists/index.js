@@ -163,7 +163,7 @@ const
             </ListsInner> : null
 
 export default compose(
-    onlyUpdateForKeys([]),
+    onlyUpdateForKeys(['cb', 'maxHeight']),
     withStyles(muiStyles),
     withPropsOnChange([], props => ({
         classedBounds: Object.freeze({

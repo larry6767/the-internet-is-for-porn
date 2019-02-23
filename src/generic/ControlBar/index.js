@@ -321,7 +321,7 @@ const
     </Wrapper>
 
 export default compose(
-    onlyUpdateForKeys([]),
+    onlyUpdateForKeys(['cb']),
     withStyles(muiStyles),
     withPropsOnChange([], props => ({
         classedBounds: Object.freeze({

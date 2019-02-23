@@ -1,22 +1,17 @@
 import {range} from 'lodash'
 import React from 'react'
 
-import {
-    List,
-    PornstarItem,
-    ThumbPlug,
-    TypographyPlug,
-    InfoBarPlug,
-} from './assets'
+import {List} from './assets'
+import {Wrapper, ThumbPlug, TypographyPlug, InfoBarPlug} from '../PornstarItem/assets'
 
 const
     PornstarListPlug = () => <List>
         {range(0, 40).map(x =>
-            <PornstarItem key={`${x}-PornstarItemPlug`}>
+            <Wrapper key={`${x}-PornstarItemPlug`}>
                 <ThumbPlug/>
                 <TypographyPlug/>
                 <InfoBarPlug/>
-            </PornstarItem>
+            </Wrapper>
         )}
     </List>
 
