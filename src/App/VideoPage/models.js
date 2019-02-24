@@ -18,10 +18,12 @@ const
                 arrayOf = isImmutable ? ImmutablePropTypes.listOf : PropTypes.arrayOf,
                 // TODO get rid of 'isOptional'
                 props = {
+                    id: PropTypes.number.isOptional,
                     title: PropTypes.string.isOptional,
                     thumb: PropTypes.string.isOptional,
                     tags: arrayOf(PropTypes.string).isOptional,
                     duration: PropTypes.number.isOptional,
+                    swfPlugUrl: PropTypes.string.isOptional,
                 }
 
             return exact(props)

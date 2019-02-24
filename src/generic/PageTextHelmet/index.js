@@ -5,12 +5,12 @@ import {getPageTextToHeadTags} from '../../App/helpers'
 import {getOpenGraphToHeadTags} from '../../App/helpers'
 
 const
-    PageTextHelmet = ({pageText, openGraphData = null}) => {
+    PageTextHelmet = ({pageText, openGraphData = null, routerContext = null, domain = null}) => {
         let
             tags = getPageTextToHeadTags(pageText)
 
-        if (openGraphData) {
-            tags = flatten([tags, getOpenGraphToHeadTags(openGraphData)])
+        if (openGraphData && routerContext && domain) {
+            tags = flatten([tags, getOpenGraphToHeadTags(openGraphData, routerContext, domain)])
         }
 
         return React.createElement(Helmet, null, ...tags)

@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {compose, withHandlers, withState, withPropsOnChange} from 'recompose'
+import {compose, withHandlers, withState} from 'recompose'
 import {connect} from 'react-redux'
 import {animateScroll} from 'react-scroll'
 import {withStyles} from '@material-ui/core/styles'
@@ -27,6 +27,7 @@ import {
     breakpointMD as md,
     getHeaderText,
     lifecycleForPageWithRefs,
+    getDomain,
 } from '../helpers'
 
 import routerGetters from '../routerGetters'
@@ -70,7 +71,7 @@ import {
 
 const
     renderFavoriteButton = (
-        classedBounds,
+        classes,
         data,
         favoriteVideoList,
         addVideoToFavoriteHandler,
@@ -80,19 +81,19 @@ const
         ? <Button
             variant="contained"
             color="primary"
-            classes={g(classedBounds, 'buttonFavorite')}
+            className={g(classes, 'buttonFavorite')}
             onClick={removeVideoFromFavoriteHandler}
         >
-            <Favorite classes={g(classedBounds, 'favoriteIcon')}/>
+            <Favorite className={g(classes, 'favoriteIcon')}/>
             {ig(i18nButtons, 'removeFromFavorite')}
         </Button>
         : <Button
             variant="contained"
             color="primary"
-            classes={g(classedBounds, 'buttonFavorite')}
+            className={g(classes, 'buttonFavorite')}
             onClick={addVideoToFavoriteHandler}
         >
-            <FavoriteBorder classes={g(classedBounds, 'favoriteBorderIcon')}/>
+            <FavoriteBorder className={g(classes, 'favoriteBorderIcon')}/>
             {ig(i18nButtons, 'addToFavorite')}
         </Button>,
 
@@ -113,10 +114,10 @@ const
         </AdIframeWrapper>
         : <AdGag currentWidth={currentWidth}/>,
 
-    renderTag = (classedBounds, cb, x, getTagLink) => <StyledLink to={getTagLink(x)} key={x}>
+    renderTag = (classes, cb, x, getTagLink) => <StyledLink to={getTagLink(x)} key={x}>
         <Chip
             label={x}
-            classes={g(classedBounds, 'chip')}
+            className={g(classes, 'chip')}
             component="div"
             variant="outlined"
             color={ccb(cb, sm) === -1 ? 'primary' : 'secondary'}
@@ -125,12 +126,12 @@ const
     </StyledLink>,
 
     renderProvidedBy = (
-        classedBounds,
+        classes,
         i18nLabelProvidedBy,
         sponsorLinkBuilder,
         sponsorName,
         withLabel = false,
-    ) => <Typography variant="body1" classes={g(classedBounds, 'typographySponsor')}>
+    ) => <Typography variant="body1" className={g(classes, 'typographySponsor')}>
         { ! withLabel ? null : `${i18nLabelProvidedBy}: `}
         <SponsorLink to={sponsorLinkBuilder(sponsorName.toLowerCase())}>
             {sponsorName}
@@ -141,19 +142,21 @@ const
         <PageTextHelmet
             pageText={ig(props.data, 'pageText')}
             openGraphData={ig(props.data, 'openGraphData')}
+            routerContext={g(props, 'routerContext')}
+            domain={g(props, 'domain')}
         />
         <PageWrapper>
             <PlayerSection>
                 <Typography
                     variant="h4"
                     gutterBottom
-                    classes={g(props, 'classedBounds', 'typographyTitle')}
+                    className={g(props, 'classes', 'typographyTitle')}
                 >
                     {`${ig(props.data, 'gallery', 'title')} ${
                         ig(props.data, 'pageText', 'galleryTitle')}`}
                 </Typography>
                 {ccb(g(props, 'cb'), sm) === -1 ? null : renderProvidedBy(
-                    g(props, 'classedBounds'),
+                    g(props, 'classes'),
                     g(props, 'i18nLabelProvidedBy'),
                     g(props, 'sponsorLinkBuilder'),
                     ig(props.data, 'gallery', 'sponsorName'),
@@ -183,7 +186,7 @@ const
                         <ControlPanel>
                             <ControlPanelBlock>
                                 {g(props, 'isSSR') ? null : renderFavoriteButton(
-                                    g(props, 'classedBounds'),
+                                    g(props, 'classes'),
                                     g(props, 'data'),
                                     g(props, 'favoriteVideoList'),
                                     g(props, 'addVideoToFavoriteHandler'),
@@ -194,14 +197,14 @@ const
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        classes={g(props, 'classedBounds', 'buttonRoot')}
+                                        className={g(props, 'classes', 'buttonRoot')}
                                     >
-                                        <HomeIcon classes={g(props, 'classedBounds', 'homeIcon')}/>
+                                        <HomeIcon className={g(props, 'classes', 'homeIcon')}/>
                                         {ig(props.i18nButtons, 'backToMainPage')}
                                     </Button>
                                 </StyledLink>
                                 { ccb(g(props, 'cb'), xs) === 1 ? null : renderProvidedBy(
-                                    g(props, 'classedBounds'),
+                                    g(props, 'classes'),
                                     g(props, 'i18nLabelProvidedBy'),
                                     g(props, 'sponsorLinkBuilder'),
                                     ig(props.data, 'gallery', 'sponsorName'),
@@ -212,11 +215,11 @@ const
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        classes={g(props, 'classedBounds', 'buttonReport')}
+                                        className={g(props, 'classes', 'buttonReport')}
                                         onClick={g(props, 'toggleReportDialogHandler')}
                                     >
                                         <ReportIcon
-                                            classes={g(props, 'classedBounds', 'reportIcon')}
+                                            className={g(props, 'classes', 'reportIcon')}
                                         />
                                         {ig(props.i18nButtons, 'report')}
                                     </Button>}
@@ -230,7 +233,7 @@ const
                     <TagsWrapper>
                         { ! ig(props.data, 'gallery', 'tags') ? null :
                             ig(props.data, 'gallery', 'tags').map(x => renderTag(
-                                g(props, 'classedBounds'),
+                                g(props, 'classes'),
                                 g(props, 'cb'),
                                 x,
                                 g(props, 'getTagLink')
@@ -242,7 +245,7 @@ const
                 <Typography
                     variant="h4"
                     gutterBottom
-                    classes={g(props, 'classedBounds', 'typographyTitle')}
+                    className={g(props, 'classes', 'typographyTitle')}
                 >
                     {g(props, 'i18nRelatedVideo')}
                 </Typography>
@@ -283,6 +286,7 @@ export default compose(
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             data: ig(state, 'app', 'video'),
             routerContext: getRouterContext(state),
+            domain: getDomain(state),
             favoriteVideoList: ig(state, 'app', 'ui', 'favoriteVideoList'),
             currentWidth: ig(state, 'app', 'ui', 'currentWidth'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
@@ -332,20 +336,6 @@ export default compose(
     }),
     lifecycleForPageWithRefs(loadPageFlow, setNewPageFlow, ['playerRef']),
     withStyles(muiStyles),
-    withPropsOnChange([], props => ({
-        classedBounds: Object.freeze({
-            typographyTitle: Object.freeze({root: g(props, 'classes', 'typographyTitle')}),
-            typographySponsor: Object.freeze({root: g(props, 'classes', 'typographySponsor')}),
-            buttonRoot: Object.freeze({root: g(props, 'classes', 'buttonRoot')}),
-            buttonFavorite: Object.freeze({root: g(props, 'classes', 'buttonFavorite')}),
-            buttonReport: Object.freeze({root: g(props, 'classes', 'buttonReport')}),
-            favoriteBorderIcon: Object.freeze({root: g(props, 'classes', 'favoriteBorderIcon')}),
-            favoriteIcon: Object.freeze({root: g(props, 'classes', 'favoriteIcon')}),
-            reportIcon: Object.freeze({root: g(props, 'classes', 'reportIcon')}),
-            homeIcon: Object.freeze({root: g(props, 'classes', 'homeIcon')}),
-            chip: Object.freeze({root: g(props, 'classes', 'chip')}),
-        }),
-    })),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.exact({
             typographyTitle: PropTypes.string,
@@ -360,23 +350,11 @@ export default compose(
             chip: PropTypes.string,
         }),
 
-        classedBounds: PropTypes.exact({
-            typographyTitle: PropTypes.object,
-            typographySponsor: PropTypes.object,
-            buttonRoot: PropTypes.object,
-            buttonFavorite: PropTypes.object,
-            buttonReport: PropTypes.object,
-            favoriteBorderIcon: PropTypes.object,
-            favoriteIcon: PropTypes.object,
-            reportIcon: PropTypes.object,
-            homeIcon: PropTypes.object,
-            chip: PropTypes.object,
-        }),
-
         cb: PropTypes.oneOf(breakpoints),
         isSSR: PropTypes.bool,
         data: model,
         routerContext: routerContextModel,
+        domain: PropTypes.string,
         favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),
         currentWidth: PropTypes.number,
         i18nButtons: immutableI18nButtonsModel,

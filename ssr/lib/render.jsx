@@ -179,7 +179,8 @@ export default (
         if (staticRouterContext.hasOwnProperty('openGraphDataResolver')) {
             const
                 openGraphData = staticRouterContext.openGraphDataResolver(store.getState()),
-                openGraphTags = getOpenGraphToHeadTags(openGraphData).map(x =>
+                routerContext = getRouterContext(store.getState()),
+                openGraphTags = getOpenGraphToHeadTags(openGraphData, routerContext, domain).map(x =>
                     renderToString(x)).join('\n')
 
             headTags = headTags + openGraphTags

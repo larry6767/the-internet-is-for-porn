@@ -2,9 +2,15 @@ import React from 'react'
 import {compose, withHandlers} from 'recompose'
 import {connect} from 'react-redux'
 import {Typography} from '@material-ui/core'
-import {Map} from 'immutable'
 
-import {plainProvedGet as g, immutableProvedGet as ig, setPropTypes, PropTypes} from '../helpers'
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    setPropTypes,
+    PropTypes,
+    getDomain
+} from '../helpers'
+
 import {immutableI18nFooterModel, immutableI18nButtonsModel} from '../models'
 import reportDialogActions from '../ReportDialog/actions'
 import {linksToProtect} from './fixtures'
@@ -63,16 +69,7 @@ export default compose(
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             i18nFooter: ig(state, 'app', 'locale', 'i18n', 'footer'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
-
-            domain: ig(
-                ig(state, 'app', 'mainHeader', 'language', 'siteLocales', 'list')
-                    .find(
-                        x => ig(x, 'code') === ig(state, 'app', 'locale', 'localeCode'),
-                        null,
-                        Map({host: '…'})
-                    ),
-                'host'
-            ),
+            domain: getDomain(state),
         }),
         {
             toggleReportDialogFlow: g(reportDialogActions, 'toggleReportDialogFlow'),

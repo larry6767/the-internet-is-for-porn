@@ -1,7 +1,5 @@
 import {mapValues, uniq} from 'lodash'
-
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
-
 import {galleryModel, openGraphDataModel} from '../../../App/VideoPage/models'
 
 const
@@ -169,7 +167,7 @@ export default (data, pageUrl, publishedTemplate, sponsors) => {
 }
 
 export const
-    getOpenGraphData = data => {
+    getOpenGraphData = (data, swfPlugUrl) => {
         if (process.env.NODE_ENV !== 'production') {
             assertPropTypes(
                 incomingGalleryModel,
@@ -181,10 +179,12 @@ export const
 
         const
             result = {
+                id: Number(getProp(data, 'id')),
                 title: getProp(data, 'title'),
                 thumb: getProp(data, 'thumb_url'),
                 tags: getProp(data, 'tags'),
                 duration: Number(getProp(data, 'length')),
+                swfPlugUrl,
             }
 
         if (process.env.NODE_ENV !== 'production')

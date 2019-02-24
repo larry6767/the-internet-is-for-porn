@@ -316,7 +316,7 @@ export const
 
         const
             result = {
-                openGraphData: getOpenGraphData(g(x, 'page', 'GALLERY')),
+                openGraphData: getOpenGraphData(g(x, 'page', 'GALLERY'), g(x, 'page', 'PAGE_URL')),
                 gallery: getGallery(
                     g(x, 'page', 'GALLERY'),
                     g(x, 'page', 'PAGE_URL'),
