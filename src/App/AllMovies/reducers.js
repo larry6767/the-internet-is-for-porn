@@ -4,7 +4,6 @@ import {provedHandleActions, plainProvedGet as g} from '../helpers'
 import actions from './actions'
 
 import {model} from './models'
-import {PageTextRecord} from '../models'
 
 export default
     provedHandleActions(model, {
@@ -12,10 +11,11 @@ export default
             isLoading: true,
             isLoaded: false,
             isFailed: false,
+            tagId: 0,
             currentPage: '',
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageNumber: 1,
-            pageText: PageTextRecord(),
+            pageText: Map(),
             pagesCount: 1,
             sponsorsList: List(),
             tagList: List(),
@@ -38,10 +38,11 @@ export default
                 isLoading: false,
                 isLoaded: true,
                 isFailed: false,
+                tagId: g(payload, 'data', 'tagId'),
                 currentPage: g(payload, 'data', 'currentPage'),
                 lastPageRequestParams: g(payload, 'pageRequestParams'),
                 pageNumber: g(payload, 'data', 'pageNumber'),
-                pageText: PageTextRecord(g(payload, 'data', 'pageText')),
+                pageText: Map(g(payload, 'data', 'pageText')),
                 pagesCount: g(payload, 'data', 'pagesCount'),
                 sponsorsList: List(fromJS(g(payload, 'data', 'sponsorsList'))),
                 tagList: List(fromJS(g(payload, 'data', 'tagList'))),
@@ -59,9 +60,10 @@ export default
             isLoading: false,
             isLoaded: false,
             isFailed: true,
+            tagId: 0,
             currentPage: '',
             pageNumber: 1,
-            pageText: PageTextRecord(),
+            pageText: Map(),
             pagesCount: 1,
             sponsorsList: List(),
             tagList: List(),
@@ -80,10 +82,11 @@ export default
         isLoading: false,
         isLoaded: false,
         isFailed: false,
+        tagId: 0,
         currentPage: '',
         lastPageRequestParams: null,
         pageNumber: 1,
-        pageText: PageTextRecord(),
+        pageText: {},
         pagesCount: 1,
         sponsorsList: List(),
         tagList: [],

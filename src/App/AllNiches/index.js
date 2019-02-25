@@ -1,8 +1,6 @@
-import {Record} from 'immutable'
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {compose, lifecycle, withHandlers} from 'recompose'
-import {Link} from 'react-router-dom'
+import {compose, lifecycle, withHandlers, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import FolderIcon from '@material-ui/icons/Folder'
 
 import ListComponent from '@material-ui/core/List'
@@ -25,44 +23,38 @@ import {
 } from '../helpers'
 
 import {routerContextModel} from '../models'
-import {dataModel} from './models'
+import {model} from './models'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import routerGetters from '../routerGetters'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import {allNichesLoadingWrapper} from '../../generic/loadingWrapper'
-import {PageWrapper} from './assets'
+import loadingWrapper from '../../generic/loadingWrapper'
+import {PageWrapper, StyledLink} from './assets'
 import {muiStyles} from './assets/muiStyles'
 
 const
-    renderListItemLink = (x, classes, getChildLink) => <Link to={getChildLink(ig(x, 'subPage'))}
+    renderListItemLink = (x, classedBounds, getChildLink) => <StyledLink
+        to={getChildLink(ig(x, 'subPage'))}
         key={ig(x, 'id')}
-        className={g(classes, 'routerLink')}
     >
         <ListItem
             button
-            classes={{
-                gutters: g(classes, 'itemGutters'),
-            }}
+            classes={g(classedBounds, 'listItem')}
         >
             <ListItemIcon>
                 <FolderIcon/>
             </ListItemIcon>
             <ListItemText
-                classes={{
-                    root: g(classes, 'listItemTextRoot'),
-                    primary: g(classes, 'primaryTypography'),
-                    secondary: g(classes, 'secondaryTypography')
-                }}
+                classes={g(classedBounds, 'listItemText')}
                 primary={ig(x, 'name')}
                 secondary={ig(x, 'itemsCount')}
             />
         </ListItem>
-    </Link>,
+    </StyledLink>,
 
-    AllNiches = ({classes, data, getChildLink, i18nAllNichesHeader}) => <Fragment>
+    AllNiches = ({classedBounds, data, getChildLink, i18nAllNichesHeader}) => <Fragment>
         <PageTextHelmet pageText={ig(data, 'pageText')}/>
         <PageWrapper>
             <Typography variant="h4" gutterBottom>
@@ -70,31 +62,18 @@ const
             </Typography>
             <ListComponent
                 component="div"
-                classes={{
-                    root: g(classes, 'root')
-                }}
+                classes={g(classedBounds, 'listComponent')}
             >
                 {ig(data, 'nichesList').map(x =>
-                    renderListItemLink(x, classes, getChildLink)
+                    renderListItemLink(x, classedBounds, getChildLink)
                 )}
             </ListComponent>
         </PageWrapper>
     </Fragment>,
 
-    DataRecord = Record({
-        isLoading: null,
-        isLoaded: null,
-        isFailed: null,
-
-        lastPageRequestParams: null,
-
-        nichesList: null,
-        pageText: null,
-    }),
-
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
-            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+            nextProps.setNewText(getHeaderText(ig(nextProps.data, 'pageText'), true))
     },
 
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
@@ -110,8 +89,8 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: DataRecord(ig(state, 'app', 'niches', 'all')),
+            cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            data: ig(state, 'app', 'allNiches'),
             i18nAllNichesHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'allNiches'),
             routerContext: getRouterContext(state),
         }),
@@ -120,6 +99,7 @@ export default compose(
             setNewText: g(headerActions, 'setNewText'),
         }
     ),
+    onlyUpdateForKeys(['data', 'cb']),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
         getChildLink: props => child => routerGetters.niche.link(g(props, 'routerContext'), child),
@@ -136,9 +116,32 @@ export default compose(
         },
     }),
     withStylesProps(muiStyles),
+    withPropsOnChange([], props => ({
+        classedBounds: Object.freeze({
+            listComponent: Object.freeze({root: g(props, 'classes', 'listComponentRoot')}),
+            listItem: Object.freeze({gutters: g(props, 'classes', 'itemGutters')}),
+            listItemText: Object.freeze({
+                root: g(props, 'classes', 'listItemTextRoot'),
+                primary: g(props, 'classes', 'primaryTypography'),
+                secondary: g(props, 'classes', 'secondaryTypography'),
+            }),
+        }),
+    })),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        currentBreakpoint: PropTypes.string,
-        data: dataModel,
+        classes: PropTypes.exact({
+            listComponentRoot: PropTypes.string,
+            itemGutters: PropTypes.string,
+            listItemTextRoot: PropTypes.string,
+            primaryTypography: PropTypes.string,
+            secondaryTypography: PropTypes.string,
+        }),
+        classedBounds: PropTypes.exact({
+            listComponent: PropTypes.object,
+            listItem: PropTypes.object,
+            listItemText: PropTypes.object,
+        }),
+        cb: PropTypes.string,
+        data: model,
         i18nAllNichesHeader: PropTypes.string,
         routerContext: routerContextModel,
 
@@ -147,5 +150,7 @@ export default compose(
         setNewText: PropTypes.func,
         getChildLink: PropTypes.func,
     }),
-    allNichesLoadingWrapper
+    loadingWrapper({
+        isAllNiches: true,
+    })
 )(AllNiches)

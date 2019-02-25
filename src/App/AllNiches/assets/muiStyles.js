@@ -1,29 +1,31 @@
 import {immutableProvedGet as ig} from '../../helpers'
 
-export const muiStyles = (theme, {data, currentBreakpoint}) => {
+export const muiStyles = (theme, {data, cb}) => {
     const
         nichesList = ig(data, 'nichesList')
 
     return {
-        root: {
+        listComponentRoot: {
+            boxSizing: 'borderBox',
+            overflow: 'hidden',
             width: ig(data, 'isLoading') ? 'auto' : '100%',
             display: 'grid',
             gridAutoFlow: 'column',
             gridTemplateRows:
-                currentBreakpoint === 'md'
+                cb === 'md'
                     ? `repeat(${Math.ceil(nichesList.size / 4)}, 1fr)`
-                    : currentBreakpoint === 'sm'
+                    : cb === 'sm'
                     ? `repeat(${Math.ceil(nichesList.size / 3)}, 1fr)`
-                    : currentBreakpoint === 'xs'
+                    : cb === 'xs'
                     ? `repeat(${Math.ceil(nichesList.size / 2)}, 1fr)`
-                    : currentBreakpoint === 'xxs'
+                    : cb === 'xxs'
                     ? `repeat(${Math.ceil(nichesList.size / 1)}, 1fr)`
                     : `repeat(${Math.ceil(nichesList.size / 5)}, 1fr)`,
         },
         listItemTextRoot: {
             paddingLeft: 0,
             paddingRight: 0,
-            display: currentBreakpoint === 'xxs'
+            display: cb === 'xxs'
                 ? 'flex'
                 : 'block',
             alignItems: 'center',
@@ -32,7 +34,7 @@ export const muiStyles = (theme, {data, currentBreakpoint}) => {
             fontSize: 14,
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
-            marginRight: currentBreakpoint === 'xxs'
+            marginRight: cb === 'xxs'
                 ? 10
                 : 0
         },
@@ -43,8 +45,5 @@ export const muiStyles = (theme, {data, currentBreakpoint}) => {
             paddingLeft: 10,
             paddingRight: 10
         },
-        routerLink: {
-            textDecoration: 'none'
-        }
     }
 }

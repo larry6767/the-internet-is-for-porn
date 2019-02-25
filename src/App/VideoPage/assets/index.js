@@ -1,6 +1,11 @@
 import styled from 'styled-components'
-
+import {Link} from 'react-router-dom'
+export {StyledLink} from '../../../generic/assets'
 export {PageWrapper} from '../../../generic/assets'
+
+export const SponsorLink = styled(Link)`
+    color: ${({theme}) => theme.palette.primary.main};
+`
 
 export const PlayerSection = styled.section`
     margin-bottom: 40px;
@@ -276,6 +281,11 @@ export const TagsWrapper = styled.div`
     `}
 `
 
-export const SponsorLink = styled.a`
-    color: ${({theme}) => theme.palette.primary.main};
+// styles for plug
+
+export const VideoPlayerPlug = styled.div`
+    width: 100%;
+    height: 675px;
+    margin-bottom: 40px;
+    background: ${({theme}) => theme.palette.prerender.plug};
 `

@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import {Record, Map, List} from 'immutable'
 
 import {
     getHeaderText,
@@ -24,6 +23,7 @@ import {
     routerContextModel,
 } from '../models'
 
+import {model} from './models'
 import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
@@ -37,19 +37,10 @@ import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
 const
-    DataRecord = Record({
-        isLoading: false,
-        isLoaded: false,
-        isFailed: false,
-
-        lastPageRequestParams: null,
-
-        pageText: Map(),
-        pageNumber: 1,
-        pagesCount: 1,
-        itemsCount: 0,
-        modelsList: List(),
-    }),
+    favoriteButtons = {
+        movies: false,
+        pornstars: true,
+    },
 
     FavoritePornstars = ({
         classes,
@@ -87,7 +78,11 @@ const
                 pagesCount={ig(data, 'pagesCount')}
                 pageNumber={ig(data, 'pageNumber')}
                 itemsCount={ig(data, 'itemsCount')}
-                favoriteButtons={true}
+                favoriteButtons={favoriteButtons}
+                archiveFilms={null}
+                tagArchiveListOlder={null}
+                tagArchiveListNewer={null}
+                archiveLinkBuilder={null}
             />
             <PornstarList
                 linkBuilder={linkBuilder}
@@ -98,7 +93,7 @@ const
 
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
-            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+            nextProps.setNewText(getHeaderText(ig(nextProps.data, 'pageText'), true))
     },
 
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
@@ -118,7 +113,7 @@ export default compose(
             cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
-            data: DataRecord(ig(state, 'app', 'favoritePornstars')),
+            data: ig(state, 'app', 'favoritePornstars'),
             i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
         }),
         {
@@ -155,9 +150,13 @@ export default compose(
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        data: model,
         cb: PropTypes.oneOf(breakpoints),
         routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
     }),
-    loadingWrapper
+    loadingWrapper({
+        withControlBar: true,
+        withPornstarList: true,
+    })
 )(FavoritePornstars)

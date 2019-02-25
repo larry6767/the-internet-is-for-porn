@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {compose} from 'recompose'
+import {compose, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 
 import {
@@ -13,7 +13,6 @@ import {
     plainProvedGet as g,
     immutableProvedGet as ig,
     PropTypes,
-    ImmutablePropTypes,
     setPropTypes,
     compareCurrentBreakpoint as ccb,
     breakpointSM as sm,
@@ -21,6 +20,8 @@ import {
 } from '../../App/helpers'
 
 import {
+    immutableSortListModel,
+    immutableTagArchiveListOlderOrNewerModel,
     immutableI18nOrderingModel,
     immutableI18nButtonsModel,
     immutableArchiveFilmsModel,
@@ -41,31 +42,16 @@ import {
 } from './assets'
 
 const
-    sortListModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
-            isActive: PropTypes.bool,
-            code: PropTypes.string,
-        })),
-
     SortSelectMaterial = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.shape({selectRoot: PropTypes.string}),
+        classedBounds: PropTypes.shape({select: PropTypes.object}),
         i18nOrdering: immutableI18nOrderingModel,
-        sortList: sortListModel,
+        sortList: immutableSortListModel,
         chooseSort: PropTypes.func,
         currentSort: PropTypes.nullable(PropTypes.string),
-    })(({classes, i18nOrdering, sortList, chooseSort, currentSort}) => <Select
-        classes={{
-            select: g(classes, 'selectRoot'),
-        }}
+    })(({classedBounds, i18nOrdering, sortList, chooseSort, currentSort}) => <Select
+        classes={g(classedBounds, 'select')}
         value={currentSort || ''}
-        input={
-            <OutlinedInput
-                onChange={event => {
-                    chooseSort(event.target.value)
-                }}
-                labelWidth={0}
-            />
-        }
+        input={<OutlinedInput onChange={chooseSort} labelWidth={0}/>}
     >
         {sortList.map(x =>
             <MenuItem key={ig(x, 'code')} value={ig(x, 'code')}>
@@ -75,7 +61,7 @@ const
     </Select>),
 
     SortSelectInlined = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        sortList: sortListModel,
+        sortList: immutableSortListModel,
         linkBuilder: PropTypes.func,
         i18nOrdering: immutableI18nOrderingModel,
     })(({sortList, linkBuilder, i18nOrdering}) => <InlinedSelectionWrap>
@@ -93,9 +79,7 @@ const
     </InlinedSelectionWrap>),
 
     NicheControlBar = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.shape({
-            typographyRoot: PropTypes.string,
-        }),
+        classedBounds: PropTypes.shape({typography: PropTypes.object}),
         cb: PropTypes.oneOf(breakpoints).isOptional,
         pageNumber: PropTypes.number,
         pagesCount: PropTypes.number,
@@ -105,11 +89,11 @@ const
         i18nButtons: immutableI18nButtonsModel,
         isSSR: PropTypes.bool,
         chooseSort: PropTypes.func,
-        sortList: sortListModel,
+        sortList: immutableSortListModel,
         currentSort: PropTypes.nullable(PropTypes.string),
         archiveFilms: PropTypes.nullable(immutableArchiveFilmsModel),
     })(({
-        classes,
+        classedBounds,
         cb,
         pageNumber,
         pagesCount,
@@ -136,16 +120,12 @@ const
             text={ig(i18nButtons, 'archive')}
         />}
         <SortWrapper>
-            {ccb(cb, sm) === -1
-                ? null
-                : <Typography
-                    variant="body1"
-                    classes={{
-                        root: g(classes, 'typographyRoot')
-                    }}
-                >
-                    {`${ig(i18nOrdering, 'label')}:`}
-                </Typography>}
+            {ccb(cb, sm) === -1 ? null : <Typography
+                variant="body1"
+                classes={g(classedBounds, 'typography')}
+            >
+                {`${ig(i18nOrdering, 'label')}:`}
+            </Typography>}
 
             {isSSR
                 ? <SortSelectInlined
@@ -154,7 +134,7 @@ const
                     i18nOrdering={i18nOrdering}
                 />
                 : <SortSelectMaterial
-                    classes={classes}
+                    classedBounds={classedBounds}
                     i18nOrdering={i18nOrdering}
                     sortList={sortList}
                     chooseSort={chooseSort}
@@ -165,7 +145,6 @@ const
     </Fragment>),
 
     ArchiveControlBar = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.object,
         cb: PropTypes.oneOf(breakpoints).isOptional,
         pageNumber: PropTypes.number,
         pagesCount: PropTypes.number,
@@ -173,20 +152,12 @@ const
 
         i18nButtons: immutableI18nButtonsModel,
 
-        tagArchiveListOlder: PropTypes.nullable(ImmutablePropTypes.exact({
-            month: PropTypes.string, // TODO convert to number on backend proxy
-            year: PropTypes.string,  // TODO convert to number on backend proxy
-        })),
-
-        tagArchiveListNewer: PropTypes.nullable(ImmutablePropTypes.exact({
-            month: PropTypes.string, // TODO convert to number on backend proxy
-            year: PropTypes.string,  // TODO convert to number on backend proxy
-        })),
+        tagArchiveListOlder: immutableTagArchiveListOlderOrNewerModel,
+        tagArchiveListNewer: immutableTagArchiveListOlderOrNewerModel,
 
         archiveLinkBuilder: PropTypes.func,
         backFromArchiveLinkBuilder: PropTypes.func,
     })(({
-        classes,
         cb,
         pageNumber,
         pagesCount,
@@ -227,20 +198,23 @@ const
     </Fragment>),
 
     FavoriteControlBar = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.object,
         cb: PropTypes.oneOf(breakpoints).isOptional,
         pageNumber: PropTypes.number,
         pagesCount: PropTypes.number,
         linkBuilder: PropTypes.func,
         i18nButtons: immutableI18nButtonsModel,
+        favoriteButtons: PropTypes.exact({
+            movies: PropTypes.bool,
+            pornstars: PropTypes.bool,
+        }),
     })(({
-        classes,
         cb,
         pageNumber,
         pagesCount,
         linkBuilder,
         favoriteLinkBuilder,
         i18nButtons,
+        favoriteButtons,
     }) => <Fragment>
         {pagesCount === 1 || pagesCount === 0 ? null :
             <Pagination
@@ -254,11 +228,13 @@ const
         <WrappedButton
             link={favoriteLinkBuilder('favorite')}
             text={ig(i18nButtons, 'favoriteMovies')}
+            variant={g(favoriteButtons, 'movies') ? 'contained' : 'outlined'}
         />
 
         <WrappedButton
             link={favoriteLinkBuilder('favoritePornstars')}
             text={ig(i18nButtons, 'favoritePornstars')}
+            variant={g(favoriteButtons, 'pornstars') ? 'contained' : 'outlined'}
         />
     </Fragment>),
 
@@ -270,7 +246,7 @@ const
     </Typography>,
 
     ControlBar = ({
-        classes,
+        classedBounds,
         isSSR,
         cb,
 
@@ -298,7 +274,7 @@ const
         <ControlButtons>
             {archiveFilms && ig(archiveFilms, 'currentlyActiveId') !== null
                 ? <ArchiveControlBar
-                    classes={classes}
+                    classedBounds={classedBounds}
                     cb={cb}
                     pageNumber={pageNumber}
                     pagesCount={pagesCount}
@@ -311,16 +287,17 @@ const
                 />
                 : favoriteButtons
                 ? <FavoriteControlBar
-                    classes={classes}
+                    classedBounds={classedBounds}
                     cb={cb}
                     pageNumber={pageNumber}
                     pagesCount={pagesCount}
                     linkBuilder={linkBuilder}
                     favoriteLinkBuilder={favoriteLinkBuilder}
                     i18nButtons={i18nButtons}
+                    favoriteButtons={favoriteButtons}
                 />
                 : <NicheControlBar
-                    classes={classes}
+                    classedBounds={classedBounds}
                     cb={cb}
                     pageNumber={pageNumber}
                     pagesCount={pagesCount}
@@ -344,9 +321,23 @@ const
     </Wrapper>
 
 export default compose(
+    onlyUpdateForKeys(['cb']),
     withStyles(muiStyles),
+    withPropsOnChange([], props => ({
+        classedBounds: Object.freeze({
+            select: Object.freeze({select: g(props, 'classes', 'selectRoot')}),
+            typography: Object.freeze({root: g(props, 'classes', 'typographyRoot')}),
+        }),
+    })),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.object,
+        classes: PropTypes.exact({
+            typographyRoot: PropTypes.string,
+            selectRoot: PropTypes.string,
+        }),
+        classedBounds: PropTypes.exact({
+            select: PropTypes.object,
+            typography: PropTypes.object,
+        }),
         isSSR: PropTypes.bool,
         cb: PropTypes.oneOf(breakpoints).isOptional,
 
@@ -363,23 +354,20 @@ export default compose(
         pagesCount: PropTypes.number,
         pageNumber: PropTypes.number,
         itemsCount: PropTypes.number,
-        sortList: sortListModel.isOptional, // could be not presented at all
+        sortList: immutableSortListModel.isOptional, // could be not presented at all
         currentSort: PropTypes.string.isOptional, // could be not presented at all
 
         archiveFilms: immutableArchiveFilmsModel.isOptional, // could be not presented at all
 
         // could be not presented at all
-        tagArchiveListOlder: ImmutablePropTypes.exact({
-            month: PropTypes.string,
-            year: PropTypes.string,
-        }).isOptional,
+        tagArchiveListOlder: immutableTagArchiveListOlderOrNewerModel,
 
         // could be not presented at all
-        tagArchiveListNewer: ImmutablePropTypes.exact({
-            month: PropTypes.string,
-            year: PropTypes.string,
-        }).isOptional,
+        tagArchiveListNewer: immutableTagArchiveListOlderOrNewerModel,
 
-        favoriteButtons: PropTypes.bool.isOptional, // could be not presented at all
+        favoriteButtons: PropTypes.exact({
+            movies: PropTypes.bool,
+            pornstars: PropTypes.bool,
+        }).isOptional, // could be not presented at all
     }),
 )(ControlBar)

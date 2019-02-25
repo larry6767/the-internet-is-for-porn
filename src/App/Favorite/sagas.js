@@ -18,7 +18,7 @@ export function* loadFavoritePageFlow(action, ssrContext) {
             data = yield obtainPageData(ssrContext, 'favorite', pageRequestParams)
 
         if (isSSR)
-            yield put(headerActions.setNewText(getHeaderText(data)))
+            yield put(headerActions.setNewText(getHeaderText(g(data, 'pageText'))))
 
         yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {

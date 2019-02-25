@@ -250,18 +250,34 @@ export const getSiteLocales = async () => {
     }
 }
 
-export const sendReport = (siteLocales, localeCode) => ({headers, formData}) => fetch(
-    backendUrlForReport(siteLocales, localeCode),
-    {
-        method: 'POST',
-        headers,
-        body:
-            Object.keys(formData).reduce(
-                (fd, k) => (fd.append(k, g(formData, k)), fd),
-                new FormData()
-            ),
-    }
-).then(fetchResponseExtractor(() => new Error().stack))
+export const sendReport = (siteLocales, localeCode, orientationCode) => ({headers, body}) => {
+    const
+        classId = getClassId(orientationCode),
+        preparedBody = {
+            op: 'abuse_report',
+            _cid: classId,
+            _url: g(body, 'url'),
+            'report-reason': g(body, 'reason'),
+            'report-comment': g(body, 'comment'),
+        }
+
+    if (g(body, 'userUrl')) preparedBody['report-url'] = g(body, 'userUrl')
+    if (g(body, 'tagId')) preparedBody['_tid'] = g(body, 'tagId')
+    if (g(body, 'galleryId')) preparedBody['_gid'] = g(body, 'galleryId')
+
+    return fetch(
+        backendUrlForReport(siteLocales, localeCode),
+        {
+            method: 'POST',
+            headers,
+            body:
+                Object.keys(preparedBody).reduce(
+                    (fd, k) => (fd.append(k, g(preparedBody, k)), fd),
+                    new FormData()
+                ),
+        }
+    ).then(fetchResponseExtractor(() => new Error().stack))
+}
 
 export const getSearchSuggestions = (siteLocales, localeCode, orientationCode) =>
     async ({headers, formData}) => {

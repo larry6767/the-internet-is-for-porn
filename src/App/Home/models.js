@@ -7,8 +7,8 @@ import {
     pageRequestParamsModel,
 } from '../models'
 
-const
-    model = process.env.NODE_ENV === 'production' ? null : {
+export const
+    model = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
@@ -16,15 +16,4 @@ const
         pageText: immutablePageTextModel,
         nichesList: immutableNichesListWithThumbModel,
         pornstarsList: immutableModelsListWithLetterModel,
-    },
-
-    stateModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exact(model),
-
-    dataModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exactRecordOf(model)
-
-export {
-    stateModel,
-    dataModel,
-}
+    })

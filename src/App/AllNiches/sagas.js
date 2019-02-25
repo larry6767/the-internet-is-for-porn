@@ -6,7 +6,6 @@ import {
     plainProvedGet as g,
     immutableProvedGet as ig,
 } from '../helpers'
-import nicheSaga from './Niche/sagas'
 import errorActions from '../../generic/ErrorMessage/actions'
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
@@ -19,7 +18,7 @@ export function* loadAllNichesPageFlow(action, ssrContext) {
             data = yield obtainPageData(ssrContext, 'allNiches', pageRequestParams)
 
         if (isSSR)
-            yield put(headerActions.setNewText(getHeaderText(data)))
+            yield put(headerActions.setNewText(getHeaderText(g(data, 'pageText'))))
 
         yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {
@@ -31,5 +30,4 @@ export function* loadAllNichesPageFlow(action, ssrContext) {
 
 export default function* saga() {
     yield takeEvery(actions.loadPageRequest, loadAllNichesPageFlow)
-    yield nicheSaga()
 }

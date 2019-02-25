@@ -1,6 +1,5 @@
 // TODO: this page needs propTypes
 import React, {Fragment} from 'react'
-import {Record} from 'immutable'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
@@ -14,8 +13,10 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
+    setPropTypes,
 } from '../helpers'
 
+import {model} from './models'
 import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
@@ -29,24 +30,6 @@ import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
 const
-    DataRecord = Record({
-        isLoading: null,
-        isLoaded: null,
-        isFailed: null,
-
-        lastPageRequestParams: null,
-
-        pageText: null,
-
-        pageNumber: null,
-        pagesCount: null,
-        itemsCount: null,
-
-        currentSort: null,
-        sortList: null,
-        videoList: null,
-    }),
-
     FindVideos = ({
         classes,
         currentBreakpoint,
@@ -95,7 +78,7 @@ const
 
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
-            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+            nextProps.setNewText(getHeaderText(ig(nextProps.data, 'pageText'), true))
     },
 
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
@@ -112,7 +95,7 @@ export default compose(
     connect(
         state => ({
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: DataRecord(ig(state, 'app', 'findVideos')),
+            data: ig(state, 'app', 'findVideos'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
@@ -127,7 +110,13 @@ export default compose(
     ),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
-        chooseSort: props => newSortValue => props.setNewSort({newSortValue}),
+
+        chooseSort: props => event => {
+            event.preventDefault()
+            props.setNewSort({
+                newSortValue: event.target.value,
+            })
+        },
 
         controlLinkBuilder: props => qsParams => routerGetters.findVideos.link(
             g(props, 'routerContext'),
@@ -147,5 +136,11 @@ export default compose(
         },
     }),
     withStyles(muiStyles),
-    loadingWrapper
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        data: model,
+    }),
+    loadingWrapper({
+        withControlBar: true,
+        withMoviesList: true,
+    })
 )(FindVideos)

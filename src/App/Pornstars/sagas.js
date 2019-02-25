@@ -8,7 +8,6 @@ import {
 } from '../helpers'
 import errorActions from '../../generic/ErrorMessage/actions'
 import headerActions from '../MainHeader/actions'
-import pornstarSaga from './Pornstar/sagas'
 import actions from './actions'
 
 export function* loadPornstarsPageFlow(action, ssrContext) {
@@ -19,7 +18,7 @@ export function* loadPornstarsPageFlow(action, ssrContext) {
             data = yield obtainPageData(ssrContext, 'pornstars', pageRequestParams)
 
         if (isSSR)
-            yield put(headerActions.setNewText(getHeaderText(data, false, false)))
+            yield put(headerActions.setNewText(getHeaderText(g(data, 'pageText'), false, false)))
 
         yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {
@@ -31,5 +30,4 @@ export function* loadPornstarsPageFlow(action, ssrContext) {
 
 export default function* saga() {
     yield takeEvery(actions.loadPageRequest, loadPornstarsPageFlow)
-    yield pornstarSaga()
 }

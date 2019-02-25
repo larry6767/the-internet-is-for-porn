@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Footer = styled.footer`
-    width: 100vw;
+    width: 100%;
 `
 
 export const FooterInner = styled.div`
@@ -45,10 +45,4 @@ export const Link = styled.a`
     &:hover {
         text-decoration: underline;
     }
-`
-
-export const QRCodeBlock = styled.div`
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
 `

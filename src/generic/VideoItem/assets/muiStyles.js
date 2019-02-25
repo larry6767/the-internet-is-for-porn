@@ -1,18 +1,4 @@
 export const muiStyles = theme => ({
-    routerLink: {
-        textDecoration: 'none',
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-    },
-    routerLinkGray: {
-        color: theme.palette.primary.dark,
-    },
-    routerLinkContrast: {
-        color: theme.palette.primary.contrastText,
-    },
     typography: {
         color: theme.palette.primary.contrastText,
     },

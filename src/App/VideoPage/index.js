@@ -1,10 +1,6 @@
-// TODO: this page needs refactoring (propTypes, ig, g, etc)
-import {Record} from 'immutable'
 import React, {Fragment} from 'react'
-import {Link} from 'react-router-dom'
 import {compose, withHandlers, withState} from 'recompose'
 import {connect} from 'react-redux'
-import {reduxForm, reset as resetForm} from 'redux-form/immutable'
 import {animateScroll} from 'react-scroll'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -20,32 +16,38 @@ import {
     immutableProvedGet as ig,
     getRouterContext,
     PropTypes,
+    ImmutablePropTypes,
     setPropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
+    breakpoints,
     compareCurrentBreakpoint as ccb,
+    breakpointXS as xs,
     breakpointSM as sm,
     breakpointMD as md,
     getHeaderText,
     lifecycleForPageWithRefs,
+    getDomain,
 } from '../helpers'
 
 import routerGetters from '../routerGetters'
 
-import {immutableI18nButtonsModel} from '../models'
+import {model} from './models'
+import {immutableI18nButtonsModel, routerContextModel} from '../models'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
 import loadingWrapper from '../../generic/loadingWrapper'
 import PageTextHelmet from '../../generic/PageTextHelmet'
 import VideoList from '../../generic/VideoList'
-import ReportDialog from './ReportDialog'
 
 import headerActions from '../MainHeader/actions'
 import actions from './actions'
 import appActions from '../actions'
+import reportDialogActions from '../ReportDialog/actions'
 import {muiStyles} from './assets/muiStyles'
 
 import {
+    StyledLink,
     PageWrapper,
     PlayerSection,
     VideoPlayer,
@@ -68,227 +70,174 @@ import {
 } from './assets'
 
 const
-    fieldNamesArray = ['op', '_cid', '_gid', '_url'], // hidden field names for report request
-
-    VideoPageRecord = Record({
-        isLoading: null,
-        isLoaded: null,
-        isFailed: null,
-
-        reportIsSending: null,
-        reportIsSent: null,
-        reportIsNotSent: null,
-
-        lastPageRequestParams: null,
-
-        inlineAdvertisementIsShowed: null,
-        reportDialogIsOpen: null,
-        openGraphData: null,
-        pageText: null,
-        gallery: null,
-        videoList: null,
-        currentHref: null,
-        currentTime: null,
-    }),
-
     renderFavoriteButton = (
-        classes, data, favoriteVideoList,
-        addVideoToFavoriteHandler, removeVideoFromFavoriteHandler, i18nButtons,
-    ) => favoriteVideoList.find(id => id === data.getIn(['gallery', 'id']))
+        classes,
+        data,
+        favoriteVideoList,
+        addVideoToFavoriteHandler,
+        removeVideoFromFavoriteHandler,
+        i18nButtons,
+    ) => favoriteVideoList.find(id => id === ig(data, 'gallery', 'id'))
         ? <Button
             variant="contained"
             color="primary"
-            classes={{
-                root: classes.buttonFavorite
-            }}
-            onClick={removeVideoFromFavoriteHandler.bind(this, data.getIn(['gallery', 'id']))}
+            className={g(classes, 'buttonFavorite')}
+            onClick={removeVideoFromFavoriteHandler}
         >
-            <Favorite
-                classes={{root: classes.favoriteIcon}}
-            />
+            <Favorite className={g(classes, 'favoriteIcon')}/>
             {ig(i18nButtons, 'removeFromFavorite')}
         </Button>
         : <Button
             variant="contained"
             color="primary"
-            classes={{
-                root: classes.buttonFavorite
-            }}
-            onClick={addVideoToFavoriteHandler.bind(this, data.get('gallery').deleteAll(
-                ['published', 'classId', 'sponsorUrl', 'urlForIframe']
-            ))}
+            className={g(classes, 'buttonFavorite')}
+            onClick={addVideoToFavoriteHandler}
         >
-            <FavoriteBorder
-                classes={{root: classes.favoriteBorderIcon}}
-            />
+            <FavoriteBorder className={g(classes, 'favoriteBorderIcon')}/>
             {ig(i18nButtons, 'addToFavorite')}
         </Button>,
 
-    renderIframe = (src, currentWidth, isVideo) =>
-        isVideo === 'isVideo'
-            ? <VideoIframe
+    renderIframe = (src, currentWidth, isVideo) => isVideo === 'isVideo'
+        ? <VideoIframe
+            title={src}
+            src={src}
+            frameBorder="0"
+        />
+        : process.env.NODE_ENV === 'production'
+        ? <AdIframeWrapper currentWidth={currentWidth}>
+            <AdIframe
                 title={src}
-                src={src}
+                src={`https://videosection.com/_ad#str-eng-1545--${src}`}
+                currentWidth={currentWidth}
                 frameBorder="0"
             />
-            : process.env.NODE_ENV === 'production'
-            ? <AdIframeWrapper currentWidth={currentWidth}>
-                <AdIframe
-                    title={src}
-                    src={`https://videosection.com/_ad#str-eng-1545--${src}`}
-                    currentWidth={currentWidth}
-                    frameBorder="0"
-                />
-            </AdIframeWrapper>
-            : <AdGag currentWidth={currentWidth}/>,
+        </AdIframeWrapper>
+        : <AdGag currentWidth={currentWidth}/>,
 
-    renderTag = (classes, cb, x, getTagLink) => <Link
-        to={getTagLink(x)}
-        key={x}
-        className={classes.routerLink}
-    >
+    renderTag = (classes, cb, x, getTagLink) => <StyledLink to={getTagLink(x)} key={x}>
         <Chip
             label={x}
-            className={classes.chip}
+            className={g(classes, 'chip')}
             component="div"
             variant="outlined"
-            color={
-                ccb(cb, sm) === -1
-                    ? 'primary'
-                    : 'secondary'
-            }
+            color={ccb(cb, sm) === -1 ? 'primary' : 'secondary'}
             clickable
         />
-    </Link>,
+    </StyledLink>,
 
-    ProvidedBy = ({classes, i18nLabelProvidedBy, data, withLabel = false}) => <Typography
-        variant="body1"
-        classes={{
-            root: classes.typographySponsor
-        }}
-    >
-        {withLabel
-            ? `${i18nLabelProvidedBy}: `
-            : null}
-        <SponsorLink
-            href={data.getIn(['gallery', 'sponsorUrl'])} // TODO need link to search
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            {data.getIn(['gallery', 'sponsorName'])}
+    renderProvidedBy = (
+        classes,
+        i18nLabelProvidedBy,
+        sponsorLinkBuilder,
+        sponsorName,
+        withLabel = false,
+    ) => <Typography variant="body1" className={g(classes, 'typographySponsor')}>
+        { ! withLabel ? null : `${i18nLabelProvidedBy}: `}
+        <SponsorLink to={sponsorLinkBuilder(sponsorName.toLowerCase())}>
+            {sponsorName}
         </SponsorLink>
     </Typography>,
 
-    VideoPage = ({
-        classes, isSSR, data, favoriteVideoList, closeAdvertisementHandler,
-        addVideoToFavoriteHandler, removeVideoFromFavoriteHandler,
-        toggleReportDialogHandler, getTagLink, pageUrl,
-        handleSubmit, pristine, reset, cb, currentWidth, i18nButtons, i18nRelatedVideo,
-        i18nLabelProvidedBy, setPlayerRef,
-    }) => <Fragment>
+    VideoPage = props => <Fragment>
         <PageTextHelmet
-            pageText={ig(data, 'pageText')}
-            openGraphData={ig(data, 'openGraphData')}
+            pageText={ig(props.data, 'pageText')}
+            openGraphData={ig(props.data, 'openGraphData')}
+            routerContext={g(props, 'routerContext')}
+            domain={g(props, 'domain')}
         />
         <PageWrapper>
             <PlayerSection>
                 <Typography
                     variant="h4"
                     gutterBottom
-                    classes={{
-                        root: classes.typographyTitle
-                    }}
+                    className={g(props, 'classes', 'typographyTitle')}
                 >
-                    {`${data.getIn(['gallery', 'title'])} ${
-                        data.getIn(['pageText', 'galleryTitle'])}`}
+                    {`${ig(props.data, 'gallery', 'title')} ${
+                        ig(props.data, 'pageText', 'galleryTitle')}`}
                 </Typography>
-                {ccb(cb, sm) === -1
-                    ? null
-                    : <ProvidedBy
-                        classes={classes}
-                        data={data}
-                        withLabel={true}
-                        i18nLabelProvidedBy={i18nLabelProvidedBy}
-                    />}
-                <VideoPlayer ref={g(setPlayerRef, [])}>
+                {ccb(g(props, 'cb'), sm) === -1 ? null : renderProvidedBy(
+                    g(props, 'classes'),
+                    g(props, 'i18nLabelProvidedBy'),
+                    g(props, 'sponsorLinkBuilder'),
+                    ig(props.data, 'gallery', 'sponsorName'),
+                    true,
+                )}
+                <VideoPlayer ref={g(props, 'setPlayerRef')}>
                     <VideoWrapper>
                         <Video>
-                            {(data.get('inlineAdvertisementIsShowed') && !isSSR)
+                            {(ig(props.data, 'inlineAdvertisementIsShowed') && !g(props, 'isSSR'))
                                 ? <InlineAdvertisementWrapper>
                                     <InlineAdvertisement
-                                        currentWidth={currentWidth}
+                                        currentWidth={g(props, 'currentWidth')}
                                     >
                                         <CloseAdvertisement
-                                            onClick={closeAdvertisementHandler}
+                                            onClick={g(props, 'closeAdvertisementHandler')}
                                         />
-                                        {renderIframe('invideo', currentWidth)}
+                                        {renderIframe('invideo', g(props, 'currentWidth'))}
                                     </InlineAdvertisement>
                                 </InlineAdvertisementWrapper>
                                 : null}
                             {renderIframe(
-                                data.getIn(['gallery', 'urlForIframe']),
+                                ig(props.data, 'gallery', 'urlForIframe'),
                                 null,
                                 'isVideo'
                             )}
                         </Video>
                         <ControlPanel>
                             <ControlPanelBlock>
-                                {!isSSR
-                                    ? renderFavoriteButton(
-                                        classes, data, favoriteVideoList,
-                                        addVideoToFavoriteHandler,
-                                        removeVideoFromFavoriteHandler, i18nButtons,
-                                    )
-                                    : null}
-                                <Link to="/" className={classes.routerLink}>
+                                {g(props, 'isSSR') ? null : renderFavoriteButton(
+                                    g(props, 'classes'),
+                                    g(props, 'data'),
+                                    g(props, 'favoriteVideoList'),
+                                    g(props, 'addVideoToFavoriteHandler'),
+                                    g(props, 'removeVideoFromFavoriteHandler'),
+                                    g(props, 'i18nButtons'),
+                                )}
+                                <StyledLink to="/">
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        classes={{
-                                            root: classes.buttonRoot
-                                        }}
+                                        className={g(props, 'classes', 'buttonRoot')}
                                     >
-                                        <HomeIcon
-                                            classes={{root: classes.homeIcon}}
-                                        />
-                                        {ig(i18nButtons, 'backToMainPage')}
+                                        <HomeIcon className={g(props, 'classes', 'homeIcon')}/>
+                                        {ig(props.i18nButtons, 'backToMainPage')}
                                     </Button>
-                                </Link>
-                                {ccb(cb, sm) === -1
-                                    ? <ProvidedBy
-                                        classes={classes}
-                                        data={data}
-                                    />
-                                    : null}
+                                </StyledLink>
+                                { ccb(g(props, 'cb'), xs) === 1 ? null : renderProvidedBy(
+                                    g(props, 'classes'),
+                                    g(props, 'i18nLabelProvidedBy'),
+                                    g(props, 'sponsorLinkBuilder'),
+                                    ig(props.data, 'gallery', 'sponsorName'),
+                                )}
                             </ControlPanelBlock>
                             <ControlPanelBlock>
-                                {!isSSR
-                                    ? <Button
+                                {g(props, 'isSSR') ? null :
+                                    <Button
                                         variant="contained"
                                         color="primary"
-                                        classes={{
-                                            root: classes.buttonReport
-                                        }}
-                                        onClick={toggleReportDialogHandler}
+                                        className={g(props, 'classes', 'buttonReport')}
+                                        onClick={g(props, 'toggleReportDialogHandler')}
                                     >
                                         <ReportIcon
-                                            classes={{root: classes.reportIcon}}
+                                            className={g(props, 'classes', 'reportIcon')}
                                         />
-                                        {ig(i18nButtons, 'report')}
-                                    </Button>
-                                    : null}
+                                        {ig(props.i18nButtons, 'report')}
+                                    </Button>}
                             </ControlPanelBlock>
                         </ControlPanel>
                     </VideoWrapper>
                     <Advertisement>
-                        {renderIframe('sidebar1', currentWidth)}
-                        {renderIframe('sidebar2', currentWidth)}
+                        {renderIframe('sidebar1', g(props, 'currentWidth'))}
+                        {renderIframe('sidebar2', g(props, 'currentWidth'))}
                     </Advertisement>
                     <TagsWrapper>
-                        {data.getIn(['gallery', 'tags'])
-                            ? data.getIn(['gallery', 'tags']).map(x =>
-                                renderTag(classes, cb, x, getTagLink))
-                            : null}
+                        { ! ig(props.data, 'gallery', 'tags') ? null :
+                            ig(props.data, 'gallery', 'tags').map(x => renderTag(
+                                g(props, 'classes'),
+                                g(props, 'cb'),
+                                x,
+                                g(props, 'getTagLink')
+                            ))}
                     </TagsWrapper>
                 </VideoPlayer>
             </PlayerSection>
@@ -296,51 +245,36 @@ const
                 <Typography
                     variant="h4"
                     gutterBottom
-                    classes={{
-                        root: classes.typographyTitle
-                    }}
+                    className={g(props, 'classes', 'typographyTitle')}
                 >
-                    {i18nRelatedVideo}
+                    {g(props, 'i18nRelatedVideo')}
                 </Typography>
                 <VideoList
-                    videoList={data.get('videoList')}
+                    videoList={ig(props.data, 'videoList')}
                 />
             </RelatedVideos>
             <BottomAdvertisement>
-                {renderIframe('bottom1', currentWidth)}
-                {renderIframe('bottom2', currentWidth)}
-                {ccb(cb, md) === -1
-                    ? null
-                    : renderIframe('bottom3', currentWidth)}
+                {renderIframe('bottom1', g(props, 'currentWidth'))}
+                {renderIframe('bottom2', g(props, 'currentWidth'))}
+                {ccb(g(props, 'cb'), md) === -1 ? null :
+                    renderIframe('bottom3', g(props, 'currentWidth'))}
             </BottomAdvertisement>
         </PageWrapper>
-        <ReportDialog
-            i18nButtons={i18nButtons}
-            data={data}
-            toggleReportDialogHandler={toggleReportDialogHandler}
-            pageUrl={pageUrl}
-            fieldNamesArray={fieldNamesArray}
-            handleSubmit={handleSubmit}
-            pristine={pristine}
-            reset={reset}
-        />
     </Fragment>,
 
     setNewPageFlow = props => {
-        if (ig(props.data, 'isLoaded'))
+        if (ig(props.data, 'isLoaded')) {
             props.scrollToPlayer()
-
-        props.setNewText(getHeaderText(g(props, 'data'), true, false))
+            props.setNewText(getHeaderText(ig(props.data, 'pageText'), true, false))
+        }
     },
 
-    loadPageFlow = ({
-        data, loadPage, routerContext, match
-    }) => {
+    loadPageFlow = props => {
         const
-            pageRequestParams = getPageRequestParams(routerContext, match)
+            pageRequestParams = getPageRequestParams(g(props, 'routerContext'), g(props, 'match'))
 
-        if (doesItHaveToBeReloaded(data, pageRequestParams))
-            loadPage(pageRequestParams)
+        if (doesItHaveToBeReloaded(g(props, 'data'), pageRequestParams))
+            props.loadPage(pageRequestParams)
     }
 
 export default compose(
@@ -348,53 +282,50 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            data: VideoPageRecord(state.getIn(['app', 'videoPage'])),
-            isSSR: state.getIn(['app', 'ssr', 'isSSR']),
+            cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            data: ig(state, 'app', 'video'),
             routerContext: getRouterContext(state),
-            pageUrl: state.getIn(['router', 'location', 'pathname']),
-            favoriteVideoList: state.getIn(['app', 'ui', 'favoriteVideoList']),
-            initialValues: { // Setting default form values. redux-form creates keys in store for this
-                [fieldNamesArray[0]]: 'abuse_report',
-                [fieldNamesArray[1]]: state.getIn(['app', 'videoPage', 'gallery', 'classId']),
-                [fieldNamesArray[2]]: state.getIn(['app', 'videoPage', 'gallery', 'id']),
-                [fieldNamesArray[3]]: state.getIn(['app', 'videoPage', 'currentHref']),
-                'report-reason': 'reason_nothing',
-            },
-            currentWidth: state.getIn(['app', 'ui', 'currentWidth']),
-            cb: state.getIn(['app', 'ui', 'currentBreakpoint']),
+            domain: getDomain(state),
+            favoriteVideoList: ig(state, 'app', 'ui', 'favoriteVideoList'),
+            currentWidth: ig(state, 'app', 'ui', 'currentWidth'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nRelatedVideo: ig(state, 'app', 'locale', 'i18n', 'headers', 'relatedVideo'),
             i18nLabelProvidedBy: ig(state, 'app', 'locale', 'i18n', 'labels', 'providedBy'),
-            i18n: ig(state, 'app', 'locale', 'i18n', 'headers', 'relatedVideo'),
-            currentSection: ig(state, 'app', 'mainHeader', 'navigation', 'currentSection'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
             setNewText: g(headerActions, 'setNewText'),
             closeAdvertisement: g(actions, 'closeAdvertisement'),
-            toggleReportDialog: g(actions, 'toggleReportDialog'),
             addVideoToFavorite: g(appActions, 'addVideoToFavorite'),
             removeVideoFromFavorite: g(appActions, 'removeVideoFromFavorite'),
+            toggleReportDialogFlow: g(reportDialogActions, 'toggleReportDialogFlow'),
         }
     ),
     withState('playerRef', 'setPlayerRef', null),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
         closeAdvertisementHandler: props => () => props.closeAdvertisement(),
-        toggleReportDialogHandler: props => () => props.toggleReportDialog(),
-        addVideoToFavoriteHandler: props => (video, e) => {
-            e.preventDefault()
-            props.addVideoToFavorite(video)
+        addVideoToFavoriteHandler: props => event => {
+            event.preventDefault()
+            props.addVideoToFavorite(ig(props.data, 'gallery').deleteAll(
+                ['published', 'classId', 'sponsorUrl', 'urlForIframe']
+            ))
         },
-        removeVideoFromFavoriteHandler: props => (id, e) => {
-            e.preventDefault()
-            props.removeVideoFromFavorite(id)
+        removeVideoFromFavoriteHandler: props => event => {
+            event.preventDefault()
+            props.removeVideoFromFavorite(ig(props.data, 'gallery', 'id'))
+        },
+        toggleReportDialogHandler: props => () => {
+            props.toggleReportDialogFlow()
         },
         getTagLink: props => searchQuery => routerGetters.findVideos.link(
             g(props, 'routerContext'),
             {searchQuery},
             ['searchQuery'],
         ),
+        sponsorLinkBuilder: props => sponsor =>
+            routerGetters.site.link(g(props, 'routerContext'), sponsor, null),
         scrollToPlayer: props => () => {
             animateScroll.scrollTo(g(props, 'playerRef', 'offsetTop'), {
                 duration: 500,
@@ -403,18 +334,53 @@ export default compose(
             })
         }
     }),
-    reduxForm({
-        form: 'reportForm',
-        enableReinitialize: true,
-        onSubmit: (formData, dispatch) => dispatch(actions.sendReportRequest(formData)),
-        onSubmitSuccess: (values, dispatch) => dispatch(resetForm('reportForm')),
-    }),
     lifecycleForPageWithRefs(loadPageFlow, setNewPageFlow, ['playerRef']),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.object,
+        classes: PropTypes.exact({
+            typographyTitle: PropTypes.string,
+            typographySponsor: PropTypes.string,
+            buttonRoot: PropTypes.string,
+            buttonFavorite: PropTypes.string,
+            buttonReport: PropTypes.string,
+            favoriteBorderIcon: PropTypes.string,
+            favoriteIcon: PropTypes.string,
+            reportIcon: PropTypes.string,
+            homeIcon: PropTypes.string,
+            chip: PropTypes.string,
+        }),
+
+        cb: PropTypes.oneOf(breakpoints),
         isSSR: PropTypes.bool,
+        data: model,
+        routerContext: routerContextModel,
+        domain: PropTypes.string,
+        favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),
+        currentWidth: PropTypes.number,
         i18nButtons: immutableI18nButtonsModel,
+        i18nRelatedVideo: PropTypes.string,
+        i18nLabelProvidedBy: PropTypes.string,
+        playerRef: PropTypes.nullable(PropTypes.instanceOf(
+            typeof Element === 'undefined' ? () => {} : Element // plug for SSR
+        )),
+
+        loadPageRequest: PropTypes.func,
+        loadPage: PropTypes.func,
+        setNewText: PropTypes.func,
+        closeAdvertisement: PropTypes.func,
+        closeAdvertisementHandler: PropTypes.func,
+        addVideoToFavorite: PropTypes.func,
+        addVideoToFavoriteHandler: PropTypes.func,
+        removeVideoFromFavorite: PropTypes.func,
+        removeVideoFromFavoriteHandler: PropTypes.func,
+        getTagLink: PropTypes.func,
+        sponsorLinkBuilder: PropTypes.func,
+        scrollToPlayer: PropTypes.func,
+        toggleReportDialogFlow: PropTypes.func,
+        toggleReportDialogHandler: PropTypes.func,
     }),
-    loadingWrapper
+    loadingWrapper({
+        withPlayer: true,
+        withMoviesList: true,
+    })
 )(VideoPage)

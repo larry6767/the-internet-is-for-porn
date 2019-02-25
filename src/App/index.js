@@ -10,6 +10,7 @@ import {PropTypes, getRouterContext, setPropTypes} from './helpers'
 import {routerContextModel} from './models'
 import MainHeader from './MainHeader'
 import MainFooter from './MainFooter'
+import ReportDialog from './ReportDialog'
 import actions from './actions'
 import theme from './assets/theme'
 import muiTheme from './assets/muiTheme'
@@ -28,6 +29,7 @@ export const App = ({sheetsManager, routerContext, children}) => <MuiThemeProvid
                 <MainHeader/>
                 {children ? children({routerContext}) : null}
                 <MainFooter/>
+                <ReportDialog/>
             </div>
         </Fragment>
     </SCThemeProvider>

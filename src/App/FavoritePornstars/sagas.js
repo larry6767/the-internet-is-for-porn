@@ -18,7 +18,7 @@ export function* loadFavoritePornstarsPageFlow(action, ssrContext) {
             data = yield obtainPageData(ssrContext, 'favoritePornstars', pageRequestParams)
 
         if (isSSR)
-            yield put(headerActions.setNewText(getHeaderText(data)))
+            yield put(headerActions.setNewText(getHeaderText(g(data, 'pageText'))))
 
         yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {

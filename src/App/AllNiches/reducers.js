@@ -1,23 +1,17 @@
-import {combineReducers} from 'redux-immutable'
-import {fromJS, List} from 'immutable'
+import {fromJS, List, Map} from 'immutable'
 
 import {provedHandleActions, plainProvedGet as g} from '../helpers'
-import {PageTextRecord} from '../models'
-import {stateModel} from './models'
+import {model} from './models'
 import actions from './actions'
-import nicheReducer from './Niche/reducers'
 
-export default combineReducers({
-    niche: nicheReducer,
-
-    all: provedHandleActions(stateModel, {
+export default provedHandleActions(model, {
         [g(actions, 'loadPageRequest')]: (state, {payload}) => state.merge({
             isLoading: true,
             isLoaded: false,
             isFailed: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             nichesList: List(),
-            pageText: PageTextRecord(),
+            pageText: Map(),
         }),
         [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
@@ -25,14 +19,14 @@ export default combineReducers({
             isFailed: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             nichesList: List(fromJS(g(payload, 'data', 'tagList'))),
-            pageText: PageTextRecord(g(payload, 'data', 'pageText')),
+            pageText: Map(g(payload, 'data', 'pageText')),
         }),
         [g(actions, 'loadPageFailure')]: (state) => state.merge({
             isLoading: false,
             isLoaded: false,
             isFailed: true,
             nichesList: List(),
-            pageText: PageTextRecord(),
+            pageText: Map(),
         }),
     }, fromJS({
         isLoading: false,
@@ -40,6 +34,5 @@ export default combineReducers({
         isFailed: false,
         lastPageRequestParams: null,
         nichesList: [],
-        pageText: PageTextRecord(),
+        pageText: {},
     }))
-})

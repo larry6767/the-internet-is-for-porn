@@ -1,7 +1,6 @@
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
-import {Record} from 'immutable'
 import Typography from '@material-ui/core/Typography'
 
 import {
@@ -18,7 +17,7 @@ import {
 } from '../helpers'
 
 import {routerContextModel} from '../models'
-import {dataModel} from './models'
+import {model} from './models'
 import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
@@ -43,20 +42,9 @@ const
         </PageWrapper>
     </Fragment>,
 
-    DataRecord = Record({
-        isLoading: null,
-        isLoaded: null,
-        isFailed: null,
-
-        lastPageRequestParams: null,
-
-        modelsList: null,
-        pageText: null,
-    }),
-
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
-            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+            nextProps.setNewText(getHeaderText(ig(nextProps.data, 'pageText'), true))
     },
 
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
@@ -72,7 +60,7 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            data: DataRecord(ig(state, 'app', 'pornstars', 'all')),
+            data: ig(state, 'app', 'pornstars'),
             routerContext: getRouterContext(state),
             i18nPornstarsHeader: getHeaderWithOrientation(state, 'pornstars'),
         }),
@@ -99,7 +87,7 @@ export default compose(
         },
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        data: dataModel,
+        data: model,
         routerContext: routerContextModel,
         i18nPornstarsHeader: PropTypes.string,
 
@@ -108,5 +96,7 @@ export default compose(
         setNewText: PropTypes.func,
         linkBuilder: PropTypes.func,
     }),
-    loadingWrapper
+    loadingWrapper({
+        withPornstarList: true,
+    })
 )(Pornstars)

@@ -105,7 +105,7 @@ const
 
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
-            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+            nextProps.setNewText(getHeaderText(ig(nextProps.data, 'pageText'), true))
     },
 
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
@@ -147,10 +147,13 @@ export default compose(
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
 
-        chooseSort: props => newSortValue => props.setNewSort({
-            newSortValue,
-            archiveParams: g(props, 'archiveParams'),
-        }),
+        chooseSort: props => event => {
+            event.preventDefault()
+            props.setNewSort({
+                newSortValue: event.target.value,
+                archiveParams: g(props, 'archiveParams'),
+            })
+        },
 
         controlLinkBuilder: props => qsParams =>
             g(props, 'archiveParams') === null
@@ -226,5 +229,9 @@ export default compose(
         sponsorLinkBuilder: PropTypes.func,
         setPageWrapperRef: PropTypes.func,
     }),
-    loadingWrapper
+    loadingWrapper({
+        withLists: true,
+        withControlBar: true,
+        withMoviesList: true,
+    })
 )(AllMovies)

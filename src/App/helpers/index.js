@@ -38,6 +38,7 @@ export {default as obtainPageData} from './obtainPageData'
 export {default as doesItHaveToBeReloaded} from './doesItHaveToBeReloaded'
 export {default as areWeSwitchedOnPage} from './areWeSwitchedOnPage'
 export {default as lifecycleForPageWithRefs} from './lifecycleForPageWithRefs'
+export {default as getDomain} from './getDomain'
 
 // favorite pages helpers
 export {default as addToList} from './favoritePages/addToList'

@@ -14,16 +14,34 @@ import {
 import homeReducer from './Home/reducers'
 import mainHeaderReducer from './MainHeader/reducers'
 import allMoviesReducer from './AllMovies/reducers'
-import nichesReducer from './AllNiches/reducers'
+import allNichesReducer from './AllNiches/reducers'
+import nicheReducer from './Niche/reducers'
 import pornstarsReducer from './Pornstars/reducers'
+import pornstarReducer from './Pornstar/reducers'
 import favoriteReducer from './Favorite/reducers'
 import favoritePornstarsReducer from './FavoritePornstars/reducers'
 import videoPageReducer from './VideoPage/reducers'
 import findVideosReducer from './FindVideos/reducers'
 import siteReducer from './Site/reducers'
 import notFoundReducer from './NotFound/reducers'
+import reportDialogReducer from './ReportDialog/reducers'
 import actions from './actions'
 import {immutableLocaleRouterModel, immutableI18nModel} from './models'
+
+import {
+    HOME,
+    ALL_NICHES,
+    NICHE,
+    ALL_MOVIES,
+    PORNSTARS,
+    PORNSTAR,
+    FAVORITE,
+    FAVORITE_PORNSTARS,
+    VIDEO,
+    FIND_VIDEOS,
+    SITE,
+    NOT_FOUND,
+} from './constants'
 
 const
     defaultSSR = fromJS({isSSR: false}),
@@ -35,17 +53,22 @@ const
     })
 
 export default combineReducers({
-    home: homeReducer,
+    // some values are constants (actually only pages) because
+    // we use them for many cases with 'currentSection' and want to avoid human typo
+    [HOME]: homeReducer,
     mainHeader: mainHeaderReducer,
-    niches: nichesReducer,
-    allMovies: allMoviesReducer,
-    pornstars: pornstarsReducer,
-    favorite: favoriteReducer,
-    favoritePornstars: favoritePornstarsReducer,
-    videoPage: videoPageReducer,
-    findVideos: findVideosReducer,
-    site: siteReducer,
-    notFound: notFoundReducer,
+    [ALL_NICHES]: allNichesReducer,
+    [NICHE]: nicheReducer,
+    [ALL_MOVIES]: allMoviesReducer,
+    [PORNSTARS]: pornstarsReducer,
+    [PORNSTAR]: pornstarReducer,
+    [FAVORITE]: favoriteReducer,
+    [FAVORITE_PORNSTARS]: favoritePornstarsReducer,
+    [VIDEO]: videoPageReducer,
+    [FIND_VIDEOS]: findVideosReducer,
+    [SITE]: siteReducer,
+    [NOT_FOUND]: notFoundReducer,
+    reportDialog: reportDialogReducer,
 
     ui: provedHandleActions(stateModel, {
         [g(actions, 'resize')]: (state, action) => state.merge({

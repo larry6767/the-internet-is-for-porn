@@ -1,6 +1,6 @@
-import {mapValues} from 'lodash'
-
+import {mapValues, uniq} from 'lodash'
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
+import {galleryModel, openGraphDataModel} from '../../../App/VideoPage/models'
 
 const
     galleryModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
@@ -45,28 +45,6 @@ export const
 
     publishedTemplateModel = process.env.NODE_ENV === 'production' ? null :
         PropTypes.shape(publishedTemplateModelProps),
-
-    // result model
-    galleryModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
-        id: PropTypes.number,
-        classId: PropTypes.number,
-        title: PropTypes.string,
-        urlForIframe: PropTypes.string,
-        sponsorName: PropTypes.string,
-        sponsorUrl: PropTypes.string,
-        published: PropTypes.string,
-
-        thumb: PropTypes.string,
-        thumbMask: PropTypes.string,
-        thumbs: PropTypes.arrayOf(PropTypes.number),
-        firstThumb: PropTypes.number,
-
-        tags: PropTypes.arrayOf(PropTypes.string),
-        tagsShort: PropTypes.string,
-
-        duration: PropTypes.string,
-        videoPageRef: PropTypes.number,
-    }),
 
     sponsorsModel = process.env.NODE_ENV === 'production' ? null :
         PropTypes.objectOf(PropTypes.shape({name: PropTypes.string}))
@@ -156,6 +134,7 @@ export default (data, pageUrl, publishedTemplate, sponsors) => {
             title: getProp(data, 'title'),
             urlForIframe: g(getProp(data, 'embed_code').match(/src="([\S]+)"/), 1),
             sponsorName: g(sponsors, getProp(data, 'id_sponsor'), 'name'),
+            sponsorLink: `${g(sponsors, getProp(data, 'id_sponsor'), 'name')} porn`,
             sponsorUrl: getProp(data, 'url'),
             published,
 
@@ -164,7 +143,7 @@ export default (data, pageUrl, publishedTemplate, sponsors) => {
             thumbMask: getProp(data, 'thumb_url').replace(/-\d+.jpg/, '-{num}.jpg'),
             thumbs: getProp(data, 'thumbs').map(x => Number(x)),
             firstThumb: Number(getProp(data, 'thumb_top')),
-            tags: getProp(data, 'tags'),
+            tags: uniq(getProp(data, 'tags')),
             // This is for very small string under a video preview,
             // it's usually only one single tag.
             tagsShort: getProp(data, 'tags').reduce((acc, tag) => {
@@ -188,14 +167,7 @@ export default (data, pageUrl, publishedTemplate, sponsors) => {
 }
 
 export const
-    openGraphDataModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
-        title: PropTypes.string,
-        thumb: PropTypes.string,
-        tags: PropTypes.arrayOf(PropTypes.string),
-        duration: PropTypes.number,
-    }),
-
-    getOpenGraphData = data => {
+    getOpenGraphData = (data, swfPlugUrl) => {
         if (process.env.NODE_ENV !== 'production') {
             assertPropTypes(
                 incomingGalleryModel,
@@ -207,10 +179,12 @@ export const
 
         const
             result = {
+                id: Number(getProp(data, 'id')),
                 title: getProp(data, 'title'),
                 thumb: getProp(data, 'thumb_url'),
                 tags: getProp(data, 'tags'),
                 duration: Number(getProp(data, 'length')),
+                swfPlugUrl,
             }
 
         if (process.env.NODE_ENV !== 'production')

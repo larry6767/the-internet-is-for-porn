@@ -1,5 +1,3 @@
-import {Record} from 'immutable'
-
 // WARNING! Some helper(s) depend(s) on this module, avoid recursive dependencies!
 import {PropTypes} from './helpers/propTypes'
 import {ImmutablePropTypes} from './helpers/propTypes/immutable'
@@ -205,27 +203,16 @@ export const
 
 
     immutablePageTextModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exactRecordOf({
-            title: PropTypes.string,
-            description: PropTypes.string,
-            keywords: PropTypes.string,
-            headerTitle: PropTypes.nullable(PropTypes.string),
-            headerDescription: PropTypes.string,
-            listHeader: PropTypes.nullable(PropTypes.string),
-            listHeaderEmpty: PropTypes.nullable(PropTypes.string),
-            galleryTitle: PropTypes.nullable(PropTypes.string),
+        ImmutablePropTypes.exact({
+            title: PropTypes.string.isOptional,
+            description: PropTypes.string.isOptional,
+            keywords: PropTypes.string.isOptional,
+            headerTitle: PropTypes.nullable(PropTypes.string.isOptional),
+            headerDescription: PropTypes.string.isOptional,
+            listHeader: PropTypes.nullable(PropTypes.string.isOptional),
+            listHeaderEmpty: PropTypes.nullable(PropTypes.string.isOptional),
+            galleryTitle: PropTypes.nullable(PropTypes.string.isOptional),
         }),
-
-    PageTextRecord = Record({
-        title: '',
-        description: '',
-        keywords: '',
-        headerTitle: null,
-        headerDescription: '',
-        listHeader: null,
-        listHeaderEmpty: null,
-        galleryTitle: null,
-    }),
 
     modelsListModel = process.env.NODE_ENV === 'production' ? null :
         modelsListModelBuilder(false, false),

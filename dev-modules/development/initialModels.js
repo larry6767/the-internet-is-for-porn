@@ -186,6 +186,7 @@ const
             failureText: PropTypes.string,
             commentLabel: PropTypes.string,
             commentPlaceholder: PropTypes.string,
+            userUrlPlaceholder: PropTypes.string,
         })
     },
 
@@ -222,6 +223,19 @@ const
             lifetime: PropTypes.string,
             careerTime: PropTypes.string,
             penis: PropTypes.string,
+        })
+    },
+
+    i18nNotFoundBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            title: PropTypes.string,
+            description: PropTypes.string,
+            headerTitle: PropTypes.string,
+            headerDescription: PropTypes.string,
+            listHeader: PropTypes.string,
         })
     },
 
@@ -263,6 +277,9 @@ const
     i18nPornstarInfoParametersModel = i18nPornstarInfoParametersBuilder(false),
     immutableI18nPornstarInfoParametersModel = i18nPornstarInfoParametersBuilder(true),
 
+    i18nNotFoundModel = i18nNotFoundBuilder(false),
+    immutableI18nNotFoundModel = i18nNotFoundBuilder(true),
+
     i18nOrientationModel = i18nOrientationModelBuilder(false),
     immutableI18nOrientationModel = i18nOrientationModelBuilder(true),
 
@@ -282,6 +299,7 @@ const
             pornstarInfoParameters: isImmutable
                 ? immutableI18nPornstarInfoParametersModel
                 : i18nPornstarInfoParametersModel,
+            notFound: isImmutable ? immutableI18nNotFoundModel : i18nNotFoundModel,
             orientation: isImmutable ? immutableI18nOrientationModel : i18nOrientationModel,
         })
     }
@@ -296,6 +314,7 @@ export {
     i18nFooterModel, immutableI18nFooterModel,
     i18nReportModel, immutableI18nReportModel,
     i18nPornstarInfoParametersModel, immutableI18nPornstarInfoParametersModel,
+    i18nNotFoundModel, immutableI18nNotFoundModel,
     i18nOrientationModel, immutableI18nOrientationModel,
 }
 
