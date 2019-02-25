@@ -21,7 +21,7 @@ export function* loadSitePageFlow(action, ssrContext) {
             data = yield obtainPageData(ssrContext, 'site', pageRequestParams)
 
         if (isSSR)
-            yield put(headerActions.setNewText(getHeaderText(data)))
+            yield put(headerActions.setNewText(getHeaderText(g(data, 'pageText'))))
 
         yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {

@@ -489,7 +489,7 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadNotFoundPageFlow.bind(null, action)
                     x.statusCodeResolver = () => 404
-                    x.pageTextResolver = () => get404PageText()
+                    x.pageTextResolver = state => get404PageText(state)
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null

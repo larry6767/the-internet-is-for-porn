@@ -1,11 +1,11 @@
 import ig from './immutable/provedGet'
 import g from './plain/provedGet'
 
-export default (data, isImmutable = false, withTitle = true) =>
+export default (pageText, isImmutable = false, withTitle = true) =>
     isImmutable ? {
-        title: withTitle ? ig(data, 'pageText', 'headerTitle') : null,
-        description: ig(data, 'pageText', 'headerDescription'),
+        title: withTitle ? ig(pageText, 'headerTitle') : null,
+        description: ig(pageText, 'headerDescription'),
     } : {
-        title: withTitle ? g(data, 'pageText', 'headerTitle') : null,
-        description: g(data, 'pageText', 'headerDescription'),
+        title: withTitle ? g(pageText, 'headerTitle') : null,
+        description: g(pageText, 'headerDescription'),
     }

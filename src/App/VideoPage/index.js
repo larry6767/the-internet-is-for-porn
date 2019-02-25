@@ -265,7 +265,7 @@ const
     setNewPageFlow = props => {
         if (ig(props.data, 'isLoaded')) {
             props.scrollToPlayer()
-            props.setNewText(getHeaderText(g(props, 'data'), true, false))
+            props.setNewText(getHeaderText(ig(props.data, 'pageText'), true, false))
         }
     },
 

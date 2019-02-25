@@ -129,6 +129,15 @@ const
                 careerTime: 'Career Start and End',
                 penis: 'Penis',
             },
+            notFound: {
+                title: 'File not found - Free Porn Tubes : %SITE%',
+                description: '404 page : %SITE%',
+                headerTitle: 'Oops... Maybe explore the other porn categories on our video site',
+                headerDescription: 'Try to return to the home page and find best free porn \
+                    collection : %SITE%',
+                listHeader: '404 Not found. Sorry, partner. The page you requested is not in our \
+                    database. Explore our fresh porn films',
+            },
             orientation: {
                 straight: 'Straight',
                 gay: 'Gays',
@@ -259,6 +268,17 @@ const
                 careerTime: 'Career Start and End',
                 penis: 'Penis',
             },
+            notFound: {
+                title: 'Datei nicht gefunden - Free Porn Tubes : %SITE%',
+                description: '404 Seite : %SITE%',
+                headerTitle: "Hoppla... erkunden Sie vielleicht die anderen Pornokategorien \
+                    auf unserer Videoseite",
+                headerDescription: 'Versuchen Sie, zur Startseite zurückzukehren und die beste \
+                    kostenlose Pornosammlung zu finden : %SITE%',
+                listHeader: '404 nicht gefunden. Entschuldigung, mein Partner. Die von Ihnen \
+                    aufgerufene Seite befindet sich nicht in unserer Datenbank. Entdecken \
+                    Sie unsere frischen Pornofilme ',
+            },
             orientation: {
                 straight: 'Hetero',
                 gay: 'Gay',
@@ -386,6 +406,16 @@ const
                 lifetime: 'Life Time',
                 careerTime: 'Career Start and End',
                 penis: 'Penis',
+            },
+            notFound: {
+                title: 'File non trovato - Provini gratuiti : %SITE%',
+                description: '404 pagina : %SITE%',
+                headerTitle: "Oops... Forse esplorare le altre categorie pornografiche sul \
+                    nostro sito di video",
+                headerDescription: 'Prova a tornare alla home page e trova la migliore \
+                    collezione porno gratuita : %SITE%',
+                listHeader: '404 Non trovato. Ci dispiace, partner. La pagina richiesta \
+                    non è nel nostro database. Esplora i nostri film porno freschi',
             },
             orientation: {
                 straight: 'Etero',
@@ -516,6 +546,15 @@ const
                 careerTime: 'Career Start and End',
                 penis: 'Penis',
             },
+            notFound: {
+                title: 'Fichier non trouvé - Free Porn Tubes : %SITE%',
+                description: '404 page : %SITE%',
+                headerTitle: 'Oups ... Explorez peut-être les autres catégories pornos sur notre site vidéo',
+                headerDescription: 'Essayez de revenir à la page d\'accueil et trouvez la \
+                    meilleure collection de porno gratuite : %SITE%',
+                listHeader: '404 Introuvable. Désolé, partenaire. La page que vous avez demandée \
+                    ne figure pas dans notre base de données. Explorez nos nouveaux films porno',
+            },
             orientation: {
                 straight: 'Hétéro',
                 gay: 'Homo',
@@ -645,6 +684,16 @@ const
                 careerTime: 'Career Start and End',
                 penis: 'Penis',
             },
+            notFound: {
+                title: 'Archivo no encontrado - Tubos porno gratis : %SITE%',
+                description: '404 página : %SITE%',
+                headerTitle: 'Oops... Tal vez explore las otras categorías de pornografía en \
+                    nuestro sitio de videos',
+                headerDescription: 'Intenta volver a la página de inicio y encuentra la mejor \
+                    colección de pornografía gratuita : %SITE%',
+                listHeader: '404 No encontrado. Lo siento compañero La página que solicitó \
+                    no está en nuestra base de datos. Explora nuestras nuevas películas porno',
+            },
             orientation: {
                 straight: 'Derecho',
                 gay: 'Homosexual',
@@ -773,6 +822,16 @@ const
                 careerTime: 'Career Start and End',
                 penis: 'Penis',
             },
+            notFound: {
+                title: 'Arquivo não encontrado - Free Porn Tubes : %SITE%',
+                description: 'página 404 : %SITE%',
+                headerTitle: 'Opa... Talvez explore as outras categorias de pornografia no nosso \
+                    site de vídeos',
+                headerDescription: 'Tente voltar para a página inicial e encontre a melhor \
+                    coleção de pornografia gratuita : %SITE%',
+                listHeader: '404 não encontrado. Desculpe, parceiro. A página que você solicitou \
+                    não está em nosso banco de dados. Explore nossos filmes pornôs frescos ',
+            },
             orientation: {
                 straight: 'Heterossexual',
                 gay: 'Gays',
@@ -899,6 +958,15 @@ const
                 lifetime: 'Life Time',
                 careerTime: 'Career Start and End',
                 penis: 'Penis',
+            },
+            notFound: {
+                title: 'Filen hittades inte - Gratis pornorör : %SITE%',
+                description: '404 sida : %SITE%',
+                headerTitle: 'Oops... Kanske utforska de andra porrkategorierna på vår videosida',
+                headerDescription: 'Försök att återvända till hemsidan och hitta bästa gratis \
+                    porrsamling : %SITE%',
+                listHeader: '404 Not Found. Tyvärr, partner. Sidan du begärde finns inte i vår \
+                    databas. Utforska våra fräscha porrfilmer',
             },
             orientation: {
                 straight: 'Straighta',
@@ -1029,6 +1097,16 @@ const
                 careerTime: 'Career Start and End',
                 penis: 'Penis',
             },
+            notFound: {
+                title: 'Bestand niet gevonden - Gratis Porno Tubes : %SITE%',
+                description: '404 pagina : %SITE%',
+                headerTitle: 'Oeps... Misschien verken je de andere porno-categorieën op \
+                    onze videosite',
+                headerDescription: 'Probeer terug te gaan naar de startpagina en vind de \
+                    beste gratis pornocollectie : %SITE%',
+                listHeader: '404 Niet gevonden. Sorry partner. De door u opgevraagde pagina \
+                    staat niet in onze database. Ontdek onze verse pornofilms',
+            },
             orientation: {
                 straight: 'Hetero',
                 gay: 'Gay',
@@ -1157,6 +1235,15 @@ const
                 careerTime: 'Career Start and End',
                 penis: 'Penis',
             },
+            notFound: {
+                title: 'Tiedostoa ei löydy - Free Porn Tubes : %SITE%',
+                description: '404 sivu : %SITE%',
+                headerTitle: 'Hups... Ehkä tutustu videopalvelumme muihin pornoluokkiin',
+                headerDescription: "Yritä palata kotisivulle ja löytää paras ilmainen \
+                    pornokokoelma : %SITE%",
+                listHeader: '404 Ei löydy. Anteeksi, kumppani. Pyytämäsi sivu ei ole \
+                    tietokannassamme. Tutustu tuoreisiin pornoelokuviin',
+            },
             orientation: {
                 straight: 'Hetero',
                 gay: 'Homo',
@@ -1283,6 +1370,16 @@ const
                 lifetime: 'Время жизни',
                 careerTime: 'Начало и конец карьеры',
                 penis: 'Пенис',
+            },
+            notFound: {
+                title: 'Файл не найден : %SITE%',
+                description: '404 страница : %SITE%',
+                headerTitle: 'Ой... Может быть, исследуете другие категории порно на нашем \
+                    видео сайте',
+                headerDescription: 'Попробуйте вернуться на главную страницу и найти лучшие \
+                    бесплатные порно коллекции : %SITE%',
+                listHeader: '404 Не найдено. Извините, партнер. Запрошенная вами страница \
+                    отсутствует в нашей базе данных. Изучите наши свежие порно фильмы',
             },
             orientation: {
                 straight: 'Гетеро',
@@ -1412,6 +1509,15 @@ const
                 lifetime: 'Life Time',
                 careerTime: 'Career Start and End',
                 penis: 'Penis',
+            },
+            notFound: {
+                title: 'Dosya bulunamadı - Bedava Porno Tüpler : %SITE%',
+                description: '404 Sayfa : %SITE%',
+                headerTitle: 'Hata! Belki de video sitemizdeki diğer porno kategorilerini inceleyin',
+                headerDescription: 'Ana sayfaya dönmeye ve en iyi bedava porno \
+                    koleksiyonunu bulmaya çalış : %SITE%',
+                listHeader: '404 Bulunamadı. Üzgünüm ortak. İstediğiniz sayfa \
+                    veritabanımızda yok. Yeni porno filmlerimizi keşfedin',
             },
             orientation: {
                 straight: 'Hetero',

@@ -104,7 +104,7 @@ const
 
     setNewPageFlow = (prevProps, nextProps) => {
         if (areWeSwitchedOnPage(prevProps, nextProps))
-            nextProps.setNewText(getHeaderText(g(nextProps, 'data'), true))
+            nextProps.setNewText(getHeaderText(ig(nextProps.data, 'pageText'), true))
     },
 
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
