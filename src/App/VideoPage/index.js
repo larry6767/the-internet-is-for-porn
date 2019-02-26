@@ -309,7 +309,7 @@ export default compose(
         addVideoToFavoriteHandler: props => event => {
             event.preventDefault()
             props.addVideoToFavorite(ig(props.data, 'gallery').deleteAll(
-                ['published', 'classId', 'sponsorUrl', 'urlForIframe']
+                ['published', 'classId', 'sponsorUrl', 'urlForIframe', 'tags']
             ))
         },
         removeVideoFromFavoriteHandler: props => event => {

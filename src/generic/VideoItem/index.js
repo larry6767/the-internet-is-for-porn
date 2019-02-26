@@ -22,6 +22,7 @@ import {immutableVideoItemModel} from './models'
 
 import {
     StyledLink,
+    StyledLinkBlock,
     ProviderLink,
     NativeLink,
     Wrapper,
@@ -29,6 +30,7 @@ import {
     VideoPreviewBar,
     InfoBlock,
     InfoBlockInner,
+    TagsBlock,
     Like,
     Duration,
     VideoPreviewThumbs,
@@ -101,10 +103,10 @@ class PreviewThumbs extends Component {
 const
     renderLink = (x, getVideoLink) => typeof ig(x, 'videoPageRef') === 'string' // external resource
         ? <NativeLink href={ig(x, 'videoPageRef')} target="_blank" rel="noopener noreferrer"/>
-        : <StyledLink to={getVideoLink(x)}/>,
+        : <StyledLinkBlock to={getVideoLink(x)}/>,
 
-    renderProviderLink = (classes, x, getProviderLink, isInline = false) => <ProviderLink
-        to={getProviderLink(x)}
+    renderProviderLink = (classes, x, getSearchLink, isInline = false) => <ProviderLink
+        to={getSearchLink(ig(x, 'sponsorLink'))}
         isInline={isInline}
     >
         <Typography
@@ -119,7 +121,7 @@ const
     renderVideoPreview = (
         classes, x, cb, isSSR, addVideoToFavoriteHandler,
         removeVideoFromFavoriteHandler, isThisVideoFavorite, thumbsLinks,
-        getProviderLink, getVideoLink,
+        getSearchLink, getVideoLink,
     ) => <VideoPreview thumb={ig(x, 'thumb')}>
         {isSSR ? null : <Fragment>
             <LoadingProgress/>
@@ -135,7 +137,7 @@ const
 
         <VideoPreviewBar>
             {isSSR ? null : ccb(cb, xs) === 0
-                ? renderProviderLink(classes, x, getProviderLink, true)
+                ? renderProviderLink(classes, x, getSearchLink, true)
                 : <Like>
                     {isThisVideoFavorite
                         ? <Favorite
@@ -160,7 +162,7 @@ const
     </VideoPreview>,
 
     VideoItem = ({
-        classes, x, cb, getVideoLink, getProviderLink, isSSR, addVideoToFavoriteHandler,
+        classes, x, cb, getVideoLink, getSearchLink, isSSR, addVideoToFavoriteHandler,
         removeVideoFromFavoriteHandler, isThisVideoFavorite,
     }) => {
         const
@@ -170,7 +172,7 @@ const
             {renderVideoPreview(
                 classes, x, cb, isSSR, addVideoToFavoriteHandler,
                 removeVideoFromFavoriteHandler, isThisVideoFavorite, thumbsLinks,
-                getProviderLink, getVideoLink,
+                getSearchLink, getVideoLink,
             )}
 
             <InfoBlock>
@@ -182,15 +184,13 @@ const
                     {ig(x, 'title')}
                 </Typography>
                 <InfoBlockInner>
-                    {ccb(cb, xs) === 0 ? null : renderProviderLink(classes, x, getProviderLink)}
+                    {ccb(cb, xs) === 0 ? null : renderProviderLink(classes, x, getSearchLink)}
 
-                    <Typography
-                        variant="body2"
-                        className={g(classes, 'typographyTags')}
-                        title={ig(x, 'tags').join(', ')}
-                    >
-                        {ig(x, 'tagsShort')}
-                    </Typography>
+                    <TagsBlock>
+                        {ig(x, 'tagsShort').map(x => <StyledLink key={x} to={getSearchLink(x)}>
+                            {x}
+                        </StyledLink>)}
+                    </TagsBlock>
                 </InfoBlockInner>
             </InfoBlock>
         </Wrapper>
@@ -223,6 +223,6 @@ export default compose(
         addVideoToFavoriteHandler: PropTypes.func,
         removeVideoFromFavoriteHandler: PropTypes.func,
         getVideoLink: PropTypes.func,
-        getProviderLink: PropTypes.func,
+        getSearchLink: PropTypes.func,
     })
 )(VideoItem)

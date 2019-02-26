@@ -3,6 +3,15 @@ import styled from 'styled-components'
 import {Link} from 'react-router-dom'
 
 export const StyledLink = styled(Link)`
+    color: ${({theme}) => theme.palette.primary.dark};
+    margin-right: 4px;
+
+    &:not(:last-child)::after {
+        content: ',';
+    }
+`
+
+export const StyledLinkBlock = styled(Link)`
     text-decoration: none;
     position: absolute;
     top: 0;
@@ -129,6 +138,12 @@ export const InfoBlock = styled.div`
 export const InfoBlockInner = styled.div`
     display: flex;
     justify-content: space-between;
+`
+
+export const TagsBlock = styled.div`
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `
 
 export const Like = styled.div`

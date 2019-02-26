@@ -29,7 +29,7 @@ const
             addVideoToFavoriteHandler={g(props, 'addVideoToFavoriteHandler')}
             removeVideoFromFavoriteHandler={g(props, 'removeVideoFromFavoriteHandler')}
             getVideoLink={g(props, 'getVideoLink')}
-            getProviderLink={g(props, 'getProviderLink')}
+            getSearchLink={g(props, 'getSearchLink')}
         />)}
     </List>
 
@@ -72,9 +72,9 @@ export default compose(
             ig(x, 'title')
         ),
 
-        getProviderLink: props => x => routerGetters.findVideos.link(
+        getSearchLink: props => x => routerGetters.findVideos.link(
             g(props, 'routerContext'),
-            {searchQuery: ig(x, 'sponsorLink')},
+            {searchQuery: x},
             ['searchQuery'],
         ),
     }),
@@ -90,6 +90,6 @@ export default compose(
         removeVideoFromFavorite: PropTypes.func,
         removeVideoFromFavoriteHandler: PropTypes.func,
         getVideoLink: PropTypes.func,
-        getProviderLink: PropTypes.func,
+        getSearchLink: PropTypes.func,
     })
 )(VideoList)

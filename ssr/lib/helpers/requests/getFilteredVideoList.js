@@ -1,4 +1,4 @@
-import {map, mapValues} from 'lodash'
+import {map, mapValues, take} from 'lodash'
 
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
 import {videoItemModel} from '../../../generic/VideoItem/models'
@@ -94,12 +94,8 @@ export default (ids, items) => map(getOrderedVideoList(ids, items), x => {
             title: getProp(x, 'title'),
             sponsorName: getProp(x, 'sponsor'),
             sponsorLink: extraLink ? extraLink[1] : `${getProp(x, 'sponsor')} porn`,
-            tags: getProp(x, 'tags'),
 
-            tagsShort: getProp(x, 'tags').reduce((acc, tag) => {
-                const newAcc = acc === '' ? tag : `${acc}, ${tag}`
-                return newAcc.length <= 22 ? newAcc : acc
-            }, ''),
+            tagsShort: take(getProp(x, 'tags'), 3),
 
             duration: `${
                 Math.floor(length / 60)

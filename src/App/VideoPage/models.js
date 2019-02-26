@@ -51,7 +51,7 @@ const
                     firstThumb: PropTypes.number.isOptional,
 
                     tags: arrayOf(PropTypes.string).isOptional,
-                    tagsShort: PropTypes.string.isOptional,
+                    tagsShort: arrayOf(PropTypes.string).isOptional,
 
                     duration: PropTypes.string.isOptional,
                     videoPageRef: PropTypes.number.isOptional,
