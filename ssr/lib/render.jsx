@@ -1,6 +1,7 @@
 import {parse, format} from 'url'
 import {find, includes} from 'lodash'
 import React from 'react'
+import Helmet from 'react-helmet'
 import {Provider} from 'react-redux'
 import {all} from 'redux-saga/effects'
 import {StaticRouter} from 'react-router'
@@ -30,6 +31,7 @@ import RouterBuilder from '../App/RouterBuilder'
 import languageActions from '../App/MainHeader/Language/actions'
 import navigationActions from '../App/MainHeader/Navigation/actions'
 import orientationActions from '../App/MainHeader/Niche/actions'
+import PageTextHelmet from '../generic/PageTextHelmet'
 import backRouterLocaleMapping, {frontRouterLocaleMapping} from '../locale-mapping/router'
 import i18n from '../locale-mapping/i18n'
 
@@ -170,7 +172,7 @@ export default (
         if (staticRouterContext.hasOwnProperty('statusCodeResolver'))
             res.status(staticRouterContext.statusCodeResolver(store.getState()))
 
-        const
+        /*const
             pageText = staticRouterContext.pageTextResolver(store.getState())
 
         let
@@ -180,11 +182,17 @@ export default (
             const
                 openGraphData = staticRouterContext.openGraphDataResolver(store.getState()),
                 routerContext = getRouterContext(store.getState()),
-                openGraphTags = getOpenGraphToHeadTags(openGraphData, routerContext, domain).map(x =>
-                    renderToString(x)).join('\n')
 
-            headTags = headTags + openGraphTags
-        }
+                openGraphTags = getOpenGraphToHeadTags(openGraphData, routerContext, domain)
+                    .map(x => renderToString(x)).join('\n')
+
+            headTags += openGraphTags
+        }*/
+        /*const
+            headTags = Helmet.renderStatic()
+        for (const k of Object.keys(headTags)) {
+            console.error(k, '---', headTags[k].toString())
+        }*/
 
         const
             serverStyleSheet = new ServerStyleSheet(),
@@ -205,9 +213,16 @@ export default (
                         </StaticRouter>
                     </Provider>
                 </JssProvider>
-            ))
+            )),
 
-        const
+            helmetData = Helmet.renderStatic(),
+
+            headTags = `
+                ${helmetData.title.toString()}
+                ${helmetData.meta.toString()}
+                ${helmetData.link.toString()}
+            `,
+
             styledComponentsStyles = serverStyleSheet.getStyleTags(),
 
             jssStyles = `<style id="jss-server-side">
@@ -220,9 +235,17 @@ export default (
                 )}
             </script>`
 
-        return res.end(`${g(layout, 'pre')}
+        return res.end(`${
+            g(layout, 'pre', 'beforeHtmlAttrs') +
+            helmetData.htmlAttributes.toString() +
+            g(layout, 'pre', 'afterHtmlAttrs')
+        }
             ${headTags}
-            ${g(layout, 'middle')}
+            ${
+                g(layout, 'middle', 'beforeBodyAttrs') +
+                helmetData.bodyAttributes.toString() +
+                g(layout, 'middle', 'afterBodyAttrs')
+            }
             ${styledComponentsStyles}
             ${jssStyles}
             ${html}
