@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- WARNING! "helmet_*" is a marker for SSR which will be replaced during render -->
+<html helmet_html_attributes>
   <head>
     <meta charset="utf-8">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
@@ -9,7 +10,8 @@
     <!-- WARNING! This <title> is supposed to be left as is (SSR use it as separator)! -->
     <title>The internet is for pOOOrn</title>
   </head>
-  <body>
+  <!-- WARNING! "helmet_*" is a marker for SSR which will be replaced during render -->
+  <body helmet_body_attributes>
     <!-- WARNING! This script#loading-script is supposed to be left as is (SSR use it as separator)! -->
     <script id="loading-script">
       // this script is only for case when JS is enabled in browser
