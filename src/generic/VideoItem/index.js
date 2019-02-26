@@ -33,72 +33,72 @@ import {
     TagsBlock,
     Like,
     Duration,
-    VideoPreviewThumbs,
-    LoadingProgress,
+    // VideoPreviewThumbs,
+    // LoadingProgress,
 } from './assets'
 
-class PreviewThumbs extends Component {
-    state = {
-        currentThumb: 0,
-        showed: false,
-    }
+// class PreviewThumbs extends Component {
+//     state = {
+//         currentThumb: 0,
+//         showed: false,
+//     }
 
-    mouseEnter = () => {
-        // preloading images
-        this.props.thumbsLinks.map(x => set(new Image(), 'src', x)).toArray()
+//     mouseEnter = () => {
+//         // preloading images
+//         this.props.thumbsLinks.map(x => set(new Image(), 'src', x)).toArray()
 
-        // reset old timers in case they for some reason exists
-        clearInterval(this.timeoutTimer)
-        clearInterval(this.intervalTimer)
+//         // reset old timers in case they for some reason exists
+//         clearInterval(this.timeoutTimer)
+//         clearInterval(this.intervalTimer)
 
-        this.timeoutTimer = setTimeout(() => {
-            this.intervalTimer = setInterval(g(this, 'progress'), 500)
-            this.setState({showed: true})
-        }, 1000)
-    }
+//         this.timeoutTimer = setTimeout(() => {
+//             this.intervalTimer = setInterval(g(this, 'progress'), 500)
+//             this.setState({showed: true})
+//         }, 1000)
+//     }
 
-    mouseLeave = () => {
-        this.stopProgress()
-    }
+//     mouseLeave = () => {
+//         this.stopProgress()
+//     }
 
-    componentWillUnmount() {
-        this.stopProgress()
-    }
+//     componentWillUnmount() {
+//         this.stopProgress()
+//     }
 
-    stopProgress = () => {
-        clearInterval(this.timeoutTimer)
-        clearInterval(this.intervalTimer)
+//     stopProgress = () => {
+//         clearInterval(this.timeoutTimer)
+//         clearInterval(this.intervalTimer)
 
-        this.setState({
-            currentThumb: 0,
-            showed: false,
-        })
-    }
+//         this.setState({
+//             currentThumb: 0,
+//             showed: false,
+//         })
+//     }
 
-    progress = () => {
-        const
-            currentThumb = g(this, 'state', 'currentThumb'),
-            thumbsLinks = g(this, 'props', 'thumbsLinks')
+//     progress = () => {
+//         const
+//             currentThumb = g(this, 'state', 'currentThumb'),
+//             thumbsLinks = g(this, 'props', 'thumbsLinks')
 
-        this.setState({
-            currentThumb: g(thumbsLinks, 'size') - 1 > currentThumb ? currentThumb + 1 : 0
-        })
-    }
+//         this.setState({
+//             currentThumb: g(thumbsLinks, 'size') - 1 > currentThumb ? currentThumb + 1 : 0
+//         })
+//     }
 
-    render() {
-        const
-            thumbsLinks = g(this, 'props', 'thumbsLinks')
+//     render() {
+//         const
+//             thumbsLinks = g(this, 'props', 'thumbsLinks')
 
-        return <VideoPreviewThumbs
-            onMouseEnter={g(this, 'mouseEnter')}
-            onMouseLeave={g(this, 'mouseLeave')}
-            thumb={ig(thumbsLinks, g(this, 'state', 'currentThumb'))}
-            showed={g(this, 'state', 'showed')}
-        >
-            {renderLink(g(this.props, 'x'), g(this.props, 'getVideoLink'))}
-        </VideoPreviewThumbs>
-    }
-}
+//         return <VideoPreviewThumbs
+//             onMouseEnter={g(this, 'mouseEnter')}
+//             onMouseLeave={g(this, 'mouseLeave')}
+//             thumb={ig(thumbsLinks, g(this, 'state', 'currentThumb'))}
+//             showed={g(this, 'state', 'showed')}
+//         >
+//             {renderLink(g(this.props, 'x'), g(this.props, 'getVideoLink'))}
+//         </VideoPreviewThumbs>
+//     }
+// }
 
 const
     renderLink = (x, getVideoLink) => typeof ig(x, 'videoPageRef') === 'string' // external resource
@@ -121,9 +121,9 @@ const
     renderVideoPreview = (
         classes, x, cb, isSSR, addVideoToFavoriteHandler,
         removeVideoFromFavoriteHandler, isThisVideoFavorite, thumbsLinks,
-        getSearchLink, getVideoLink,
-    ) => <VideoPreview thumb={ig(x, 'thumb')}>
-        {isSSR ? null : <Fragment>
+        getSearchLink, getVideoLink, videoPreviewStyle,
+    ) => <VideoPreview style={videoPreviewStyle}>
+        {/* {isSSR ? null : <Fragment>
             <LoadingProgress/>
             <PreviewThumbs
                 thumbsLinks={thumbsLinks}
@@ -131,7 +131,7 @@ const
                 x={x}
                 getVideoLink={getVideoLink}
             />
-        </Fragment>}
+        </Fragment>} */}
 
         {isSSR ? renderLink(x, getVideoLink) : null}
 
@@ -163,7 +163,7 @@ const
 
     VideoItem = ({
         classes, x, cb, getVideoLink, getSearchLink, isSSR, addVideoToFavoriteHandler,
-        removeVideoFromFavoriteHandler, isThisVideoFavorite,
+        removeVideoFromFavoriteHandler, isThisVideoFavorite, videoPreviewStyle
     }) => {
         const
             thumbsLinks = ig(x, 'thumbs').map(thumb => replace(ig(x, 'thumbMask'), '{num}', thumb))
@@ -172,7 +172,7 @@ const
             {renderVideoPreview(
                 classes, x, cb, isSSR, addVideoToFavoriteHandler,
                 removeVideoFromFavoriteHandler, isThisVideoFavorite, thumbsLinks,
-                getSearchLink, getVideoLink,
+                getSearchLink, getVideoLink, videoPreviewStyle,
             )}
 
             <InfoBlock>
@@ -203,6 +203,11 @@ export default compose(
             g(props, 'favoriteVideoList').find(id => id === ig(g(props, 'x'), 'id'))
         ),
     })),
+    withPropsOnChange(['x'], props => ({
+        videoPreviewStyle: Object.freeze({
+            backgroundImage: `url(${ig(props.x, 'thumb')})`,
+        }),
+    })),
     onlyUpdateForKeys(['cb', 'x', 'isThisVideoFavorite']),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.exact({
@@ -218,6 +223,8 @@ export default compose(
         isSSR: PropTypes.bool,
         cb: PropTypes.oneOf(breakpoints),
         x: immutableVideoItemModel,
+        isThisVideoFavorite: PropTypes.bool,
+        videoPreviewStyle: PropTypes.object,
         favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),
 
         addVideoToFavoriteHandler: PropTypes.func,

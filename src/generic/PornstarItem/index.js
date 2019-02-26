@@ -21,7 +21,7 @@ import {Wrapper, Thumb, InfoBar, Like, StyledLinkBlock} from './assets'
 const
     PornstarItem = props => <Wrapper>
         <StyledLinkBlock to={props.linkBuilder(ig(props.x, 'subPage'))}>
-            <Thumb thumb={ig(props.x, 'thumb')} />
+            <Thumb style={g(props, 'pornstarPreviewStyle')}/>
             <Typography variant="body2" className={g(props, 'classes', 'typographyTitle')}>
                 {ig(props.x, 'name')}
             </Typography>
@@ -54,6 +54,11 @@ export default compose(
         isThisPornstarFavorite: Boolean(
             g(props, 'favoritePornstarList').find(id => id === ig(g(props, 'x'), 'id'))
         ),
+    })),
+    withPropsOnChange(['x'], props => ({
+        pornstarPreviewStyle: Object.freeze({
+            backgroundImage: `url(${ig(props.x, 'thumb')})`,
+        }),
     })),
     onlyUpdateForKeys(['isThisPornstarFavorite']),
     withStyles(muiStyles),

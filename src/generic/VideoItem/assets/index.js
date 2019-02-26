@@ -100,7 +100,7 @@ export const VideoPreview = styled(VideoPreviewCommon)`
     display: flex;
     align-items: flex-end;
     background-color: ${({theme}) => theme.palette.primary.light};
-    background-image: ${({thumb}) => `url(${thumb})`};
+    ${'' /* background-image: ${({thumb}) => `url(${thumb})`}; */}
     background-size: cover;
     background-repeat: no-repeat;
     border-radius: 1px;
@@ -116,17 +116,17 @@ export const VideoPreview = styled(VideoPreviewCommon)`
     }
 `
 
-export const VideoPreviewThumbs = styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    opacity: ${({showed}) => showed ? 1 : 0};
-    background-image: ${({thumb}) => `url(${thumb})`};
-    background-size: cover;
-    background-repeat: no-repeat;
-`
+// export const VideoPreviewThumbs = styled.div`
+//     position: absolute;
+//     top: 0;
+//     left: 0;
+//     right: 0;
+//     bottom: 0;
+//     opacity: ${({showed}) => showed ? 1 : 0};
+//     background-image: ${({thumb}) => `url(${thumb})`};
+//     background-size: cover;
+//     background-repeat: no-repeat;
+// `
 
 export const InfoBlock = styled.div`
     width: 100%;
