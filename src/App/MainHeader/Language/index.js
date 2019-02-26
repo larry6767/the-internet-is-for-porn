@@ -3,10 +3,10 @@ import {Select, MenuItem, OutlinedInput, CircularProgress, Chip} from '@material
 import {withStyles} from '@material-ui/core/styles'
 import WarningIcon from '@material-ui/icons/Warning'
 import {connect} from 'react-redux'
-import {compose, lifecycle} from 'recompose'
+import {compose, lifecycle, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {Record} from 'immutable'
 
-import {immutableProvedGet as ig} from '../../helpers'
+import {plainProvedGet as g, immutableProvedGet as ig, setPropTypes, PropTypes, ImmutablePropTypes} from '../../helpers'
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
@@ -19,16 +19,12 @@ import {
 } from './assets'
 
 const
-    LanguageSelectMaterial = ({classes, siteLocales, currentLanguage, chooseLanguage}) => <Select
-        classes={{
-            select: classes.select
-        }}
+    LanguageSelectMaterial = ({classedBounds, siteLocales, currentLanguage, chooseLanguage}) => <Select
+        classes={g(classedBounds, 'select')}
         value={currentLanguage}
         input={
             <OutlinedInput
-                classes={{
-                    notchedOutline: classes.notchedOutline,
-                }}
+                classes={g(classedBounds, 'outlinedInput')}
                 onChange={chooseLanguage}
                 labelWidth={0}
             />
@@ -36,9 +32,7 @@ const
     >
         {
             siteLocales.map(siteLocale => <MenuItem
-                classes={{
-                    root: classes.menuItemRoot
-                }}
+                classes={g(classedBounds, 'menuItem')}
                 key={ig(siteLocale, 'code')}
                 value={ig(siteLocale, 'code')}
             >
@@ -68,7 +62,7 @@ const
 
     LanguageSelect = ({
         isSSR,
-        classes,
+        classedBounds,
         siteLocales,
         siteLocalesState,
         currentLanguage,
@@ -85,13 +79,13 @@ const
 
         : isSSR
         ? <LanguageSelectInlined
-            classes={classes}
+            classedBounds={classedBounds}
             siteLocales={siteLocales}
             currentLanguage={currentLanguage}
             chooseLanguage={chooseLanguage}
         />
         : <LanguageSelectMaterial
-            classes={classes}
+            classedBounds={classedBounds}
             siteLocales={siteLocales}
             currentLanguage={currentLanguage}
             chooseLanguage={chooseLanguage}
@@ -127,6 +121,7 @@ export default compose(
             },
         })
     ),
+    onlyUpdateForKeys(['siteLocalesState']),
     lifecycle({
         componentDidMount() {
             if (
@@ -137,5 +132,32 @@ export default compose(
             }
         },
     }),
-    withStyles(muiStyles)
+    withStyles(muiStyles),
+    withPropsOnChange([], props => ({
+        classedBounds: Object.freeze({
+            menuItem: Object.freeze({root: g(props, 'classes', 'menuItemRoot')}),
+            select: Object.freeze({select: g(props, 'classes', 'select')}),
+            outlinedInput: Object.freeze({notchedOutline: g(props, 'classes', 'notchedOutline')}),
+        })
+    })),
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        classes: PropTypes.exact({
+            menuItemRoot: PropTypes.string,
+            select: PropTypes.string,
+            notchedOutline: PropTypes.string,
+        }),
+        classedBounds: PropTypes.exact({
+            menuItem: PropTypes.object,
+            select: PropTypes.object,
+            outlinedInput: PropTypes.object,
+        }),
+        siteLocales: ImmutablePropTypes.list,
+        siteLocalesState: ImmutablePropTypes.exactRecordOf({
+            isLoading: PropTypes.bool,
+            isLoaded: PropTypes.bool,
+            isFailed: PropTypes.bool,
+        }),
+        currentLanguage: PropTypes.nullable(PropTypes.string),
+        isSSR: PropTypes.bool,
+    })
 )(LanguageSelect)

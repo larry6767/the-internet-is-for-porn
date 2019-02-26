@@ -1,7 +1,4 @@
 export const muiStyles = {
-    menuItemRoot: {
-        display: 'flex'
-    },
     select: {
         color: '#ffffff',
         paddingRight: 25,

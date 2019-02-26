@@ -1,6 +1,6 @@
 import {includes} from 'lodash'
 import React from 'react'
-import {compose, withHandlers, withPropsOnChange} from 'recompose'
+import {compose, withHandlers, withPropsOnChange, onlyUpdateForKeys} from 'recompose'
 import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 import {Tabs, Tab} from '@material-ui/core'
@@ -35,7 +35,7 @@ import {
 
 const
     Navigation = ({
-        classes, isSSR, i18nNav, goToPath, getLinkByNavKey, preparedCurrentSection, navMenuItems
+        classedBounds, isSSR, i18nNav, goToPath, getLinkByNavKey, preparedCurrentSection, navMenuItems
     }) => <Nav>
         <Tabs
             value={includes(navMenuItems, preparedCurrentSection) ? preparedCurrentSection : false}
@@ -55,10 +55,7 @@ const
                     href={link}
                     value={navKey}
                     label={ig(i18nNav, navKey, 'title')}
-                    classes={{
-                        root: g(classes, 'labelRoot'),
-                        label: g(classes, 'label'),
-                    }}
+                    classes={g(classedBounds, 'tab')}
                 />
             })}
         </Tabs>
@@ -111,10 +108,25 @@ export default compose(
                 : currentSection
         }
     }),
-
+    onlyUpdateForKeys(['currentSection']),
     withStyles(muiStyles),
+    withPropsOnChange([], props => ({
+        classedBounds: Object.freeze({
+            tab: Object.freeze({
+                root: g(props, 'classes', 'labelRoot'),
+                label: g(props, 'classes', 'label'),
+            }),
+        }),
+    })),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.object,
+        classes: PropTypes.exact({
+            labelRoot: PropTypes.string,
+            label: PropTypes.string,
+        }),
+        classedBounds: PropTypes.exact({
+            tab: PropTypes.object,
+        }),
+
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
         i18nNav: immutableI18nNavigationModel,
