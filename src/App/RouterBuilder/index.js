@@ -3,14 +3,7 @@ import React from 'react'
 import {Route, Switch} from 'react-router-dom'
 import {compose} from 'recompose'
 
-import {
-    plainProvedGet as g,
-    immutableProvedGet as ig,
-    setPropTypes,
-    get404PageText,
-    getPageRequestParams,
-} from '../helpers'
-
+import {plainProvedGet as g, setPropTypes, getPageRequestParams} from '../helpers'
 import status500 from '../helpers/status500BranchResolver'
 
 import {routerContextModel, orientationCodes, defaultOrientationCode} from '../models'
@@ -102,7 +95,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                 x.saga = loadHomeFlow.bind(null, action)
                 x.statusCodeResolver = status500(['app', HOME, 'isFailed'])
-                x.pageTextResolver = state => ig(state, ['app', HOME, 'pageText'])
                 x.currentOrientation = orientationCode
                 x.currentSection = currentSection
                 return null
@@ -133,7 +125,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadAllNichesPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', ALL_NICHES, 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', ALL_NICHES, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -160,7 +151,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadNichePageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', NICHE, 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', NICHE, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -187,7 +177,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadNichePageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', NICHE, 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', NICHE, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -219,7 +208,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadAllMoviesPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', ALL_MOVIES, 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', ALL_MOVIES, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -246,7 +234,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadAllMoviesPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', ALL_MOVIES, 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', ALL_MOVIES, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -278,7 +265,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadPornstarsPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', PORNSTARS, 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', PORNSTARS, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -305,8 +291,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadPornstarPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', PORNSTAR, 'isFailed'])
-                    x.pageTextResolver = state =>
-                        ig(state, ['app', PORNSTAR, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -340,7 +324,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
             x.saga = loadFavoritePageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', FAVORITE, 'isFailed'])
-            x.pageTextResolver = state => ig(state, ['app', FAVORITE, 'pageText'])
             x.currentSection = currentSection
             // x.currentOrientation = orientationCode
             return null
@@ -363,7 +346,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
             x.saga = loadFavoritePornstarsPageFlow.bind(null, action)
             x.statusCodeResolver = status500(['app', FAVORITE_PORNSTARS, 'isFailed'])
-            x.pageTextResolver = state => ig(state, ['app', FAVORITE_PORNSTARS, 'pageText'])
             x.currentSection = currentSection
             // x.currentOrientation = orientationCode
             return null
@@ -392,9 +374,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadVideoPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', VIDEO, 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', VIDEO, 'pageText'])
-                    x.openGraphDataResolver = state =>
-                        ig(state, ['app', VIDEO, 'openGraphData'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -426,7 +405,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadFindVideosPageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', FIND_VIDEOS, 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', FIND_VIDEOS, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -458,7 +436,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadSitePageFlow.bind(null, action)
                     x.statusCodeResolver = status500(['app', SITE, 'isFailed'])
-                    x.pageTextResolver = state => ig(state, ['app', SITE, 'pageText'])
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
@@ -489,7 +466,6 @@ const RouterBuilder = ({routerContext: r}) => <Switch>
 
                     x.saga = loadNotFoundPageFlow.bind(null, action)
                     x.statusCodeResolver = () => 404
-                    x.pageTextResolver = state => get404PageText(state)
                     x.currentOrientation = orientationCode
                     x.currentSection = currentSection
                     return null
