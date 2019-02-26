@@ -43,13 +43,13 @@ import actions from './actions'
 
 const
     Pornstar = ({
-        cb, i18nOrdering, i18nButtons, i18nLabelShowing, i18nPornstarInfoParameters,
+        cb, htmlLang, i18nOrdering, i18nButtons, i18nLabelShowing, i18nPornstarInfoParameters,
         data, chooseSort, isSSR, favoritePornstarList,
         controlLinkBuilder, modelLinkBuilder,
         addToFavoriteHandler, removeFromFavoriteHandler,
         orderedPornstarInfoForTable, setPageWrapperRef, pageWrapperRef,
     }) => <Fragment>
-        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
         {!pageWrapperRef && !isSSR ? null : <Lists
             cb={cb}
             maxHeight={!isSSR ? g(pageWrapperRef, 'clientHeight') : null}
@@ -117,6 +117,7 @@ export default compose(
             data: ig(state, 'app', 'pornstar'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
+            htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
@@ -215,10 +216,12 @@ export default compose(
         orderedPornstarInfoForTable: immutablePornstarInfoForTableModel,
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
+        htmlLang: PropTypes.string,
         i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,
         i18nPornstarInfoParameters: immutableI18nPornstarInfoParametersModel,
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
+
         pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(
             typeof Element === 'undefined' ? () => {} : Element // plug for SSR
         )),

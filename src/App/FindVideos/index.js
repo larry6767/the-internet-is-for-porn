@@ -14,6 +14,7 @@ import {
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
     setPropTypes,
+    PropTypes,
 } from '../helpers'
 
 import {model} from './models'
@@ -33,6 +34,7 @@ const
     FindVideos = ({
         classes,
         currentBreakpoint,
+        htmlLang,
         i18nOrdering,
         i18nButtons,
         i18nLabelShowing,
@@ -41,7 +43,7 @@ const
         isSSR,
         controlLinkBuilder,
     }) => <Fragment>
-        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
         <PageWrapper>
             <Typography
                 variant="h4"
@@ -98,6 +100,7 @@ export default compose(
             data: ig(state, 'app', 'findVideos'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
+            htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
@@ -138,6 +141,7 @@ export default compose(
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         data: model,
+        htmlLang: PropTypes.string,
     }),
     loadingWrapper({
         withControlBar: true,

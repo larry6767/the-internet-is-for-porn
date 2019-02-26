@@ -29,8 +29,8 @@ import actions from './actions'
 import {PageWrapper} from './assets'
 
 const
-    Pornstars = ({data, linkBuilder, i18nPornstarsHeader}) => <Fragment>
-        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+    Pornstars = ({data, linkBuilder, htmlLang, i18nPornstarsHeader}) => <Fragment>
+        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
         <PageWrapper>
             <Typography variant="h4" gutterBottom>
                 {i18nPornstarsHeader}
@@ -62,6 +62,7 @@ export default compose(
         state => ({
             data: ig(state, 'app', 'pornstars'),
             routerContext: getRouterContext(state),
+            htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
             i18nPornstarsHeader: getHeaderWithOrientation(state, 'pornstars'),
         }),
         {
@@ -89,6 +90,7 @@ export default compose(
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         data: model,
         routerContext: routerContextModel,
+        htmlLang: PropTypes.string,
         i18nPornstarsHeader: PropTypes.string,
 
         loadPageRequest: PropTypes.func,

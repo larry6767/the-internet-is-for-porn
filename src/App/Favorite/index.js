@@ -42,13 +42,14 @@ const
         classes,
         cb,
         isSSR,
+        htmlLang,
         i18nButtons,
         i18nLabelShowing,
         data,
         controlLinkBuilder,
         controlFavoriteLinkBuilder,
     }) => <Fragment>
-        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
         <PageWrapper>
             <Typography
                 variant="h4"
@@ -106,6 +107,7 @@ export default compose(
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             routerContext: getRouterContext(state),
+            htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
             data: ig(state, 'app', 'favorite'),
@@ -144,6 +146,7 @@ export default compose(
         isSSR: PropTypes.bool,
         cb: PropTypes.oneOf(breakpoints),
         routerContext: routerContextModel,
+        htmlLang: PropTypes.string,
         i18nButtons: immutableI18nButtonsModel,
         i18nLabelShowing: PropTypes.string,
         data: model,

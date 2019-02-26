@@ -9,6 +9,7 @@ import deepFreeze from '../lib/helpers/deepFreeze'
 const
     mapping = deepFreeze({
         eng: {
+            htmlLangAttribute: 'en',
             labels: {
                 providedBy: 'provided by',
                 showing: 'Showing',
@@ -145,6 +146,7 @@ const
             },
         },
         deu: {
+            htmlLangAttribute: 'de',
             labels: {
                 providedBy: 'zur Verfügung gestellt von',
                 showing: 'Anzeigen',
@@ -286,6 +288,7 @@ const
             },
         },
         ita: {
+            htmlLangAttribute: 'it',
             labels: {
                 providedBy: 'fornito da',
                 showing: 'Mostrando',
@@ -424,6 +427,7 @@ const
             },
         },
         fra: {
+            htmlLangAttribute: 'fr',
             labels: {
                 providedBy: 'fourni par',
                 showing: 'Montrant',
@@ -562,6 +566,7 @@ const
             },
         },
         spa: {
+            htmlLangAttribute: 'es',
             labels: {
                 providedBy: 'proporcionado por',
                 showing: 'Demostración',
@@ -701,6 +706,7 @@ const
             },
         },
         por: {
+            htmlLangAttribute: 'pt',
             labels: {
                 providedBy: 'fornecido por',
                 showing: 'Mostrando',
@@ -839,6 +845,7 @@ const
             },
         },
         swe: {
+            htmlLangAttribute: 'sv',
             labels: {
                 providedBy: 'tillhandahålls av',
                 showing: 'Som visar',
@@ -975,6 +982,7 @@ const
             },
         },
         nld: {
+            htmlLangAttribute: 'nl',
             labels: {
                 providedBy: 'geleverd door',
                 showing: 'Tonen',
@@ -1114,6 +1122,7 @@ const
             },
         },
         fin: {
+            htmlLangAttribute: 'fi',
             labels: {
                 providedBy: 'toimittamat',
                 showing: 'Näytetään',
@@ -1251,6 +1260,7 @@ const
             },
         },
         rus: {
+            htmlLangAttribute: 'ru',
             labels: {
                 providedBy: 'предоставлено',
                 showing: 'Показано',
@@ -1388,6 +1398,7 @@ const
             },
         },
         tur: {
+            htmlLangAttribute: 'tr',
             labels: {
                 providedBy: 'tarafından sunulan',
                 showing: 'Gösterme',

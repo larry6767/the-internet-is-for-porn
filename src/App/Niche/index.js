@@ -40,6 +40,7 @@ import actions from './actions'
 const
     Niche = ({
         cb,
+        htmlLang,
         i18nOrdering,
         i18nButtons,
         data,
@@ -56,9 +57,8 @@ const
         i18nLabelShowing,
         setPageWrapperRef,
         pageWrapperRef,
-
     }) => <Fragment>
-        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
         {!pageWrapperRef && !isSSR ? null : <Lists
             cb={cb}
             maxHeight={!isSSR ? g(pageWrapperRef, 'clientHeight') : null}
@@ -122,6 +122,7 @@ export default compose(
             data: ig(state, 'app', 'niche'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
+            htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nListNichesHeader: getHeaderWithOrientation(state, 'listNiches'),
@@ -219,11 +220,13 @@ export default compose(
         data: model,
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
+        htmlLang: PropTypes.string,
         i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,
         i18nListNichesHeader: PropTypes.string,
         i18nListArchiveHeader: PropTypes.string,
         i18nLabelShowing: PropTypes.string,
+
         pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(
             typeof Element === 'undefined' ? () => {} : Element // plug for SSR
         )),

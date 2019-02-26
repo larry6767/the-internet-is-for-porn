@@ -30,8 +30,8 @@ import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
 const
-    Favorite = props => <Fragment>
-        <PageTextHelmet pageText={g(props, 'pageText')}/>
+    NotFound = props => <Fragment>
+        <PageTextHelmet htmlLang={g(props, 'htmlLang')} pageText={g(props, 'pageText')}/>
         <PageWrapper>
             <Typography variant="h4" gutterBottom>
                 {ig(props.pageText, 'headerTitle')}
@@ -61,6 +61,7 @@ export default compose(
             data: ig(state, 'app', 'notFound'),
             routerContext: getRouterContext(state),
             pageText: get404PageText(state),
+            htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -90,8 +91,9 @@ export default compose(
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
+        htmlLang: PropTypes.string,
     }),
     loadingWrapper({
         withMoviesList: true,
     })
-)(Favorite)
+)(NotFound)
