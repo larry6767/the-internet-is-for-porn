@@ -45,9 +45,14 @@ import {
 } from './assets'
 
 const
-    renderLink = (x, getVideoLink) => typeof ig(x, 'videoPageRef') === 'string' // external resource
-        ? <NativeLink href={ig(x, 'videoPageRef')} target="_blank" rel="noopener noreferrer"/>
-        : <StyledLinkBlock to={getVideoLink(x)}/>,
+    renderLink = (x, getVideoLink, component) => typeof ig(x, 'videoPageRef') === 'string'
+        // external resource
+        ? <NativeLink href={ig(x, 'videoPageRef')} target="_blank" rel="noopener noreferrer">
+            {component}
+        </NativeLink>
+        : <StyledLinkBlock to={getVideoLink(x)}>
+            {component}
+        </StyledLinkBlock>,
 
     renderProviderLink = (classes, x, getSearchLink, isInline = false) => <ProviderLink
         to={getSearchLink(ig(x, 'sponsorLink'))}
@@ -198,7 +203,8 @@ const
         classes, x, cb, getVideoLink, getSearchLink, isSSR, addVideoToFavoriteHandler,
         removeVideoFromFavoriteHandler, isThisVideoFavorite,
     }) => <Wrapper>
-        <VideoPreviewRender
+
+        {renderLink(x, getVideoLink, <VideoPreviewRender
             classes={classes}
             x={x}
             cb={cb}
@@ -208,7 +214,7 @@ const
             isThisVideoFavorite={isThisVideoFavorite}
             getSearchLink={getSearchLink}
             getVideoLink={getVideoLink}
-        />
+        />)}
 
         <InfoBlock>
             <Typography
