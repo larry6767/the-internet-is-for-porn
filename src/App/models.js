@@ -178,6 +178,26 @@ const
                 props.thumb = PropTypes.string
 
             return listOf(exact(props))
+        },
+
+    pageTextModelBuilder = process.env.NODE_ENV === 'production' ? null :
+        (isImmutable, isVideoPage = false) => {
+            const
+                exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
+                props = {
+                    title: PropTypes.string,
+                    description: PropTypes.string,
+                    keywords: PropTypes.string,
+                    headerTitle: PropTypes.nullable(PropTypes.string),
+                    headerDescription: PropTypes.string,
+                    listHeader: PropTypes.nullable(PropTypes.string),
+                    listHeaderEmpty: PropTypes.nullable(PropTypes.string),
+                }
+
+            return isVideoPage ? exact({
+                ...props,
+                galleryTitle: PropTypes.string,
+            }) : exact(props)
         }
 
 export const
@@ -203,16 +223,9 @@ export const
 
 
     immutablePageTextModel = process.env.NODE_ENV === 'production' ? null :
-        ImmutablePropTypes.exact({
-            title: PropTypes.string.isOptional,
-            description: PropTypes.string.isOptional,
-            keywords: PropTypes.string.isOptional,
-            headerTitle: PropTypes.nullable(PropTypes.string.isOptional),
-            headerDescription: PropTypes.string.isOptional,
-            listHeader: PropTypes.nullable(PropTypes.string.isOptional),
-            listHeaderEmpty: PropTypes.nullable(PropTypes.string.isOptional),
-            galleryTitle: PropTypes.nullable(PropTypes.string.isOptional),
-        }),
+        pageTextModelBuilder(true),
+    immutableVideoPageTextModel = process.env.NODE_ENV === 'production' ? null :
+        pageTextModelBuilder(true, true),
 
     modelsListModel = process.env.NODE_ENV === 'production' ? null :
         modelsListModelBuilder(false, false),
