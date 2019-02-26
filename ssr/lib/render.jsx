@@ -11,15 +11,7 @@ import {SheetsRegistry} from 'jss'
 import JssProvider from 'react-jss/lib/JssProvider'
 import {createGenerateClassName} from '@material-ui/core/styles'
 
-import {
-    plainProvedGet as g,
-    getRouterContext,
-    getPageTextToHeadTags,
-    getOpenGraphToHeadTags,
-    PropTypes,
-    assertPropTypes,
-} from '../App/helpers'
-
+import {plainProvedGet as g, getRouterContext, PropTypes, assertPropTypes} from '../App/helpers'
 import {getPureDomain} from '../App/helpers/hostLocale'
 import {getLegacyOrientationPrefixes, logRequestError} from './helpers'
 import {getPageData as requestPageData} from './requests'
@@ -63,8 +55,6 @@ const
                 currentOrientation: PropTypes.string.isOptional,
                 saga: PropTypes.func.isOptional,
                 statusCodeResolver: PropTypes.func.isOptional,
-                pageTextResolver: PropTypes.func,
-                openGraphDataResolver: PropTypes.func.isOptional,
             }),
         ])
 
@@ -171,28 +161,6 @@ export default (
 
         if (staticRouterContext.hasOwnProperty('statusCodeResolver'))
             res.status(staticRouterContext.statusCodeResolver(store.getState()))
-
-        /*const
-            pageText = staticRouterContext.pageTextResolver(store.getState())
-
-        let
-            headTags = getPageTextToHeadTags(pageText).map(x => renderToString(x)).join('\n')
-
-        if (staticRouterContext.hasOwnProperty('openGraphDataResolver')) {
-            const
-                openGraphData = staticRouterContext.openGraphDataResolver(store.getState()),
-                routerContext = getRouterContext(store.getState()),
-
-                openGraphTags = getOpenGraphToHeadTags(openGraphData, routerContext, domain)
-                    .map(x => renderToString(x)).join('\n')
-
-            headTags += openGraphTags
-        }*/
-        /*const
-            headTags = Helmet.renderStatic()
-        for (const k of Object.keys(headTags)) {
-            console.error(k, '---', headTags[k].toString())
-        }*/
 
         const
             serverStyleSheet = new ServerStyleSheet(),
