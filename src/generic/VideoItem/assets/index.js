@@ -73,18 +73,6 @@ export const VideoPreviewBar = styled.div`
     ${({theme}) => theme.media.mobile`transform: translateY(0);`}
 `
 
-export const LoadingProgress = styled.div`
-    opacity: 0;
-    position: absolute;
-    height: 2px;
-    top: 0;
-    right: 0;
-    left: 0;
-    background-color: ${({theme}) => theme.palette.primary.light};
-    transform: translateX(-100%);
-    transition: transform 1s;
-`
-
 const VideoPreviewCommon = styled.div`
     width: 100%;
 
@@ -100,33 +88,36 @@ export const VideoPreview = styled(VideoPreviewCommon)`
     display: flex;
     align-items: flex-end;
     background-color: ${({theme}) => theme.palette.primary.light};
-    ${'' /* background-image: ${({thumb}) => `url(${thumb})`}; */}
     background-size: cover;
     background-repeat: no-repeat;
     border-radius: 1px;
     overflow: hidden;
+    z-index: 0;
 
     &:hover ${VideoPreviewBar} {
         transform: translateY(0px);
     }
 
-    &:hover ${LoadingProgress} {
+    &::after {
+        display: ${({hasOnlyOneThumb}) => hasOnlyOneThumb ? 'none' : 'block'};
+        content: '';
+        opacity: 0;
+        position: absolute;
+        height: 2px;
+        top: 0;
+        right: 0;
+        left: 0;
+        background-color: ${({theme}) => theme.palette.primary.light};
+        transform: translateX(-100%);
+        transition: transform 1s;
+        z-index: 1;
+    }
+
+    &:hover::after {
         transform: translateX(0);
         opacity: 1;
     }
 `
-
-// export const VideoPreviewThumbs = styled.div`
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     right: 0;
-//     bottom: 0;
-//     opacity: ${({showed}) => showed ? 1 : 0};
-//     background-image: ${({thumb}) => `url(${thumb})`};
-//     background-size: cover;
-//     background-repeat: no-repeat;
-// `
 
 export const InfoBlock = styled.div`
     width: 100%;
@@ -154,6 +145,7 @@ export const Like = styled.div`
     border-radius: 1px;
     min-height: 35px;
     min-width: 40px;
+    cursor: pointer;
 `
 
 export const Duration = styled.div`
