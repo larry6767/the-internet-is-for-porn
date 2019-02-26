@@ -58,9 +58,9 @@ const
 
     Home = ({
         classedBounds, data, routerContext,
-        i18nNichesHeader, i18nPornstarsHeader,
+        htmlLang, i18nNichesHeader, i18nPornstarsHeader,
     }) => <Fragment>
-        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
         <PageWrapper>
             <Typography variant="h4" gutterBottom>
                 {i18nNichesHeader}
@@ -123,6 +123,7 @@ export default compose(
             cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             data: ig(state, 'app', 'home'),
             routerContext: getRouterContext(state),
+            htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nNichesHeader: getHeaderWithOrientation(state, 'niches'),
             i18nPornstarsHeader: getHeaderWithOrientation(state, 'pornstars'),
@@ -179,6 +180,7 @@ export default compose(
         cb: PropTypes.string,
         data: model,
         routerContext: routerContextModel,
+        htmlLang: PropTypes.string,
         i18nOrdering: immutableI18nOrderingModel,
         i18nNichesHeader: PropTypes.string,
         i18nPornstarsHeader: PropTypes.string,

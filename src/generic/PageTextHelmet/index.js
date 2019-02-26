@@ -1,18 +1,18 @@
 import React from 'react'
 import Helmet from 'react-helmet'
 
-import {getPageTextToHeadTags, getOpenGraphToHeadTags} from '../../App/helpers'
+import {getPageTextToHeadTags, getOpenGraphToHeadTags, plainProvedGet as g} from '../../App/helpers'
 
 const
     PageTextHelmet = ({
+        htmlLang,
         pageText,
         openGraphData = null,
         routerContext = null,
         domain = null,
     }) => React.createElement(Helmet, null, ...(
         [
-            // TODO FIXME implement localized "lang" attribute
-            <html lang="en"/>,
+            <html lang={g(htmlLang, [])}/>,
         ].concat(
             getPageTextToHeadTags(pageText)
         ).concat(
