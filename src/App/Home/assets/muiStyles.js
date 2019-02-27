@@ -6,6 +6,8 @@ export const muiStyles = (theme, {data, cb}) => {
 
     return {
         listComponentRoot: {
+            boxSizing: 'border-box',
+            overflow: 'hidden',
             width: ig(data, 'isLoading') ? 'auto' : '100%',
             display: 'grid',
             gridAutoFlow: 'column',
