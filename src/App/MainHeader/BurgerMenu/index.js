@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {compose, withHandlers, withState} from 'recompose'
+import {compose, withHandlers, withState, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {connect} from 'react-redux'
 import {Menu, MenuItem, IconButton} from '@material-ui/core'
 import MenuIcon from '@material-ui/icons/Menu'
@@ -25,10 +25,9 @@ const
     menuIconStyle = Object.freeze({fill: "#a1a7b1"}),
 
     BurgerMenu = ({
-        classes,
+        classedBounds,
         anchorEl,
         isOpened,
-        pathname,
         openModal,
         closeModal,
         goToPath,
@@ -48,9 +47,7 @@ const
             anchorEl={anchorEl}
             open={isOpened}
             onClose={closeModal}
-            classes={{
-                paper: g(classes, 'paper'),
-            }}
+            classes={g(classedBounds, 'paper')}
         >
             {navMenuOrder.map((navKey, index) =>
                 <MenuItem
@@ -81,6 +78,7 @@ export default compose(
         }
     ),
     withState('anchorEl', 'setAnchorEl', null),
+    onlyUpdateForKeys(['isOpened']),
     withHandlers({
         getLinkByNavKey,
 
@@ -103,8 +101,18 @@ export default compose(
         },
     }),
     withStyles(muiStyles),
+    withPropsOnChange([], props => ({
+        classedBounds: Object.freeze({
+            paper: Object.freeze({paper: g(props, 'classes', 'paper')}),
+        }),
+    })),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.object,
+        classes: PropTypes.exact({
+            paper: PropTypes.string,
+        }),
+        classedBounds: PropTypes.exact({
+            paper: PropTypes.object,
+        }),
         anchorEl: PropTypes.object.isOptional,
         setAnchorEl: PropTypes.func,
         isOpened: PropTypes.bool,

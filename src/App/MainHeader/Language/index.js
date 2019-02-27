@@ -6,7 +6,14 @@ import {connect} from 'react-redux'
 import {compose, lifecycle, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {Record} from 'immutable'
 
-import {plainProvedGet as g, immutableProvedGet as ig, setPropTypes, PropTypes, ImmutablePropTypes} from '../../helpers'
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    setPropTypes,
+    PropTypes,
+    ImmutablePropTypes
+} from '../../helpers'
+
 import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
@@ -19,7 +26,9 @@ import {
 } from './assets'
 
 const
-    LanguageSelectMaterial = ({classedBounds, siteLocales, currentLanguage, chooseLanguage}) => <Select
+    LanguageSelectMaterial = ({
+        classedBounds, siteLocales, currentLanguage, chooseLanguage
+    }) => <Select
         classes={g(classedBounds, 'select')}
         value={currentLanguage}
         input={
