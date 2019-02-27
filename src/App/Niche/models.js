@@ -23,7 +23,7 @@ export const
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageNumber: PropTypes.number,
         pagesCount: PropTypes.number,
-        pageText: immutablePageTextModel,
+        pageText: PropTypes.nullable(immutablePageTextModel),
         sponsorsList: ImmutablePropTypes.listOf(PropTypes.string),
         tagList: immutableNichesListModel,
         tagArchiveList: immutableTagArchiveListModel,

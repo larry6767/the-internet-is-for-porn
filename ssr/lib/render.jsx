@@ -1,6 +1,7 @@
 import {parse, format} from 'url'
 import {find, includes} from 'lodash'
 import React from 'react'
+import Helmet from 'react-helmet'
 import {Provider} from 'react-redux'
 import {all} from 'redux-saga/effects'
 import {StaticRouter} from 'react-router'
@@ -10,15 +11,7 @@ import {SheetsRegistry} from 'jss'
 import JssProvider from 'react-jss/lib/JssProvider'
 import {createGenerateClassName} from '@material-ui/core/styles'
 
-import {
-    plainProvedGet as g,
-    getRouterContext,
-    getPageTextToHeadTags,
-    getOpenGraphToHeadTags,
-    PropTypes,
-    assertPropTypes,
-} from '../App/helpers'
-
+import {plainProvedGet as g, getRouterContext, PropTypes, assertPropTypes} from '../App/helpers'
 import {getPureDomain} from '../App/helpers/hostLocale'
 import {getLegacyOrientationPrefixes, logRequestError} from './helpers'
 import {getPageData as requestPageData} from './requests'
@@ -30,6 +23,7 @@ import RouterBuilder from '../App/RouterBuilder'
 import languageActions from '../App/MainHeader/Language/actions'
 import navigationActions from '../App/MainHeader/Navigation/actions'
 import orientationActions from '../App/MainHeader/Niche/actions'
+import PageTextHelmet from '../generic/PageTextHelmet'
 import backRouterLocaleMapping, {frontRouterLocaleMapping} from '../locale-mapping/router'
 import i18n from '../locale-mapping/i18n'
 
@@ -61,8 +55,6 @@ const
                 currentOrientation: PropTypes.string.isOptional,
                 saga: PropTypes.func.isOptional,
                 statusCodeResolver: PropTypes.func.isOptional,
-                pageTextResolver: PropTypes.func,
-                openGraphDataResolver: PropTypes.func.isOptional,
             }),
         ])
 
@@ -171,22 +163,6 @@ export default (
             res.status(staticRouterContext.statusCodeResolver(store.getState()))
 
         const
-            pageText = staticRouterContext.pageTextResolver(store.getState())
-
-        let
-            headTags = getPageTextToHeadTags(pageText).map(x => renderToString(x)).join('\n')
-
-        if (staticRouterContext.hasOwnProperty('openGraphDataResolver')) {
-            const
-                openGraphData = staticRouterContext.openGraphDataResolver(store.getState()),
-                routerContext = getRouterContext(store.getState()),
-                openGraphTags = getOpenGraphToHeadTags(openGraphData, routerContext, domain).map(x =>
-                    renderToString(x)).join('\n')
-
-            headTags = headTags + openGraphTags
-        }
-
-        const
             serverStyleSheet = new ServerStyleSheet(),
             jssSheetsRegistry = new SheetsRegistry(),
             generateClassName = createGenerateClassName(),
@@ -205,9 +181,16 @@ export default (
                         </StaticRouter>
                     </Provider>
                 </JssProvider>
-            ))
+            )),
 
-        const
+            helmetData = Helmet.renderStatic(),
+
+            headTags = `
+                ${helmetData.title.toString()}
+                ${helmetData.meta.toString()}
+                ${helmetData.link.toString()}
+            `,
+
             styledComponentsStyles = serverStyleSheet.getStyleTags(),
 
             jssStyles = `<style id="jss-server-side">
@@ -220,9 +203,17 @@ export default (
                 )}
             </script>`
 
-        return res.end(`${g(layout, 'pre')}
+        return res.end(`${
+            g(layout, 'pre', 'beforeHtmlAttrs') +
+            helmetData.htmlAttributes.toString() +
+            g(layout, 'pre', 'afterHtmlAttrs')
+        }
             ${headTags}
-            ${g(layout, 'middle')}
+            ${
+                g(layout, 'middle', 'beforeBodyAttrs') +
+                helmetData.bodyAttributes.toString() +
+                g(layout, 'middle', 'afterBodyAttrs')
+            }
             ${styledComponentsStyles}
             ${jssStyles}
             ${html}

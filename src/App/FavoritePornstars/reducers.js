@@ -18,7 +18,7 @@ export default
 
             lastPageRequestParams: g(payload, 'pageRequestParams'),
 
-            pageText: Map(),
+            pageText: null,
             modelsList: List(),
 
             pageNumber: 1,
@@ -44,7 +44,7 @@ export default
             isLoaded: false,
             isFailed: true,
 
-            pageText: Map(),
+            pageText: null,
             modelsList: List(),
 
             pageNumber: 1,
@@ -62,7 +62,7 @@ export default
 
         lastPageRequestParams: null,
 
-        pageText: {},
+        pageText: null,
         modelsList: [],
 
         pageNumber: 1,

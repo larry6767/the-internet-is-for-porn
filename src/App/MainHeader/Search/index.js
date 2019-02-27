@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import queryString from 'query-string'
 import {get, throttle} from 'lodash'
-import {compose, withHandlers, withPropsOnChange} from 'recompose'
+import {compose, withHandlers, withPropsOnChange, onlyUpdateForKeys} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, Field, formValueSelector} from 'redux-form/immutable'
 import Autosuggest from 'react-autosuggest'
@@ -186,6 +186,7 @@ export default compose(
     withPropsOnChange(['searchSuggestions'], props => ({
         searchSuggestions: Object.freeze(g(props, 'searchSuggestions').toJS()),
     })),
+    onlyUpdateForKeys(['searchSuggestions']),
     withHandlers({
         loadSuggestions: props => ({value, reason}) => {
             props.suggestionsFetchRequest({searchQuery: value})

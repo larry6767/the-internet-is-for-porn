@@ -68,7 +68,6 @@ export const NicheImage = styled(NicheImageCommon)`
     display: flex;
     align-items: flex-end;
     background-color: ${({theme}) => theme.palette.primary.dark};
-    background-image: ${({thumb}) => `url(${thumb})`};
     background-size: cover;
     background-repeat: no-repeat;
     border-radius: 1px;

@@ -56,41 +56,52 @@ const
         </ListItem>
     </StyledLink>,
 
+    NicheWrapper = compose(
+        withPropsOnChange(['x'], props => ({
+            nichePreviewStyle: Object.freeze({
+                backgroundImage: `url(${ig(props.x, 'thumb')})`,
+            }),
+        })),
+        onlyUpdateForKeys(['x'])
+    )(({x, nichePreviewStyle, classedBounds, routerContext}) => <Niche>
+        <StyledLink
+            to={routerGetters.niche.link(
+                routerContext,
+                ig(x, 'subPage'),
+                null
+            )}
+            key={ig(x, 'id')}
+        >
+            <NicheImage style={nichePreviewStyle}/>
+            <Typography
+                variant="body1"
+                gutterBottom
+                classes={g(classedBounds, 'nicheTitleTypography')}
+            >{ig(x, 'name')}</Typography>
+        </StyledLink>
+    </Niche>),
+
     Home = ({
         classedBounds, data, routerContext,
-        i18nNichesHeader, i18nPornstarsHeader,
+        htmlLang, i18nNichesHeader, i18nPornstarsHeader,
     }) => <Fragment>
-        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
         <PageWrapper>
             <Typography variant="h4" gutterBottom>
                 {i18nNichesHeader}
             </Typography>
             <NichesList>
-                {ig(data, 'nichesList').map(x => <Niche key={ig(x, 'id')}>
-                    <StyledLink
-                        to={routerGetters.niche.link(
-                            routerContext,
-                            ig(x, 'subPage'),
-                            null
-                        )}
-                        key={ig(x, 'id')}
-                    >
-                        <NicheImage thumb={ig(x, 'thumb')}/>
-                        <Typography
-                            variant="body1"
-                            gutterBottom
-                            classes={g(classedBounds, 'nicheTitleTypography')}
-                        >{ig(x, 'name')}</Typography>
-                    </StyledLink>
-                </Niche>)}
+                {ig(data, 'nichesList').map(x => <NicheWrapper
+                    key={ig(x, 'id')}
+                    x={x}
+                    classedBounds={classedBounds}
+                    routerContext={routerContext}
+                />)}
             </NichesList>
             <Typography variant="h4" gutterBottom>
                 {i18nPornstarsHeader}
             </Typography>
-            <ListComponent
-                component="div"
-                classes={g(classedBounds, 'listComponent')}
-            >
+            <ListComponent component="div" classes={g(classedBounds, 'listComponent')}>
                 {ig(data, 'pornstarsList').map((x, idx) => renderListItemLink(
                     x,
                     idx,
@@ -123,6 +134,7 @@ export default compose(
             cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             data: ig(state, 'app', 'home'),
             routerContext: getRouterContext(state),
+            htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nNichesHeader: getHeaderWithOrientation(state, 'niches'),
             i18nPornstarsHeader: getHeaderWithOrientation(state, 'pornstars'),
@@ -179,6 +191,7 @@ export default compose(
         cb: PropTypes.string,
         data: model,
         routerContext: routerContextModel,
+        htmlLang: PropTypes.string,
         i18nOrdering: immutableI18nOrderingModel,
         i18nNichesHeader: PropTypes.string,
         i18nPornstarsHeader: PropTypes.string,

@@ -15,7 +15,7 @@ export const
 
             lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
 
-            pageText: immutablePageTextModel,
+            pageText: PropTypes.nullable(immutablePageTextModel),
             modelsList: immutableModelsListModel,
 
             // TODO: get rid of that shit below (pornstars not supposed to have pagination)

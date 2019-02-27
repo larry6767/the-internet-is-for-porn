@@ -4,7 +4,7 @@ import {
 } from '../helpers'
 
 import {
-    immutablePageTextModel,
+    immutableVideoPageTextModel,
     pageRequestParamsModel,
 } from '../models'
 
@@ -16,17 +16,16 @@ const
             const
                 exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
                 arrayOf = isImmutable ? ImmutablePropTypes.listOf : PropTypes.arrayOf,
-                // TODO get rid of 'isOptional'
                 props = {
-                    id: PropTypes.number.isOptional,
-                    title: PropTypes.string.isOptional,
-                    thumb: PropTypes.string.isOptional,
-                    tags: arrayOf(PropTypes.string).isOptional,
-                    duration: PropTypes.number.isOptional,
-                    swfPlugUrl: PropTypes.string.isOptional,
+                    id: PropTypes.number,
+                    title: PropTypes.string,
+                    thumb: PropTypes.string,
+                    tags: arrayOf(PropTypes.string),
+                    duration: PropTypes.number,
+                    swfPlugUrl: PropTypes.string,
                 }
 
-            return exact(props)
+            return PropTypes.nullable(exact(props))
         },
 
     galleryModelBuilder = process.env.NODE_ENV === 'production' ? null :
@@ -34,30 +33,29 @@ const
             const
                 exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
                 arrayOf = isImmutable ? ImmutablePropTypes.listOf : PropTypes.arrayOf,
-                // TODO get rid of 'isOptional'
                 props = {
-                    id: PropTypes.number.isOptional,
-                    classId: PropTypes.number.isOptional,
-                    title: PropTypes.string.isOptional,
-                    urlForIframe: PropTypes.string.isOptional,
-                    sponsorName: PropTypes.string.isOptional,
-                    sponsorLink: PropTypes.string.isOptional,
-                    sponsorUrl: PropTypes.string.isOptional,
-                    published: PropTypes.string.isOptional,
+                    id: PropTypes.number,
+                    classId: PropTypes.number,
+                    title: PropTypes.string,
+                    urlForIframe: PropTypes.string,
+                    sponsorName: PropTypes.string,
+                    sponsorLink: PropTypes.string,
+                    sponsorUrl: PropTypes.string,
+                    published: PropTypes.string,
 
-                    thumb: PropTypes.string.isOptional,
-                    thumbMask: PropTypes.string.isOptional,
-                    thumbs: arrayOf(PropTypes.number).isOptional,
-                    firstThumb: PropTypes.number.isOptional,
+                    thumb: PropTypes.string,
+                    thumbMask: PropTypes.string,
+                    thumbs: arrayOf(PropTypes.number),
+                    firstThumb: PropTypes.number,
 
-                    tags: arrayOf(PropTypes.string).isOptional,
-                    tagsShort: PropTypes.string.isOptional,
+                    tags: arrayOf(PropTypes.string),
+                    tagsShort: arrayOf(PropTypes.string),
 
-                    duration: PropTypes.string.isOptional,
-                    videoPageRef: PropTypes.number.isOptional,
+                    duration: PropTypes.string,
+                    videoPageRef: PropTypes.number,
                 }
 
-            return exact(props)
+            return PropTypes.nullable(exact(props))
         },
 
     immutableGalleryModel = process.env.NODE_ENV === 'production' ? null :
@@ -79,7 +77,7 @@ export const
         isFailed: PropTypes.bool,
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         inlineAdvertisementIsShowed: PropTypes.bool,
-        pageText: immutablePageTextModel,
+        pageText: PropTypes.nullable(immutableVideoPageTextModel),
         openGraphData: immutableOpenGraphDataModel,
         gallery: immutableGalleryModel,
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),

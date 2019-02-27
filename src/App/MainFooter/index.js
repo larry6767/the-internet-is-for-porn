@@ -1,5 +1,5 @@
 import React from 'react'
-import {compose, withHandlers} from 'recompose'
+import {compose, withHandlers, onlyUpdateForKeys} from 'recompose'
 import {connect} from 'react-redux'
 import {Typography} from '@material-ui/core'
 
@@ -75,6 +75,7 @@ export default compose(
             toggleReportDialogFlow: g(reportDialogActions, 'toggleReportDialogFlow'),
         }
     ),
+    onlyUpdateForKeys([]),
     withHandlers({
         toggleReportDialogHandler: props => event => {
             event.preventDefault()

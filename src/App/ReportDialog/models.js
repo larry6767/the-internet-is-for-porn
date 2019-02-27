@@ -10,25 +10,26 @@ export const
         currentTime: PropTypes.string,
         isOpen: PropTypes.bool,
     }),
-    // TODO get rid of 'isOptional'
-    galleryModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exactRecordOf({
-        id: PropTypes.number.isOptional,
-        classId: PropTypes.number.isOptional,
-        title: PropTypes.string.isOptional,
-        sponsorName: PropTypes.string.isOptional,
-        sponsorUrl: PropTypes.string.isOptional,
-        published: PropTypes.string.isOptional,
-        thumb: PropTypes.string.isOptional,
-        duration: PropTypes.string.isOptional,
-    }),
+
+    galleryModel = process.env.NODE_ENV === 'production' ? null :
+        ImmutablePropTypes.exactRecordOf({
+            id: PropTypes.number,
+            classId: PropTypes.number,
+            title: PropTypes.string,
+            sponsorName: PropTypes.string,
+            sponsorUrl: PropTypes.string,
+            published: PropTypes.string,
+            thumb: PropTypes.string,
+            duration: PropTypes.string,
+        }),
 
     GalleryRecord = Record({
-        id: null,
-        classId: null,
-        title: null,
-        sponsorName: null,
-        sponsorUrl: null,
-        published: null,
-        thumb: null,
-        duration: null,
+        id: 0,
+        classId: 0,
+        title: '',
+        sponsorName: '',
+        sponsorUrl: '',
+        published: '',
+        thumb: '',
+        duration: '',
     })

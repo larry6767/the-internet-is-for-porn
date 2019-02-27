@@ -52,7 +52,7 @@ const ThumbCommon = styled.div`
 export const Thumb = styled(ThumbCommon)`
     height: auto;
     border: 1px solid #000;
-    background: ${({thumb}) => `url(${thumb})`};
+    ${'' /* background: ${({thumb}) => `url(${thumb})`}; */}
     background-size: cover;
     border-radius: 1px;
 `

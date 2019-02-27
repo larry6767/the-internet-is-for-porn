@@ -1,4 +1,4 @@
-import {mapValues, uniq} from 'lodash'
+import {mapValues, uniq, take} from 'lodash'
 import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
 import {galleryModel, openGraphDataModel} from '../../../App/VideoPage/models'
 
@@ -146,10 +146,7 @@ export default (data, pageUrl, publishedTemplate, sponsors) => {
             tags: uniq(getProp(data, 'tags')),
             // This is for very small string under a video preview,
             // it's usually only one single tag.
-            tagsShort: getProp(data, 'tags').reduce((acc, tag) => {
-                const newAcc = acc === '' ? tag : `${acc}, ${tag}`
-                return g(newAcc, 'length') <= 22 ? newAcc : acc
-            }, ''),
+            tagsShort: take(getProp(data, 'tags'), 3),
 
             duration: `${
                 Math.floor(length / 60)

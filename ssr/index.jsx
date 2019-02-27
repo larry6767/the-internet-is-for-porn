@@ -12,7 +12,7 @@ import {json} from 'body-parser'
 import React from 'react'
 
 // local libs
-import {plainProvedGet as g} from './App/helpers'
+import {plainProvedGet as g, PropTypes, assertPropTypes} from './App/helpers'
 import {patchSiteLocales} from './App/helpers/hostLocale'
 import {deepFreeze} from './lib/helpers'
 import renderPage from './lib/render'
@@ -41,7 +41,22 @@ const
             description: 'Running testing server (will use proper robots.txt file)',
             default: false,
         })
-        .argv
+        .argv,
+
+    layoutModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
+        pre: PropTypes.exact({
+            beforeHtmlAttrs: PropTypes.string,
+            afterHtmlAttrs: PropTypes.string,
+        }),
+        middle: PropTypes.exact({
+            beforeBodyAttrs: PropTypes.string,
+            afterBodyAttrs: PropTypes.string,
+        }),
+        post: PropTypes.string,
+    }),
+
+    attrsSplitModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.tuple([PropTypes.string, PropTypes.string])
 
 const initApp = async () => {
     const
@@ -65,14 +80,37 @@ const initApp = async () => {
 
                 // Removing <script> tag for development (non-production) mode
                 // because there's no frontend scripts in development SSR pages.
-                preRoot = process.env.NODE_ENV === 'production' ? split[1] :
-                    split[1].replace(/<script id="loading-script">[^\0]*<\/script>/m, '')
+                preRoot = process.env.NODE_ENV === 'production' ? g(split, 1) :
+                    split[1].replace(/<script id="loading-script">[^\0]*<\/script>/m, ''),
 
-            return {
-                pre: `${split[0]}`,
-                middle: `${preRoot}<div id="root">`,
-                post: `</div>${result[1]}`
+                htmlAttrsSplit = split[0].split(/helmet_html_attributes/),
+                bodyAttrsSplit = preRoot.split(/helmet_body_attributes/),
+
+                resultLayout = Object.freeze({
+                    pre: Object.freeze({
+                        beforeHtmlAttrs: g(htmlAttrsSplit, 0),
+                        afterHtmlAttrs: g(htmlAttrsSplit, 1),
+                    }),
+                    middle: Object.freeze({
+                        beforeBodyAttrs: g(bodyAttrsSplit, 0),
+                        afterBodyAttrs: `${g(bodyAttrsSplit, 1)}<div id="root">`,
+                    }),
+                    post: `</div>${g(result, 1)}`,
+                })
+
+            if (process.env.NODE_ENV !== 'production') {
+                assertPropTypes(
+                    attrsSplitModel, htmlAttrsSplit, 'ssr/index', 'html attributes split'
+                )
+
+                assertPropTypes(
+                    attrsSplitModel, bodyAttrsSplit, 'ssr/index', 'body attributes split'
+                )
+
+                assertPropTypes(layoutModel, resultLayout, 'ssr/index', 'layout')
             }
+
+            return resultLayout
         })(
             readFileSync(join(publicDir, 'index.html'))
                 .toString()

@@ -11,7 +11,7 @@ export default
             isLoaded: false,
             isFailed: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
-            pageText: Map(),
+            pageText: null,
             nichesList: List(),
             pornstarsList: List(),
         }),
@@ -28,7 +28,7 @@ export default
             isLoading: false,
             isLoaded: false,
             isFailed: true,
-            pageText: Map(),
+            pageText: null,
             nichesList: List(),
             pornstarsList: List(),
         }),
@@ -37,7 +37,7 @@ export default
         isLoaded: false,
         isFailed: false,
         lastPageRequestParams: null,
-        pageText: {},
+        pageText: null,
         nichesList: [],
         pornstarsList: []
     }))

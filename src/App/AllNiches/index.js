@@ -54,8 +54,8 @@ const
         </ListItem>
     </StyledLink>,
 
-    AllNiches = ({classedBounds, data, getChildLink, i18nAllNichesHeader}) => <Fragment>
-        <PageTextHelmet pageText={ig(data, 'pageText')}/>
+    AllNiches = ({classedBounds, data, getChildLink, htmlLang, i18nAllNichesHeader}) => <Fragment>
+        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
         <PageWrapper>
             <Typography variant="h4" gutterBottom>
                 {i18nAllNichesHeader}
@@ -91,6 +91,7 @@ export default compose(
         state => ({
             cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             data: ig(state, 'app', 'allNiches'),
+            htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
             i18nAllNichesHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'allNiches'),
             routerContext: getRouterContext(state),
         }),
@@ -142,6 +143,7 @@ export default compose(
         }),
         cb: PropTypes.string,
         data: model,
+        htmlLang: PropTypes.string,
         i18nAllNichesHeader: PropTypes.string,
         routerContext: routerContextModel,
 

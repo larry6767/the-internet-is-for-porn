@@ -13,7 +13,7 @@ export const
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
-        pageText: immutablePageTextModel,
+        pageText: PropTypes.nullable(immutablePageTextModel),
         nichesList: immutableNichesListWithThumbModel,
         pornstarsList: immutableModelsListWithLetterModel,
     })

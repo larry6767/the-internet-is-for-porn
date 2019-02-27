@@ -85,7 +85,7 @@ const
         tagId: PropTypes.number,
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageNumber: PropTypes.number,
-        pageText: immutablePageTextModel,
+        pageText: PropTypes.nullable(immutablePageTextModel),
         pagesCount: PropTypes.number,
         sortList: ImmutablePropTypes.listOf(ImmutablePropTypes.exact({
             isActive: PropTypes.bool,

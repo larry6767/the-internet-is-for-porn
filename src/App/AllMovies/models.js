@@ -21,7 +21,7 @@ export const
         currentPage: PropTypes.string,
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageNumber: PropTypes.number,
-        pageText: immutablePageTextModel,
+        pageText: PropTypes.nullable(immutablePageTextModel),
         pagesCount: PropTypes.number,
         sponsorsList: ImmutablePropTypes.listOf(PropTypes.string),
         tagList: immutableNichesListModel,

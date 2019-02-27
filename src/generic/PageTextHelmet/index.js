@@ -1,19 +1,25 @@
-import {flatten} from 'lodash'
 import React from 'react'
 import Helmet from 'react-helmet'
-import {getPageTextToHeadTags} from '../../App/helpers'
-import {getOpenGraphToHeadTags} from '../../App/helpers'
+
+import {getPageTextToHeadTags, getOpenGraphToHeadTags, plainProvedGet as g} from '../../App/helpers'
 
 const
-    PageTextHelmet = ({pageText, openGraphData = null, routerContext = null, domain = null}) => {
-        let
-            tags = getPageTextToHeadTags(pageText)
+    PageTextHelmet = ({
+        htmlLang,
+        pageText,
+        openGraphData = null,
+        routerContext = null,
+        domain = null,
+    }) => React.createElement(Helmet, null, ...(
+        [
+            <html lang={g(htmlLang, [])}/>,
+        ].concat(
+            getPageTextToHeadTags(pageText)
+        ).concat(
+            openGraphData && routerContext && domain
+                ? getOpenGraphToHeadTags(openGraphData, routerContext, domain)
+                : []
+        )
+    ))
 
-        if (openGraphData && routerContext && domain) {
-            tags = flatten([tags, getOpenGraphToHeadTags(openGraphData, routerContext, domain)])
-        }
-
-        return React.createElement(Helmet, null, ...tags)
-    }
-
-export default (PageTextHelmet)
+export default PageTextHelmet

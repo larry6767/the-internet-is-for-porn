@@ -3,8 +3,5 @@ export const muiStyles = theme => ({
         maxWidth: '100%',
         color: theme.palette.primary.contrastText,
         display: 'inline',
-    },
-    routerLinkSpy: {
-        cursor: 'default',
-    },
+    }
 })

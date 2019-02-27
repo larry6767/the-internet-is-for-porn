@@ -1,8 +1,6 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
 import {connect} from 'react-redux'
-import {compose} from 'recompose'
-import {Record} from 'immutable'
+import {compose, onlyUpdateForKeys} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import {Typography} from '@material-ui/core'
 
@@ -10,10 +8,10 @@ import {
     plainProvedGet as g,
     immutableProvedGet as ig,
     PropTypes,
-    ImmutablePropTypes,
     setPropTypes,
 } from '../helpers'
 
+import {model} from './models'
 import Niche from './Niche'
 import Navigation from './Navigation'
 import Language from './Language'
@@ -23,6 +21,7 @@ import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
 import {
+    StyledSpyLink,
     Header,
     Top,
     TopInner,
@@ -51,19 +50,12 @@ const
                             ? <Typography
                                 variant="caption"
                                 gutterBottom
-                                classes={{
-                                    root: g(classes, 'typography'),
-                                }}
+                                className={g(classes, 'typography')}
                             >
                                 {`${ig(data, 'title')}. `}
                             </Typography>
                             : null}
-                        <Typography
-                            variant="caption"
-                            classes={{
-                                root: g(classes, 'typography'),
-                            }}
-                        >
+                        <Typography variant="caption" className={g(classes, 'typography')}>
                             {ig(data, 'description')}
                         </Typography>
                     </TextWrapper>
@@ -74,12 +66,9 @@ const
                         }
                         {
                             isXSorXXS && isSearchShown ? '' :
-                            <Link
-                                to="/"
-                                className={pageUrl === '/' ? classes.routerLinkSpy : ''}
-                            >
+                            <StyledSpyLink to="/" isSpy={pageUrl === '/'}>
                                 <Logo src="/img/logo.png" alt="VideoSection logo" isSSR={isSSR}/>
-                            </Link>
+                            </StyledSpyLink>
                         }
                         {
                             isXSorXXS
@@ -115,13 +104,7 @@ const
                     : null
             }
         </Header>
-    },
-
-    dataRecord = Record({
-        isSearchShown: false,
-        title: '',
-        description: '',
-    })
+    }
 
 export default compose(
     connect(
@@ -129,18 +112,19 @@ export default compose(
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             pageUrl: ig(state, 'router', 'location', 'pathname'),
             currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: dataRecord(ig(state, 'app', 'mainHeader', 'ui')),
+            data: ig(state, 'app', 'mainHeader', 'ui'),
         }),
         dispatch => ({
             toggleSearchAction: () => dispatch(actions.toggleSearch())
         })
     ),
+    onlyUpdateForKeys(['currentBreakpoint', 'data']),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.object,
         isSSR: PropTypes.bool,
         pageUrl: PropTypes.string,
         currentBreakpoint: PropTypes.string,
-        data: ImmutablePropTypes.record,
+        data: model,
     }),
 )(MainHeader)

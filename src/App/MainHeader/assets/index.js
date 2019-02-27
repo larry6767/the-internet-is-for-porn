@@ -1,6 +1,11 @@
+import React from 'react'
 import styled from 'styled-components'
-
+import {Link} from 'react-router-dom'
 import {plainProvedGet as g} from '../../helpers'
+
+export const StyledSpyLink = styled(({isSpy, ...rest}) => <Link {...rest}/>)`
+    ${({theme, isSpy}) => isSpy ? 'cursor: default;' : ''}
+`
 
 export const Header = styled.header`
     display: flex;

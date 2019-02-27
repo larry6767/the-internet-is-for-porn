@@ -288,6 +288,7 @@ const
             exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
 
         return exact({
+            htmlLangAttribute: PropTypes.string,
             labels: isImmutable ? immutableI18nLabelsModel : i18nLabelsModel,
             headers: isImmutable ? immutableI18nHeadersModel : i18nHeadersModel,
             search: isImmutable ? immutableI18nSearchModel : i18nSearchModel,
@@ -296,9 +297,11 @@ const
             buttons: isImmutable ? immutableI18nButtonsModel : i18nButtonsModel,
             footer: isImmutable ? immutableI18nFooterModel : i18nFooterModel,
             report: isImmutable ? immutableI18nReportModel : i18nReportModel,
+
             pornstarInfoParameters: isImmutable
                 ? immutableI18nPornstarInfoParametersModel
                 : i18nPornstarInfoParametersModel,
+
             notFound: isImmutable ? immutableI18nNotFoundModel : i18nNotFoundModel,
             orientation: isImmutable ? immutableI18nOrientationModel : i18nOrientationModel,
         })

@@ -221,6 +221,7 @@ export const CloseAdvertisement = styled.div`
 export const AdIframeWrapper = styled.div`
     position: relative;
     overflow: hidden;
+    width: 300px;
 
     &:first-child {
         margin-bottom: 10px;

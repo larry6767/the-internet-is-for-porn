@@ -1,6 +1,6 @@
 import {find} from 'lodash'
 import React from 'react'
-import {compose, withHandlers} from 'recompose'
+import {compose, withHandlers, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
 import {Select, MenuItem, FormControl, OutlinedInput} from '@material-ui/core'
@@ -45,7 +45,7 @@ const
     // so everywhere else it's going to be "orientation" which stands for "sexual orientation"
     // to differ this "niche" from another.
     Niche = ({
-        classes,
+        classedBounds,
         isSSR,
         currentOrientation,
         currentBreakpoint,
@@ -88,17 +88,12 @@ const
             : <NicheWrapper>
                 <FormControl variant="outlined">
                     <Select
-                        classes={{
-                            select: g(classes, 'select'),
-                            icon: g(classes, 'icon'),
-                        }}
+                        classes={g(classedBounds, 'select')}
                         value={currentOrientation}
                         onChange={orient}
                         input={
                             <OutlinedInput
-                                classes={{
-                                    notchedOutline: g(classes, 'notchedOutline'),
-                                }}
+                                classes={g(classedBounds, 'outlinedInput')}
                                 labelWidth={0}
                             />
                         }
@@ -130,6 +125,7 @@ export default compose(
             switchOrientation: g(actions, 'switchOrientation'),
         }
     ),
+    onlyUpdateForKeys(['currentBreakpoint', 'currentOrientation']),
     withHandlers({
         orient: props => event => {
             event.preventDefault()
@@ -142,12 +138,26 @@ export default compose(
         ),
     }),
     withStyles(muiStyles),
+    withPropsOnChange([], props => ({
+        classedBounds: Object.freeze({
+            select: Object.freeze({
+                select: g(props, 'classes', 'select'),
+                icon: g(props, 'classes', 'icon'),
+            }),
+            outlinedInput: Object.freeze({notchedOutline: g(props, 'classes', 'notchedOutline')}),
+        }),
+    })),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.shape({
+        classes: PropTypes.exact({
             select: PropTypes.string,
             icon: PropTypes.string,
             notchedOutline: PropTypes.string,
         }),
+        classedBounds: PropTypes.exact({
+            select: PropTypes.object,
+            outlinedInput: PropTypes.object,
+        }),
+
         isSSR: PropTypes.bool,
         currentOrientation: PropTypes.oneOf(orientationCodes),
         currentBreakpoint: PropTypes.string,

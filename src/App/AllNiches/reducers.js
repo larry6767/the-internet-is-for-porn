@@ -11,7 +11,7 @@ export default provedHandleActions(model, {
             isFailed: false,
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             nichesList: List(),
-            pageText: Map(),
+            pageText: null,
         }),
         [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
@@ -26,7 +26,7 @@ export default provedHandleActions(model, {
             isLoaded: false,
             isFailed: true,
             nichesList: List(),
-            pageText: Map(),
+            pageText: null,
         }),
     }, fromJS({
         isLoading: false,
@@ -34,5 +34,5 @@ export default provedHandleActions(model, {
         isFailed: false,
         lastPageRequestParams: null,
         nichesList: [],
-        pageText: {},
+        pageText: null,
     }))

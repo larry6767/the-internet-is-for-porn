@@ -140,6 +140,7 @@ const
 
     VideoPage = props => <Fragment>
         <PageTextHelmet
+            htmlLang={g(props, 'htmlLang')}
             pageText={ig(props.data, 'pageText')}
             openGraphData={ig(props.data, 'openGraphData')}
             routerContext={g(props, 'routerContext')}
@@ -289,6 +290,7 @@ export default compose(
             domain: getDomain(state),
             favoriteVideoList: ig(state, 'app', 'ui', 'favoriteVideoList'),
             currentWidth: ig(state, 'app', 'ui', 'currentWidth'),
+            htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nRelatedVideo: ig(state, 'app', 'locale', 'i18n', 'headers', 'relatedVideo'),
             i18nLabelProvidedBy: ig(state, 'app', 'locale', 'i18n', 'labels', 'providedBy'),
@@ -309,7 +311,7 @@ export default compose(
         addVideoToFavoriteHandler: props => event => {
             event.preventDefault()
             props.addVideoToFavorite(ig(props.data, 'gallery').deleteAll(
-                ['published', 'classId', 'sponsorUrl', 'urlForIframe']
+                ['published', 'classId', 'sponsorUrl', 'urlForIframe', 'tags']
             ))
         },
         removeVideoFromFavoriteHandler: props => event => {
@@ -357,9 +359,11 @@ export default compose(
         domain: PropTypes.string,
         favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),
         currentWidth: PropTypes.number,
+        htmlLang: PropTypes.string,
         i18nButtons: immutableI18nButtonsModel,
         i18nRelatedVideo: PropTypes.string,
         i18nLabelProvidedBy: PropTypes.string,
+
         playerRef: PropTypes.nullable(PropTypes.instanceOf(
             typeof Element === 'undefined' ? () => {} : Element // plug for SSR
         )),
