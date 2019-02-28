@@ -21,7 +21,7 @@ export const VideoPlayer = styled.div`
     border-radius: 2px;
     background-color: ${({theme}) => theme.palette.primary.light};
 
-    ${({theme}) => theme.media.sm`flex-direction: column;`}
+    ${({theme}) => theme.media.sm`flex-direction: column; background: none;`}
     ${({theme}) => theme.media.mobile`flex-direction: column; background: none;`}
 `
 
@@ -32,7 +32,7 @@ export const VideoWrapper = styled.div`
     flex-grow: 1;
     padding: 10px 10px 0;
 
-    ${({theme}) => theme.media.sm`width: 100%;`}
+    ${({theme}) => theme.media.sm`padding: 0; width: 100%;`}
     ${({theme}) => theme.media.mobile`padding: 0; width: 100%;`}
 `
 
@@ -107,7 +107,11 @@ export const BottomAdvertisement = styled.section`
     padding: 10px 10px 7px;
     border-radius: 2px;
 
-    ${({theme}) => theme.media.sm`flex-wrap: wrap; justify-content: space-around;`}
+    ${({theme}) => theme.media.sm`
+        flex-wrap: wrap;
+        justify-content: space-around;
+        background: none;
+    `}
     ${({theme}) => theme.media.mobile`
         padding: 0;
         background-color: none;

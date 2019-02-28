@@ -120,7 +120,7 @@ const
             className={g(classes, 'chip')}
             component="div"
             variant="outlined"
-            color={ccb(cb, sm) === -1 ? 'primary' : 'secondary'}
+            color={ccb(cb, md) === -1 ? 'primary' : 'secondary'}
             clickable
         />
     </StyledLink>,

@@ -39,6 +39,10 @@ export const muiStyles = theme => ({
         transition: 'background-image 0.3s',
         color: '#ffffff',
 
+        '&::placeholder': {
+            opacity: 0.6,
+        },
+
         [theme.breakpoints.down("xs")]: {
             padding: '8px 40px 8px 10px',
             backgroundSize: '20px',
