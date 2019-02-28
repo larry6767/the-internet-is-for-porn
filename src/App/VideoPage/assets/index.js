@@ -3,6 +3,10 @@ import {Link} from 'react-router-dom'
 export {StyledLink} from '../../../generic/assets'
 export {PageWrapper} from '../../../generic/assets'
 
+const
+    adWidth = 310,
+    adHeight = 264
+
 export const SponsorLink = styled(Link)`
     color: ${({theme}) => theme.palette.primary.main};
 `
@@ -28,7 +32,7 @@ export const VideoPlayer = styled.div`
 export const VideoWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    width: calc(100% - 320px);
+    width: calc(100% - ${adWidth + 20}px);
     flex-grow: 1;
     padding: 10px 10px 0;
 
@@ -44,7 +48,7 @@ export const Video = styled.div`
     &::before {
         display: block;
         content: '';
-        padding-top: 468px;
+        padding-top: ${adHeight * 2 + 10}px;
 
         ${({theme}) => theme.media.mobile`padding-top: 80%;`}
     }
@@ -79,7 +83,7 @@ export const ControlPanelBlock = styled.div`
 
 export const Advertisement = styled.div`
     display: flex;
-    width: 320px;
+    width: ${adWidth + 20}px;
     padding: 10px;
     flex-direction: column;
 
@@ -135,8 +139,8 @@ export const InlineAdvertisementWrapper = styled.div`
 `
 
 export const AdGag = styled.div`
-    width: 300px;
-    height: 254px;
+    width: ${adWidth}px;
+    height: ${adHeight}px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -148,8 +152,8 @@ export const AdGag = styled.div`
     }
 
     ${({theme}) => theme.media.sm`
-        width: calc(300px * 0.9);
-        height: calc(254px * 0.9);
+        width: calc(${adWidth}px * 0.9);
+        height: calc(${adHeight}px * 0.9);
     `}
 
     ${({theme, currentWidth}) => theme.media.mobile`
@@ -167,10 +171,10 @@ export const AdGag = styled.div`
 const
     getAdWidth = (currentWidth, quantity) => (currentWidth - quantity * 10 - 10) / quantity,
     getCrazyAdStyles = (currentWidth, quantity, abstractСoefficient) => `
-        width: ${(abstractСoefficient - getAdWidth(currentWidth, quantity) / 300) * 300}px;
-        height: ${(abstractСoefficient - getAdWidth(currentWidth, quantity) / 254) * 254}px;
-        zoom: ${getAdWidth(currentWidth, quantity) / 300};
-        transform: scale(${getAdWidth(currentWidth, quantity) / 300});
+        width: ${(abstractСoefficient - getAdWidth(currentWidth, quantity) / adWidth) * adWidth}px;
+        height: ${(abstractСoefficient - getAdWidth(currentWidth, quantity) / adHeight) * adHeight}px;
+        zoom: ${getAdWidth(currentWidth, quantity) / adWidth};
+        transform: scale(${getAdWidth(currentWidth, quantity) / adWidth});
         transform-origin: 0 0;
     `,
     heightRatio = 0.84
@@ -179,14 +183,14 @@ export const InlineAdvertisement = styled.div`
     position: absolute;
     top: calc(50% - 130px);
     left: calc(50% - 150px);
-    width: 300px;
-    height: 254px;
+    width: ${adWidth}px;
+    height: ${adHeight}px;
     background-color: ${({theme}) => theme.palette.primary.light};
     overflow: hidden;
 
     ${({theme}) => theme.media.sm`
-        width: calc(300px * 0.9);
-        height: calc(254px * 0.9);
+        width: calc(${adWidth}px * 0.9);
+        height: calc(${adHeight}px * 0.9);
     `}
 
     ${({theme, currentWidth}) => theme.media.mobile`
@@ -225,14 +229,14 @@ export const CloseAdvertisement = styled.div`
 export const AdIframeWrapper = styled.div`
     position: relative;
     overflow: hidden;
-    width: 300px;
+    width: ${adWidth}px;
 
     &:first-child {
         margin-bottom: 10px;
     }
 
     ${({theme}) => theme.media.sm`
-        width: calc(300px * 0.9);
+        width: calc(${adWidth}px * 0.9);
     `}
 
     ${({theme, currentWidth}) => theme.media.xs`
@@ -254,12 +258,12 @@ export const AdIframe = styled.iframe`
     position: absolute;
     top: 0;
     left: 0;
-    width: 300px;
-    height: 254px;
+    width: ${adWidth}px;
+    height: ${adHeight}px;
     border-radius: 2px;
     ${({theme}) => theme.media.sm`
-        width: calc(300px * 1.15);
-        height: calc(254px * 1.15);
+        width: calc(${adWidth}px * 1.15);
+        height: calc(${adHeight}px * 1.15);
         zoom: 0.9;
         transform: scale(0.9);
         transform-origin: 0 0;
