@@ -4,8 +4,8 @@ export {StyledLink} from '../../../generic/assets'
 export {PageWrapper} from '../../../generic/assets'
 
 const
-    adWidth = 310,
-    adHeight = 264
+    adWidth = 300,
+    adHeight = 256
 
 export const SponsorLink = styled(Link)`
     color: ${({theme}) => theme.palette.primary.main};
@@ -177,12 +177,12 @@ const
         transform: scale(${getAdWidth(currentWidth, quantity) / adWidth});
         transform-origin: 0 0;
     `,
-    heightRatio = 0.84
+    heightRatio = 0.8535
 
 export const InlineAdvertisement = styled.div`
     position: absolute;
-    top: calc(50% - 130px);
-    left: calc(50% - 150px);
+    top: calc(50% - ${adHeight/2}px);
+    left: calc(50% - ${adWidth/2}px);
     width: ${adWidth}px;
     height: ${adHeight}px;
     background-color: ${({theme}) => theme.palette.primary.light};
