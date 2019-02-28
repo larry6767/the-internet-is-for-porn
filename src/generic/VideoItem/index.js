@@ -1,4 +1,5 @@
 import React from 'react'
+import {connect} from 'react-redux'
 
 import {
     compose,
@@ -9,7 +10,7 @@ import {
     lifecycle,
 } from 'recompose'
 
-import {replace, set} from 'lodash'
+import {replace, set, some, throttle} from 'lodash'
 import {withStyles} from '@material-ui/core/styles'
 import {Typography} from '@material-ui/core'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
@@ -67,6 +68,18 @@ const
         </Typography>
     </ProviderLink>,
 
+    isVisibleOnScreen = wh => x => {
+        const
+            t = g(x, 'top'),
+            b = g(x, 'bottom')
+
+        return (t >= 0 && t < wh) || (t < 0 && b > 0)
+    },
+
+    timeoutKey = 'timeout',
+    intervalKey = 'interval',
+    scrollListenerKey = 'scrollListener',
+
     VideoPreviewRender = compose(
         withPropsOnChange(['x'], props => {
             const
@@ -76,8 +89,8 @@ const
                 // WARNING! These are mutable to avoid triggering state change events.
                 //          For internal usage only (inside `compose`d HOCs).
                 mutableTimersIds: thumbsCount === 0 ? null : {
-                    timeout: null,
-                    interval: null,
+                    [timeoutKey]: null,
+                    [intervalKey]: null,
                 },
 
                 thumbsCount,
@@ -85,6 +98,9 @@ const
         }),
         withState('currentThumb', 'setCurrentThumb', null),
         withState('thumbsArePreloaded', 'setThumbsArePreloaded', false),
+        withState('wasVisible', 'setWasVisible', props => g(props, 'isSSR') ? true : false),
+        withState('wrapperRef', 'setRef', null),
+        withState('scrollTop', 'setScrollTop', 0),
         withHandlers({
             progress: props => () => {
                 const
@@ -96,21 +112,21 @@ const
             },
 
             stopProgress: props => () => {
-                clearTimeout(g(props, 'mutableTimersIds', 'timeout'))
-                clearInterval(g(props, 'mutableTimersIds', 'interval'))
+                clearTimeout(g(props, 'mutableTimersIds', timeoutKey))
+                clearInterval(g(props, 'mutableTimersIds', intervalKey))
                 props.setCurrentThumb(null)
             },
         }),
         withHandlers({
             mouseLeaveHandler: props => () => {
-                if (g(props, 'thumbsCount') === 1)
+                if ( ! g(props, 'wasVisible') || g(props, 'thumbsCount') === 1)
                     return
 
                 props.stopProgress()
             },
 
             mouseEnterHandler: props => () => {
-                if (g(props, 'thumbsCount') === 1)
+                if ( ! g(props, 'wasVisible') || g(props, 'thumbsCount') === 1)
                     return
 
                 // preloading images
@@ -127,24 +143,61 @@ const
                 }
 
                 // reset old timers in case they for some reason exists
-                clearTimeout(g(props, 'mutableTimersIds', 'timeout'))
-                clearInterval(g(props, 'mutableTimersIds', 'interval'))
+                clearTimeout(g(props, 'mutableTimersIds', timeoutKey))
+                clearInterval(g(props, 'mutableTimersIds', intervalKey))
 
-                g(props, 'mutableTimersIds').timeout = setTimeout(() => {
+                g(props, 'mutableTimersIds')[timeoutKey] = setTimeout(() => {
                     props.setCurrentThumb(0)
-                    g(props, 'mutableTimersIds').interval = setInterval(g(props, 'progress'), 500)
+                    g(props, 'mutableTimersIds')[intervalKey] =
+                        setInterval(g(props, 'progress'), 500)
                 }, 1000)
             },
+
+            scrollListenerHandler: props => () => {
+                props.setScrollTop(g(document, 'documentElement', 'scrollTop'))
+            },
         }),
+        connect(
+            state => ({
+                currentHeight: ig(state, 'app', 'ui', 'currentHeight'),
+            })
+        ),
         lifecycle({
+            componentDidMount() {
+                this[scrollListenerKey] = throttle(g(this, 'props', 'scrollListenerHandler'), 500)
+                window.addEventListener('scroll', g(this, scrollListenerKey))
+                this.props.scrollListenerHandler()
+            },
+
             componentWillUnmount() {
-                if (g(this, 'props', 'thumbsCount') === 1)
+                window.removeEventListener('scroll', g(this, scrollListenerKey))
+
+                if ( ! g(this, 'props', 'wasVisible') || g(this, 'props', 'thumbsCount') === 1)
                     return
 
                 this.props.stopProgress()
             },
+
+            componentWillReceiveProps(nextProps) {
+                if (g(nextProps, 'wasVisible') || (
+                    g(this, 'props', 'currentHeight') === g(nextProps, 'currentHeight') &&
+                    g(this, 'props', 'wrapperRef') === g(nextProps, 'wrapperRef') &&
+                    g(this, 'props', 'scrollTop') === g(nextProps, 'scrollTop')
+                ))
+                    return
+
+                const
+                    currentHeight = g(nextProps, 'currentHeight'),
+                    ref = g(nextProps, 'wrapperRef')
+
+                if (ref !== null && some(ref.getClientRects(), isVisibleOnScreen(currentHeight)))
+                    nextProps.setWasVisible(true)
+            }
         }),
-        withPropsOnChange(['x', 'currentThumb'], props => {
+        withPropsOnChange(['x', 'currentThumb', 'wasVisible'], props => {
+            if ( ! g(props, 'wasVisible'))
+                return {videoPreviewStyle: null}
+
             const
                 currentThumb = g(props, 'currentThumb')
 
@@ -164,12 +217,13 @@ const
         classes, x, cb, isSSR, addVideoToFavoriteHandler,
         removeVideoFromFavoriteHandler, isThisVideoFavorite,
         getSearchLink, getVideoLink,
-        videoPreviewStyle, mouseEnterHandler, mouseLeaveHandler, thumbsCount,
+        videoPreviewStyle, mouseEnterHandler, mouseLeaveHandler, thumbsCount, setRef,
     }) => <VideoPreview
         onMouseEnter={g(mouseEnterHandler, [])}
         onMouseLeave={g(mouseLeaveHandler, [])}
         style={videoPreviewStyle}
         hasOnlyOneThumb={thumbsCount === 1}
+        ref={setRef}
     >
         {isSSR ? renderLink(x, getVideoLink) : null}
 
