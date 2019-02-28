@@ -1,4 +1,3 @@
-// TODO: this page needs propTypes
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
@@ -17,6 +16,7 @@ import {
     PropTypes,
 } from '../helpers'
 
+import {routerContextModel} from '../models'
 import {model} from './models'
 import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
@@ -31,50 +31,44 @@ import actions from './actions'
 import {muiStyles} from './assets/muiStyles'
 
 const
-    FindVideos = ({
-        classes,
-        currentBreakpoint,
-        htmlLang,
-        i18nOrdering,
-        i18nButtons,
-        i18nLabelShowing,
-        data,
-        chooseSort,
-        isSSR,
-        controlLinkBuilder,
-    }) => <Fragment>
-        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
+    FindVideos = props => <Fragment>
+        <PageTextHelmet htmlLang={g(props, 'htmlLang')} pageText={ig(props.data, 'pageText')}/>
         <PageWrapper>
             <Typography
                 variant="h4"
                 gutterBottom
-                classes={{
-                    root: classes.typographyTitle
-                }}
+                className={g(props, 'classes', 'typographyTitle')}
             >
-                {ig(data, 'pageText', 'listHeader')}
+                {ig(props.data, 'pageText', 'listHeader')}
             </Typography>
             <ControlBar
-                cb={currentBreakpoint}
-                i18nOrdering={i18nOrdering}
-                i18nButtons={i18nButtons}
-                i18nLabelShowing={i18nLabelShowing}
-                chooseSort={chooseSort}
-                isSSR={isSSR}
-                pagesCount={ig(data, 'pagesCount')}
-                pageNumber={ig(data, 'pageNumber')}
-                itemsCount={ig(data, 'itemsCount')}
-                sortList={ig(data, 'sortList')}
-                currentSort={ig(data, 'currentSort')}
+                chooseSort={g(props, 'chooseSort')}
+                pagesCount={ig(props.data, 'pagesCount')}
+                pageNumber={ig(props.data, 'pageNumber')}
+                itemsCount={ig(props.data, 'itemsCount')}
+                sortList={ig(props.data, 'sortList')}
+                currentSort={ig(props.data, 'currentSort')}
                 archiveFilms={null}
                 tagArchiveListOlder={null}
                 tagArchiveListNewer={null}
-                linkBuilder={controlLinkBuilder}
+                linkBuilder={g(props, 'controlLinkBuilder')}
                 archiveLinkBuilder={null}
             />
-            <VideoList
-                videoList={ig(data, 'videoList')}
-            />
+            <VideoList videoList={ig(props.data, 'videoList')}/>
+            {g(ig(props.data, 'videoList'), 'size') < 20 ? null : <ControlBar
+                isDownBelow={true}
+                chooseSort={g(props, 'chooseSort')}
+                pagesCount={ig(props.data, 'pagesCount')}
+                pageNumber={ig(props.data, 'pageNumber')}
+                itemsCount={ig(props.data, 'itemsCount')}
+                sortList={ig(props.data, 'sortList')}
+                currentSort={ig(props.data, 'currentSort')}
+                archiveFilms={null}
+                tagArchiveListOlder={null}
+                tagArchiveListNewer={null}
+                linkBuilder={g(props, 'controlLinkBuilder')}
+                archiveLinkBuilder={null}
+            />}
         </PageWrapper>
     </Fragment>,
 
@@ -96,14 +90,9 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
             data: ig(state, 'app', 'findVideos'),
-            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            routerContext: getRouterContext(state),
             htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
-            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
-            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
-            i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
+            routerContext: getRouterContext(state),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -142,6 +131,14 @@ export default compose(
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         data: model,
         htmlLang: PropTypes.string,
+        routerContext: routerContextModel,
+
+        loadPageRequest: PropTypes.func,
+        loadPage: PropTypes.func,
+        setNewSort: PropTypes.func,
+        chooseSort: PropTypes.func,
+        setNewText: PropTypes.func,
+        controlLinkBuilder: PropTypes.func,
     }),
     loadingWrapper({
         withControlBar: true,

@@ -1,4 +1,3 @@
-// TODO: this page needs propTypes
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, withHandlers, withProps, withState, lifecycle} from 'recompose'
@@ -18,11 +17,7 @@ import {
     breakpoints,
 } from '../helpers'
 
-import {
-    immutableI18nOrderingModel,
-    immutableI18nButtonsModel,
-    routerContextModel,
-} from '../models'
+import {routerContextModel} from '../models'
 
 import {model} from './models'
 import routerGetters from '../routerGetters'
@@ -38,65 +33,54 @@ import headerActions from '../MainHeader/actions'
 import actions from './actions'
 
 const
-    Niche = ({
-        cb,
-        htmlLang,
-        i18nOrdering,
-        i18nButtons,
-        data,
-        chooseSort,
-        isSSR,
-        controlLinkBuilder,
-        controlArchiveLinkBuilder,
-        controlBackFromArchiveLinkBuilder,
-        listsTagLinkBuilder,
-        listsArchiveLinkBuilder,
-        sponsorLinkBuilder,
-        i18nListNichesHeader,
-        i18nListArchiveHeader,
-        i18nLabelShowing,
-        setPageWrapperRef,
-        pageWrapperRef,
-    }) => <Fragment>
-        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
-        {!pageWrapperRef && !isSSR ? null : <Lists
-            cb={cb}
-            maxHeight={!isSSR ? g(pageWrapperRef, 'clientHeight') : null}
-            sponsorsList={ig(data, 'sponsorsList')}
-            sponsorLinkBuilder={sponsorLinkBuilder}
-            tagList={ig(data, 'tagList')}
-            tagLinkBuilder={listsTagLinkBuilder}
-            tagArchiveList={ig(data, 'tagArchiveList')}
-            archiveLinkBuilder={listsArchiveLinkBuilder}
-            i18nListNichesHeader={i18nListNichesHeader}
-            i18nListArchiveHeader={i18nListArchiveHeader}
+    Niche = props => <Fragment>
+        <PageTextHelmet htmlLang={g(props, 'htmlLang')} pageText={ig(props.data, 'pageText')}/>
+        {!g(props, 'pageWrapperRef') && !g(props, 'isSSR') ? null : <Lists
+            cb={g(props, 'cb')}
+            maxHeight={!g(props, 'isSSR') ? g(props, 'pageWrapperRef', 'clientHeight') : null}
+            sponsorsList={ig(props.data, 'sponsorsList')}
+            sponsorLinkBuilder={g(props, 'sponsorLinkBuilder')}
+            tagList={ig(props.data, 'tagList')}
+            tagLinkBuilder={g(props, 'listsTagLinkBuilder')}
+            tagArchiveList={ig(props.data, 'tagArchiveList')}
+            archiveLinkBuilder={g(props, 'listsArchiveLinkBuilder')}
+            i18nListNichesHeader={g(props, 'i18nListNichesHeader')}
+            i18nListArchiveHeader={g(props, 'i18nListArchiveHeader')}
         />}
-        <PageWrapperNextToList ref={setPageWrapperRef}>
+        <PageWrapperNextToList ref={g(props, 'setPageWrapperRef')}>
             <Typography variant="h4" gutterBottom>
-                {ig(data, 'pageText', 'listHeader')}
+                {ig(props.data, 'pageText', 'listHeader')}
             </Typography>
             <ControlBar
-                cb={cb}
-                linkBuilder={controlLinkBuilder}
-                archiveLinkBuilder={controlArchiveLinkBuilder}
-                backFromArchiveLinkBuilder={controlBackFromArchiveLinkBuilder}
-                i18nOrdering={i18nOrdering}
-                i18nButtons={i18nButtons}
-                i18nLabelShowing={i18nLabelShowing}
-                chooseSort={chooseSort}
-                isSSR={isSSR}
-                pagesCount={ig(data, 'pagesCount')}
-                pageNumber={ig(data, 'pageNumber')}
-                itemsCount={ig(data, 'itemsCount')}
-                sortList={ig(data, 'sortList')}
-                currentSort={ig(data, 'currentSort')}
-                archiveFilms={ig(data, 'archiveFilms')}
-                tagArchiveListOlder={ig(data, 'tagArchiveListOlder')}
-                tagArchiveListNewer={ig(data, 'tagArchiveListNewer')}
+                linkBuilder={g(props, 'controlLinkBuilder')}
+                archiveLinkBuilder={g(props, 'controlArchiveLinkBuilder')}
+                backFromArchiveLinkBuilder={g(props, 'controlBackFromArchiveLinkBuilder')}
+                chooseSort={g(props, 'chooseSort')}
+                pagesCount={ig(props.data, 'pagesCount')}
+                pageNumber={ig(props.data, 'pageNumber')}
+                itemsCount={ig(props.data, 'itemsCount')}
+                sortList={ig(props.data, 'sortList')}
+                currentSort={ig(props.data, 'currentSort')}
+                archiveFilms={ig(props.data, 'archiveFilms')}
+                tagArchiveListOlder={ig(props.data, 'tagArchiveListOlder')}
+                tagArchiveListNewer={ig(props.data, 'tagArchiveListNewer')}
             />
-            <VideoList
-                videoList={ig(data, 'videoList')}
-            />
+            <VideoList videoList={ig(props.data, 'videoList')}/>
+            {g(ig(props.data, 'videoList'), 'size') < 20 ? null : <ControlBar
+                isDownBelow={true}
+                linkBuilder={g(props, 'controlLinkBuilder')}
+                archiveLinkBuilder={g(props, 'controlArchiveLinkBuilder')}
+                backFromArchiveLinkBuilder={g(props, 'controlBackFromArchiveLinkBuilder')}
+                chooseSort={g(props, 'chooseSort')}
+                pagesCount={ig(props.data, 'pagesCount')}
+                pageNumber={ig(props.data, 'pageNumber')}
+                itemsCount={ig(props.data, 'itemsCount')}
+                sortList={ig(props.data, 'sortList')}
+                currentSort={ig(props.data, 'currentSort')}
+                archiveFilms={ig(props.data, 'archiveFilms')}
+                tagArchiveListOlder={ig(props.data, 'tagArchiveListOlder')}
+                tagArchiveListNewer={ig(props.data, 'tagArchiveListNewer')}
+            />}
         </PageWrapperNextToList>
     </Fragment>,
 
@@ -123,11 +107,8 @@ export default compose(
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
-            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
-            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nListNichesHeader: getHeaderWithOrientation(state, 'listNiches'),
             i18nListArchiveHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'listArchive'),
-            i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -221,11 +202,8 @@ export default compose(
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
         htmlLang: PropTypes.string,
-        i18nOrdering: immutableI18nOrderingModel,
-        i18nButtons: immutableI18nButtonsModel,
         i18nListNichesHeader: PropTypes.string,
         i18nListArchiveHeader: PropTypes.string,
-        i18nLabelShowing: PropTypes.string,
 
         pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(
             typeof Element === 'undefined' ? () => {} : Element // plug for SSR

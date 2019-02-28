@@ -19,7 +19,7 @@ import {
 } from '../helpers'
 
 import {model} from './models'
-import {immutableI18nButtonsModel, immutableI18nOrderingModel, routerContextModel} from '../models'
+import {routerContextModel} from '../models'
 import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
@@ -38,8 +38,6 @@ const
         classes,
         cb,
         htmlLang,
-        i18nOrdering,
-        i18nButtons,
         data,
         chooseSort,
         isSSR,
@@ -51,7 +49,6 @@ const
         listsArchiveLinkBuilder,
         i18nListNichesHeader,
         i18nListArchiveHeader,
-        i18nLabelShowing,
         setPageWrapperRef,
         pageWrapperRef,
     }) => <Fragment>
@@ -73,22 +70,15 @@ const
             <Typography
                 variant="h4"
                 gutterBottom
-                classes={{
-                    root: classes.typographyTitle
-                }}
+                className={classes.typographyTitle}
             >
                 {data.getIn(['pageText', 'listHeader'])}
             </Typography>
             <ControlBar
-                cb={cb}
                 linkBuilder={controlLinkBuilder}
                 archiveLinkBuilder={controlArchiveLinkBuilder}
                 backFromArchiveLinkBuilder={controlBackFromArchiveLinkBuilder}
-                i18nOrdering={i18nOrdering}
-                i18nButtons={i18nButtons}
-                i18nLabelShowing={i18nLabelShowing}
                 chooseSort={chooseSort}
-                isSSR={isSSR}
                 pagesCount={ig(data, 'pagesCount')}
                 pageNumber={ig(data, 'pageNumber')}
                 itemsCount={ig(data, 'itemsCount')}
@@ -98,8 +88,21 @@ const
                 tagArchiveListOlder={ig(data, 'tagArchiveListOlder')}
                 tagArchiveListNewer={ig(data, 'tagArchiveListNewer')}
             />
-            <VideoList
-                videoList={ig(data, 'videoList')}
+            <VideoList videoList={ig(data, 'videoList')}/>
+            <ControlBar
+                isDownBelow={true}
+                linkBuilder={controlLinkBuilder}
+                archiveLinkBuilder={controlArchiveLinkBuilder}
+                backFromArchiveLinkBuilder={controlBackFromArchiveLinkBuilder}
+                chooseSort={chooseSort}
+                pagesCount={ig(data, 'pagesCount')}
+                pageNumber={ig(data, 'pageNumber')}
+                itemsCount={ig(data, 'itemsCount')}
+                sortList={ig(data, 'sortList')}
+                currentSort={ig(data, 'currentSort')}
+                archiveFilms={ig(data, 'archiveFilms')}
+                tagArchiveListOlder={ig(data, 'tagArchiveListOlder')}
+                tagArchiveListNewer={ig(data, 'tagArchiveListNewer')}
             />
         </PageWrapperNextToList>
     </Fragment>,
@@ -127,11 +130,8 @@ export default compose(
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
-            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
-            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
             i18nListNichesHeader: getHeaderWithOrientation(state, 'listNiches'),
             i18nListArchiveHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'listArchive'),
-            i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -210,11 +210,8 @@ export default compose(
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
         htmlLang: PropTypes.string,
-        i18nOrdering: immutableI18nOrderingModel,
-        i18nButtons: immutableI18nButtonsModel,
         i18nListNichesHeader: PropTypes.string,
         i18nListArchiveHeader: PropTypes.string,
-        i18nLabelShowing: PropTypes.string,
 
         pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(
             typeof Element === 'undefined' ? () => {} : Element // plug for SSR

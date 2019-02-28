@@ -45,8 +45,10 @@ import {
 
 const
     defaultSSR = fromJS({isSSR: false}),
+
     stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({
         currentWidth: PropTypes.number,
+        currentHeight: PropTypes.number,
         currentBreakpoint: PropTypes.string,
         favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
@@ -72,8 +74,9 @@ export default combineReducers({
 
     ui: provedHandleActions(stateModel, {
         [g(actions, 'resize')]: (state, action) => state.merge({
-            currentWidth: action.payload,
-            currentBreakpoint: getCurrentBreakpoint(action.payload),
+            currentWidth: g(action, 'payload', 'width'),
+            currentHeight: g(action, 'payload', 'height'),
+            currentBreakpoint: getCurrentBreakpoint(g(action, 'payload', 'width')),
         }),
 
         [g(actions, 'setFavoriteVideoList')]: (state, {payload: favoriteVideoList}) =>
@@ -91,6 +94,7 @@ export default combineReducers({
             removeIdFromFavoriteList(state, 'favoritePornstarList', id),
     }, fromJS({
         currentWidth: 0,
+        currentHeight: 0,
         currentBreakpoint: getCurrentBreakpoint(),
         favoriteVideoList: List(),
         favoritePornstarList: List(),
