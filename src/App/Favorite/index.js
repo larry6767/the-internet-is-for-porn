@@ -1,4 +1,3 @@
-// TODO: this page needs propTypes
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
@@ -15,11 +14,10 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
-    breakpoints,
 } from '../helpers'
 
 import {model} from './models'
-import {immutableI18nButtonsModel, routerContextModel} from '../models'
+import {routerContextModel} from '../models'
 import routerGetters from '../routerGetters'
 import orientationPortal from '../MainHeader/Niche/orientationPortal'
 import sectionPortal from '../MainHeader/Navigation/sectionPortal'
@@ -38,51 +36,46 @@ const
         pornstars: false,
     },
 
-    Favorite = ({
-        classes,
-        cb,
-        isSSR,
-        htmlLang,
-        i18nButtons,
-        i18nLabelShowing,
-        data,
-        controlLinkBuilder,
-        controlFavoriteLinkBuilder,
-    }) => <Fragment>
-        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
+    Favorite = props => <Fragment>
+        <PageTextHelmet htmlLang={g(props, 'htmlLang')} pageText={ig(props.data, 'pageText')}/>
         <PageWrapper>
             <Typography
                 variant="h4"
                 gutterBottom
-                classes={{
-                    root: g(classes, 'typographyTitle'),
-                }}
+                className={g(props, 'classes', 'typographyTitle')}
             >
-                {g(ig(data, 'videoList'), 'size')
-                    ? `${(ig(data, 'pageText', 'listHeader') || '')
-                        .replace(/[0-9]/g, '')}${g(ig(data, 'videoList'), 'size')}`
-                    : ig(data, 'pageText', 'listHeaderEmpty')
+                {g(ig(props.data, 'videoList'), 'size')
+                    ? `${(ig(props.data, 'pageText', 'listHeader') || '')
+                        .replace(/[0-9]/g, '')}${g(ig(props.data, 'videoList'), 'size')}`
+                    : ig(props.data, 'pageText', 'listHeaderEmpty')
                 }
             </Typography>
             <ControlBar
-                isSSR={isSSR}
-                cb={cb}
-                i18nButtons={i18nButtons}
-                i18nLabelShowing={i18nLabelShowing}
-                linkBuilder={controlLinkBuilder}
-                favoriteLinkBuilder={controlFavoriteLinkBuilder}
-                pagesCount={ig(data, 'pagesCount')}
-                pageNumber={ig(data, 'pageNumber')}
-                itemsCount={ig(data, 'itemsCount')}
+                linkBuilder={g(props, 'controlLinkBuilder')}
+                favoriteLinkBuilder={g(props, 'controlFavoriteLinkBuilder')}
+                pagesCount={ig(props.data, 'pagesCount')}
+                pageNumber={ig(props.data, 'pageNumber')}
+                itemsCount={ig(props.data, 'itemsCount')}
                 favoriteButtons={favoriteButtons}
                 archiveFilms={null}
                 tagArchiveListOlder={null}
                 tagArchiveListNewer={null}
                 archiveLinkBuilder={null}
             />
-            <VideoList
-                videoList={ig(data, 'videoList')}
-            />
+            <VideoList videoList={ig(props.data, 'videoList')}/>
+            {g(ig(props.data, 'videoList'), 'size') < 20 ? null : <ControlBar
+                isDownBelow={true}
+                linkBuilder={g(props, 'controlLinkBuilder')}
+                favoriteLinkBuilder={g(props, 'controlFavoriteLinkBuilder')}
+                pagesCount={ig(props.data, 'pagesCount')}
+                pageNumber={ig(props.data, 'pageNumber')}
+                itemsCount={ig(props.data, 'itemsCount')}
+                favoriteButtons={favoriteButtons}
+                archiveFilms={null}
+                tagArchiveListOlder={null}
+                tagArchiveListNewer={null}
+                archiveLinkBuilder={null}
+            />}
         </PageWrapper>
     </Fragment>,
 
@@ -104,12 +97,8 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             routerContext: getRouterContext(state),
             htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
-            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
-            i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
             data: ig(state, 'app', 'favorite'),
         }),
         {
@@ -143,17 +132,14 @@ export default compose(
     }),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        isSSR: PropTypes.bool,
-        cb: PropTypes.oneOf(breakpoints),
         routerContext: routerContextModel,
         htmlLang: PropTypes.string,
-        i18nButtons: immutableI18nButtonsModel,
-        i18nLabelShowing: PropTypes.string,
         data: model,
         controlLinkBuilder: PropTypes.func,
         controlFavoriteLinkBuilder: PropTypes.func,
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
+        setNewText: PropTypes.func,
     }),
     loadingWrapper({
         withControlBar: true,

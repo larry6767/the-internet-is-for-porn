@@ -8,9 +8,11 @@ import {
     PropTypes,
     ImmutablePropTypes,
     setPropTypes,
+    getRouterContext,
 } from '../../App/helpers'
 
-import {immutableI18nButtonsModel} from '../../App/models'
+import {immutableI18nButtonsModel, routerContextModel} from '../../App/models'
+import routerGetters from '../../App/routerGetters'
 import {immutablePornstarItemModel} from '../PornstarItem/models'
 import PornstarItem from '../PornstarItem'
 import actions from '../../App/actions'
@@ -32,6 +34,7 @@ const
 export default compose(
     connect(
         state => ({
+            routerContext: getRouterContext(state),
             favoritePornstarList: ig(state, 'app', 'ui', 'favoritePornstarList'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
         }),
@@ -60,13 +63,17 @@ export default compose(
 
             props.removePornstarFromFavorite(ig(x, 'id'))
         },
+
+        linkBuilder: props => child =>
+            routerGetters.pornstar.link(g(props, 'routerContext'), child, null),
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        routerContext: routerContextModel,
         i18nButtons: immutableI18nButtonsModel,
         pornstarList: ImmutablePropTypes.listOf(immutablePornstarItemModel),
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
-        linkBuilder: PropTypes.func,
 
+        linkBuilder: PropTypes.func,
         addPornstarToFavorite: PropTypes.func,
         addToFavoriteHandler: PropTypes.func,
         removePornstarFromFavorite: PropTypes.func,

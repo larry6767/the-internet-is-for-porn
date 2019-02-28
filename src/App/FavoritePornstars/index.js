@@ -1,4 +1,3 @@
-// TODO: this page needs refactoring (propTypes, ig, ext)
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
@@ -14,14 +13,10 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
-    breakpoints,
     PropTypes,
 } from '../helpers'
 
-import {
-    immutableI18nButtonsModel,
-    routerContextModel,
-} from '../models'
+import {routerContextModel} from '../models'
 
 import {model} from './models'
 import routerGetters from '../routerGetters'
@@ -42,53 +37,46 @@ const
         pornstars: true,
     },
 
-    FavoritePornstars = ({
-        classes,
-        isSSR,
-        cb,
-        htmlLang,
-        i18nButtons,
-        i18nLabelShowing,
-        controlLinkBuilder,
-        controlFavoriteLinkBuilder,
-        data,
-        linkBuilder,
-    }) => <Fragment>
-        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
+    FavoritePornstars = props => <Fragment>
+        <PageTextHelmet htmlLang={g(props, 'htmlLang')} pageText={ig(props.data, 'pageText')}/>
         <PageWrapper>
             <Typography
                 variant="h4"
                 gutterBottom
-                classes={{
-                    root: g(classes, 'typographyTitle')
-                }}
+                className={g(props, 'classes', 'typographyTitle')}
             >
-                {g(ig(data, 'modelsList'), 'size')
-                    ? `${(ig(data, 'pageText', 'listHeader') || '')
-                        .replace(/[0-9]/g, '')}${g(ig(data, 'modelsList'), 'size')}`
-                    : ig(data, 'pageText', 'listHeaderEmpty')
+                {g(ig(props.data, 'modelsList'), 'size')
+                    ? `${(ig(props.data, 'pageText', 'listHeader') || '')
+                        .replace(/[0-9]/g, '')}${g(ig(props.data, 'modelsList'), 'size')}`
+                    : ig(props.data, 'pageText', 'listHeaderEmpty')
                 }
             </Typography>
             <ControlBar
-                isSSR={isSSR}
-                cb={cb}
-                i18nButtons={i18nButtons}
-                i18nLabelShowing={i18nLabelShowing}
-                linkBuilder={controlLinkBuilder}
-                favoriteLinkBuilder={controlFavoriteLinkBuilder}
-                pagesCount={ig(data, 'pagesCount')}
-                pageNumber={ig(data, 'pageNumber')}
-                itemsCount={ig(data, 'itemsCount')}
+                linkBuilder={g(props, 'controlLinkBuilder')}
+                favoriteLinkBuilder={g(props, 'controlFavoriteLinkBuilder')}
+                pagesCount={ig(props.data, 'pagesCount')}
+                pageNumber={ig(props.data, 'pageNumber')}
+                itemsCount={ig(props.data, 'itemsCount')}
                 favoriteButtons={favoriteButtons}
                 archiveFilms={null}
                 tagArchiveListOlder={null}
                 tagArchiveListNewer={null}
                 archiveLinkBuilder={null}
             />
-            <PornstarList
-                linkBuilder={linkBuilder}
-                pornstarList={ig(data, 'modelsList')}
-            />
+            <PornstarList pornstarList={ig(props.data, 'modelsList')}/>
+            {g(ig(props.data, 'modelsList'), 'size') < 24 ? null : <ControlBar
+                isDownBelow={true}
+                linkBuilder={g(props, 'controlLinkBuilder')}
+                favoriteLinkBuilder={g(props, 'controlFavoriteLinkBuilder')}
+                pagesCount={ig(props.data, 'pagesCount')}
+                pageNumber={ig(props.data, 'pageNumber')}
+                itemsCount={ig(props.data, 'itemsCount')}
+                favoriteButtons={favoriteButtons}
+                archiveFilms={null}
+                tagArchiveListOlder={null}
+                tagArchiveListNewer={null}
+                archiveLinkBuilder={null}
+            />}
         </PageWrapper>
     </Fragment>,
 
@@ -110,13 +98,9 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             routerContext: getRouterContext(state),
             data: ig(state, 'app', 'favoritePornstars'),
             htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
-            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
-            i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -135,9 +119,6 @@ export default compose(
 
         controlFavoriteLinkBuilder: props => section =>
             g(routerGetters, section).link(g(props, 'routerContext'), null),
-
-        linkBuilder: props => child =>
-            routerGetters.pornstar.link(g(props, 'routerContext'), child, null),
     }),
     lifecycle({
         componentDidMount() {
@@ -153,10 +134,8 @@ export default compose(
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         data: model,
-        cb: PropTypes.oneOf(breakpoints),
         routerContext: routerContextModel,
         htmlLang: PropTypes.string,
-        i18nButtons: immutableI18nButtonsModel,
     }),
     loadingWrapper({
         withControlBar: true,

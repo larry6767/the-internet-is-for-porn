@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react'
+import {connect} from 'react-redux'
 import {compose, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 
@@ -247,12 +248,13 @@ const
 
     ControlBar = ({
         classedBounds,
-        isSSR,
         cb,
-
+        isSSR,
         i18nOrdering,
         i18nButtons,
         i18nLabelShowing,
+
+        isDownBelow = false,
 
         linkBuilder,
         backFromArchiveLinkBuilder,
@@ -270,7 +272,12 @@ const
         tagArchiveListOlder,
         tagArchiveListNewer,
         favoriteButtons,
-    }) => <Wrapper>
+    }) => <Wrapper isDownBelow={isDownBelow}>
+        { ! isDownBelow ? null : <ShowedElements
+            itemsCount={itemsCount}
+            pageNumber={pageNumber}
+            i18nLabelShowing={i18nLabelShowing}
+        />}
         <ControlButtons>
             {archiveFilms && ig(archiveFilms, 'currentlyActiveId') !== null
                 ? <ArchiveControlBar
@@ -313,14 +320,23 @@ const
                 />
             }
         </ControlButtons>
-        <ShowedElements
+        {isDownBelow ? null : <ShowedElements
             itemsCount={itemsCount}
             pageNumber={pageNumber}
             i18nLabelShowing={i18nLabelShowing}
-        />
+        />}
     </Wrapper>
 
 export default compose(
+    connect(
+        state => ({
+            cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            isSSR: ig(state, 'app', 'ssr', 'isSSR'),
+            i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
+            i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
+            i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
+        }),
+    ),
     onlyUpdateForKeys(['cb']),
     withStyles(muiStyles),
     withPropsOnChange([], props => ({
@@ -338,12 +354,13 @@ export default compose(
             select: PropTypes.object,
             typography: PropTypes.object,
         }),
-        isSSR: PropTypes.bool,
         cb: PropTypes.oneOf(breakpoints).isOptional,
-
-        i18nOrdering: immutableI18nOrderingModel.isOptional,
+        isSSR: PropTypes.bool,
+        i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,
         i18nLabelShowing: PropTypes.string,
+
+        isDownBelow: PropTypes.bool.isOptional,
 
         linkBuilder: PropTypes.func,
         archiveLinkBuilder: PropTypes.func.isOptional,
