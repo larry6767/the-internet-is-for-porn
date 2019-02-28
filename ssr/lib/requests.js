@@ -42,9 +42,27 @@ const
                 `Response is not OK (status code is ${response.status}), ` +
                 `call stack: ${callStackGetter()}`
             )
-
         return response.json()
     },
+
+    fetchPageDataResponseExtractor = (headers, siteLocales, localeCode, orientationCode) =>
+        async response => {
+            if ( ! response.ok && response.status === 404) {
+                url = getPageDataUrlBuilder(localeCode, orientationCode, 'notFound', null),
+                body = {operation: 'getPageDataByUrl', params: {
+                    url,
+                    options: {blocks: {updateExtraURL: 1, updateSponsorURL: 1}}
+                }}
+
+                return getNotFoundMap(await fetch(backendUrl(siteLocales, localeCode), {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(body),
+                }).then(fetchResponseExtractor(() => new Error().stack)))
+            } else {
+                return response.json()
+            }
+        },
 
     getPageDataPageMapping = Object.freeze({
         home: Object.freeze([
@@ -198,7 +216,7 @@ export const getPageData = siteLocales => async ({
         method: 'POST',
         headers,
         body: JSON.stringify(body),
-    }).then(fetchResponseExtractor(() => new Error().stack)))
+    }).then(fetchPageDataResponseExtractor(headers, siteLocales, localeCode, orientationCode)))
 }
 
 /*
