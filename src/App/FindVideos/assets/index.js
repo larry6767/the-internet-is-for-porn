@@ -1,1 +1,1 @@
-export {PageWrapper} from '../../../generic/assets'
+export {PageWrapper, StyledLink} from '../../../generic/assets'

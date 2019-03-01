@@ -345,12 +345,18 @@ export const
 
     getFindVideosMap = x => {
         const
-            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS'))
+            sortList = getOrderingSortList(g(x, 'page', 'ACTIVE_NAV_TABS')),
+            orientationSuggestion = ! (
+                x.page.SEARCH_SUGGESTED_CLASS_ID &&
+                x.page.SEARCH_SUGGESTED_CLASS_ID !== g(x, 'page', 'CLASS_ID')
+            ) ? null :
+                Number(g(x, 'page', 'SEARCH_SUGGESTED_CLASS_ID'))
 
         return {
-            pageNumber: x.page.PAGE_NUMBER,
-            pageText: getPageText(x.page.PAGE_TEXT),
-            pagesCount: x.page.PAGES_COUNT,
+            orientationSuggestion,
+            pageNumber: g(x, 'page', 'PAGE_NUMBER'),
+            pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
+            pagesCount: g(x, 'page', 'PAGES_COUNT'),
 
             sortList,
             currentSort:

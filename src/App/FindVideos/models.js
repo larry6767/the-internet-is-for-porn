@@ -7,6 +7,7 @@ export const
         isLoading: PropTypes.bool,
         isLoaded: PropTypes.bool,
         isFailed: PropTypes.bool,
+        orientationSuggestion: PropTypes.nullable(PropTypes.number),
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageNumber: PropTypes.number,
         pageText: PropTypes.nullable(immutablePageTextModel),
