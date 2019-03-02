@@ -186,7 +186,7 @@ export default compose(
     withPropsOnChange(['searchSuggestions'], props => ({
         searchSuggestions: Object.freeze(g(props, 'searchSuggestions').toJS()),
     })),
-    onlyUpdateForKeys(['searchSuggestions']),
+    onlyUpdateForKeys(['searchSuggestions', 'searchQuery']),
     withHandlers({
         loadSuggestions: props => ({value, reason}) => {
             props.suggestionsFetchRequest({searchQuery: value})
