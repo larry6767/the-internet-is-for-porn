@@ -284,9 +284,13 @@ const
 
                 return `${orientationPfx}/${findVideos}`
             },
-            link: (r, qsParams={/*ordering:'…', pagination:1, searchQuery:''*/}, allowedQsKeys) => {
+            link: (r, qsParams={
+                /*ordering:'…', pagination:1, searchQuery:'', changeOrientation: ''*/
+            }, allowedQsKeys, changeOrientation = null) => {
                 const
-                    orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
+                    orientationPfx = ! changeOrientation
+                        ? ig(r, 'router', 'orientation', ig(r, 'currentOrientation'))
+                        : ig(r, 'router', 'orientation', changeOrientation),
                     findVideos = ig(r, 'router', 'routes', 'findVideos', 'section'),
                     qs = qsParams === null ? {} : prepareQs(r, qsParams, allowedQsKeys)
 

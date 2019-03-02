@@ -25,6 +25,8 @@ const
             search: {
                 inputPlaceholder: 'Search box',
                 buttonTitle: 'Run search',
+                orientationSuggestion: 'The keyword \"%SEARCH_QUERY%\" you were searching for \
+                    sounds pretty %ORIENTATION%',
             },
             navigation: {
                 home: {title: 'Home'},
@@ -53,6 +55,7 @@ const
                 backToMainPage: 'Back to main page',
                 addToFavorite: 'Add to favorite',
                 removeFromFavorite: 'Remove from favorite',
+                agree: 'Yes',
                 cancel: 'Cancel',
                 showInfo: 'Show info',
                 hideInfo: 'Hide info',
@@ -162,6 +165,8 @@ const
             search: {
                 inputPlaceholder: 'Stichworte hinzufügen',
                 buttonTitle: 'Suche starten',
+                orientationSuggestion: 'Das Stichwort \"%SEARCH_QUERY%\" nach dem Du gesucht \
+                    hast hört sich ziemlich %ORIENTATION% an',
             },
             navigation: {
                 home: {title: 'Hauptseite'},
@@ -190,6 +195,7 @@ const
                 backToMainPage: 'Zurück zur Hauptseite',
                 addToFavorite: 'Zu den Favoriten hinzufügen',
                 removeFromFavorite: 'Aus Favoriten entfernen',
+                agree: 'Ja',
                 cancel: 'Stornieren',
                 showInfo: 'Zeige',
                 hideInfo: 'Ausblenden',
@@ -304,6 +310,9 @@ const
             search: {
                 inputPlaceholder: 'Inserisci parole chiave...',
                 buttonTitle: 'Esegui la ricerca',
+                orientationSuggestion: 'Stai cercando un termine \"%SEARCH_QUERY%\", per i \
+                    migliori risultati mirati ti consigliamo di passare alla sezione %ORIENTATION% \
+                    di questo sito',
             },
             navigation: {
                 home: {title: 'Principale'},
@@ -332,6 +341,7 @@ const
                 backToMainPage: 'Torna alla pagina principale',
                 addToFavorite: 'Aggiungi ai favoriti',
                 removeFromFavorite: 'Rimuovi dai preferiti',
+                agree: 'Sì',
                 cancel: 'Annulla',
                 showInfo: 'Mostra',
                 hideInfo: 'Nascondi',
@@ -443,6 +453,8 @@ const
             search: {
                 inputPlaceholder: 'Chercher sur Video Section',
                 buttonTitle: 'Lancer une recherche',
+                orientationSuggestion: '\"%SEARCH_QUERY%\", pour des résultats plus appropriés \
+                    nous vous recommandons de vous diriger vers la section %ORIENTATION% de ce site',
             },
             navigation: {
                 home: {title: 'Principale'},
@@ -471,6 +483,7 @@ const
                 backToMainPage: 'Retour au menu',
                 addToFavorite: 'À Favoris',
                 removeFromFavorite: 'De Favoris',
+                agree: 'Oui',
                 cancel: 'Annuler',
                 showInfo: 'Afficher',
                 hideInfo: 'Masquer',
@@ -582,6 +595,8 @@ const
             search: {
                 inputPlaceholder: 'Palabra va aquí ...',
                 buttonTitle: 'Ejecutar búsqueda',
+                orientationSuggestion: 'Si estabas buscando videos de sexo \"%SEARCH_QUERY%\", \
+                    visita nuestra sección de %ORIENTATION% para obtener mejores resultados',
             },
             navigation: {
                 home: {title: 'Principal'},
@@ -610,6 +625,7 @@ const
                 backToMainPage: 'Volver a la Página Principal',
                 addToFavorite: 'Agregar a "Favoritos',
                 removeFromFavorite: 'Eliminar de favorito',
+                agree: 'Sí',
                 cancel: 'Cancelar',
                 showInfo: 'Mostrar',
                 hideInfo: 'Ocultar',
@@ -722,6 +738,8 @@ const
             search: {
                 inputPlaceholder: 'Palavra chave ou pornstar nome',
                 buttonTitle: 'Executar pesquisa',
+                orientationSuggestion: 'Se procuras \"%SEARCH_QUERY%\" porno por favor verifica \
+                    a secção %ORIENTATION% do site para melhores resultados',
             },
             navigation: {
                 home: {title: 'Inicial'},
@@ -750,6 +768,7 @@ const
                 backToMainPage: 'Voltar à Página Principal',
                 addToFavorite: 'para Favoritos',
                 removeFromFavorite: 'dos Favoritos',
+                agree: 'Sim',
                 cancel: 'Cancelar',
                 showInfo: 'Mostrar',
                 hideInfo: 'Ocultar',
@@ -861,6 +880,8 @@ const
             search: {
                 inputPlaceholder: 'Skriv nyckelordet här...',
                 buttonTitle: 'Kör sök',
+                orientationSuggestion: 'Om du sökte efter \"%SEARCH_QUERY%\"-sexvideor vänligen \
+                    byt till vår %ORIENTATION%-sektion för bättre resultat',
             },
             navigation: {
                 home: {title: 'Hemsida'},
@@ -889,6 +910,7 @@ const
                 backToMainPage: 'Tillbaka till Huvudsidan',
                 addToFavorite: 'från Favoriter',
                 removeFromFavorite: 'till Favoriter',
+                agree: 'Ja',
                 cancel: 'Annullera',
                 showInfo: 'Visa info',
                 hideInfo: 'Dölja info',
@@ -998,6 +1020,8 @@ const
             search: {
                 inputPlaceholder: 'Zoekveld',
                 buttonTitle: 'Voer een zoekopdracht uit',
+                orientationSuggestion: 'Als je op zoek bent naar \"%SEARCH_QUERY%\" sex video\'s \
+                    bezoek dan onze %ORIENTATION% sectie voor betere resultaten',
             },
             navigation: {
                 home: {title: 'Hoofd'},
@@ -1026,6 +1050,7 @@ const
                 backToMainPage: 'Terug naar de Hoofdpagina',
                 addToFavorite: 'naar Favorieten',
                 removeFromFavorite: 'uit Favorieten',
+                agree: 'Ja',
                 cancel: 'Annuleren',
                 showInfo: 'Toon info',
                 hideInfo: 'Verbergen',
@@ -1138,6 +1163,8 @@ const
             search: {
                 inputPlaceholder: 'Hakulaatikko',
                 buttonTitle: 'Suorita haku',
+                orientationSuggestion: 'Jos etsit \"%SEARCH_QUERY%\" pornoa, ole hyvä ja siirry \
+                    sivustomme %ORIENTATION%–osioon saadaksesi parempia tuloksia',
             },
             navigation: {
                 home: {title: 'Etusivu'},
@@ -1166,6 +1193,7 @@ const
                 backToMainPage: 'Takaisin Etusivulle',
                 addToFavorite: 'Suosikkeihin',
                 removeFromFavorite: 'Suosikeista',
+                agree: 'Joo',
                 cancel: 'Peruuttaa',
                 showInfo: 'Näytä',
                 hideInfo: 'Piilota',
@@ -1276,6 +1304,8 @@ const
             search: {
                 inputPlaceholder: 'Искать на сайте',
                 buttonTitle: 'Начать поиск',
+                orientationSuggestion: 'Если вы ищете \"%SEARCH_QUERY%\" секс видео, пожалуйста, \
+                    посетите наш %ORIENTATION% раздел для лучших результатов поиска',
             },
             navigation: {
                 home: {title: 'Главная'},
@@ -1304,6 +1334,7 @@ const
                 backToMainPage: 'Вернуться на главную',
                 addToFavorite: 'В избранное',
                 removeFromFavorite: 'Из избранного',
+                agree: 'Да',
                 cancel: 'Отменить',
                 showInfo: 'Развернуть',
                 hideInfo: 'Скрыть',
@@ -1414,6 +1445,8 @@ const
             search: {
                 inputPlaceholder: 'Video Section\'de Ara',
                 buttonTitle: 'Arama çalıştır',
+                orientationSuggestion: 'Eğer \"%SEARCH_QUERY%\" seks videoları arıyorsanız, \
+                    lütfen sayfamızın %ORIENTATION% bölümüne tıklayın',
             },
             navigation: {
                 home: {title: 'Anasayfa'},
@@ -1442,6 +1475,7 @@ const
                 backToMainPage: 'Ana Sayfaya geri dön',
                 addToFavorite: 'Favorilere git',
                 removeFromFavorite: 'Favoriler den',
+                agree: 'Evet',
                 cancel: 'Iptal etmek',
                 showInfo: 'Göster',
                 hideInfo: 'Gizle',

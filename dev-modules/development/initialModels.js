@@ -95,6 +95,7 @@ const
         return exact({
             inputPlaceholder: PropTypes.string,
             buttonTitle: PropTypes.string,
+            orientationSuggestion: PropTypes.string,
         })
     },
 
@@ -142,6 +143,7 @@ const
             backToMainPage: PropTypes.string,
             addToFavorite: PropTypes.string,
             removeFromFavorite: PropTypes.string,
+            agree: PropTypes.string,
             cancel: PropTypes.string,
             showInfo: PropTypes.string,
             hideInfo: PropTypes.string,
