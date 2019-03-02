@@ -44,6 +44,7 @@ const
         <PageTextHelmet htmlLang={g(props, 'htmlLang')} pageText={ig(props.data, 'pageText')}/>
         <PageWrapper>
             {g(props, 'isSSR') ? null : <Snackbar
+                ContentProps={g(props, 'snackbarContentProps')}
                 anchorOrigin={g(props, 'snackbarPosition')}
                 open={g(props, 'complexSnackbarState')}
                 message={g(props, 'snackbarText')}
@@ -137,10 +138,16 @@ export default compose(
             i18nOrientationSuggestion,
         }
     }),
+    withStyles(muiStyles),
     withPropsOnChange([], props => ({
         snackbarPosition: Object.freeze({
             vertical: 'top',
             horizontal: 'right'
+        }),
+        snackbarContentProps: Object.freeze({
+            classes: Object.freeze({
+                root: g(props, 'classes', 'snackbarContent'),
+            })
         }),
     })),
     withHandlers({
@@ -203,7 +210,7 @@ export default compose(
     }),
     withPropsOnChange(['data', 'snackbarIsOpen'], props => ({
         complexSnackbarState: Boolean(ig(props.data, 'orientationSuggestion') &&
-                g(props, 'snackbarIsOpen'))
+            g(props, 'snackbarIsOpen'))
     })),
     lifecycle({
         componentDidMount() {
@@ -216,10 +223,10 @@ export default compose(
             setNewPageFlow(this.props, nextProps)
         },
     }),
-    withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.exact({
             typographyTitle: PropTypes.string,
+            snackbarContent: PropTypes.string,
         }),
         isSSR: PropTypes.bool,
         data: model,
@@ -234,6 +241,11 @@ export default compose(
         snackbarPosition: PropTypes.exact({
             vertical: PropTypes.string,
             horizontal: PropTypes.string,
+        }),
+        snackbarContentProps: PropTypes.exact({
+            classes: PropTypes.exact({
+                root: PropTypes.string,
+            }),
         }),
         snackbarText: PropTypes.string,
         buttonsArray: PropTypes.arrayOf(PropTypes.node),
