@@ -21,6 +21,7 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
+    lazyImage,
 } from '../helpers'
 
 import {immutableI18nOrderingModel, routerContextModel} from '../models'
@@ -57,27 +58,23 @@ const
     </StyledLink>,
 
     NicheWrapper = compose(
-        withPropsOnChange(['x'], props => ({
-            nichePreviewStyle: Object.freeze({
-                backgroundImage: `url(${ig(props.x, 'thumb')})`,
-            }),
-        })),
-        onlyUpdateForKeys(['x'])
-    )(({x, nichePreviewStyle, classedBounds, routerContext}) => <Niche>
+        lazyImage,
+        onlyUpdateForKeys(['x', 'previewStyle'])
+    )((props) => <Niche>
         <StyledLink
             to={routerGetters.niche.link(
-                routerContext,
-                ig(x, 'subPage'),
+                g(props, 'routerContext'),
+                ig(props.x, 'subPage'),
                 null
             )}
-            key={ig(x, 'id')}
+            key={ig(props.x, 'id')}
         >
-            <NicheImage style={nichePreviewStyle}/>
+            <NicheImage ref={g(props, 'setRef')} style={g(props, 'previewStyle')}/>
             <Typography
                 variant="body1"
                 gutterBottom
-                classes={g(classedBounds, 'nicheTitleTypography')}
-            >{ig(x, 'name')}</Typography>
+                classes={g(props, 'classedBounds', 'nicheTitleTypography')}
+            >{ig(props.x, 'name')}</Typography>
         </StyledLink>
     </Niche>),
 
