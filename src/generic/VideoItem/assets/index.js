@@ -77,7 +77,7 @@ export const VideoPreview = styled(VideoPreviewCommon)`
     position: relative;
     display: flex;
     align-items: flex-end;
-    background-color: ${({theme}) => theme.palette.primary.light};
+    background-color: ${({theme}) => theme.palette.prerender.plug};
     background-size: cover;
     background-repeat: no-repeat;
     border-radius: 1px;

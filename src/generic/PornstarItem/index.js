@@ -11,6 +11,7 @@ import {
     PropTypes,
     ImmutablePropTypes,
     setPropTypes,
+    lazyImage,
 } from '../../App/helpers'
 
 import {immutableI18nButtonsModel} from '../../App/models'
@@ -21,7 +22,7 @@ import {Wrapper, Thumb, InfoBar, Like, StyledLinkBlock} from './assets'
 const
     PornstarItem = props => <Wrapper>
         <StyledLinkBlock to={props.linkBuilder(ig(props.x, 'subPage'))}>
-            <Thumb style={g(props, 'pornstarPreviewStyle')}/>
+            <Thumb ref={g(props, 'setRef')} style={g(props, 'previewStyle')}/> {/*from lazyImage*/}
             <Typography variant="body2" className={g(props, 'classes', 'typographyTitle')}>
                 {ig(props.x, 'name')}
             </Typography>
@@ -50,17 +51,13 @@ const
     </Wrapper>
 
 export default compose(
+    lazyImage,
     withPropsOnChange(['x', 'favoritePornstarList'], props => ({
         isThisPornstarFavorite: Boolean(
             g(props, 'favoritePornstarList').find(id => id === ig(g(props, 'x'), 'id'))
         ),
     })),
-    withPropsOnChange(['x'], props => ({
-        pornstarPreviewStyle: Object.freeze({
-            backgroundImage: `url(${ig(props.x, 'thumb')})`,
-        }),
-    })),
-    onlyUpdateForKeys(['isThisPornstarFavorite']),
+    onlyUpdateForKeys(['x', 'isThisPornstarFavorite', 'previewStyle']),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.shape({

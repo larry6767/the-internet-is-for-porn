@@ -1,5 +1,4 @@
 import React from 'react'
-import {connect} from 'react-redux'
 
 import {
     compose,
@@ -10,7 +9,7 @@ import {
     lifecycle,
 } from 'recompose'
 
-import {replace, set, some, throttle} from 'lodash'
+import {replace, set} from 'lodash'
 import {withStyles} from '@material-ui/core/styles'
 import {Typography} from '@material-ui/core'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
@@ -25,6 +24,7 @@ import {
     compareCurrentBreakpoint as ccb,
     breakpointXS as xs,
     breakpoints,
+    lazyImage,
 } from '../../App/helpers'
 
 import {muiStyles} from './assets/muiStyles'
@@ -68,19 +68,11 @@ const
         </Typography>
     </ProviderLink>,
 
-    isVisibleOnScreen = wh => x => {
-        const
-            t = g(x, 'top'),
-            b = g(x, 'bottom')
-
-        return (t >= 0 && t < wh) || (t < 0 && b > 0)
-    },
-
     timeoutKey = 'timeout',
     intervalKey = 'interval',
-    scrollListenerKey = 'scrollListener',
 
     VideoPreviewRender = compose(
+        lazyImage,
         withPropsOnChange(['x'], props => {
             const
                 thumbsCount = g(ig(props.x, 'thumbs'), 'size')
@@ -98,9 +90,6 @@ const
         }),
         withState('currentThumb', 'setCurrentThumb', null),
         withState('thumbsArePreloaded', 'setThumbsArePreloaded', false),
-        withState('wasVisible', 'setWasVisible', props => g(props, 'isSSR') ? true : false),
-        withState('wrapperRef', 'setRef', null),
-        withState('scrollTop', 'setScrollTop', 0),
         withHandlers({
             progress: props => () => {
                 const
@@ -152,57 +141,25 @@ const
                         setInterval(g(props, 'progress'), 500)
                 }, 1000)
             },
-
-            scrollListenerHandler: props => () => {
-                props.setScrollTop(g(document, 'documentElement', 'scrollTop'))
-            },
         }),
-        connect(
-            state => ({
-                currentHeight: ig(state, 'app', 'ui', 'currentHeight'),
-            })
-        ),
         lifecycle({
-            componentDidMount() {
-                this[scrollListenerKey] = throttle(g(this, 'props', 'scrollListenerHandler'), 500)
-                window.addEventListener('scroll', g(this, scrollListenerKey))
-                this.props.scrollListenerHandler()
-            },
-
             componentWillUnmount() {
-                window.removeEventListener('scroll', g(this, scrollListenerKey))
-
                 if ( ! g(this, 'props', 'wasVisible') || g(this, 'props', 'thumbsCount') === 1)
                     return
 
                 this.props.stopProgress()
             },
-
-            componentWillReceiveProps(nextProps) {
-                if (g(nextProps, 'wasVisible') || (
-                    g(this, 'props', 'currentHeight') === g(nextProps, 'currentHeight') &&
-                    g(this, 'props', 'wrapperRef') === g(nextProps, 'wrapperRef') &&
-                    g(this, 'props', 'scrollTop') === g(nextProps, 'scrollTop')
-                ))
-                    return
-
-                const
-                    currentHeight = g(nextProps, 'currentHeight'),
-                    ref = g(nextProps, 'wrapperRef')
-
-                if (ref !== null && some(ref.getClientRects(), isVisibleOnScreen(currentHeight)))
-                    nextProps.setWasVisible(true)
-            }
         }),
+        // extending standard previewStyle from lazyImage below
         withPropsOnChange(['x', 'currentThumb', 'wasVisible'], props => {
             if ( ! g(props, 'wasVisible'))
-                return {videoPreviewStyle: null}
+                return {previewStyle: null}
 
             const
                 currentThumb = g(props, 'currentThumb')
 
             return {
-                videoPreviewStyle: Object.freeze({
+                previewStyle: Object.freeze({
                     backgroundImage: `url(${
                         currentThumb === null
                             ? ig(props.x, 'thumb')
@@ -212,42 +169,42 @@ const
                 }),
             }
         }),
-        onlyUpdateForKeys(['cb', 'x', 'isThisVideoFavorite', 'videoPreviewStyle'])
-    )(({
-        classes, x, cb, isSSR, addVideoToFavoriteHandler,
-        removeVideoFromFavoriteHandler, isThisVideoFavorite,
-        getSearchLink, getVideoLink,
-        videoPreviewStyle, mouseEnterHandler, mouseLeaveHandler, thumbsCount, setRef,
-    }) => <VideoPreview
-        onMouseEnter={g(mouseEnterHandler, [])}
-        onMouseLeave={g(mouseLeaveHandler, [])}
-        style={videoPreviewStyle}
-        hasOnlyOneThumb={thumbsCount === 1}
-        ref={setRef}
+        onlyUpdateForKeys(['cb', 'x', 'isThisVideoFavorite', 'previewStyle'])
+    )((props) => <VideoPreview
+        onMouseEnter={g(props, 'mouseEnterHandler')}
+        onMouseLeave={g(props, 'mouseLeaveHandler')}
+        style={g(props, 'previewStyle')}
+        hasOnlyOneThumb={g(props, 'thumbsCount') === 1}
+        ref={g(props, 'setRef')}
     >
-        {isSSR ? renderLink(x, getVideoLink) : null}
+        {g(props, 'isSSR') ? renderLink(g(props, 'x'), g(props, 'getVideoLink')) : null}
 
         <VideoPreviewBar>
-            {isSSR ? null : ccb(cb, xs) === 0
-                ? renderProviderLink(classes, x, getSearchLink, true)
+            {g(props, 'isSSR') ? null : ccb(g(props, 'cb'), xs) === 0
+                ? renderProviderLink(
+                    g(props, 'classes'),
+                    g(props, 'x'),
+                    g(props, 'getSearchLink'),
+                    true
+                )
                 : <Like>
-                    {isThisVideoFavorite
+                    {g(props, 'isThisVideoFavorite')
                         ? <Favorite
-                            className={g(classes, 'favoriteIcon')}
-                            data-favorite-video-id={ig(x, 'id')}
-                            onClick={removeVideoFromFavoriteHandler}
+                            className={g(props, 'classes', 'favoriteIcon')}
+                            data-favorite-video-id={ig(props.x, 'id')}
+                            onClick={g(props, 'removeVideoFromFavoriteHandler')}
                         />
                         : <FavoriteBorder
-                            className={g(classes, 'favoriteBorderIcon')}
-                            data-favorite-video-id={ig(x, 'id')}
-                            onClick={addVideoToFavoriteHandler}
+                            className={g(props, 'classes', 'favoriteBorderIcon')}
+                            data-favorite-video-id={ig(props.x, 'id')}
+                            onClick={g(props, 'addVideoToFavoriteHandler')}
                         />
                     }
                 </Like>}
 
             <Duration>
-                <Typography variant="body2" className={g(classes, 'typography')}>
-                    {ig(x, 'duration')}
+                <Typography variant="body2" className={g(props, 'classes', 'typography')}>
+                    {ig(props.x, 'duration')}
                 </Typography>
             </Duration>
         </VideoPreviewBar>
