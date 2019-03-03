@@ -12,6 +12,7 @@ import {
 import {ssrRouterContextModel, orientationCodes} from '../App/models'
 import routerGetters from '../App/routerGetters'
 import nichesRedirects from '../fixtures/legacy-redirects/niches-redirects.json'
+import pornstarsRedirects from '../fixtures/legacy-redirects/pornstars-redirects.json'
 
 const
     videoRedirectFrom = r => {
@@ -46,9 +47,20 @@ const
                     exact
                     from={decodeURIComponent(from)}
                     to={routerGetters.niche.link(orientedR, to)}
+                />),
+
+                pornstarsBranch = g(pornstarsRedirects, ig(r, 'ssr', 'localeCode'), orientationCode),
+
+                pornstarsRedirectsList = map(pornstarsBranch, (to, from) => <Redirect
+                    key={`${orientationCode}-${to}-niche`}
+                    exact
+                    from={decodeURIComponent(from)}
+                    to={routerGetters.pornstar.link(orientedR, to)}
                 />)
 
-            return nichesRedirectsList.concat([
+            return nichesRedirectsList.concat(
+                pornstarsRedirectsList
+            ).concat([
                 <Route
                     key={`${orientationCode}-allNiches`}
                     exact
