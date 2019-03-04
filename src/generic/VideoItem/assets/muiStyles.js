@@ -8,12 +8,6 @@ export const muiStyles = theme => ({
         whiteSpace: 'nowrap',
         color: theme.palette.primary.dark,
     },
-    typographyTags: {
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        color: theme.palette.primary.dark,
-    },
     typographySource: {
         marginRight: 10,
     },

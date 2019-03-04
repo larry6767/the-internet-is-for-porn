@@ -259,7 +259,6 @@ export default compose(
         classes: PropTypes.exact({
             typography: PropTypes.string,
             typographyTitle: PropTypes.string,
-            typographyTags: PropTypes.string,
             typographySource: PropTypes.string,
             typographySourceContrast: PropTypes.string,
             favoriteBorderIcon: PropTypes.string,

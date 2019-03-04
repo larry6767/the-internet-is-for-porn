@@ -8,7 +8,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     html {
-        font-family: "PT Sans", sans-serif;
+        font-family: 'Arial', 'Helvetica', sans-serif;
     }
 
     * {

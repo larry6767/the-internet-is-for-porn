@@ -125,6 +125,10 @@ export const TagsBlock = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 0.75rem;
+    line-height: 1.5;
+
+    ${({theme}) => theme.media.mobile`font-size: 0.65rem;`}
 `
 
 export const Like = styled.div`

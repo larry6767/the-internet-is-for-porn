@@ -40,13 +40,15 @@ const
                     },
                 },
                 body1: {
+                    fontSize: '0.875rem',
                     [preMuiTheme.breakpoints.down("xs")]: {
-                        fontSize: '0.875rem',
+                        fontSize: '0.75rem',
                     },
                 },
                 body2: {
+                    fontSize: '0.75rem',
                     [preMuiTheme.breakpoints.down("xs")]: {
-                        fontSize: '0.75rem',
+                        fontSize: '0.65rem',
                     },
                 },
             },
