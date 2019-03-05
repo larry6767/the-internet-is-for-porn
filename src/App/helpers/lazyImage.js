@@ -27,7 +27,10 @@ export default compose(
     withState('scrollTop', 'setScrollTop', 0),
     withHandlers({
         scrollListenerHandler: props => () => {
-            props.setScrollTop(g(document, 'documentElement', 'scrollTop'))
+            const
+                scrollTop = window.pageYOffset || g(document, 'documentElement', 'scrollTop')
+
+            props.setScrollTop(scrollTop)
         },
     }),
     lifecycle({
