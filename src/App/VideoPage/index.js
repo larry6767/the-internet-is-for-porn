@@ -114,13 +114,13 @@ const
         </AdIframeWrapper>
         : <AdGag currentWidth={currentWidth}/>,
 
-    renderTag = (classes, cb, x, getTagLink) => <StyledLink to={getTagLink(x)} key={x}>
+    renderTag = (classes, x, getTagLink) => <StyledLink to={getTagLink(x)} key={x}>
         <Chip
             label={x}
             className={g(classes, 'chip')}
             component="div"
             variant="outlined"
-            color={ccb(cb, md) === -1 ? 'primary' : 'secondary'}
+            color="primary"
             clickable
         />
     </StyledLink>,
@@ -235,7 +235,6 @@ const
                         { ! ig(props.data, 'gallery', 'tags') ? null :
                             ig(props.data, 'gallery', 'tags').map(x => renderTag(
                                 g(props, 'classes'),
-                                g(props, 'cb'),
                                 x,
                                 g(props, 'getTagLink')
                             ))}

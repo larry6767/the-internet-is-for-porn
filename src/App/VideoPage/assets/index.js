@@ -23,10 +23,9 @@ export const VideoPlayer = styled.div`
     flex-wrap: wrap;
     width: 100%;
     border-radius: 2px;
-    background-color: ${({theme}) => theme.palette.primary.light};
 
-    ${({theme}) => theme.media.sm`flex-direction: column; background: none;`}
-    ${({theme}) => theme.media.mobile`flex-direction: column; background: none;`}
+    ${({theme}) => theme.media.sm`flex-direction: column;`}
+    ${({theme}) => theme.media.mobile`flex-direction: column;`}
 `
 
 export const VideoWrapper = styled.div`
@@ -34,10 +33,10 @@ export const VideoWrapper = styled.div`
     flex-direction: column;
     width: calc(100% - ${adWidth + 20}px);
     flex-grow: 1;
-    padding: 10px 10px 0;
+    margin-right: 10px;
 
-    ${({theme}) => theme.media.sm`padding: 0; width: 100%;`}
-    ${({theme}) => theme.media.mobile`padding: 0; width: 100%;`}
+    ${({theme}) => theme.media.sm`margin-right: 0; width: 100%;`}
+    ${({theme}) => theme.media.mobile`margin-right: 0; width: 100%;`}
 `
 
 export const Video = styled.div`
@@ -83,14 +82,15 @@ export const ControlPanelBlock = styled.div`
 
 export const Advertisement = styled.div`
     display: flex;
-    width: ${adWidth + 20}px;
-    padding: 10px;
+    width: ${adWidth}px;
+    padding: 0 0 10px;
     flex-direction: column;
 
     ${({theme}) => theme.media.sm`
         width: 100%;
         flex-direction: row;
         justify-content: space-around;
+        padding: 0;
         order: 1;
     `}
 
@@ -107,21 +107,15 @@ export const BottomAdvertisement = styled.section`
     display: flex;
     width: 100%;
     justify-content: space-between;
-    background-color: ${({theme}) => theme.palette.primary.light};
-    padding: 10px 10px 7px;
     border-radius: 2px;
 
     ${({theme}) => theme.media.sm`
         flex-wrap: wrap;
         justify-content: space-around;
-        background: none;
     `}
     ${({theme}) => theme.media.mobile`
-        padding: 0;
-        background-color: none;
         flex-wrap: wrap;
         justify-content: space-around;
-        background: none;
     `}
 `
 
@@ -281,13 +275,9 @@ export const TagsWrapper = styled.div`
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    padding: 10px;
+    padding: 10px 0;
 
-    ${({theme}) => theme.media.mobile`
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding: 10px 0;
-    `}
+    ${({theme}) => theme.media.mobile`flex-wrap: nowrap; overflow-x: auto;`}
 `
 
 // styles for plug
