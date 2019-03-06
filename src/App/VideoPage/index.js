@@ -328,7 +328,7 @@ export default compose(
         sponsorLinkBuilder: props => sponsor =>
             routerGetters.site.link(g(props, 'routerContext'), sponsor, null),
         scrollToPlayer: props => () => {
-            animateScroll.scrollTo(g(props, 'playerRef', 'offsetTop'), {
+            animateScroll.scrollTo(g(props, 'playerRef', 'offsetTop') - 10, {
                 duration: 500,
                 delay: 500,
                 smooth: true,
