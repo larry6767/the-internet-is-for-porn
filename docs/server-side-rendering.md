@@ -2,36 +2,40 @@
 
 `ssr` is an acronym for __Server-Side Rendering__.
 
+_P.S. You supposed to be inside a site directory
+(like this one: [`sites/videosection/`](../sites/videosection/))
+before running commands shown below._
+
 ## Usage
 
 To start HTTP-server on `http://127.0.0.1:8001` use this command:
 
 ```bash
-npm run start-ssr
+make start-ssr
 ```
 
 To customize port or/and host use command-line arguments:
 
 ```bash
-npm run start-ssr -- --port=8111 --host=0.0.0.0
+make ARGS='--port=8111 --host=0.0.0.0' start-ssr
 ```
 
 To run production build (produced by `npm run build`) without watcher:
 
 ```bash
-npm run start-production-ssr
+make start-production-ssr
 ```
 
 ### Available command-line options
 
-Use them after `--` separator given to `npm run ...`, like:
+Use them by passing in `ARGS` variable to `make` command, like:
 
 ```bash
-npm run start-ssr -- --port=8123
+make ARGS='--port=8123' start-ssr
 ```
 or:
 ```bash
-npm run start-production-ssr -- --port=8123
+make ARGS='--port=8123' start-production-ssr
 ```
 
 - `--port=8001`
@@ -42,9 +46,8 @@ npm run start-production-ssr -- --port=8123
 ### All steps to deploy and run production service
 
 ```bash
-npm i
-npm run build
-npm run start-production-ssr
+(cd ../../ && npm i)
+make start-production-ssr
 ```
 
 It will start HTTP server on `http://127.0.0.1:8001` and you could proxy it with __nginx__ or other
@@ -55,7 +58,7 @@ HTTP(S) endpoint server.
 To run RC server with proper `robots.txt` file (to prevent search engines from indexing it):
 
 ```bash
-npm run start-production-ssr -- --rc
+make ARGS='--rc' start-production-ssr
 ```
 
 #### Many workers
@@ -64,10 +67,10 @@ You probably wish to start few workers in parallel and balance requests between 
 To do so you could just start them on different ports like this:
 
 ```bash
-npm run start-production-ssr -- --port=9001 &
-npm run start-production-ssr -- --port=9002 &
-npm run start-production-ssr -- --port=9003 &
-npm run start-production-ssr -- --port=9004 &
+make ARGS='--port=9001' start-production-ssr &
+make ARGS='--port=9002' start-production-ssr &
+make ARGS='--port=9003' start-production-ssr &
+make ARGS='--port=9004' start-production-ssr &
 ```
 
 And patch your __nginx__ config relying on this example:
@@ -102,6 +105,8 @@ setsebool -P httpd_can_network_connect 1
 
 #### Serving static files by __nginx__
 
+_P.S. `$dir` is for the Video Section site, change it for specific site._
+
 ```nginx
 http {
     upstream ssr_workers {
@@ -121,7 +126,7 @@ http {
         }
     }
 
-    set $dir '/home/videosectionssr/project/xxxvogue';
+    set $dir '/home/videosectionssr/project/the-internet-is-for-porn/sites/videosection';
 
     # For production
     location /robots.txt { alias $dir/robots/production/robots.txt; }

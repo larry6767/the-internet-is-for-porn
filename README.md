@@ -1,20 +1,23 @@
-# VideoSection
+# The Internet Is For Porn
 
-Website built on top of React.js framework and its ecosystem.
+A bunch of websites built on top of React.js framework and its ecosystem with shared codebase
+between them.
 
 ## Status
 
 _In development…_
 
-## Sub-systems
+## Websites
 
-- [Server-Side Rendering service](ssr/)
+- [Video Section](sites/videosection/) (status: _in development…_)
+- [XXXVogue](sites/xxxvogue/) (status: _early prototyping…_)
 
 ## Documentation
 
 - [Style guide](docs/style-guide.md)
 - [About our redux store](docs/redux-store.md)
 - [About helpers](docs/helpers.md)
+- [Server-Side Rendering](docs/server-side-rendering.md)
 
 ## Recommended working environment
 
@@ -37,21 +40,25 @@ Keep in mind that front-end depends on SSR because SSR proxying requests to the 
 (it also rearranges and filtering huge amounts of data, because backend designed that way).
 So you just need to start both front-end development server and SSR service in parallel.
 
+_P.S. Keep in mind that you supposed to run these commands being inside a site directory,
+like this one: [`sites/videosection/`](sites/videosection/)._
+
 1. Start SSR:
 
    ```bash
-   npm run start-ssr
+   make start-ssr
    ```
 
 2. Start front-end development server:
 
    ```bash
-   npm start
+   make start-dev-server
    ```
 
 ### Production
 
-An example of __systemd__ service (`/etc/systemd/system/videosection-ssr-worker@.service`):
+An example of __systemd__ service for the __Video Section__ website
+(`/etc/systemd/system/videosection-ssr-worker@.service`):
 
 ```systemd
 [Unit]
@@ -59,15 +66,15 @@ Description=VideoSection SSR Worker - Node.js based Servers-Side-Rendering servi
 After=multi-user.target
 
 [Service]
-WorkingDirectory=/home/videosectionssr/project/xxxvogue
+WorkingDirectory=/home/videosectionssr/project/the-internet-is-for-porn
 Type=simple
 
 # For production
-ExecStart=/bin/bash ./launch.sh --port=%i
+ExecStart=/bin/bash ./sites/videosection/launch.sh --port=%i
 
 # Or use this instead if it's running on Release Candidate/testing server
 # (to prevent search engines from indexing it).
-#ExecStart=/bin/bash ./launch.sh --rc --port=%i
+#ExecStart=/bin/bash ./sites/videosection/launch.sh --rc --port=%i
 
 #Restart=on-failure
 
