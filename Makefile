@@ -14,7 +14,7 @@ start-dev-server: validate-site-directory
 start-ssr: validate-site-directory
 	"$(BINDIR)/nodemon" --watch src/ --watch ssr/ ssr/index.jsx --exec "$(BINDIR)/babel-node" --presets es2015,stage-2,react -- $(ARGS)
 
-start-production-ssr: validate-site-directory build-prod-bundle
+start-production-ssr: validate-site-directory
 	env NODE_ENV=production "$(BINDIR)/babel-node" ssr/index.jsx --presets es2015,stage-2,react --production $(ARGS)
 
 validate-site-directory:

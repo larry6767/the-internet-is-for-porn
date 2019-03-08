@@ -47,6 +47,7 @@ make ARGS='--port=8123' start-production-ssr
 
 ```bash
 (cd ../../ && npm i)
+make build-prod-bundle
 make start-production-ssr
 ```
 
