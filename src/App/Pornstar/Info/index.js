@@ -43,18 +43,27 @@ import {
 
 const
     paramsQuantityForMobile = 3,
-    paramsShrinkedQuantityForDesktop = 5,
+    paramsShrinkedQuantityForDesktop = 4,
 
-    renderTableRow = (v, k, i18nPornstarInfoParameters, classedBounds) =>
+    renderTableRow = (v, k, i18nPornstarInfoParameters, classes) =>
         <TableRow key={`${k}-row`}>
-            <TableCell component="td" classes={g(classedBounds, 'tableCellRoot')}>
+            <TableCell component="td" className={g(classes, 'tableCellRoot')}>
                 {ig(i18nPornstarInfoParameters, k)}
             </TableCell>
             <TableCell component="td">{v}</TableCell>
         </TableRow>,
 
+    renderTableButton = (modelInfoIsOpened, toggleModelInfoIsOpened, i18nButtons, classes) =>
+        <TableRow className={g(classes, 'tableButton')} onClick={toggleModelInfoIsOpened}>
+            <TableCell>
+                {modelInfoIsOpened
+                    ? ig(i18nButtons, 'hideInfo')
+                    : ig(i18nButtons, 'showInfo')}
+            </TableCell>
+        </TableRow>,
+
     Info = ({
-        classedBounds,
+        classes,
         isSSR,
         i18nButtons,
         pornstarInfo,
@@ -72,34 +81,42 @@ const
                 <Like>
                     {isThisModelFavorite
                         ? <Favorite
-                            classes={g(classedBounds, 'favoriteIcon')}
+                            className={g(classes, 'favoriteIcon')}
                             data-favorite-pornstar-id={ig(pornstarInfo, 'id')}
                             onClick={removeFromFavoriteHandler}
                         />
                         : <FavoriteBorder
-                            classes={g(classedBounds, 'favoriteBorderIcon')}
+                            className={g(classes, 'favoriteBorderIcon')}
                             data-favorite-pornstar-id={ig(pornstarInfo, 'id')}
                             onClick={addToFavoriteHandler}
                         />
                     }
                 </Like>
-                {isSSR ? null : <Button
+                {/* {isSSR ? null : <Button
                     variant="outlined"
                     color="primary"
-                    classes={g(classedBounds, 'buttonMore')}
+                    className={g(classes, 'buttonMore')}
                     onClick={toggleModelInfoIsOpened}
                 >
                     {modelInfoIsOpened
                         ? ig(i18nButtons, 'hideInfo')
                         : ig(i18nButtons, 'showInfo')}
-                </Button>}
+                </Button>} */}
             </InfoBar>
         </ThumbWrapper>
         <MobileInfo>{infoTableMobileItems}</MobileInfo>
         <DataWrapper modelInfoIsOpened={modelInfoIsOpened}>
             <Paper>
                 <Table>
-                    <TableBody>{infoTableItems}</TableBody>
+                    <TableBody>
+                        {infoTableItems}
+                        {isSSR ? null : renderTableButton(
+                            modelInfoIsOpened,
+                            toggleModelInfoIsOpened,
+                            i18nButtons,
+                            classes,
+                        )}
+                    </TableBody>
                 </Table>
             </Paper>
         </DataWrapper>
@@ -108,14 +125,6 @@ const
 
 export default compose(
     withStyles(muiStyles),
-    withPropsOnChange([], props => ({
-        classedBounds: Object.freeze({
-            tableCellRoot: Object.freeze({root: g(props, 'classes', 'tableCellRoot')}),
-            favoriteIcon: Object.freeze({root: g(props, 'classes', 'favoriteIcon')}),
-            favoriteBorderIcon: Object.freeze({root: g(props, 'classes', 'favoriteBorderIcon')}),
-            buttonMore: Object.freeze({root: g(props, 'classes', 'buttonMore')}),
-        }),
-    })),
     withPropsOnChange(['cb', 'pornstarInfoForTable'], props => {
         const
             cb = g(props, 'cb'),
@@ -126,7 +135,6 @@ export default compose(
 
         const
             classes = g(props, 'classes'),
-            typographyBold = Object.freeze({root: g(classes, 'typographyBold')}),
             pornstarInfoForTable = g(props, 'pornstarInfoForTable'),
             i18nPornstarInfoParameters = g(props, 'i18nPornstarInfoParameters'),
 
@@ -134,7 +142,7 @@ export default compose(
                 pornstarInfoForTable.mapEntries(([k, v], idx) => [
                     idx <= paramsQuantityForMobile
                         ? <Fragment>
-                            <Typography variant="body1" classes={typographyBold}>
+                            <Typography variant="body1" className={g(classes, 'typographyBold')}>
                                 {`${ig(i18nPornstarInfoParameters, k)}: `}
                             </Typography>
                             <Typography variant="body1" gutterBottom>{v}</Typography>
@@ -157,23 +165,23 @@ export default compose(
             modelInfoIsOpened = g(props, 'modelInfoIsOpened'),
             pornstarInfoForTable = g(props, 'pornstarInfoForTable'),
             i18nPornstarInfoParameters = g(props, 'i18nPornstarInfoParameters'),
-            classedBounds = g(props, 'classedBounds'),
+            classes = g(props, 'classes'),
 
             eitherDesktopOrMobileRestItems =
                 isMobile && modelInfoIsOpened
 
                 ? pornstarInfoForTable.mapEntries(([k, v], idx) => [
                     idx > paramsQuantityForMobile
-                        ? renderTableRow(v, k, i18nPornstarInfoParameters, classedBounds)
+                        ? renderTableRow(v, k, i18nPornstarInfoParameters, classes)
                         : null,
                     null
                 ]).keySeq()
 
                 : pornstarInfoForTable.mapEntries(([k, v], idx) => [
                     g(props, 'isSSR') || modelInfoIsOpened
-                        ? renderTableRow(v, k, i18nPornstarInfoParameters, classedBounds)
+                        ? renderTableRow(v, k, i18nPornstarInfoParameters, classes)
                         : idx < paramsShrinkedQuantityForDesktop && ccb(cb, xs) === 1
-                        ? renderTableRow(v, k, i18nPornstarInfoParameters, classedBounds)
+                        ? renderTableRow(v, k, i18nPornstarInfoParameters, classes)
                         : null,
                     null
                 ]).keySeq()
@@ -197,20 +205,12 @@ export default compose(
     ]),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.exact({
-            typography: PropTypes.string,
             typographyBold: PropTypes.string,
-            typographyTitle: PropTypes.string,
             favoriteBorderIcon: PropTypes.string,
             favoriteIcon: PropTypes.string,
             buttonMore: PropTypes.string,
             tableCellRoot: PropTypes.string,
-        }),
-
-        classedBounds: PropTypes.exact({
-            tableCellRoot: PropTypes.object,
-            favoriteIcon: PropTypes.object,
-            favoriteBorderIcon: PropTypes.object,
-            buttonMore: PropTypes.object,
+            tableButton: PropTypes.string,
         }),
 
         isSSR: PropTypes.bool,

@@ -1,15 +1,6 @@
 export const muiStyles = theme => ({
-    typography: {
-        color: theme.palette.primary.contrastText
-    },
     typographyBold: {
         fontWeight: 'bold',
-    },
-    typographyTitle: {
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-        width: '100%',
     },
     favoriteBorderIcon: {
         color: theme.palette.primary.dark,
@@ -38,5 +29,8 @@ export const muiStyles = theme => ({
     },
     tableCellRoot: {
         width: '30%',
+    },
+    tableButton: {
+        cursor: 'pointer',
     }
 })
