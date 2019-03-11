@@ -1,6 +1,6 @@
 {
-  "name": "xxxvogue",
-  "version": "0.1.0",
+  "name": "the-internet-is-for-porn",
+  "version": "0.0.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.9.2",
@@ -31,15 +31,7 @@
     "svg-inline-react": "^3.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "npm run ln-prod-dev-modules && react-scripts build && npm run ln-dev-modules",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "start-ssr": "nodemon --watch src/ --watch ssr/ ssr/index.jsx --exec babel-node --presets es2015,stage-2,react --",
-    "start-production-ssr": "env NODE_ENV=production babel-node ssr/index.jsx --presets es2015,stage-2,react --production",
-    "rm-dev-modules": "rm -f src/dev-modules",
-    "ln-dev-modules": "npm run rm-dev-modules && sh -c 'cd src/ && ln -s ../dev-modules/development/ dev-modules'",
-    "ln-prod-dev-modules": "npm run rm-dev-modules && sh -c 'cd src/ && ln -s ../dev-modules/production/ dev-modules'"
+    "preinstall": "make validate-not-site-directory"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -53,6 +45,7 @@
   "proxy": "http://127.0.0.1:8001/",
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^10.0.1",
     "babel-plugin-styled-components": "^1.8.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",

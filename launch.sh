@@ -6,4 +6,4 @@ cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-npm run start-production-ssr -- "$@"
+make ARGS="$*" start-production-ssr
