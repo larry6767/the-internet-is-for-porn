@@ -1,1 +1,1 @@
-./ssr/index.jsx
+../../../ssr/index.jsx
