@@ -96,16 +96,6 @@ const
                         />
                     }
                 </Like>
-                {/* {isSSR ? null : <Button
-                    variant="outlined"
-                    color="primary"
-                    className={g(classes, 'buttonMore')}
-                    onClick={toggleModelInfoIsOpened}
-                >
-                    {modelInfoIsOpened
-                        ? ig(i18nButtons, 'hideInfo')
-                        : ig(i18nButtons, 'showInfo')}
-                </Button>} */}
             </InfoBar>
         </ThumbWrapper>
         <MobileInfo>{infoTableMobileItems}</MobileInfo>
