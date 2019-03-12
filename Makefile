@@ -15,7 +15,7 @@ start-ssr: validate-site-directory
 	env NODE_PATH='ssr/:../../' "$(BINDIR)/nodemon" --watch src/ --watch ssr/ ssr/index.jsx --exec "$(BINDIR)/babel-node" --presets es2015,stage-2,react -- $(ARGS)
 
 start-production-ssr: validate-site-directory
-	env NODE_ENV=production "$(BINDIR)/babel-node" ssr/index.jsx --presets es2015,stage-2,react --production $(ARGS)
+	env NODE_PATH='ssr/:../../' NODE_ENV=production "$(BINDIR)/babel-node" ssr/index.jsx --presets es2015,stage-2,react --production $(ARGS)
 
 validate-site-directory:
 	pwd | grep "$(SITE_DIR_REG)" 1>/dev/null || (echo You are supposed to run make tasks being insite a site directory! 1>&2 && exit 1)
