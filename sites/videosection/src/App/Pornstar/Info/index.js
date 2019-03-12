@@ -65,7 +65,7 @@ const
     Info = props => <InfoWrapper>
         <ThumbWrapper>
             <Thumb thumb={ig(props.pornstarInfo, 'thumbUrl')}/>
-                <Like>
+                {g(props, 'isSSR') ? null : <Like>
                     {g(props, 'isThisModelFavorite')
                         ? <Favorite
                             className={g(props, 'classes', 'favoriteIcon')}
@@ -78,7 +78,7 @@ const
                             onClick={g(props, 'addToFavoriteHandler')}
                         />
                     }
-                </Like>
+                </Like>}
         </ThumbWrapper>
         <DataWrapper modelInfoIsOpened={g(props, 'modelInfoIsOpened')}>
             <Paper>

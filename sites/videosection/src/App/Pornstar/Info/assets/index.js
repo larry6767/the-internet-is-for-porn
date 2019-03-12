@@ -80,16 +80,8 @@ export const ThumbPlug = styled(ThumbCommon)`
     background: ${({theme}) => theme.palette.prerender.plug};
 `
 
-export const InfoBarPlug = styled.div`
-    width: 100%;
-    height: 34px;
-    background: ${({theme}) => theme.palette.prerender.plug};
-`
-
-export const MobileInfoPlug = styled.div`
-    background: ${({theme}) => theme.palette.prerender.plug};
-`
-
 export const DataWrapperPlug = styled(DataWrapperCommon)`
     background: ${({theme}) => theme.palette.prerender.plug};
+
+    ${({theme}) => theme.media.mobile`width: 100%; height: 128px;`}
 `
