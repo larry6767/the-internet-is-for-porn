@@ -2,18 +2,18 @@ import React, {Fragment} from 'react'
 import {compose, withPropsOnChange, withState, withHandlers, onlyUpdateForKeys} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 
-import {
-    Button,
-    Paper,
-    Table,
-    TableBody,
-    TableRow,
-    TableCell,
-    Typography,
-} from '@material-ui/core'
-
+import Paper from '@material-ui/core/Paper'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableRow from '@material-ui/core/TableRow'
+import TableCell from '@material-ui/core/TableCell'
+import Typography from '@material-ui/core/Typography'
+import Toolbar from '@material-ui/core/Toolbar'
 import Favorite from '@material-ui/icons/Favorite'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
+import Button from '@material-ui/core/Button'
+import ArrowDropDown from '@material-ui/icons/ArrowDropDown'
+import ArrowDropUp from '@material-ui/icons/ArrowDropUp'
 
 import {
     plainProvedGet as g,
@@ -54,13 +54,17 @@ const
         </TableRow>,
 
     renderTableButton = (modelInfoIsOpened, toggleModelInfoIsOpened, i18nButtons, classes) =>
-        <TableRow className={g(classes, 'tableButton')} onClick={toggleModelInfoIsOpened}>
-            <TableCell>
-                {modelInfoIsOpened
-                    ? ig(i18nButtons, 'hideInfo')
-                    : ig(i18nButtons, 'showInfo')}
-            </TableCell>
-        </TableRow>,
+        <Toolbar className={g(classes, 'toolbar')} onClick={toggleModelInfoIsOpened}>
+            {modelInfoIsOpened
+                ? <Button className={g(classes, 'tableButton')}>
+                    {ig(i18nButtons, 'hideInfo')}
+                    <ArrowDropUp/>
+                </Button>
+                : <Button className={g(classes, 'tableButton')}>
+                    {ig(i18nButtons, 'showInfo')}
+                    <ArrowDropDown/>
+                </Button>}
+        </Toolbar>,
 
     Info = ({
         classes,
@@ -110,14 +114,14 @@ const
                 <Table>
                     <TableBody>
                         {infoTableItems}
-                        {isSSR ? null : renderTableButton(
-                            modelInfoIsOpened,
-                            toggleModelInfoIsOpened,
-                            i18nButtons,
-                            classes,
-                        )}
                     </TableBody>
                 </Table>
+                {isSSR ? null : renderTableButton(
+                    modelInfoIsOpened,
+                    toggleModelInfoIsOpened,
+                    i18nButtons,
+                    classes,
+                )}
             </Paper>
         </DataWrapper>
     </InfoWrapper>
@@ -210,6 +214,7 @@ export default compose(
             favoriteIcon: PropTypes.string,
             buttonMore: PropTypes.string,
             tableCellRoot: PropTypes.string,
+            toolbar: PropTypes.string,
             tableButton: PropTypes.string,
         }),
 

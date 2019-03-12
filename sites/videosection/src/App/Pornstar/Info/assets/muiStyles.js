@@ -30,7 +30,12 @@ export const muiStyles = theme => ({
     tableCellRoot: {
         width: '30%',
     },
+    toolbar: {
+        minHeight: 'auto',
+        padding: 0,
+    },
     tableButton: {
-        cursor: 'pointer',
+        width: '100%',
+        borderRadius: '0 0 4px 4px',
     }
 })
