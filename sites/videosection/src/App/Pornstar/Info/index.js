@@ -37,7 +37,6 @@ import {
     MobileInfo,
     DataWrapper,
     Thumb,
-    InfoBar,
     Like,
 } from './assets'
 
@@ -81,7 +80,6 @@ const
     }) => <InfoWrapper>
         <ThumbWrapper>
             <Thumb thumb={ig(pornstarInfo, 'thumbUrl')}/>
-            <InfoBar>
                 <Like>
                     {isThisModelFavorite
                         ? <Favorite
@@ -96,7 +94,6 @@ const
                         />
                     }
                 </Like>
-            </InfoBar>
         </ThumbWrapper>
         <MobileInfo>{infoTableMobileItems}</MobileInfo>
         <DataWrapper modelInfoIsOpened={modelInfoIsOpened}>

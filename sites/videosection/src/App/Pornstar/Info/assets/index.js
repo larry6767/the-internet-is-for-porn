@@ -9,11 +9,13 @@ export const InfoWrapper = styled.section`
 `
 
 export const ThumbWrapper = styled.div`
-    width: 130px;
+    position: relative;
+    width: 160px;
     display: flex;
     flex-direction: column;
     margin-right: 20px;
     flex-shrink: 0;
+    overflow: hidden;
 `
 
 export const MobileInfo = styled.div`
@@ -57,42 +59,33 @@ const ThumbCommon = styled.div`
 
 export const Thumb = styled(ThumbCommon)`
     height: auto;
-    border: 1px solid ${({theme}) => theme.palette.primary.light};
     background: ${({thumb}) => `url(${thumb})`};
     background-size: cover;
     border-radius: 1px;
-    margin-bottom: 8px;
 `
 
-export const InfoBar = styled.div`
+export const Like = styled.div`
+    position: absolute;
+    left: 0;
+    bottom: -2px;
     display: flex;
+    justify-content: center;
     align-items: center;
-    min-height: 27px;
+    background-color: ${({theme}) => theme.palette.primary.lightOpacity};
+    border-radius: 1px;
+    min-height: 35px;
+    min-width: 40px;
+    cursor: pointer;
 
     html.is-loading & * {
         display: none;
     }
-
-    html.is-loading & {
-        background: ${({theme}) => theme.palette.prerender.plug};
-        border-radius: 4px;
-        width: 130px;
-        height: 34px;
-    }
-`
-
-export const Like = styled.div`
-    display: flex;
-    min-width: 27px;
-    margin-right: 5px;
-    cursor: pointer;
 `
 
 // styles for plug
 
 export const ThumbPlug = styled(ThumbCommon)`
     background: ${({theme}) => theme.palette.prerender.plug};
-    margin-bottom: 8px;
 `
 
 export const InfoBarPlug = styled.div`
