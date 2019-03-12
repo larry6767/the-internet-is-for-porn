@@ -37,5 +37,8 @@ export const muiStyles = theme => ({
     tableButton: {
         width: '100%',
         borderRadius: '0 0 4px 4px',
+        [theme.breakpoints.down("xs")]: {
+            fontSize: '0.75rem',
+        },
     }
 })

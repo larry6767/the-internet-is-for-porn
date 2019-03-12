@@ -15,16 +15,11 @@ export const ThumbWrapper = styled.div`
     flex-direction: column;
     margin-right: 20px;
     flex-shrink: 0;
+    flex-grow: 0;
+    align-self: flex-start;
     overflow: hidden;
-`
 
-export const MobileInfo = styled.div`
-    display: none;
-    flex-direction: column;
-    flex-grow: 1;
-    width: calc(100% - 150px);
-
-    ${({theme}) => theme.media.mobile`display: flex;`}
+    ${({theme}) => theme.media.mobile`margin-bottom: 10px;`};
 `
 
 const DataWrapperCommon = styled.div`
@@ -34,9 +29,6 @@ const DataWrapperCommon = styled.div`
 `
 
 export const DataWrapper = styled(DataWrapperCommon)`
-    ${({theme, modelInfoIsOpened}) => modelInfoIsOpened
-        ? theme.media.mobile`width: 100%; margin-top: 20px;` : ''}
-
     html.is-loading & * {
         display: none;
     }
