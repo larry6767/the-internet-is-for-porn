@@ -12,7 +12,7 @@ start-dev-server: validate-site-directory
 	env SKIP_PREFLIGHT_CHECK=true $(BINDIR)/react-scripts start
 
 start-ssr: validate-site-directory
-	"$(BINDIR)/nodemon" --watch src/ --watch ssr/ ssr/index.jsx --exec "$(BINDIR)/babel-node" --presets es2015,stage-2,react -- $(ARGS)
+	env NODE_PATH='ssr/:../../' "$(BINDIR)/nodemon" --watch src/ --watch ssr/ ssr/index.jsx --exec "$(BINDIR)/babel-node" --presets es2015,stage-2,react -- $(ARGS)
 
 start-production-ssr: validate-site-directory
 	env NODE_ENV=production "$(BINDIR)/babel-node" ssr/index.jsx --presets es2015,stage-2,react --production $(ARGS)

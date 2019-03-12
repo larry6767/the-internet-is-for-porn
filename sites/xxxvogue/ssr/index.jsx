@@ -1,1 +1,1 @@
-../../../ssr/index.jsx
+../../../shared/ssr/index.jsx
