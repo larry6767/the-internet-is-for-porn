@@ -50,7 +50,7 @@ export const
     // if we'll leave this implementation we need some additional logic,
     // because it's same data for AllNiches and Niche (we don't need to get twice from API)
     getAllNichesMap = x => ({
-        tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
+        tagList: getTagListByLetters(x.page.EXTENDED_TAGS_BY_LETTERS.letters),
         pageText: getPageText(x.page.PAGE_TEXT),
     }),
     // sortBy(

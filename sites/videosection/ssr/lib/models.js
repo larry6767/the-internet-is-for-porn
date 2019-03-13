@@ -7,6 +7,7 @@ const
         // for now it is the only option we use
         blocks: PropTypes.exact({
             allTagsBlock: PropTypes.number.isOptional,
+            extendedTagsBlock: PropTypes.number.isOptional,
             modelsABCBlockText: PropTypes.number.isOptional,
             modelsABCBlockThumbs: PropTypes.number.isOptional,
             updateSponsorURL: PropTypes.number.isOptional,
