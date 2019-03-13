@@ -1,6 +1,7 @@
-import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
-
 import {set, map, pick} from 'lodash'
+
+// local libs
+import {PropTypes, assertPropTypes, plainProvedGet as g} from 'App/helpers'
 
 const
     ordering = Object.freeze({

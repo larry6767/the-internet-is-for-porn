@@ -1,7 +1,4 @@
-import {
-    isPlainObject, isArray, isBoolean, isNumber, isString, isNull,
-    mapValues, get, first, last, initial, isEmpty,
-} from 'lodash'
+import {isPlainObject, isArray, isBoolean, isNumber, isString, isNull, mapValues} from 'lodash'
 
 const scalarCheckers = Object.freeze([isBoolean, isNumber, isString, isNull])
 

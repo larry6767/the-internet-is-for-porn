@@ -1,6 +1,4 @@
-import {
-    map
-} from 'lodash'
+import {map} from 'lodash'
 
 export default (list, monthsNames) => map(
     list,

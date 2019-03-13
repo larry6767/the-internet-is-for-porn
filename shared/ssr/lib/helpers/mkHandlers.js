@@ -1,4 +1,4 @@
-import mkHandler from './mkHandler'
+import mkHandler from 'lib/helpers/mkHandler'
 
 // boilerplate to create handlers for route mapping
 export default (method, handlers) =>

@@ -1,9 +1,4 @@
-import {
-    map,
-    concat,
-    sortBy,
-    reduce,
-} from 'lodash'
+import {map, concat, sortBy, reduce} from 'lodash'
 
 export default (letters) => reduce(
     letters,

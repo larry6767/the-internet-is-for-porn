@@ -1,6 +1,7 @@
 import {identity, mapValues} from 'lodash'
 
-import {PropTypes, assertPropTypes, plainProvedGet as g} from '../../../App/helpers'
+// local libs
+import {PropTypes, assertPropTypes, plainProvedGet as g} from 'App/helpers'
 
 const
     incomingPageTextModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({

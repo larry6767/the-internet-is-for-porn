@@ -1,7 +1,8 @@
 import {mapValues} from 'lodash'
 
-import {plainProvedGet as g, PropTypes, assertPropTypes} from '../../../App/helpers'
-import {archiveIdModel, archiveFilmsModel} from '../../../App/models'
+// local libs
+import {plainProvedGet as g, PropTypes, assertPropTypes} from 'App/helpers'
+import {archiveIdModel, archiveFilmsModel} from 'App/models'
 
 const
     urlReg = /\/(\d{4})-(\d{2})-archive.html$/,
