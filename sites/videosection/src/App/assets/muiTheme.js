@@ -39,6 +39,24 @@ const
                         whiteSpace: 'nowrap',
                     },
                 },
+                h6: {
+                    [preMuiTheme.breakpoints.only("sm")]: {
+                        fontSize: '1.25rem',
+                    },
+
+                    [preMuiTheme.breakpoints.down("xs")]: {
+                        fontSize: '1rem',
+                    },
+                },
+                subtitle1: {
+                    [preMuiTheme.breakpoints.only("sm")]: {
+                        fontSize: '0.875rem',
+                    },
+
+                    [preMuiTheme.breakpoints.down("xs")]: {
+                        fontSize: '0.875rem',
+                    },
+                },
                 body1: {
                     fontSize: '0.875rem',
                     [preMuiTheme.breakpoints.down("xs")]: {
