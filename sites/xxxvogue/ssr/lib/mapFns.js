@@ -1,8 +1,10 @@
 import {pick, map, get} from 'lodash'
-import {videoItemModel} from '../generic/VideoItem/models'
-import {incomingVideoItemModel} from './helpers/requests/getFilteredVideoList'
 
-import {plainProvedGet as g, PropTypes, assertPropTypes} from '../App/helpers'
+// local libs
+import {videoItemModel} from 'src/generic/VideoItem/models'
+import {incomingVideoItemModel} from 'ssr/lib/helpers/requests/getFilteredVideoList'
+
+import {plainProvedGet as g, PropTypes, assertPropTypes} from 'src/App/helpers'
 
 import {
     incomingPageTextModel,
@@ -10,13 +12,17 @@ import {
     incomingVideoPageTextModel,
     videoPageTextModel,
     getVideoPageText,
-} from './helpers/requests/getPageText'
+} from 'ssr/lib/helpers/requests/getPageText'
 
-import {pornstarInfoModel, pornstarInfoForTableModel} from './helpers/requests/getPornstarInfo'
-import {sortModel} from './helpers/requests/getSortList'
-import {modelsListWithLetterModel} from './helpers/requests/getModelsList'
-import {incomingGalleryModel, publishedTemplateModel} from './helpers/requests/getGallery'
-import {galleryModel, openGraphDataModel} from '../App/VideoPage/models'
+import {
+    pornstarInfoModel,
+    pornstarInfoForTableModel
+} from 'ssr/lib/helpers/requests/getPornstarInfo'
+
+import {sortModel} from 'ssr/lib/helpers/requests/getSortList'
+import {modelsListWithLetterModel} from 'ssr/lib/helpers/requests/getModelsList'
+import {incomingGalleryModel, publishedTemplateModel} from 'ssr/lib/helpers/requests/getGallery'
+import {galleryModel, openGraphDataModel} from 'src/App/VideoPage/models'
 
 import {
     getTagList,
@@ -32,7 +38,7 @@ import {
     getGallery,
     getOpenGraphData,
     getSponsorsList,
-} from './helpers/requests'
+} from 'ssr/lib/helpers/requests'
 
 export const
     getHomeMap = x => ({

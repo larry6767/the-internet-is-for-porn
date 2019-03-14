@@ -2,7 +2,7 @@ import {padStart} from 'lodash'
 import queryString from 'query-string'
 
 // local libs
-import g from 'App/helpers/plain/provedGet'
+import g from 'src/App/helpers/plain/provedGet'
 
 const
     orderingMapping = Object.freeze({

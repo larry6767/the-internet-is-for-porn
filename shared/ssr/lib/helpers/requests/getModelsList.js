@@ -1,8 +1,8 @@
 import {map, concat, sortBy, reduce} from 'lodash'
 
 // local libs
-import {PropTypes, assertPropTypes, plainProvedGet as g} from 'App/helpers'
-import {modelsListModel, modelsListWithLetterModel} from 'App/models'
+import {PropTypes, assertPropTypes, plainProvedGet as g} from 'src/App/helpers'
+import {modelsListModel, modelsListWithLetterModel} from 'src/App/models'
 
 const
     letterKeyModel = process.env.NODE_ENV === 'production' ? null :

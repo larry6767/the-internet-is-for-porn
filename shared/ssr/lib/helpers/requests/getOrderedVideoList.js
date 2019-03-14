@@ -1,6 +1,4 @@
-import _, {
-    sortBy
-} from 'lodash'
+import _, {sortBy} from 'lodash'
 
 export default (ids, items) => {
     const

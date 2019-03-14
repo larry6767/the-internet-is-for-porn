@@ -1,8 +1,8 @@
 import {mapValues, uniq, take} from 'lodash'
 
 // local libs
-import {PropTypes, assertPropTypes, plainProvedGet as g} from 'App/helpers'
-import {galleryModel, openGraphDataModel} from 'App/VideoPage/models'
+import {PropTypes, assertPropTypes, plainProvedGet as g} from 'src/App/helpers'
+import {galleryModel, openGraphDataModel} from 'src/App/VideoPage/models'
 
 const
     galleryModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({

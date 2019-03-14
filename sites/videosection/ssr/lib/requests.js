@@ -4,13 +4,14 @@ import FormData from 'form-data'
 import queryString from 'query-string'
 import {parse, format} from 'url'
 
-import {plainProvedGet as g, assertPropTypes, getClassId} from '../App/helpers'
-import {defaultHostToFetchSiteLocalesFrom} from '../config'
-import apiLocales from '../locale-mapping/backend-api'
-import routerLocales from '../locale-mapping/router'
-import {backendUrl, backendUrlForReport, backendUrlForSearch} from './helpers/backendUrl'
-import getSubPage, {orderingMapping} from './helpers/getSubPage'
-import deepFreeze from './helpers/deepFreeze'
+// local libs
+import {plainProvedGet as g, assertPropTypes, getClassId} from 'src/App/helpers'
+import {defaultHostToFetchSiteLocalesFrom} from 'ssr/config'
+import apiLocales from 'ssr/locale-mapping/backend-api'
+import routerLocales from 'ssr/locale-mapping/router'
+import {backendUrl, backendUrlForReport, backendUrlForSearch} from 'ssr/lib/helpers/backendUrl'
+import getSubPage, {orderingMapping} from 'ssr/lib/helpers/getSubPage'
+import deepFreeze from 'ssr/lib/helpers/deepFreeze'
 
 import {
     getHomeMap,
@@ -25,13 +26,13 @@ import {
     getFindVideosMap,
     getSiteMap,
     getNotFoundMap,
-} from './mapFns'
+} from 'ssr/lib/mapFns'
 
 import {
     getPageDataResultModel,
     getPageDataReqBodyModel,
     getPageDataPageMappingModel,
-} from './models'
+} from 'ssr/lib/models'
 
 const
     // `callStackGetter` supposed to be (() => new Error().stack) in place where it's called,

@@ -1,8 +1,8 @@
 import {mapValues, pick} from 'lodash'
 
 // local libs
-import {PropTypes, assertPropTypes, plainProvedGet as g} from 'App/helpers'
-import {pornstarInfoForTableModel} from 'App/Pornstar/models'
+import {PropTypes, assertPropTypes, plainProvedGet as g} from 'src/App/helpers'
+import {pornstarInfoForTableModel} from 'src/App/Pornstar/models'
 
 const
     pornstarInfoModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({

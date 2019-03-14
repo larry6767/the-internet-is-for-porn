@@ -1,19 +1,19 @@
 import {cloneDeep, find, includes, unset, get} from 'lodash'
 
 // local libs
-import apiLocaleMapping from 'locale-mapping/backend-api'
-import {frontRouterLocaleMapping} from 'locale-mapping/router'
-import i18n from 'locale-mapping/i18n'
-import {plainProvedGet as g} from 'App/helpers'
-import {orientationCodes} from 'App/models'
-import {getPureDomain, patchSiteLocales} from 'App/helpers/hostLocale'
-import {logRequestError} from 'lib/helpers'
+import apiLocaleMapping from 'ssr/locale-mapping/backend-api'
+import {frontRouterLocaleMapping} from 'ssr/locale-mapping/router'
+import i18n from 'ssr/locale-mapping/i18n'
+import {plainProvedGet as g} from 'src/App/helpers'
+import {orientationCodes} from 'src/App/models'
+import {getPureDomain, patchSiteLocales} from 'src/App/helpers/hostLocale'
+import {logRequestError} from 'ssr/lib/helpers'
 
 import {
     getPageData as requestPageData,
     sendReport as sendReportRequest,
     getSearchSuggestions as searchSuggestionsRequest
-} from 'lib/requests'
+} from 'ssr/lib/requests'
 
 export const proxiedHeaders = (siteLocales, localeCode) => req => {
     const headers = cloneDeep(req.headers)

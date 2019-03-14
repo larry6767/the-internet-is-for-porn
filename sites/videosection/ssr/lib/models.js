@@ -1,6 +1,8 @@
 import {set} from 'lodash'
-import {PropTypes} from '../App/helpers'
-import {pageKeys} from '../App/models'
+
+// local libs
+import {PropTypes} from 'src/App/helpers'
+import {pageKeys} from 'src/App/models'
 
 const
     getPageDataParamsOptionsModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({

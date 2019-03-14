@@ -1,7 +1,7 @@
 import {map, omit} from 'lodash'
 
 // local libs
-import {PropTypes, assertPropTypes, plainProvedGet as g} from 'App/helpers'
+import {PropTypes, assertPropTypes, plainProvedGet as g} from 'src/App/helpers'
 
 const
     sponsorsModel = process.env.NODE_ENV === 'production' ? null :

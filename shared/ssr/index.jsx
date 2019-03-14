@@ -12,16 +12,16 @@ import {json} from 'body-parser'
 import React from 'react'
 
 // local libs
-import {plainProvedGet as g, PropTypes, assertPropTypes} from 'App/helpers'
-import {patchSiteLocales} from 'App/helpers/hostLocale'
-import {deepFreeze} from 'lib/helpers'
-import renderPage from 'lib/render'
-import {newStore} from 'lib/store'
-import backendProxyHandler from 'lib/backend-proxy'
-import {getSiteLocales} from 'lib/requests'
-import {validate as apiLocaleMappingValidate} from 'locale-mapping/backend-api'
-import {validate as routerLocaleMappingValidate} from 'locale-mapping/router'
-import {validate as i18nLocaleMappingValidate} from 'locale-mapping/i18n'
+import {plainProvedGet as g, PropTypes, assertPropTypes} from 'src/App/helpers'
+import {patchSiteLocales} from 'src/App/helpers/hostLocale'
+import {deepFreeze} from 'ssr/lib/helpers'
+import renderPage from 'ssr/lib/render'
+import {newStore} from 'ssr/lib/store'
+import backendProxyHandler from 'ssr/lib/backend-proxy'
+import {getSiteLocales} from 'ssr/lib/requests'
+import {validate as apiLocaleMappingValidate} from 'ssr/locale-mapping/backend-api'
+import {validate as routerLocaleMappingValidate} from 'ssr/locale-mapping/router'
+import {validate as i18nLocaleMappingValidate} from 'ssr/locale-mapping/i18n'
 
 const
     {port, host, production: isProduction, rc: isRC} = yargs

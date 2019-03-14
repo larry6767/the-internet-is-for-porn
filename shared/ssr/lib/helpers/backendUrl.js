@@ -1,7 +1,7 @@
 import {find} from 'lodash'
 
 // local libs
-import {plainProvedGet as g} from 'App/helpers'
+import {plainProvedGet as g} from 'src/App/helpers'
 
 const
     getHost = (siteLocales, localeCode) =>

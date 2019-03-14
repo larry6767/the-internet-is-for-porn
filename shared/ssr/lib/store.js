@@ -5,7 +5,7 @@ import {createStore, applyMiddleware} from 'redux'
 import createSagaMiddleware from 'redux-saga'
 
 // local libs
-import createRootReducer from 'reducers'
+import createRootReducer from 'src/reducers'
 
 export const initialStore = fromJS({
     router: {

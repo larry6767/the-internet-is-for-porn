@@ -3,16 +3,17 @@ import {map} from 'lodash'
 import {Switch, Redirect, Route} from 'react-router-dom'
 import {compose} from 'recompose'
 
+// local libs
 import {
     immutableProvedGet as ig,
     plainProvedGet as g,
     setPropTypes,
-} from '../App/helpers'
+} from 'src/App/helpers'
 
-import {ssrRouterContextModel, orientationCodes} from '../App/models'
-import routerGetters from '../App/routerGetters'
-import nichesRedirects from '../fixtures/legacy-redirects/niches-redirects.json'
-import pornstarsRedirects from '../fixtures/legacy-redirects/pornstars-redirects.json'
+import {ssrRouterContextModel, orientationCodes} from 'src/App/models'
+import routerGetters from 'src/App/routerGetters'
+import nichesRedirects from 'ssr/fixtures/legacy-redirects/niches-redirects.json'
+import pornstarsRedirects from 'ssr/fixtures/legacy-redirects/pornstars-redirects.json'
 
 const
     videoRedirectFrom = r => {

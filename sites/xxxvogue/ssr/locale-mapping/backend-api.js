@@ -1,10 +1,11 @@
 import {set} from 'lodash'
 
-import {PropTypes, assertPropTypes, plainProvedGet as g} from '../App/helpers'
-import {pageKeys} from '../App/models'
+// local libs
+import {PropTypes, assertPropTypes, plainProvedGet as g} from 'src/App/helpers'
+import {pageKeys} from 'src/App/models'
 
 // only particular helper, because some of all helpers depends on this module
-import deepFreeze from '../lib/helpers/deepFreeze'
+import deepFreeze from 'ssr/lib/helpers/deepFreeze'
 
 const
     mapping = deepFreeze({

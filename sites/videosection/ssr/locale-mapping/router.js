@@ -1,8 +1,8 @@
 import {set, includes} from 'lodash'
 
-import {PropTypes, assertPropTypes, plainProvedGet as g} from '../App/helpers'
-import {ssrLocaleRouterModel} from '../App/models'
-import deepFreeze from '../lib/helpers/deepFreeze'
+import {PropTypes, assertPropTypes, plainProvedGet as g} from 'src/App/helpers'
+import {ssrLocaleRouterModel} from 'src/App/models'
+import deepFreeze from 'ssr/lib/helpers/deepFreeze'
 
 const
     mapping = deepFreeze({
