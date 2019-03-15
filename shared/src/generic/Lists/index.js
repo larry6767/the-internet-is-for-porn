@@ -2,13 +2,13 @@ import React from 'react'
 import {compose, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import ArrowRight from '@material-ui/icons/ChevronRight'
-
 import ListSubheader from '@material-ui/core/ListSubheader'
 import ListComponent from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 
+// local libs
 import {
     PropTypes,
     ImmutablePropTypes,
@@ -17,15 +17,16 @@ import {
     breakpointSM as sm,
     plainProvedGet as g,
     compareCurrentBreakpoint as ccb,
-} from '../../App/helpers'
+} from 'src/App/helpers'
 
 import {
     immutableNichesListModel,
     immutableTagArchiveListModel,
     immutableModelsListWithLetterModel
-} from '../../App/models'
-import {ListsInner, StyledLink, Section, SectionInner} from './assets'
-import {muiStyles} from './assets/muiStyles'
+} from 'src/App/models'
+
+import {ListsInner, StyledLink, Section, SectionInner} from 'src/generic/Lists/assets'
+import {muiStyles} from 'src/generic/Lists/assets/muiStyles'
 
 const
     // Generic list item component generator

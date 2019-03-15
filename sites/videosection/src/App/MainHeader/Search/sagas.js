@@ -1,10 +1,11 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 import {push} from 'connected-react-router/immutable'
 
-import {BACKEND_URL} from '../../../config'
-import {plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
-import errorActions from '../../../generic/ErrorMessage/actions'
-import actions from './actions'
+// local libs
+import {BACKEND_URL} from 'src/config'
+import {plainProvedGet as g, immutableProvedGet as ig} from 'src/App/helpers'
+import errorActions from 'src/generic/ErrorMessage/actions'
+import actions from 'src/App/MainHeader/Search/actions'
 
 export function* loadSuggestionsFlow({payload: formData}) {
     try {

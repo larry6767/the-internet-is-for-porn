@@ -4,7 +4,6 @@ import {compose, withHandlers, withState, withPropsOnChange} from 'recompose'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
-
 import Typography from '@material-ui/core/Typography'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -25,16 +24,20 @@ import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import {plainProvedGet as g, immutableProvedGet as ig, setPropTypes, PropTypes} from '../helpers'
-import {model, galleryModel, GalleryRecord} from './models'
-import {immutableI18nButtonsModel, immutableI18nReportModel} from '../models'
+// local libs
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    setPropTypes,
+    PropTypes
+} from 'src/App/helpers'
 
-import {VideoBlock, Thumb, Description, SubmitButtonWrapper} from './assets'
-
-import {muiStyles} from './assets/muiStyles'
-import actions from './actions'
-
-import {NICHE, ALL_MOVIES, PORNSTAR, VIDEO} from '../constants'
+import {model, galleryModel, GalleryRecord} from 'src/App/ReportDialog/models'
+import {immutableI18nButtonsModel, immutableI18nReportModel} from 'src/App/models'
+import {VideoBlock, Thumb, Description, SubmitButtonWrapper} from 'src/App/ReportDialog/assets'
+import {muiStyles} from 'src/App/ReportDialog/assets/muiStyles'
+import actions from 'src/App/ReportDialog/actions'
+import {NICHE, ALL_MOVIES, PORNSTAR, VIDEO} from 'src/App/constants'
 
 const
     renderTableRow = (k, v, classes) => <TableRow>

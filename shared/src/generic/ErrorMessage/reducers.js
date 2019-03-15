@@ -1,6 +1,8 @@
 import {handleActions} from 'redux-actions'
 import {fromJS} from 'immutable'
-import actions from './actions'
+
+// local libs
+import actions from 'src/generic/ErrorMessage/actions'
 
 export default
     handleActions({

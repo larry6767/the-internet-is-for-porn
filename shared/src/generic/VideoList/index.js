@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose, withHandlers, onlyUpdateForKeys} from 'recompose'
 
+// local libs
 import {
     getRouterContext,
     plainProvedGet as g,
@@ -10,13 +11,14 @@ import {
     ImmutablePropTypes,
     setPropTypes,
     breakpoints,
-} from '../../App/helpers'
-import {routerContextModel} from '../../App/models'
-import {immutableVideoItemModel} from '../VideoItem/models'
-import routerGetters from '../../App/routerGetters'
-import VideoItem from '../VideoItem'
-import {List} from './assets'
-import appActions from '../../App/actions'
+} from 'src/App/helpers'
+
+import {routerContextModel} from 'src/App/models'
+import {immutableVideoItemModel} from 'src/generic/VideoItem/models'
+import routerGetters from 'src/App/routerGetters'
+import VideoItem from 'src/generic/VideoItem'
+import {List} from 'src/generic/VideoList/assets'
+import appActions from 'src/App/actions'
 
 const
     VideoList = props => <List>

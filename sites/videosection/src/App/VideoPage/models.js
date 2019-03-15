@@ -1,14 +1,6 @@
-import {
-    ImmutablePropTypes,
-    PropTypes,
-} from '../helpers'
-
-import {
-    immutableVideoPageTextModel,
-    pageRequestParamsModel,
-} from '../models'
-
-import {immutableVideoItemModel} from '../../generic/VideoItem/models'
+import {ImmutablePropTypes, PropTypes} from 'src/App/helpers'
+import {immutableVideoPageTextModel, pageRequestParamsModel} from 'src/App/models'
+import {immutableVideoItemModel} from 'src/generic/VideoItem/models'
 
 const
     openGraphDataModelBuilder = process.env.NODE_ENV === 'production' ? null :

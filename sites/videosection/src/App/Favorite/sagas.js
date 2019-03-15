@@ -1,14 +1,16 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 
+// local libs
 import {
     obtainPageData,
     getHeaderText,
     plainProvedGet as g,
     immutableProvedGet as ig,
-} from '../helpers'
-import errorActions from '../../generic/ErrorMessage/actions'
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
+} from 'sec/App/helpers'
+
+import errorActions from 'src/generic/ErrorMessage/actions'
+import headerActions from 'sec/App/MainHeader/actions'
+import actions from 'src/App/Favorite/actions'
 
 export function* loadFavoritePageFlow(action, ssrContext) {
     try {

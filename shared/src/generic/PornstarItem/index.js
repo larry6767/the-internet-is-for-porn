@@ -3,8 +3,9 @@ import {compose, withPropsOnChange, onlyUpdateForKeys} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import Favorite from '@material-ui/icons/Favorite'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
-import {Typography} from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 
+// local libs
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -12,12 +13,12 @@ import {
     ImmutablePropTypes,
     setPropTypes,
     lazyImage,
-} from '../../App/helpers'
+} from 'src/App/helpers'
 
-import {immutableI18nButtonsModel} from '../../App/models'
-import {immutablePornstarItemModel} from './models'
-import {muiStyles} from './assets/muiStyles'
-import {Wrapper, Thumb, InfoBar, Like, StyledLinkBlock} from './assets'
+import {immutableI18nButtonsModel} from 'src/App/models'
+import {immutablePornstarItemModel} from 'src/generic/PornstarItem/models'
+import {muiStyles} from 'src/generic/PornstarItem/assets/muiStyles'
+import {Wrapper, Thumb, InfoBar, Like, StyledLinkBlock} from 'src/generic/PornstarItem/assets'
 
 const
     PornstarItem = props => <Wrapper>

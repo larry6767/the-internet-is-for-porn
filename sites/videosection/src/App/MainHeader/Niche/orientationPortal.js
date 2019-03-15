@@ -1,9 +1,10 @@
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
 
-import {orientationCodes} from '../../models'
-import {plainProvedGet as g, setPropTypes, PropTypes} from '../../helpers'
-import actions from './actions'
+// local libs
+import {orientationCodes} from 'src/App/models'
+import {plainProvedGet as g, setPropTypes, PropTypes} from 'src/App/helpers'
+import actions from 'src/App/MainHeader/Niche/actions'
 
 // Helper HOC
 export default compose(

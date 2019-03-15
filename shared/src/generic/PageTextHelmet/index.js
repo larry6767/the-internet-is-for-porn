@@ -1,7 +1,8 @@
 import React from 'react'
 import Helmet from 'react-helmet'
 
-import {getPageTextToHeadTags, getOpenGraphToHeadTags, plainProvedGet as g} from '../../App/helpers'
+// local libs
+import {getPageTextToHeadTags, getOpenGraphToHeadTags, plainProvedGet as g} from 'src/App/helpers'
 
 const
     PageTextHelmet = ({

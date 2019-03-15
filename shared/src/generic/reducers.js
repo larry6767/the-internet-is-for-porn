@@ -1,5 +1,7 @@
 import {combineReducers} from 'redux-immutable'
-import errorMessageReducer from './ErrorMessage/reducers'
+
+// local libs
+import errorMessageReducer from 'src/generic/ErrorMessage/reducers'
 
 export default combineReducers({
     errorMessage: errorMessageReducer

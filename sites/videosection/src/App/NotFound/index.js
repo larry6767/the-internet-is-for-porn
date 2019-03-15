@@ -4,6 +4,7 @@ import {compose, lifecycle, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 
+// local libs
 import {
     getHeaderText,
     getRouterContext,
@@ -15,19 +16,19 @@ import {
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
     get404PageText,
-} from '../helpers'
+} from 'src/App/helpers'
 
-import {routerContextModel, immutablePageTextModel} from '../models'
-import {model} from './models'
-import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import loadingWrapper from '../../generic/loadingWrapper'
-import PageTextHelmet from '../../generic/PageTextHelmet'
-import VideoList from '../../generic/VideoList'
-import {PageWrapper} from './assets'
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
-import {muiStyles} from './assets/muiStyles'
+import {routerContextModel, immutablePageTextModel} from 'src/App/models'
+import {model} from 'src/App/NotFound/models'
+import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
+import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
+import loadingWrapper from 'src/generic/loadingWrapper'
+import PageTextHelmet from 'src/generic/PageTextHelmet'
+import VideoList from 'src/generic/VideoList'
+import {PageWrapper} from 'src/App/NotFound/assets'
+import headerActions from 'src/App/MainHeader/actions'
+import actions from 'src/App/NotFound/actions'
+import {muiStyles} from 'src/App/NotFound/assets/muiStyles'
 
 const
     NotFound = props => <Fragment>

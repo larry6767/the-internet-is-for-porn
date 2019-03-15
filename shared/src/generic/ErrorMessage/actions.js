@@ -1,4 +1,4 @@
-import {createActions} from '../../App/helpers'
+import {createActions} from 'src/App/helpers'
 
 const actions = createActions('SNACKBAR', [
     'CLOSE_ERROR_MESSAGE',

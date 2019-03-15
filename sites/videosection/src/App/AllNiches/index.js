@@ -9,6 +9,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 
+// local libs
 import {
     getHeaderText,
     withStylesProps,
@@ -20,19 +21,19 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
-} from '../helpers'
+} from 'src/App/helpers'
 
-import {routerContextModel} from '../models'
-import {model} from './models'
-import PageTextHelmet from '../../generic/PageTextHelmet'
-import routerGetters from '../routerGetters'
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
-import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import loadingWrapper from '../../generic/loadingWrapper'
-import {PageWrapper, StyledLink} from './assets'
-import {muiStyles} from './assets/muiStyles'
+import {routerContextModel} from 'src/App/models'
+import {model} from 'src/App/AllNiches/models'
+import PageTextHelmet from 'src/generic/PageTextHelmet'
+import routerGetters from 'src/App/routerGetters'
+import headerActions from 'src/App/MainHeader/actions'
+import actions from 'src/App/AllNiches/actions'
+import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
+import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
+import loadingWrapper from 'src/generic/loadingWrapper'
+import {PageWrapper, StyledLink} from 'src/App/AllNiches/assets'
+import {muiStyles} from 'src/App/AllNiches/assets/muiStyles'
 
 const
     renderListItemLink = (x, classedBounds, getChildLink) => <StyledLink

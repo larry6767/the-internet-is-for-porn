@@ -1,8 +1,9 @@
 import {range} from 'lodash'
 import React from 'react'
 
-import {List} from './assets'
-import {Wrapper, ThumbPlug, TypographyPlug, InfoBarPlug} from '../PornstarItem/assets'
+// local libs
+import {List} from 'src/generic/PornstarList/assets'
+import {Wrapper, ThumbPlug, TypographyPlug, InfoBarPlug} from 'src/generic/PornstarItem/assets'
 
 const
     PornstarListPlug = () => <List>

@@ -1,4 +1,4 @@
-import {ImmutablePropTypes, PropTypes} from '../../App/helpers'
+import {ImmutablePropTypes, PropTypes} from 'src/App/helpers'
 
 const
     pornstarItemModelBuilder = process.env.NODE_ENV === 'production' ? null : isImmutable => {

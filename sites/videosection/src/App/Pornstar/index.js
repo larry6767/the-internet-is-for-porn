@@ -4,6 +4,7 @@ import {compose, withHandlers, withProps, withPropsOnChange, withState, lifecycl
 import Typography from '@material-ui/core/Typography'
 import {remove} from 'immutable'
 
+// local libs
 import {
     getHeaderText,
     getRouterContext,
@@ -16,30 +17,29 @@ import {
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
     breakpoints,
-} from '../helpers'
+} from 'src/App/helpers'
 
 import {
     routerContextModel,
     immutableI18nOrderingModel,
     immutableI18nButtonsModel,
     immutableI18nPornstarInfoParametersModel,
-} from '../models'
+} from 'src/App/models'
 
-import {model, immutablePornstarInfoForTableModel} from './models'
-import routerGetters from '../routerGetters'
-import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import loadingWrapper from '../../generic/loadingWrapper'
-import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import ControlBar from '../../generic/ControlBar'
-import PageTextHelmet from '../../generic/PageTextHelmet'
-import Lists from '../../generic/Lists'
-import VideoList from '../../generic/VideoList'
-
-import Info from './Info'
-import {PageWrapperNextToList} from './assets'
-import appActions from '../../App/actions'
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
+import {model, immutablePornstarInfoForTableModel} from 'src/App/Pornstar/models'
+import routerGetters from 'src/App/routerGetters'
+import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
+import loadingWrapper from 'src/generic/loadingWrapper'
+import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
+import ControlBar from 'src/generic/ControlBar'
+import PageTextHelmet from 'src/generic/PageTextHelmet'
+import Lists from 'src/generic/Lists'
+import VideoList from 'src/generic/VideoList'
+import Info from 'src/App/Pornstar/Info'
+import {PageWrapperNextToList} from 'src/App/Pornstar/assets'
+import appActions from 'src/App/actions'
+import headerActions from 'src/App/MainHeader/actions'
+import actions from 'src/App/Pornstar/actions'
 
 const
     Pornstar = ({

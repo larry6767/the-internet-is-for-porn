@@ -1,8 +1,9 @@
 import {put, takeEvery} from 'redux-saga/effects'
 import {push} from 'connected-react-router/immutable'
 
-import {plainProvedGet as g} from '../../helpers'
-import actions from './actions'
+// local libs
+import {plainProvedGet as g} from 'src/App/helpers'
+import actions from 'src/App/MainHeader/Navigation/actions'
 
 function* switchPageFlow(action) {
     yield put(push(g(action, 'payload')))

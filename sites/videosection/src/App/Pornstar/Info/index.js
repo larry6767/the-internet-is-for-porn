@@ -14,6 +14,7 @@ import Button from '@material-ui/core/Button'
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown'
 import ArrowDropUp from '@material-ui/icons/ArrowDropUp'
 
+// local libs
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -23,11 +24,16 @@ import {
     setPropTypes,
     PropTypes,
     ImmutablePropTypes,
-} from '../../helpers'
+} from 'src/App/helpers'
 
-import {immutableI18nPornstarInfoParametersModel, immutableI18nButtonsModel} from '../../models'
-import {immutablePornstarInfoModel, immutablePornstarInfoForTableModel} from '../models'
-import {muiStyles} from './assets/muiStyles'
+import {immutableI18nPornstarInfoParametersModel, immutableI18nButtonsModel} from 'src/App/models'
+
+import {
+    immutablePornstarInfoModel,
+    immutablePornstarInfoForTableModel
+} from 'src/App/Pornstar/models'
+
+import {muiStyles} from 'src/App/Pornstar/Info/assets/muiStyles'
 
 import {
     InfoWrapper,
@@ -35,7 +41,7 @@ import {
     DataWrapper,
     Thumb,
     Like,
-} from './assets'
+} from 'src/App/Pornstar/Info/assets'
 
 const
     paramsQuantityForMobile = 2,

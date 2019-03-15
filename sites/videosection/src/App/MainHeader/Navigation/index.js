@@ -3,8 +3,10 @@ import React from 'react'
 import {compose, withHandlers, withPropsOnChange, onlyUpdateForKeys} from 'recompose'
 import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
-import {Tabs, Tab} from '@material-ui/core'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
 
+// local libs
 import {
     getRouterContext,
     immutableProvedGet as ig,
@@ -12,13 +14,13 @@ import {
     PropTypes,
     setPropTypes,
     getLinkByNavKey as getLinkByNavKeyHandler,
-} from '../../helpers'
+} from 'src/App/helpers'
 
-import {immutableI18nNavigationModel, routerContextModel} from '../../models'
-import {muiStyles} from './assets/muiStyles'
-import {Nav} from './assets'
-import actions from './actions'
-import {navMenuOrder} from './models'
+import {immutableI18nNavigationModel, routerContextModel} from 'src/App/models'
+import {muiStyles} from 'src/App/MainHeader/Navigation/assets/muiStyles'
+import {Nav} from 'src/App/MainHeader/Navigation/assets'
+import actions from 'src/App/MainHeader/Navigation/actions'
+import {navMenuOrder} from 'src/App/MainHeader/Navigation/models'
 
 import {
     ALL_NICHES,
@@ -31,7 +33,7 @@ import {
     VIDEO,
     FIND_VIDEOS,
     SITE,
-} from '../../constants'
+} from 'src/App/constants'
 
 const
     Navigation = ({

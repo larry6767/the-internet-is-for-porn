@@ -1,18 +1,19 @@
 import {range} from 'lodash'
 import React, {Fragment} from 'react'
 
-import PornstarListPlug from '../PornstarList/PornstarListPlug'
-import HomePlug from '../../App/Home/HomePlug'
-import AllNichesPlug from '../../App/AllNiches/AllNichesPlug'
-import PornstarInfoPlug from '../../App/Pornstar/Info/PornstarInfoPlug'
-import ControlBarPlug from '../ControlBar/ControlBarPlug'
-import VideoItemPlug from '../VideoItem/VideoItemPlug'
+// local libs
+import PornstarListPlug from 'src/generic/PornstarList/PornstarListPlug'
+import HomePlug from 'src/App/Home/HomePlug'
+import AllNichesPlug from 'src/App/AllNiches/AllNichesPlug'
+import PornstarInfoPlug from 'src/App/Pornstar/Info/PornstarInfoPlug'
+import ControlBarPlug from 'src/generic/ControlBar/ControlBarPlug'
+import VideoItemPlug from 'src/generic/VideoItem/VideoItemPlug'
 
-import {Content, PageWrapper} from '../assets'
-import {VideoPlayerPlug} from '../../App/VideoPage/assets'
-import {ListsPlug} from '../Lists/assets'
-import {PageTitlePlug} from './assets'
-import {VideoListPlug} from '../VideoList/assets'
+import {Content, PageWrapper} from 'src/generic/assets'
+import {VideoPlayerPlug} from 'src/App/VideoPage/assets'
+import {ListsPlug} from 'src/generic/Lists/assets'
+import {PageTitlePlug} from 'src/generic/LoadingPlug/assets'
+import {VideoListPlug} from 'src/generic/VideoList/assets'
 
 const
     LoadingPlug = ({

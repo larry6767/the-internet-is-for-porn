@@ -1,4 +1,4 @@
-import {ImmutablePropTypes, PropTypes} from '../../App/helpers'
+import {ImmutablePropTypes, PropTypes} from 'src/App/helpers'
 
 const
     videoItemModelBuilder = process.env.NODE_ENV === 'production' ? null : isImmutable => {

@@ -2,16 +2,16 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import {compose} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
 
-import {Button} from '@material-ui/core'
-
+// local libs
 import {
     plainProvedGet as g,
     PropTypes,
     setPropTypes,
-} from '../../App/helpers'
+} from 'src/App/helpers'
 
-import {muiStyles} from './assets/muiStyles'
+import {muiStyles} from 'src/generic/WrappedButton/assets/muiStyles'
 
 const
     WrappedButton = ({

@@ -1,15 +1,22 @@
 import {fromJS} from 'immutable'
-
-import {ImmutablePropTypes, PropTypes, provedHandleActions, plainProvedGet as g} from '../helpers'
-import actions from './actions'
-
 import {combineReducers} from 'redux-immutable'
-import nicheReducer from './Niche/reducers'
-import languageReducer from './Language/reducers'
-import HDSwitchReducer from './HDSwitch/reducers'
-import navigationReducer from './Navigation/reducers'
-import searchReducer from './Search/reducers'
-import burgerMenuReducer from './BurgerMenu/reducers'
+
+// local libs
+import {
+    ImmutablePropTypes,
+    PropTypes,
+    provedHandleActions,
+    plainProvedGet as g
+} from 'src/App/helpers'
+
+import actions from 'src/App/MainHeader/actions'
+
+import nicheReducer from 'src/App/MainHeader/Niche/reducers'
+import languageReducer from 'src/App/MainHeader/Language/reducers'
+import HDSwitchReducer from 'src/App/MainHeader/HDSwitch/reducers'
+import navigationReducer from 'src/App/MainHeader/Navigation/reducers'
+import searchReducer from 'src/App/MainHeader/Search/reducers'
+import burgerMenuReducer from 'src/App/MainHeader/BurgerMenu/reducers'
 
 const
     mainHeaderUiModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({

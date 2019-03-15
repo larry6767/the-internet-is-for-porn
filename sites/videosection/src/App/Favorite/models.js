@@ -1,11 +1,6 @@
-import {ImmutablePropTypes, PropTypes} from '../helpers'
-
-import {
-    immutablePageTextModel,
-    pageRequestParamsModel,
-} from '../models'
-
-import {immutableVideoItemModel} from '../../generic/VideoItem/models'
+import {ImmutablePropTypes, PropTypes} from 'src/App/helpers'
+import {immutablePageTextModel, pageRequestParamsModel} from 'src/App/models'
+import {immutableVideoItemModel} from 'src/generic/VideoItem/models'
 
 export const
     model = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({

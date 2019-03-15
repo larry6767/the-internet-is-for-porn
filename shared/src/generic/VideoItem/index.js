@@ -1,4 +1,5 @@
 import React from 'react'
+import {replace, set} from 'lodash'
 
 import {
     compose,
@@ -9,12 +10,12 @@ import {
     lifecycle,
 } from 'recompose'
 
-import {replace, set} from 'lodash'
 import {withStyles} from '@material-ui/core/styles'
-import {Typography} from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder'
 import Favorite from '@material-ui/icons/Favorite'
 
+// local libs
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -25,10 +26,10 @@ import {
     breakpointXS as xs,
     breakpoints,
     lazyImage,
-} from '../../App/helpers'
+} from 'src/App/helpers'
 
-import {muiStyles} from './assets/muiStyles'
-import {immutableVideoItemModel} from './models'
+import {muiStyles} from 'src/generic/VideoItem/assets/muiStyles'
+import {immutableVideoItemModel} from 'src/generic/VideoItem/models'
 
 import {
     StyledLink,
@@ -43,7 +44,7 @@ import {
     TagsBlock,
     Like,
     Duration,
-} from './assets'
+} from 'src/generic/VideoItem/assets'
 
 const
     renderLink = (x, getVideoLink, component) => typeof ig(x, 'videoPageRef') === 'string'

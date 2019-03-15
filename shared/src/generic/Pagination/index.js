@@ -3,9 +3,9 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import {compose, withState, lifecycle, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
 
-import {Button} from '@material-ui/core'
-
+// local libs
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -14,15 +14,12 @@ import {
     compareCurrentBreakpoint as ccb,
     breakpointSM as sm,
     breakpoints,
-} from '../../App/helpers'
+} from 'src/App/helpers'
 
-import {immutableI18nButtonsModel} from '../../App/models'
-import WrappedButton from '../WrappedButton'
-import {muiStyles} from './assets/muiStyles'
-import {
-    ButtonsListWrapper,
-    ButtonsList,
-} from './assets'
+import {immutableI18nButtonsModel} from 'src/App/models'
+import WrappedButton from 'src/generic/WrappedButton'
+import {muiStyles} from 'src/generic/Pagination/assets/muiStyles'
+import {ButtonsListWrapper, ButtonsList} from 'src/generic/Pagination/assets'
 
 const
     Pagination = ({

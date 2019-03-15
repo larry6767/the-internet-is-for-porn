@@ -1,4 +1,4 @@
-import {createActions} from '../helpers'
+import {createActions} from 'src/App/helpers'
 
 const actions = createActions('DIALOG', [
     'TOGGLE_REPORT_DIALOG_FLOW',

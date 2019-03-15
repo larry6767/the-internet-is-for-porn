@@ -1,9 +1,10 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 
-import {BACKEND_URL} from '../../../config'
-import {plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
-import errorActions from '../../../generic/ErrorMessage/actions'
-import actions from './actions'
+// local libs
+import {BACKEND_URL} from 'src/config'
+import {plainProvedGet as g, immutableProvedGet as ig} from 'src/App/helpers'
+import errorActions from 'src/generic/ErrorMessage/actions'
+import actions from 'src/App/MainHeader/Language/actions'
 
 // this one is't supposed to be called on SSR side,
 // related store branch supposed to be pre-filled on SSR side.

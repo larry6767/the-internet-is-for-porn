@@ -2,23 +2,24 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose, onlyUpdateForKeys} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
-import {Typography} from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 
+// local libs
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
     PropTypes,
     setPropTypes,
-} from '../helpers'
+} from 'src/App/helpers'
 
-import {model} from './models'
-import Niche from './Niche'
-import Navigation from './Navigation'
-import Language from './Language'
-import Search from './Search'
-import BurgerMenu from './BurgerMenu'
-import actions from './actions'
-import {muiStyles} from './assets/muiStyles'
+import {model} from 'src/App/MainHeader/models'
+import Niche from 'src/App/MainHeader/Niche'
+import Navigation from 'src/App/MainHeader/Navigation'
+import Language from 'src/App/MainHeader/Language'
+import Search from 'src/App/MainHeader/Search'
+import BurgerMenu from 'src/App/MainHeader/BurgerMenu'
+import actions from 'src/App/MainHeader/actions'
+import {muiStyles} from 'src/App/MainHeader/assets/muiStyles'
 
 import {
     StyledSpyLink,
@@ -31,7 +32,7 @@ import {
     Icon,
     BottomInner,
     TextWrapper,
-} from './assets'
+} from 'src/App/MainHeader/assets'
 
 const
     MainHeader = ({

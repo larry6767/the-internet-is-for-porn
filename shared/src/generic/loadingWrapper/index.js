@@ -1,9 +1,11 @@
 import React from 'react'
 import {compose, branch, renderNothing} from 'recompose'
-import {immutableProvedGet as ig} from '../../App/helpers'
-import ErrorContent from '../../generic/ErrorContent'
-import {Page, Content} from '../assets'
-import LoadingPlug from '../LoadingPlug'
+
+// local libs
+import {immutableProvedGet as ig} from 'src/App/helpers'
+import ErrorContent from 'src/generic/ErrorContent'
+import {Page, Content} from 'src/generic/loadingWrapper/assets'
+import LoadingPlug from 'src/generic/LoadingPlug'
 
 const
     // HOC helper to avoid any errors when neither page isn't loaded

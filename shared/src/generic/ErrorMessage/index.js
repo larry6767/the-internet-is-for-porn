@@ -1,13 +1,16 @@
 import React from 'react'
-import {Snackbar, SnackbarContent} from '@material-ui/core'
-import {withStyles} from '@material-ui/core/styles'
-import {compose} from 'recompose'
 import {connect} from 'react-redux'
-import actions from './actions'
+import {compose} from 'recompose'
+import Snackbar from '@material-ui/core/Snackbar'
+import SnackbarContent from '@material-ui/core/SnackbarContent'
+import {withStyles} from '@material-ui/core/styles'
 import CloseIcon from '@material-ui/icons/Close'
 import ErrorIcon from '@material-ui/icons/Error'
 import IconButton from '@material-ui/core/IconButton'
-import {muiStyles} from './assets/muiStyles'
+
+// local libs
+import {muiStyles} from 'src/generic/ErrorMessage/assets/muiStyles'
+import actions from 'src/generic/ErrorMessage/actions'
 
 const
     ErrorMessage = ({classes, isOpen, onClose}) => <Snackbar

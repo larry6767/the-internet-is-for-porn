@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {compose, withHandlers, withProps, withState, lifecycle} from 'recompose'
 import Typography from '@material-ui/core/Typography'
 
+// local libs
 import {
     getHeaderWithOrientation,
     getHeaderText,
@@ -15,22 +16,22 @@ import {
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
     breakpoints,
-} from '../helpers'
+} from 'src/App/helpers'
 
-import {routerContextModel} from '../models'
+import {routerContextModel} from 'src/App/models'
 
-import {model} from './models'
-import routerGetters from '../routerGetters'
-import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import loadingWrapper from '../../generic/loadingWrapper'
-import ControlBar from '../../generic/ControlBar'
-import PageTextHelmet from '../../generic/PageTextHelmet'
-import Lists from '../../generic/Lists'
-import VideoList from '../../generic/VideoList'
-import {PageWrapperNextToList} from './assets'
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
+import {model} from 'src/App/Niche/models'
+import routerGetters from 'src/App/routerGetters'
+import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
+import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
+import loadingWrapper from 'src/generic/loadingWrapper'
+import ControlBar from 'src/generic/ControlBar'
+import PageTextHelmet from 'src/generic/PageTextHelmet'
+import Lists from 'src/generic/Lists'
+import VideoList from 'src/generic/VideoList'
+import {PageWrapperNextToList} from 'src/App/Niche/assets'
+import headerActions from 'src/App/MainHeader/actions'
+import actions from 'src/App/Niche/actions'
 
 const
     Niche = props => <Fragment>

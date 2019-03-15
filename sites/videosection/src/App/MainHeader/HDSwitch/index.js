@@ -1,13 +1,14 @@
 import React from 'react'
+import {connect} from 'react-redux'
+import {compose} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import FormGroup from '@material-ui/core/FormGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 
-import {compose} from 'recompose'
-import {connect} from 'react-redux'
-import actions from './actions'
-import {muiStyles} from './assets/muiStyles'
+// local libs
+import actions from 'src/App/MainHeader/HDSwitch/actions'
+import {muiStyles} from 'src/App/MainHeader/HDSwitch/assets/muiStyles'
 
 const
     HDSwitch = ({classes, hdState, toggleHdAction}) => <FormGroup row>

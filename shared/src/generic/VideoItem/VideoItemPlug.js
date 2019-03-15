@@ -1,4 +1,5 @@
 import React from 'react'
+
 import {
     Wrapper,
     InfoBlock,
@@ -7,7 +8,7 @@ import {
     TitlePlug,
     ProviderLinkPlug,
     TagsPlug,
-} from './assets'
+} from 'src/generic/VideoItem/assets'
 
 const
     VideoItemPlug = () => <Wrapper>

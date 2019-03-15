@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {compose, withHandlers} from 'recompose'
 
+// local libs
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -9,14 +10,14 @@ import {
     ImmutablePropTypes,
     setPropTypes,
     getRouterContext,
-} from '../../App/helpers'
+} from 'src/App/helpers'
 
-import {immutableI18nButtonsModel, routerContextModel} from '../../App/models'
-import routerGetters from '../../App/routerGetters'
-import {immutablePornstarItemModel} from '../PornstarItem/models'
-import PornstarItem from '../PornstarItem'
-import actions from '../../App/actions'
-import {List} from './assets'
+import {immutableI18nButtonsModel, routerContextModel} from 'src/App/models'
+import routerGetters from 'src/App/routerGetters'
+import {immutablePornstarItemModel} from 'src/generic/PornstarItem/models'
+import PornstarItem from 'src/generic/PornstarItem'
+import actions from 'src/App/actions'
+import {List} from 'src/generic/PornstarList/assets'
 
 const
     PornstarList = props => <List>

@@ -1,31 +1,32 @@
 import {all, takeEvery, put} from 'redux-saga/effects'
 import {LOCATION_CHANGE} from 'connected-react-router'
 
-import homeSaga from './Home/sagas'
-import mainHeaderSaga from './MainHeader/sagas'
-import allMoviesSaga from './AllMovies/sagas'
-import allNichesSaga from './AllNiches/sagas'
-import nicheSaga from './Niche/sagas'
-import pornstarsSaga from './Pornstars/sagas'
-import pornstarSaga from './Pornstar/sagas'
-import favoriteSaga from './Favorite/sagas'
-import favoritePornstarsSaga from './FavoritePornstars/sagas'
-import videoPageSaga from './VideoPage/sagas'
-import findVideosSaga from './FindVideos/sagas'
-import siteSaga from './Site/sagas'
-import notFoundSaga from './NotFound/sagas'
-import reportDialogSaga from './ReportDialog/sagas'
+// local libs
+import homeSaga from 'src/App/Home/sagas'
+import mainHeaderSaga from 'src/App/MainHeader/sagas'
+import allMoviesSaga from 'src/App/AllMovies/sagas'
+import allNichesSaga from 'src/App/AllNiches/sagas'
+import nicheSaga from 'src/App/Niche/sagas'
+import pornstarsSaga from 'src/App/Pornstars/sagas'
+import pornstarSaga from 'src/App/Pornstar/sagas'
+import favoriteSaga from 'src/App/Favorite/sagas'
+import favoritePornstarsSaga from 'src/App/FavoritePornstars/sagas'
+import videoPageSaga from 'src/App/VideoPage/sagas'
+import findVideosSaga from 'src/App/FindVideos/sagas'
+import siteSaga from 'src/App/Site/sagas'
+import notFoundSaga from 'src/App/NotFound/sagas'
+import reportDialogSaga from 'src/App/ReportDialog/sagas'
 
 import {
     getIdsForInitialFavoriteList,
     addIdToCookie,
     removeIdFromCookie,
     immutableProvedGet as ig,
-} from './helpers'
+} from 'src/App/helpers'
 
-import actions from './actions'
-import favoriteActions from './Favorite/actions'
-import favoritePornstarsActions from './FavoritePornstars/actions'
+import actions from 'src/App/actions'
+import favoriteActions from 'src/App/Favorite/actions'
+import favoritePornstarsActions from 'src/App/FavoritePornstars/actions'
 
 export function* addVideoToFavorite({payload: item}) {
     addIdToCookie('mcj_fav', item)
