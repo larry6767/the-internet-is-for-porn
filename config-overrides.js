@@ -1,14 +1,10 @@
 const path = require('path')
-const {
-    override,
-    babelInclude,
-} = require('customize-cra')
+const {override, babelInclude} = require('customize-cra')
 
-module.exports = function(config, env) {
-    return Object.assign(config, override(
+module.exports = (config, env) =>
+    Object.assign(config, override(
         babelInclude([
             path.resolve('.'),
-            path.resolve('../../shared/')
+            path.resolve('../../shared/'),
         ])
     )(config, env))
-}
