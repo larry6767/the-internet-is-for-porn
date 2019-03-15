@@ -1,11 +1,8 @@
 import React from 'react'
-import {
-    Wrapper,
-    ControlButtons,
-    SortPlug,
-    ShowedElementsPlug,
-} from './assets'
-import {PaginationPlug} from '../Pagination/assets'
+
+// local libs
+import {Wrapper, ControlButtons, SortPlug, ShowedElementsPlug} from 'src/generic/ControlBar/assets'
+import {PaginationPlug} from 'src/generic/Pagination/assets'
 
 const
     ControlBarPlug = () => <Wrapper>
