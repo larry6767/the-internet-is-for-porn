@@ -1,21 +1,26 @@
 import React from 'react'
-import {Select, MenuItem, OutlinedInput, CircularProgress, Chip} from '@material-ui/core'
-import {withStyles} from '@material-ui/core/styles'
-import WarningIcon from '@material-ui/icons/Warning'
 import {connect} from 'react-redux'
 import {compose, lifecycle, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {Record} from 'immutable'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import OutlinedInput from '@material-ui/core/OutlinedInput'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Chip from '@material-ui/core/Chip'
+import {withStyles} from '@material-ui/core/styles'
+import WarningIcon from '@material-ui/icons/Warning'
 
+// local libs
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
     setPropTypes,
     PropTypes,
     ImmutablePropTypes
-} from '../../helpers'
+} from 'src/App/helpers'
 
-import actions from './actions'
-import {muiStyles} from './assets/muiStyles'
+import actions from 'src/App/MainHeader/Language/actions'
+import {muiStyles} from 'src/App/MainHeader/Language/assets/muiStyles'
 
 import {
     Item,
@@ -23,7 +28,7 @@ import {
     InlinedSelectionList,
     InlinedSelectionItem,
     SelectWrapper,
-} from './assets'
+} from 'src/App/MainHeader/Language/assets'
 
 const
     LanguageSelectMaterial = ({

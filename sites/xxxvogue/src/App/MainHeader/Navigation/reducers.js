@@ -1,13 +1,14 @@
 import {fromJS} from 'immutable'
 
+// local libs
 import {
     ImmutablePropTypes,
     PropTypes,
     provedHandleActions,
     plainProvedGet as g,
-} from '../../helpers'
+} from 'src/App/helpers'
 
-import actions from './actions'
+import actions from 'src/App/MainHeader/Navigation/actions'
 
 const
     stateModel = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({

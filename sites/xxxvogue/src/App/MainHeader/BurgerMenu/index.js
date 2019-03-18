@@ -1,10 +1,13 @@
 import React, {Fragment} from 'react'
 import {compose, withHandlers, withState, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {connect} from 'react-redux'
-import {Menu, MenuItem, IconButton} from '@material-ui/core'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import {withStyles} from '@material-ui/core/styles'
 
+// local libs
 import {
     getRouterContext,
     immutableProvedGet as ig,
@@ -12,14 +15,14 @@ import {
     PropTypes,
     setPropTypes,
     getLinkByNavKey,
-} from '../../helpers'
+} from 'src/App/helpers'
 
-import {immutableI18nNavigationModel, routerContextModel} from '../../models'
-import Language from '../Language'
-import actionsNavigation from '../Navigation/actions'
-import {navMenuOrder} from '../Navigation/models'
-import actions from './actions'
-import {muiStyles} from './assets/muiStyles'
+import {immutableI18nNavigationModel, routerContextModel} from 'src/App/models'
+import Language from 'src/App/MainHeader/Language'
+import actionsNavigation from 'src/App/MainHeader/Navigation/actions'
+import {navMenuOrder} from 'src/App/MainHeader/Navigation/models'
+import actions from 'src/App/MainHeader/BurgerMenu/actions'
+import {muiStyles} from 'src/App/MainHeader/BurgerMenu/assets/muiStyles'
 
 const
     menuIconStyle = Object.freeze({fill: "#a1a7b1"}),

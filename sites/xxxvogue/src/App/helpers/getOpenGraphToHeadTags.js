@@ -1,7 +1,8 @@
 import React from 'react'
 
-import ig from './immutable/provedGet'
-import routerGetters from '../routerGetters'
+// local libs
+import ig from 'src/App/helpers/immutable/provedGet'
+import routerGetters from 'src/App/routerGetters'
 
 export default (openGraphData, routerContext, domain) => {
     const

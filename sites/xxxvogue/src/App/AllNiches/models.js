@@ -1,10 +1,10 @@
-import {ImmutablePropTypes, PropTypes} from '../helpers'
+import {ImmutablePropTypes, PropTypes} from 'src/App/helpers'
 
 import {
     immutablePageTextModel,
     immutableNichesListModel,
     pageRequestParamsModel,
-} from '../models'
+} from 'src/App/models'
 
 export const
     model = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({

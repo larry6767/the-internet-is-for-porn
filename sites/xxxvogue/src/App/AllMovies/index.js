@@ -4,6 +4,7 @@ import {compose, withHandlers, withProps, withState, lifecycle} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 
+// local libs
 import {
     getHeaderWithOrientation,
     getRouterContext,
@@ -16,22 +17,22 @@ import {
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
     breakpoints,
-} from '../helpers'
+} from 'src/App/helpers'
 
-import {model} from './models'
-import {routerContextModel} from '../models'
-import routerGetters from '../routerGetters'
-import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import loadingWrapper from '../../generic/loadingWrapper'
-import ControlBar from '../../generic/ControlBar'
-import PageTextHelmet from '../../generic/PageTextHelmet'
-import Lists from '../../generic/Lists'
-import VideoList from '../../generic/VideoList'
-import {PageWrapperNextToList} from './assets'
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
-import {muiStyles} from './assets/muiStyles'
+import {model} from 'src/App/AllMovies/models'
+import {routerContextModel} from 'src/App/models'
+import routerGetters from 'src/App/routerGetters'
+import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
+import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
+import loadingWrapper from 'src/generic/loadingWrapper'
+import ControlBar from 'src/generic/ControlBar'
+import PageTextHelmet from 'src/generic/PageTextHelmet'
+import Lists from 'src/generic/Lists'
+import VideoList from 'src/generic/VideoList'
+import {PageWrapperNextToList} from 'src/App/AllMovies/assets'
+import headerActions from 'src/App/MainHeader/actions'
+import actions from 'src/App/AllMovies/actions'
+import {muiStyles} from 'src/App/AllMovies/assets/muiStyles'
 
 const
     AllMovies = ({

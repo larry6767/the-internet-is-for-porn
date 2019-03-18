@@ -1,11 +1,11 @@
 import {get} from 'lodash'
 import {put, takeEvery, select} from 'redux-saga/effects'
 
-import {immutableProvedGet as ig} from '../helpers'
-
-import {BACKEND_URL} from '../../config'
-import errorActions from '../../generic/ErrorMessage/actions'
-import actions from './actions'
+// local libs
+import {immutableProvedGet as ig} from 'src/App/helpers'
+import {BACKEND_URL} from 'src/config'
+import errorActions from 'src/generic/ErrorMessage/actions'
+import actions from 'src/App/ReportDialog/actions'
 
 export function* sendReportFlow({payload: formData}) {
     try {

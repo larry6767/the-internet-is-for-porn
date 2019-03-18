@@ -6,15 +6,16 @@ import {MuiThemeProvider} from '@material-ui/core/styles'
 import {ThemeProvider as SCThemeProvider} from 'styled-components'
 import {Normalize} from 'styled-normalize'
 
-import {PropTypes, getRouterContext, setPropTypes, plainProvedGet as g} from './helpers'
-import {routerContextModel} from './models'
-import MainHeader from './MainHeader'
-import MainFooter from './MainFooter'
-import ReportDialog from './ReportDialog'
-import actions from './actions'
-import theme from './assets/theme'
-import muiTheme from './assets/muiTheme'
-import GlobalStyle from './assets/style'
+// local libs
+import {PropTypes, getRouterContext, setPropTypes, plainProvedGet as g} from 'src/App/helpers'
+import {routerContextModel} from 'src/App/models'
+import MainHeader from 'src/App/MainHeader'
+import MainFooter from 'src/App/MainFooter'
+import ReportDialog from 'src/App/ReportDialog'
+import actions from 'src/App/actions'
+import theme from 'src/App/assets/theme'
+import muiTheme from 'src/App/assets/muiTheme'
+import GlobalStyle from 'src/App/assets/style'
 
 export const App = ({sheetsManager, routerContext, children}) => <MuiThemeProvider
     theme={muiTheme}

@@ -1,10 +1,12 @@
 import {range} from 'lodash'
 import React from 'react'
+
+// local libs
 import {
     ListComponentPlug,
     ListItemWrapperPlug,
     ListItemPlug,
-} from './assets'
+} from 'src/App/AllNiches/assets'
 
 const
     itemsQuantity = 100,

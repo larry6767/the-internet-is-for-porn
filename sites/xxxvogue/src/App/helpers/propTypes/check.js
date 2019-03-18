@@ -1,1 +1,1 @@
-export {checkPropTypes, assertPropTypes} from '../../../dev-modules/propTypes/check'
+export {checkPropTypes, assertPropTypes} from 'src/dev-modules/propTypes/check'

@@ -1,8 +1,8 @@
-import {PropTypes} from './propTypes'
-import {assertPropTypes} from './propTypes/check'
+import {PropTypes} from 'src/App/helpers/propTypes'
+import {assertPropTypes} from 'src/App/helpers/propTypes/check'
 
 // WARNING! Be careful! Avoid recursive dependencies!
-import {orientationCodes} from '../models'
+import {orientationCodes} from 'src/App/models'
 
 const
     classIdModel = process.env.NODE_ENV === 'production' ? null :

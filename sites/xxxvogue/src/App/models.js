@@ -1,11 +1,11 @@
 // WARNING! Some helper(s) depend(s) on this module, avoid recursive dependencies!
-import {PropTypes} from './helpers/propTypes'
-import {ImmutablePropTypes} from './helpers/propTypes/immutable'
+import {PropTypes} from 'src/App/helpers/propTypes'
+import {ImmutablePropTypes} from 'src/App/helpers/propTypes/immutable'
 
 import {
     immutableLocaleRouterModel,
     ssrImmutableLocaleRouterModel,
-} from '../dev-modules/initialModels'
+} from 'src/dev-modules/initialModels'
 
 export {
     localeRouterModel, immutableLocaleRouterModel,
@@ -20,7 +20,7 @@ export {
     i18nOrientationModel, immutableI18nOrientationModel,
     i18nModel, immutableI18nModel,
     ssrLocaleRouterModel, ssrImmutableLocaleRouterModel,
-} from '../dev-modules/initialModels'
+} from 'src/dev-modules/initialModels'
 
 const
     routerContextModelBuilder = process.env.NODE_ENV === 'production' ? null : isSSR =>

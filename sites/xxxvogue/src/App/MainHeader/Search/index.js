@@ -7,22 +7,25 @@ import {reduxForm, Field, formValueSelector} from 'redux-form/immutable'
 import Autosuggest from 'react-autosuggest'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
-import {TextField, Paper, MenuItem} from '@material-ui/core'
+import TextField from '@material-ui/core/TextField'
+import Paper from '@material-ui/core/Paper'
+import MenuItem from '@material-ui/core/MenuItem'
 import {withStyles} from '@material-ui/core/styles'
 
+// local libs
 import {
     immutableProvedGet as ig,
     plainProvedGet as g,
     PropTypes,
     setPropTypes,
     getRouterContext,
-} from '../../helpers'
+} from 'src/App/helpers'
 
-import {immutableI18nSearchModel, routerContextModel} from '../../models'
-import routerGetters from '../../routerGetters'
-import {SearchForm, SearchButton} from './assets'
-import {muiStyles} from './assets/muiStyles'
-import actions from './actions'
+import {immutableI18nSearchModel, routerContextModel} from 'src/App/models'
+import routerGetters from 'src/App/routerGetters'
+import {SearchForm, SearchButton} from 'src/App/MainHeader/Search/assets'
+import {muiStyles} from 'src/App/MainHeader/Search/assets/muiStyles'
+import actions from 'src/App/MainHeader/Search/actions'
 
 const
     renderInputComponent = ({classes, ref, i18nSearch, ...input}) => <TextField

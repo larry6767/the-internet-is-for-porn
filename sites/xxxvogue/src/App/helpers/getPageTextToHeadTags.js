@@ -1,6 +1,7 @@
 import React from 'react'
 
-import ig from './immutable/provedGet'
+// local libs
+import ig from 'src/App/helpers/immutable/provedGet'
 
 export default pageText => [
     <title>{ig(pageText, 'title')}</title>,

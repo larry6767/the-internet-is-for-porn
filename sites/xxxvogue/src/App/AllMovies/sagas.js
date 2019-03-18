@@ -1,18 +1,19 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 import {push} from 'connected-react-router/immutable'
 
+// local libs
 import {
     obtainPageData,
     getHeaderText,
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
-} from '../helpers'
+} from 'src/App/helpers'
 
-import routerGetters from '../routerGetters'
-import errorActions from '../../generic/ErrorMessage/actions'
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
+import routerGetters from 'src/App/routerGetters'
+import errorActions from 'src/generic/ErrorMessage/actions'
+import headerActions from 'src/App/MainHeader/actions'
+import actions from 'src/App/AllMovies/actions'
 
 export function* loadAllMoviesPageFlow(action, ssrContext) {
     try {

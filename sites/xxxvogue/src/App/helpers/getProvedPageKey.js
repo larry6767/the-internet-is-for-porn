@@ -1,9 +1,10 @@
 import {set} from 'lodash'
 
-import g from './plain/provedGet'
+// local libs
+import g from 'src/App/helpers/plain/provedGet'
 
 // WARNING! Be careful! Avoid recursive dependencies!
-import {pageKeys} from '../models'
+import {pageKeys} from 'src/App/models'
 
 const
     // {home: 'home', niche: 'niche', ...etc

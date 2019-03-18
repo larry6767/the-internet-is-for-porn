@@ -1,8 +1,8 @@
-import g from './plain/provedGet'
-import ig from './immutable/provedGet'
-import PropTypes from './propTypes'
-import ImmutablePropTypes from './propTypes/immutable'
-import {assertPropTypes} from './propTypes/check'
+import g from 'src/App/helpers/plain/provedGet'
+import ig from 'src/App/helpers/immutable/provedGet'
+import PropTypes from 'src/App/helpers/propTypes'
+import ImmutablePropTypes from 'src/App/helpers/propTypes/immutable'
+import {assertPropTypes} from 'src/App/helpers/propTypes/check'
 
 const
     dataModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({

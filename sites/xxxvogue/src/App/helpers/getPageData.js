@@ -1,4 +1,4 @@
-import {BACKEND_URL} from '../../config'
+import {BACKEND_URL} from 'src/config'
 
 export default reqBody => fetch(`${BACKEND_URL}/get-page-data`, {
     method: 'POST',

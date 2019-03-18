@@ -1,5 +1,5 @@
-import ig from './immutable/provedGet'
-import g from './plain/provedGet'
+import ig from 'src/App/helpers/immutable/provedGet'
+import g from 'src/App/helpers/plain/provedGet'
 
 export default (pageText, isImmutable = false, withTitle = true) =>
     isImmutable ? {

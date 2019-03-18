@@ -1,15 +1,17 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 
+// local libs
 import {
     obtainPageData,
     getHeaderText,
     plainProvedGet as g,
     immutableProvedGet as ig,
     get404PageText,
-} from '../helpers'
-import errorActions from '../../generic/ErrorMessage/actions'
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
+} from 'src/App/helpers'
+
+import errorActions from 'src/generic/ErrorMessage/actions'
+import headerActions from 'src/App/MainHeader/actions'
+import actions from 'src/App/NotFound/actions'
 
 export function* loadNotFoundPageFlow(action, ssrContext) {
     try {

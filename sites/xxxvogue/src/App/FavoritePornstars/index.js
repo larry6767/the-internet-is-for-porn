@@ -4,6 +4,7 @@ import {compose, lifecycle, withHandlers} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 
+// local libs
 import {
     getHeaderText,
     getRouterContext,
@@ -14,22 +15,22 @@ import {
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
     PropTypes,
-} from '../helpers'
+} from 'src/App/helpers'
 
-import {routerContextModel} from '../models'
+import {routerContextModel} from 'src/App/models'
 
-import {model} from './models'
-import routerGetters from '../routerGetters'
-import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import loadingWrapper from '../../generic/loadingWrapper'
-import ControlBar from '../../generic/ControlBar'
-import PageTextHelmet from '../../generic/PageTextHelmet'
-import PornstarList from '../../generic/PornstarList'
-import {PageWrapper} from './assets'
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
-import {muiStyles} from './assets/muiStyles'
+import {model} from 'src/App/FavoritePornstars/models'
+import routerGetters from 'src/App/routerGetters'
+import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
+import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
+import loadingWrapper from 'src/generic/loadingWrapper'
+import ControlBar from 'src/generic/ControlBar'
+import PageTextHelmet from 'src/generic/PageTextHelmet'
+import PornstarList from 'src/generic/PornstarList'
+import {PageWrapper} from 'src/App/FavoritePornstars/assets'
+import headerActions from 'src/App/MainHeader/actions'
+import actions from 'src/App/FavoritePornstars/actions'
+import {muiStyles} from 'src/App/FavoritePornstars/assets/muiStyles'
 
 const
     favoriteButtons = {

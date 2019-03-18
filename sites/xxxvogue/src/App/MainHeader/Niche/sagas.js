@@ -1,9 +1,10 @@
 import {put, takeEvery, select} from 'redux-saga/effects'
 import {push} from 'connected-react-router/immutable'
 
-import {plainProvedGet as g, getRouterContext} from '../../helpers'
-import routerGetters from '../../routerGetters'
-import actions from './actions'
+// local libs
+import {plainProvedGet as g, getRouterContext} from 'src/App/helpers'
+import routerGetters from 'src/App/routerGetters'
+import actions from 'src/App/MainHeader/Niche/actions'
 
 function* switchOrientationFlow(action) {
     const

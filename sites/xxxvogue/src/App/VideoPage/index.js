@@ -11,6 +11,7 @@ import Favorite from '@material-ui/icons/Favorite'
 import HomeIcon from '@material-ui/icons/Home'
 import ReportIcon from '@material-ui/icons/Report'
 
+// local libs
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -28,23 +29,21 @@ import {
     getHeaderText,
     lifecycleForPageWithRefs,
     getDomain,
-} from '../helpers'
+} from 'src/App/helpers'
 
-import routerGetters from '../routerGetters'
-
-import {model} from './models'
-import {immutableI18nButtonsModel, routerContextModel} from '../models'
-import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import loadingWrapper from '../../generic/loadingWrapper'
-import PageTextHelmet from '../../generic/PageTextHelmet'
-import VideoList from '../../generic/VideoList'
-
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
-import appActions from '../actions'
-import reportDialogActions from '../ReportDialog/actions'
-import {muiStyles} from './assets/muiStyles'
+import routerGetters from 'src/App/routerGetters'
+import {model} from 'src/App/VideoPage/models'
+import {immutableI18nButtonsModel, routerContextModel} from 'src/App/models'
+import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
+import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
+import loadingWrapper from 'src/generic/loadingWrapper'
+import PageTextHelmet from 'src/generic/PageTextHelmet'
+import VideoList from 'src/generic/VideoList'
+import headerActions from 'src/App/MainHeader/actions'
+import actions from 'src/App/VideoPage/actions'
+import appActions from 'src/App/actions'
+import reportDialogActions from 'src/App/ReportDialog/actions'
+import {muiStyles} from 'src/App/VideoPage/assets/muiStyles'
 
 import {
     StyledLink,
@@ -67,7 +66,7 @@ import {
     VideoIframe,
     AdIframeWrapper,
     AdIframe,
-} from './assets'
+} from 'src/App/VideoPage/assets'
 
 const
     renderFavoriteButton = (

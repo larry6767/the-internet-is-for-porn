@@ -1,28 +1,21 @@
 import React from 'react'
 import {compose, withHandlers, onlyUpdateForKeys} from 'recompose'
 import {connect} from 'react-redux'
-import {Typography} from '@material-ui/core'
+import Typography from '@material-ui/core/Typography'
 
+// local libs
 import {
     plainProvedGet as g,
     immutableProvedGet as ig,
     setPropTypes,
     PropTypes,
     getDomain
-} from '../helpers'
+} from 'src/App/helpers'
 
-import {immutableI18nFooterModel, immutableI18nButtonsModel} from '../models'
-import reportDialogActions from '../ReportDialog/actions'
-import {linksToProtect} from './fixtures'
-
-import {
-    Footer,
-    FooterInner,
-    TextBlock,
-    LinkList,
-    LinkItem,
-    Link,
-} from './assets'
+import {immutableI18nFooterModel, immutableI18nButtonsModel} from 'src/App/models'
+import reportDialogActions from 'src/App/ReportDialog/actions'
+import {linksToProtect} from 'src/App/MainFooter/fixtures'
+import {Footer, FooterInner, TextBlock, LinkList, LinkItem, Link} from 'src/App/MainFooter/assets'
 
 const
     startYear = 2019,

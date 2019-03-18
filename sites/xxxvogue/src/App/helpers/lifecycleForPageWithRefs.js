@@ -1,7 +1,9 @@
 import {lifecycle} from 'recompose'
-import {default as areWeSwitchedOnPage} from './areWeSwitchedOnPage'
-import g from './plain/provedGet'
-import ig from './immutable/provedGet'
+
+// local libs
+import {default as areWeSwitchedOnPage} from 'src/App/helpers/areWeSwitchedOnPage'
+import g from 'src/App/helpers/plain/provedGet'
+import ig from 'src/App/helpers/immutable/provedGet'
 
 const
     areRefsNotNull = (props, refsKeys) => g(refsKeys, []).every(x => g(props, x) !== null),

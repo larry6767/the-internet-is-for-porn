@@ -2,9 +2,7 @@ import React, {Fragment} from 'react'
 import queryString from 'query-string'
 import {get} from 'lodash'
 import {connect} from 'react-redux'
-
 import {compose, lifecycle, withHandlers, withState, withPropsOnChange} from 'recompose'
-
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Snackbar from '@material-ui/core/Snackbar'
@@ -12,6 +10,7 @@ import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import CloseIcon from '@material-ui/icons/Close'
 
+// local libs
 import {
     getHeaderText,
     getRouterContext,
@@ -23,21 +22,21 @@ import {
     setPropTypes,
     PropTypes,
     getOrientationByClassId,
-} from '../helpers'
+} from 'src/App/helpers'
 
-import {routerContextModel, legacyOrientationPrefixesModel} from '../models'
-import {model} from './models'
-import routerGetters from '../routerGetters'
-import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import loadingWrapper from '../../generic/loadingWrapper'
-import ControlBar from '../../generic/ControlBar'
-import PageTextHelmet from '../../generic/PageTextHelmet'
-import VideoList from '../../generic/VideoList'
-import {PageWrapper, StyledLink} from './assets'
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
-import {muiStyles} from './assets/muiStyles'
+import {routerContextModel, legacyOrientationPrefixesModel} from 'src/App/models'
+import {model} from 'src/App/FindVideos/models'
+import routerGetters from 'src/App/routerGetters'
+import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
+import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
+import loadingWrapper from 'src/generic/loadingWrapper'
+import ControlBar from 'src/generic/ControlBar'
+import PageTextHelmet from 'src/generic/PageTextHelmet'
+import VideoList from 'src/generic/VideoList'
+import {PageWrapper, StyledLink} from 'src/App/FindVideos/assets'
+import headerActions from 'src/App/MainHeader/actions'
+import actions from 'src/App/FindVideos/actions'
+import {muiStyles} from 'src/App/FindVideos/assets/muiStyles'
 
 const
     FindVideos = props => <Fragment>

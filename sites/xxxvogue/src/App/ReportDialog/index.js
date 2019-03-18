@@ -1,56 +1,52 @@
 import {includes} from 'lodash'
 import React, {Fragment} from 'react'
-import {compose, withHandlers, withPropsOnChange, withState} from 'recompose'
+import {compose, withHandlers, withState, withPropsOnChange} from 'recompose'
 import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {withStyles} from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import FormControl from '@material-ui/core/FormControl'
+import FormLabel from '@material-ui/core/FormLabel'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Radio from '@material-ui/core/Radio'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import Paper from '@material-ui/core/Paper'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableRow from '@material-ui/core/TableRow'
+import TableCell from '@material-ui/core/TableCell'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
+// local libs
 import {
-    Typography,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    DialogContentText,
-    FormControl,
-    FormLabel,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
-    Button,
-    TextField,
-    Paper,
-    Table,
-    TableBody,
-    TableRow,
-    TableCell,
-    CircularProgress,
-} from '@material-ui/core'
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    setPropTypes,
+    PropTypes
+} from 'src/App/helpers'
 
-import {plainProvedGet as g, immutableProvedGet as ig, setPropTypes, PropTypes} from '../helpers'
-import {model, galleryModel, GalleryRecord} from './models'
-import {immutableI18nButtonsModel, immutableI18nReportModel} from '../models'
-
-import {
-    VideoBlock,
-    Thumb,
-    Description,
-    SubmitButtonWrapper,
-} from './assets'
-
-import {muiStyles} from './assets/muiStyles'
-import actions from './actions'
-
-import {NICHE, ALL_MOVIES, PORNSTAR, VIDEO} from '../constants'
+import {model, galleryModel, GalleryRecord} from 'src/App/ReportDialog/models'
+import {immutableI18nButtonsModel, immutableI18nReportModel} from 'src/App/models'
+import {VideoBlock, Thumb, Description, SubmitButtonWrapper} from 'src/App/ReportDialog/assets'
+import {muiStyles} from 'src/App/ReportDialog/assets/muiStyles'
+import actions from 'src/App/ReportDialog/actions'
+import {NICHE, ALL_MOVIES, PORNSTAR, VIDEO} from 'src/App/constants'
 
 const
-    renderTableRow = (k, v, classedBounds) => <TableRow>
-        <TableCell component="td" classes={g(classedBounds, 'tableCellRoot')}>{k}</TableCell>
+    renderTableRow = (k, v, classes) => <TableRow>
+        <TableCell component="td" className={g(classes, 'tableCellRoot')}>{k}</TableCell>
         <TableCell component="td">{v}</TableCell>
     </TableRow>,
 
     renderVideoBlock = (
-        classedBounds,
+        classes,
         i18nReport,
         gallery,
         pageUrl,
@@ -60,7 +56,7 @@ const
         <Typography
             variant="subtitle1"
             gutterBottom
-            classes={g(classedBounds, 'typographyTitle')}
+            className={g(classes, 'typographyTitle')}
         >
             {ig(gallery, 'title')}
         </Typography>
@@ -72,12 +68,12 @@ const
                         {renderTableRow(
                             ig(i18nReport, 'duration'),
                             ig(gallery, 'duration'),
-                            classedBounds,
+                            classes,
                         )}
                         {renderTableRow(
                             ig(i18nReport, 'added'),
                             ig(gallery, 'published'),
-                            classedBounds,
+                            classes,
                         )}
                         {renderTableRow(
                             ig(i18nReport, 'hosted'),
@@ -87,7 +83,7 @@ const
                             >
                                 {ig(gallery, 'sponsorName')}
                             </a>,
-                            classedBounds,
+                            classes,
                         )}
                         {renderTableRow(
                             ig(i18nReport, 'found'),
@@ -95,7 +91,7 @@ const
                                 <Link to={pageUrl}>{currentHref}</Link>
                                 {` ${ig(i18nReport, 'on')} ${currentTime}`}
                             </Fragment>,
-                            classedBounds,
+                            classes,
                         )}
                     </TableBody>
                 </Table>
@@ -103,7 +99,7 @@ const
         </Description>
     </VideoBlock>,
 
-    renderTextField = (i18nReport, commentHandler, name, label, placeholder) => <TextField
+    renderTextField = (commentHandler, name, label, placeholder) => <TextField
         name={name}
         multiline
         fullWidth
@@ -114,12 +110,14 @@ const
         onChange={commentHandler}
     />,
 
-    renderRadioButtons = (classedBounds, i18nReport, radioButtons, handler) => <FormControl
+    renderRadioButtons = (classes, i18nReport, radioButtons, handler) => <FormControl
         component="fieldset"
-        classes={g(classedBounds, 'formControl')}
+        className={g(classes, 'formControl')}
     >
-        <FormLabel component="legend">{ig(i18nReport, 'radioLabel')}</FormLabel>
-        <RadioGroup name="reason" classes={g(classedBounds, 'radioGroup')} onChange={handler}>
+        <FormLabel component="legend" className={g(classes, 'formLabelRoot')}>
+            {ig(i18nReport, 'radioLabel')}
+        </FormLabel>
+        <RadioGroup name="reason" className={g(classes, 'radioGroup')} onChange={handler}>
             {Object.keys(radioButtons).map(x => <FormControlLabel
                 key={x}
                 value={x}
@@ -148,13 +146,16 @@ const
             onClose={g(props, 'closeHandler')}
             maxWidth={'md'}
             aria-labelledby="report-dialog"
+            classes={g(props, 'classedBounds', 'dialog')}
         >
             <form onSubmit={g(props, 'sendReportRequestHandler')}>
-                <DialogTitle id="report-dialog">{ig(props.i18nReport, 'title')}</DialogTitle>
-                <DialogContent>
+                <DialogTitle id="report-dialog" className={g(props, 'classes', 'dialogTitleRoot')}>
+                    {ig(props.i18nReport, 'title')}
+                </DialogTitle>
+                <DialogContent className={g(props, 'classes', 'dialogContentRoot')}>
                     {g(props, 'gallery') ? <Fragment>
                         {renderVideoBlock(
-                            g(props, 'classedBounds'),
+                            g(props, 'classes'),
                             g(props, 'i18nReport'),
                             g(props, 'gallery'),
                             g(props, 'pageUrl'),
@@ -164,7 +165,6 @@ const
                         <input type="hidden" name="galleryId" value={ig(props.gallery, 'id')}/>
                     </Fragment>
                     : renderTextField(
-                        g(props, 'i18nReport'),
                         g(props, 'userUrlHandler'),
                         'userUrl',
                         'URL',
@@ -174,14 +174,14 @@ const
                     <input type="hidden" name="url" value={ig(props.data, 'currentHref')}/>
 
                     {ig(props.data, 'isSent') ? null : renderRadioButtons(
-                        g(props, 'classedBounds'),
+                        g(props, 'classes'),
                         g(props, 'i18nReport'),
                         radioButtons,
                         g(props, 'reasonHandler'),
                     )}
 
                     {ig(props.data, 'isSent')
-                        ? <DialogContentText classes={g(props.classedBounds, 'dialogSuccessText')}>
+                        ? <DialogContentText className={g(props, 'classes', 'dialogSuccessText')}>
                             {ig(props.i18nReport, 'successText')}
                         </DialogContentText>
                         : <DialogContentText>
@@ -190,7 +190,6 @@ const
 
                     {ig(props.data, 'isSent') ? null :
                         renderTextField(
-                            g(props, 'i18nReport'),
                             g(props, 'commentHandler'),
                             'comment',
                             ig(props.i18nReport, 'commentLabel'),
@@ -198,7 +197,7 @@ const
                         )}
 
                     { ! ig(props.data, 'isNotSent') ? null :
-                        <DialogContentText classes={g(props.classedBounds, 'dialogFailureText')}>
+                        <DialogContentText className={g(props, 'classes', 'dialogFailureText')}>
                             {ig(props.i18nReport, 'failureText')}
                         </DialogContentText>}
                 </DialogContent>
@@ -222,7 +221,7 @@ const
                         { ! ig(props.data, 'isSending') ? null :
                             <CircularProgress
                                 size={24}
-                                classes={g(props.classedBounds, 'buttonProgress')}
+                                className={g(props, 'classes', 'buttonProgress')}
                             />}
                     </SubmitButtonWrapper>}
                 </DialogActions>
@@ -287,19 +286,17 @@ export default compose(
     withStyles(muiStyles),
     withPropsOnChange([], props => ({
         classedBounds: Object.freeze({
-            typographyTitle: Object.freeze({root: g(props, 'classes', 'typographyTitle')}),
-            tableCellRoot: Object.freeze({root: g(props, 'classes', 'tableCellRoot')}),
-            formControl: Object.freeze({root: g(props, 'classes', 'formControl')}),
-            radioGroup: Object.freeze({root: g(props, 'classes', 'radioGroup')}),
-            dialogSuccessText: Object.freeze({root: g(props, 'classes', 'dialogSuccessText')}),
-            dialogFailureText: Object.freeze({root: g(props, 'classes', 'dialogFailureText')}),
-            buttonProgress: Object.freeze({root: g(props, 'classes', 'buttonProgress')}),
+            dialog: Object.freeze({paper: g(props, 'classes', 'paperRoot')}),
         }),
     })),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.shape({
+        classes: PropTypes.exact({
+            paperRoot: PropTypes.string,
+            dialogTitleRoot: PropTypes.string,
+            dialogContentRoot: PropTypes.string,
             typographyTitle: PropTypes.string,
             tableCellRoot: PropTypes.string,
+            formLabelRoot: PropTypes.string,
             formControl: PropTypes.string,
             radioGroup: PropTypes.string,
             dialogSuccessText: PropTypes.string,
@@ -308,13 +305,7 @@ export default compose(
         }),
 
         classedBounds: PropTypes.exact({
-            typographyTitle: PropTypes.object,
-            tableCellRoot: PropTypes.object,
-            formControl: PropTypes.object,
-            radioGroup: PropTypes.object,
-            dialogSuccessText: PropTypes.object,
-            dialogFailureText: PropTypes.object,
-            buttonProgress: PropTypes.object,
+            dialog: PropTypes.object,
         }),
 
         data: model,

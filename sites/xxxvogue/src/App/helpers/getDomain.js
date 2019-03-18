@@ -1,5 +1,7 @@
 import {Map} from 'immutable'
-import ig from './immutable/provedGet'
+
+// local libs
+import ig from 'src/App/helpers/immutable/provedGet'
 
 export default state => ig(
     ig(state, 'app', 'mainHeader', 'language', 'siteLocales', 'list')

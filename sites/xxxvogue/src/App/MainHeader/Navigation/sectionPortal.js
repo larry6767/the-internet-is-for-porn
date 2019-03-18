@@ -1,8 +1,9 @@
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
 
-import {plainProvedGet as g, setPropTypes, PropTypes} from '../../helpers'
-import actions from './actions'
+// local libs
+import {plainProvedGet as g, setPropTypes, PropTypes} from 'src/App/helpers'
+import actions from 'src/App/MainHeader/Navigation/actions'
 
 // Helper HOC
 export default compose(

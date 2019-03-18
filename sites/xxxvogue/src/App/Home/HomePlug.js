@@ -1,11 +1,8 @@
 import {range} from 'lodash'
 import React from 'react'
-import {
-    NichesList,
-    NichePlug,
-    NicheImagePlug,
-    TypographyPlug,
-} from './assets'
+
+// local libs
+import {NichesList, NichePlug, NicheImagePlug, TypographyPlug} from 'src/App/Home/assets'
 
 const
     PornstarInfoPlug = () => <NichesList>

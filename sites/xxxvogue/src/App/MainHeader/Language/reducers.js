@@ -1,8 +1,9 @@
 import {fromJS, Record} from 'immutable'
 import {handleActions} from 'redux-actions'
 
-import {plainProvedGet as g, immutableProvedGet as ig} from '../../helpers'
-import actions from './actions'
+// local libs
+import {plainProvedGet as g, immutableProvedGet as ig} from 'src/App/helpers'
+import actions from 'src/App/MainHeader/Language/actions'
 
 const
     SiteLocaleRecord = Record({

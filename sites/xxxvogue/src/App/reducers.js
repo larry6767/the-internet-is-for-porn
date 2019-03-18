@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux-immutable'
 import {fromJS, List, Map} from 'immutable'
 
+// local libs
 import {
     getCurrentBreakpoint,
     addIdToFavoriteList,
@@ -9,24 +10,24 @@ import {
     PropTypes,
     ImmutablePropTypes,
     provedHandleActions,
-} from './helpers'
+} from 'src/App/helpers'
 
-import homeReducer from './Home/reducers'
-import mainHeaderReducer from './MainHeader/reducers'
-import allMoviesReducer from './AllMovies/reducers'
-import allNichesReducer from './AllNiches/reducers'
-import nicheReducer from './Niche/reducers'
-import pornstarsReducer from './Pornstars/reducers'
-import pornstarReducer from './Pornstar/reducers'
-import favoriteReducer from './Favorite/reducers'
-import favoritePornstarsReducer from './FavoritePornstars/reducers'
-import videoPageReducer from './VideoPage/reducers'
-import findVideosReducer from './FindVideos/reducers'
-import siteReducer from './Site/reducers'
-import notFoundReducer from './NotFound/reducers'
-import reportDialogReducer from './ReportDialog/reducers'
-import actions from './actions'
-import {immutableLocaleRouterModel, immutableI18nModel} from './models'
+import homeReducer from 'src/App/Home/reducers'
+import mainHeaderReducer from 'src/App/MainHeader/reducers'
+import allMoviesReducer from 'src/App/AllMovies/reducers'
+import allNichesReducer from 'src/App/AllNiches/reducers'
+import nicheReducer from 'src/App/Niche/reducers'
+import pornstarsReducer from 'src/App/Pornstars/reducers'
+import pornstarReducer from 'src/App/Pornstar/reducers'
+import favoriteReducer from 'src/App/Favorite/reducers'
+import favoritePornstarsReducer from 'src/App/FavoritePornstars/reducers'
+import videoPageReducer from 'src/App/VideoPage/reducers'
+import findVideosReducer from 'src/App/FindVideos/reducers'
+import siteReducer from 'src/App/Site/reducers'
+import notFoundReducer from 'src/App/NotFound/reducers'
+import reportDialogReducer from 'src/App/ReportDialog/reducers'
+import actions from 'src/App/actions'
+import {immutableLocaleRouterModel, immutableI18nModel} from 'src/App/models'
 
 import {
     HOME,
@@ -41,7 +42,7 @@ import {
     FIND_VIDEOS,
     SITE,
     NOT_FOUND,
-} from './constants'
+} from 'src/App/constants'
 
 const
     defaultSSR = fromJS({isSSR: false}),

@@ -1,1 +1,1 @@
-export {default, ImmutablePropTypes} from '../../../dev-modules/propTypes/immutable'
+export {default, ImmutablePropTypes} from 'src/dev-modules/propTypes/immutable'

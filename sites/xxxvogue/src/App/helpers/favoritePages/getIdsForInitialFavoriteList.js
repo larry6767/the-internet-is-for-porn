@@ -1,6 +1,7 @@
 import {map, compact} from 'lodash'
 
-import getCookie from '../cookie/getCookie'
+// local libs
+import getCookie from 'src/App/helpers/cookie/getCookie'
 
 export default cookieName => getCookie(cookieName)
     ? map(

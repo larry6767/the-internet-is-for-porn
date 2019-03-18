@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers} from 'recompose'
 import Typography from '@material-ui/core/Typography'
 
+// local libs
 import {
     getHeaderWithOrientation,
     getHeaderText,
@@ -14,19 +15,19 @@ import {
     getPageRequestParams,
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
-} from '../helpers'
+} from 'src/App/helpers'
 
-import {routerContextModel} from '../models'
-import {model} from './models'
-import routerGetters from '../routerGetters'
-import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import loadingWrapper from '../../generic/loadingWrapper'
-import PageTextHelmet from '../../generic/PageTextHelmet'
-import PornstarList from '../../generic/PornstarList'
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
-import {PageWrapper} from './assets'
+import {routerContextModel} from 'src/App/models'
+import {model} from 'src/App/Pornstars/models'
+import routerGetters from 'src/App/routerGetters'
+import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
+import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
+import loadingWrapper from 'src/generic/loadingWrapper'
+import PageTextHelmet from 'src/generic/PageTextHelmet'
+import PornstarList from 'src/generic/PornstarList'
+import headerActions from 'src/App/MainHeader/actions'
+import actions from 'src/App/Pornstars/actions'
+import {PageWrapper} from 'src/App/Pornstars/assets'
 
 const
     Pornstars = ({data, linkBuilder, htmlLang, i18nPornstarsHeader}) => <Fragment>

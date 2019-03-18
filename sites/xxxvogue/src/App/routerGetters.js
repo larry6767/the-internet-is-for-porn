@@ -1,11 +1,12 @@
 import {padStart, difference} from 'lodash'
 import queryString from 'query-string'
 
+// local libs
 // WARNING! Some helper(s) depend(s) on this module, avoid recursive dependencies!
-import g from './helpers/plain/provedGet'
-import ig from './helpers/immutable/provedGet'
-import {PropTypes} from './helpers/propTypes'
-import {assertPropTypes} from './helpers/propTypes/check'
+import g from 'src/App/helpers/plain/provedGet'
+import ig from 'src/App/helpers/immutable/provedGet'
+import {PropTypes} from 'src/App/helpers/propTypes'
+import {assertPropTypes} from 'src/App/helpers/propTypes/check'
 
 const
     getQs = r => queryString.parse(ig(r, 'location', 'search')),

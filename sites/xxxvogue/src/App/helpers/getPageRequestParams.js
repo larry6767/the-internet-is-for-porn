@@ -2,12 +2,13 @@ import {get} from 'lodash'
 import queryString from 'query-string'
 import {fromJS} from 'immutable'
 
-import g from './plain/provedGet'
-import ig from './immutable/provedGet'
-import {assertPropTypes} from './propTypes/check'
+// local libs
+import g from 'src/App/helpers/plain/provedGet'
+import ig from 'src/App/helpers/immutable/provedGet'
+import {assertPropTypes} from 'src/App/helpers/propTypes/check'
 
 // WARNING! Be careful! Avoid recursive dependencies!
-import {pageRequestParamsModel} from '../models'
+import {pageRequestParamsModel} from 'src/App/models'
 
 export default (routerContext, match, isSitePage = false) => {
     const

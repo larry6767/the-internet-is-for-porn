@@ -3,8 +3,12 @@ import React from 'react'
 import {compose, withHandlers, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {connect} from 'react-redux'
 import {withStyles} from '@material-ui/core/styles'
-import {Select, MenuItem, FormControl, OutlinedInput} from '@material-ui/core'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import OutlinedInput from '@material-ui/core/OutlinedInput'
 
+// local libs
 import {
     compareCurrentBreakpoint,
     breakpointXS,
@@ -13,17 +17,17 @@ import {
     PropTypes,
     setPropTypes,
     getRouterContext,
-} from '../../helpers'
+} from 'src/App/helpers'
 
 import {
     orientationCodes,
     routerContextModel,
     immutableI18nOrientationModel,
-} from '../../models'
+} from 'src/App/models'
 
-import routerGetters from '../../routerGetters'
-import actions from './actions'
-import {muiStyles} from './assets/muiStyles'
+import routerGetters from 'src/App/routerGetters'
+import actions from 'src/App/MainHeader/Niche/actions'
+import {muiStyles} from 'src/App/MainHeader/Niche/assets/muiStyles'
 
 import {
     NicheBlock,
@@ -31,8 +35,8 @@ import {
     NicheMobile,
     NicheMobileItem,
     NicheMobileItemSelected,
-    TextIcon
-} from './assets'
+    TextIcon,
+} from 'src/App/MainHeader/Niche/assets'
 
 const
     orientationSymbols = Object.freeze({

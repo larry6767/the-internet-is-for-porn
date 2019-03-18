@@ -4,6 +4,7 @@ import {compose, lifecycle, withHandlers, withProps} from 'recompose'
 import {withStyles} from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
 
+// local libs
 import {
     getHeaderText,
     getRouterContext,
@@ -14,21 +15,21 @@ import {
     areWeSwitchedOnPage,
     setPropTypes,
     PropTypes,
-} from '../helpers'
+} from 'src/App/helpers'
 
-import {routerContextModel} from '../models'
-import {model} from './models'
-import routerGetters from '../routerGetters'
-import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import loadingWrapper from '../../generic/loadingWrapper'
-import ControlBar from '../../generic/ControlBar'
-import PageTextHelmet from '../../generic/PageTextHelmet'
-import VideoList from '../../generic/VideoList'
-import {PageWrapper} from './assets'
-import headerActions from '../MainHeader/actions'
-import actions from './actions'
-import {muiStyles} from './assets/muiStyles'
+import {routerContextModel} from 'src/App/models'
+import {model} from 'src/App/Site/models'
+import routerGetters from 'src/App/routerGetters'
+import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
+import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
+import loadingWrapper from 'src/generic/loadingWrapper'
+import ControlBar from 'src/generic/ControlBar'
+import PageTextHelmet from 'src/generic/PageTextHelmet'
+import VideoList from 'src/generic/VideoList'
+import {PageWrapper} from 'src/App/Site/assets'
+import headerActions from 'src/App/MainHeader/actions'
+import actions from 'src/App/Site/actions'
+import {muiStyles} from 'src/App/Site/assets/muiStyles'
 
 const
     Site = props => <Fragment>

@@ -1,7 +1,9 @@
 // we get pageText for all pages from backend, but for 'notFound'... you know, we have crazy backend
 import {fromJS} from 'immutable'
-import ig from './immutable/provedGet'
-import getDomain from './getDomain'
+
+// local libs
+import ig from 'src/App/helpers/immutable/provedGet'
+import getDomain from 'src/App/helpers/getDomain'
 
 const
     setDomain = (domain, x) => x.replace('%SITE%', domain)

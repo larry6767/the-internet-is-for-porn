@@ -9,6 +9,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 
+// local libs
 import {
     getHeaderWithOrientation,
     withStylesProps,
@@ -22,18 +23,18 @@ import {
     doesItHaveToBeReloaded,
     areWeSwitchedOnPage,
     lazyImage,
-} from '../helpers'
+} from 'src/App/helpers'
 
-import {immutableI18nOrderingModel, routerContextModel} from '../models'
-import {model} from './models'
-import routerGetters from '../routerGetters'
-import PageTextHelmet from '../../generic/PageTextHelmet'
-import sectionPortal from '../MainHeader/Navigation/sectionPortal'
-import orientationPortal from '../MainHeader/Niche/orientationPortal'
-import loadingWrapper from '../../generic/loadingWrapper'
-import {muiStyles} from './assets/muiStyles'
-import actions from './actions'
-import headerActions from '../MainHeader/actions'
+import {immutableI18nOrderingModel, routerContextModel} from 'src/App/models'
+import {model} from 'src/App/Home/models'
+import routerGetters from 'src/App/routerGetters'
+import PageTextHelmet from 'src/generic/PageTextHelmet'
+import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
+import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
+import loadingWrapper from 'src/generic/loadingWrapper'
+import {muiStyles} from 'src/App/Home/assets/muiStyles'
+import actions from 'src/App/Home/actions'
+import headerActions from 'src/App/MainHeader/actions'
 
 import {PageWrapper, LetterIcon, NichesList, Niche, NicheImage, StyledLink} from './assets'
 

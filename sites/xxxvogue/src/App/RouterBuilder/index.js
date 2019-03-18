@@ -3,60 +3,61 @@ import React from 'react'
 import {Route, Switch} from 'react-router-dom'
 import {compose} from 'recompose'
 
-import {plainProvedGet as g, setPropTypes, getPageRequestParams} from '../helpers'
-import status500 from '../helpers/status500BranchResolver'
+// local libs
+import {plainProvedGet as g, setPropTypes, getPageRequestParams} from 'src/App/helpers'
+import status500 from 'src/App/helpers/status500BranchResolver'
 
-import {routerContextModel, orientationCodes, defaultOrientationCode} from '../models'
+import {routerContextModel, orientationCodes, defaultOrientationCode} from 'src/App/models'
 
-import Home from '../Home'
-import homeActions from '../Home/actions'
-import {loadHomeFlow} from '../Home/sagas'
+import Home from 'src/App/Home'
+import homeActions from 'src/App/Home/actions'
+import {loadHomeFlow} from 'src/App/Home/sagas'
 
-import AllNiches from '../AllNiches'
-import allNichesActions from '../AllNiches/actions'
-import {loadAllNichesPageFlow} from '../AllNiches/sagas'
+import AllNiches from 'src/App/AllNiches'
+import allNichesActions from 'src/App/AllNiches/actions'
+import {loadAllNichesPageFlow} from 'src/App/AllNiches/sagas'
 
-import Niche from '../Niche'
-import nicheActions from '../Niche/actions'
-import {loadNichePageFlow} from '../Niche/sagas'
+import Niche from 'src/App/Niche'
+import nicheActions from 'src/App/Niche/actions'
+import {loadNichePageFlow} from 'src/App/Niche/sagas'
 
-import AllMovies from '../AllMovies'
-import allMoviesActions from '../AllMovies/actions'
-import {loadAllMoviesPageFlow} from '../AllMovies/sagas'
+import AllMovies from 'src/App/AllMovies'
+import allMoviesActions from 'src/App/AllMovies/actions'
+import {loadAllMoviesPageFlow} from 'src/App/AllMovies/sagas'
 
-import Pornstars from '../Pornstars'
-import pornstarsActions from '../Pornstars/actions'
-import {loadPornstarsPageFlow} from '../Pornstars/sagas'
+import Pornstars from 'src/App/Pornstars'
+import pornstarsActions from 'src/App/Pornstars/actions'
+import {loadPornstarsPageFlow} from 'src/App/Pornstars/sagas'
 
-import Pornstar from '../Pornstar'
-import pornstarActions from '../Pornstar/actions'
-import {loadPornstarPageFlow} from '../Pornstar/sagas'
+import Pornstar from 'src/App/Pornstar'
+import pornstarActions from 'src/App/Pornstar/actions'
+import {loadPornstarPageFlow} from 'src/App/Pornstar/sagas'
 
-import Favorite from '../Favorite'
-import favoriteActions from '../Favorite/actions'
-import {loadFavoritePageFlow} from '../Favorite/sagas'
+import Favorite from 'src/App/Favorite'
+import favoriteActions from 'src/App/Favorite/actions'
+import {loadFavoritePageFlow} from 'src/App/Favorite/sagas'
 
-import FavoritePornstars from '../FavoritePornstars'
-import favoritePornstarsActions from '../FavoritePornstars/actions'
-import {loadFavoritePornstarsPageFlow} from '../FavoritePornstars/sagas'
+import FavoritePornstars from 'src/App/FavoritePornstars'
+import favoritePornstarsActions from 'src/App/FavoritePornstars/actions'
+import {loadFavoritePornstarsPageFlow} from 'src/App/FavoritePornstars/sagas'
 
-import VideoPage from '../VideoPage'
-import videoPageActions from '../VideoPage/actions'
-import {loadVideoPageFlow} from '../VideoPage/sagas'
+import VideoPage from 'src/App/VideoPage'
+import videoPageActions from 'src/App/VideoPage/actions'
+import {loadVideoPageFlow} from 'src/App/VideoPage/sagas'
 
-import FindVideos from '../FindVideos'
-import findVideosActions from '../FindVideos/actions'
-import {loadFindVideosPageFlow} from '../FindVideos/sagas'
+import FindVideos from 'src/App/FindVideos'
+import findVideosActions from 'src/App/FindVideos/actions'
+import {loadFindVideosPageFlow} from 'src/App/FindVideos/sagas'
 
-import Site from '../Site'
-import siteActions from '../Site/actions'
-import {loadSitePageFlow} from '../Site/sagas'
+import Site from 'src/App/Site'
+import siteActions from 'src/App/Site/actions'
+import {loadSitePageFlow} from 'src/App/Site/sagas'
 
-import NotFound from '../NotFound'
-import notFoundActions from '../NotFound/actions'
-import {loadNotFoundPageFlow} from '../NotFound/sagas'
+import NotFound from 'src/App/NotFound'
+import notFoundActions from 'src/App/NotFound/actions'
+import {loadNotFoundPageFlow} from 'src/App/NotFound/sagas'
 
-import routerGetters from '../routerGetters'
+import routerGetters from 'src/App/routerGetters'
 
 import {
     HOME,
@@ -71,7 +72,7 @@ import {
     FIND_VIDEOS,
     SITE,
     NOT_FOUND,
-} from '../constants'
+} from 'src/App/constants'
 
 // `staticContext` is for only for Server-Side Rendering here.
 // `staticContext.isPreRouting` means we don't need to render any component

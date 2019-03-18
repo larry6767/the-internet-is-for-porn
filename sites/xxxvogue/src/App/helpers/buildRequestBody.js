@@ -1,7 +1,8 @@
 import {select} from 'redux-saga/effects'
 
-import getProvedPageKey from './getProvedPageKey'
-import ig from './immutable/provedGet'
+// local libs
+import getProvedPageKey from 'src/App/helpers/getProvedPageKey'
+import ig from 'src/App/helpers/immutable/provedGet'
 
 export default (pageKey, pageRequestParams) =>
     select(x => Object.assign(pageRequestParams.toJS(), {

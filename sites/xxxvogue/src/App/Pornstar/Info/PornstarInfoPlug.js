@@ -1,5 +1,7 @@
 import React from 'react'
-import {InfoWrapper, ThumbWrapper, ThumbPlug, DataWrapperPlug} from './assets'
+
+// local libs
+import {InfoWrapper, ThumbWrapper, ThumbPlug, DataWrapperPlug} from 'src/App/Pornstar/Info/assets'
 
 const
     PornstarInfoPlug = () => <InfoWrapper>

@@ -1,5 +1,7 @@
 import {Record} from 'immutable'
-import {ImmutablePropTypes, PropTypes} from '../helpers'
+
+// local libs
+import {ImmutablePropTypes, PropTypes} from 'src/App/helpers'
 
 export const
     model = process.env.NODE_ENV === 'production' ? null : ImmutablePropTypes.exact({

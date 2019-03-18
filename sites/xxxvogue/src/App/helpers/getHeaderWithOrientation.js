@@ -1,4 +1,4 @@
-import ig from './immutable/provedGet'
+import ig from 'src/App/helpers/immutable/provedGet'
 
 export default (state, key) => ig(state, 'app', 'locale', 'i18n', 'headers', key).replace(
     '%ORIENTATION%',

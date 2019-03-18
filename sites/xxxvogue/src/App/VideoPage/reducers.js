@@ -1,8 +1,9 @@
 import {fromJS, List, Map} from 'immutable'
 
-import {provedHandleActions, plainProvedGet as g} from '../helpers'
-import {model} from './models'
-import actions from './actions'
+// local libs
+import {provedHandleActions, plainProvedGet as g} from 'src/App/helpers'
+import {model} from 'src/App/VideoPage/models'
+import actions from 'src/App/VideoPage/actions'
 
 export default
     provedHandleActions(model, {

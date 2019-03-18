@@ -1,9 +1,10 @@
 import {all} from 'redux-saga/effects'
 
-import navigationSaga from './Navigation/sagas'
-import languageSaga from './Language/sagas'
-import searchSaga from './Search/sagas'
-import nicheSaga from './Niche/sagas'
+// local libs
+import navigationSaga from 'src/App/MainHeader/Navigation/sagas'
+import languageSaga from 'src/App/MainHeader/Language/sagas'
+import searchSaga from 'src/App/MainHeader/Search/sagas'
+import nicheSaga from 'src/App/MainHeader/Niche/sagas'
 
 export default function* saga() {
     yield all([
