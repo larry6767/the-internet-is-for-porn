@@ -7,6 +7,7 @@ export const muiStyles = theme => ({
         paddingBottom: 9,
         display: 'flex',
         alignItems: 'center',
+        paddingRight: 25,
 
         [theme.breakpoints.down("xs")]: {
             paddingTop: 6,
