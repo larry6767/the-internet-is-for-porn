@@ -1,8 +1,10 @@
 import {throttle, some} from 'lodash'
 import {connect} from 'react-redux'
 import {compose, withPropsOnChange, lifecycle, withState, withHandlers} from 'recompose'
-import g from './plain/provedGet'
-import ig from './immutable/provedGet'
+
+// local libs
+import g from 'src/App/helpers/plain/provedGet'
+import ig from 'src/App/helpers/immutable/provedGet'
 
 const
     isVisibleOnScreen = wh => x => {

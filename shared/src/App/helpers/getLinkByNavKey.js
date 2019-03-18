@@ -1,4 +1,4 @@
-import g from './plain/provedGet'
+import g from 'src/App/helpers/plain/provedGet'
 
 // WARNING! Be careful! Avoid recursive dependencies!
 import routerGetters from '../routerGetters'

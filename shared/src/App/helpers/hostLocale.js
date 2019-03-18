@@ -1,4 +1,4 @@
-import g from './plain/provedGet'
+import g from 'src/App/helpers/plain/provedGet'
 
 export const
     testHostReg = /(^test\.|\.test(?=\.))/g,

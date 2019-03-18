@@ -1,1 +1,1 @@
-export {default, PropTypes} from '../../../dev-modules/propTypes'
+export {default, PropTypes} from 'src/dev-modules/propTypes'

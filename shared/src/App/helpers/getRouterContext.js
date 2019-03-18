@@ -1,10 +1,11 @@
 import {Record, fromJS} from 'immutable'
 
-import ig from './immutable/provedGet'
-import {assertPropTypes} from './propTypes/check'
+// local libs
+import ig from 'src/App/helpers/immutable/provedGet'
+import {assertPropTypes} from 'src/App/helpers/propTypes/check'
 
 // WARNING! Be careful! Avoid recursive dependencies!
-import {routerContextModel, ssrRouterContextModel} from '../models'
+import {routerContextModel, ssrRouterContextModel} from 'src/App/models'
 
 const
     RouterContextRecord = Record({

@@ -1,8 +1,9 @@
 import {select} from 'redux-saga/effects'
 
-import ig from './immutable/provedGet'
-import getPageData from './getPageData'
-import buildRequestBody from './buildRequestBody'
+// local libs
+import ig from 'src/App/helpers/immutable/provedGet'
+import getPageData from 'src/App/helpers/getPageData'
+import buildRequestBody from 'src/App/helpers/buildRequestBody'
 
 // saga effect
 export default function* (ssrContext, pageKey, pageRequestParams) {

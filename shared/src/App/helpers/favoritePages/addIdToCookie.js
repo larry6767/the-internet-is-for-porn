@@ -1,7 +1,7 @@
-import getCookie from '../cookie/getCookie'
-import setCookie from '../cookie/setCookie'
+import getCookie from 'src/App/helpers/cookie/getCookie'
+import setCookie from 'src/App/helpers/cookie/setCookie'
 
-import ig from '../immutable/provedGet'
+import ig from 'src/App/helpers/immutable/provedGet'
 
 export default (cookieName, item) => {
     const

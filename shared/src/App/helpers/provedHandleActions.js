@@ -1,7 +1,8 @@
 import {mapValues} from 'lodash'
 import {handleActions} from 'redux-actions'
 
-import {assertPropTypes} from './propTypes/check'
+// local libs
+import {assertPropTypes} from 'src/App/helpers/propTypes/check'
 
 // helps to validate store branch with prop types
 export default (model, mapping, initialState) => {
