@@ -1,10 +1,1 @@
-import {createActions} from 'src/App/helpers'
-
-const actions = createActions('SEARCH', [
-    'SUGGESTIONS_FETCH_REQUEST',
-    'SET_NEW_SUGGESTIONS',
-    'SET_EMPTY_SUGGESTIONS',
-    'RUN_SEARCH',
-])
-
-export default actions
+../../../../../../shared/src/App/MainHeader/Search/actions.js
