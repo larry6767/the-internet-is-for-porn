@@ -1,1 +1,1 @@
-../../../../../shared/src/generic/LoadingPlug/index.js
+../../../../../shared/src/generic/loadingWrapper/index.js

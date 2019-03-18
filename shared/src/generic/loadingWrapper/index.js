@@ -4,7 +4,7 @@ import {compose, branch, renderNothing} from 'recompose'
 // local libs
 import {immutableProvedGet as ig} from 'src/App/helpers'
 import ErrorContent from 'src/generic/ErrorContent'
-import {Page, Content} from 'src/generic/loadingWrapper/assets'
+import {Page, Content} from 'src/generic/assets'
 import LoadingPlug from 'src/generic/LoadingPlug'
 
 const
