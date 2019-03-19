@@ -18,8 +18,7 @@ import {
     breakpoints,
 } from 'src/App/helpers'
 
-import {routerContextModel} from 'src/App/models'
-
+import {routerContextModel, refModel} from 'src/App/models'
 import {model} from 'src/App/Niche/models'
 import routerGetters from 'src/App/routerGetters'
 import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
@@ -205,11 +204,7 @@ export default compose(
         htmlLang: PropTypes.string,
         i18nListNichesHeader: PropTypes.string,
         i18nListArchiveHeader: PropTypes.string,
-
-        pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(
-            typeof Element === 'undefined' ? () => {} : Element // plug for SSR
-        )),
-
+        pageWrapperRef: refModel,
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,

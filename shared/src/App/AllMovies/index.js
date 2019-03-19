@@ -20,7 +20,7 @@ import {
 } from 'src/App/helpers'
 
 import {model} from 'src/App/AllMovies/models'
-import {routerContextModel} from 'src/App/models'
+import {routerContextModel, refModel} from 'src/App/models'
 import routerGetters from 'src/App/routerGetters'
 import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
 import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
@@ -213,11 +213,7 @@ export default compose(
         htmlLang: PropTypes.string,
         i18nListNichesHeader: PropTypes.string,
         i18nListArchiveHeader: PropTypes.string,
-
-        pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(
-            typeof Element === 'undefined' ? () => {} : Element // plug for SSR
-        )),
-
+        pageWrapperRef: refModel,
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,

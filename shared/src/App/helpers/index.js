@@ -42,6 +42,7 @@ export {default as lifecycleForPageWithRefs} from 'src/App/helpers/lifecycleForP
 export {default as getDomain} from 'src/App/helpers/getDomain'
 export {default as lazyImage} from 'src/App/helpers/lazyImage'
 export {default as getRandomWidthList} from 'src/App/helpers/getRandomWidthList'
+export {default as imagesRandomWidth} from 'src/App/helpers/imagesRandomWidth'
 
 // favorite pages helpers
 export {default as addToList} from 'src/App/helpers/favoritePages/addToList'

@@ -33,7 +33,7 @@ import {
 
 import routerGetters from 'src/App/routerGetters'
 import {model} from 'src/App/VideoPage/models'
-import {immutableI18nButtonsModel, routerContextModel} from 'src/App/models'
+import {immutableI18nButtonsModel, routerContextModel, refModel} from 'src/App/models'
 import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
 import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
 import loadingWrapper from 'src/generic/loadingWrapper'
@@ -361,11 +361,7 @@ export default compose(
         i18nButtons: immutableI18nButtonsModel,
         i18nRelatedVideo: PropTypes.string,
         i18nLabelProvidedBy: PropTypes.string,
-
-        playerRef: PropTypes.nullable(PropTypes.instanceOf(
-            typeof Element === 'undefined' ? () => {} : Element // plug for SSR
-        )),
-
+        playerRef: refModel,
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,

@@ -24,6 +24,7 @@ import {
     immutableI18nOrderingModel,
     immutableI18nButtonsModel,
     immutableI18nPornstarInfoParametersModel,
+    refModel,
 } from 'src/App/models'
 
 import {model, immutablePornstarInfoForTableModel} from 'src/App/Pornstar/models'
@@ -221,11 +222,7 @@ export default compose(
         i18nButtons: immutableI18nButtonsModel,
         i18nPornstarInfoParameters: immutableI18nPornstarInfoParametersModel,
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
-
-        pageWrapperRef: PropTypes.nullable(PropTypes.instanceOf(
-            typeof Element === 'undefined' ? () => {} : Element // plug for SSR
-        )),
-
+        pageWrapperRef: refModel,
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,

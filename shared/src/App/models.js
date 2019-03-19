@@ -89,7 +89,11 @@ export const
                     `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
                     `(it doesn't match proper archive id format). Validation failed.`
                 )
-        }
+        },
+
+    refModel = PropTypes.nullable(PropTypes.instanceOf(
+        typeof Element === 'undefined' ? () => {} : Element // plug for SSR
+    ))
 
 const
     archiveFilmsModelBuilder = process.env.NODE_ENV === 'production' ? null : isImmutable => {
