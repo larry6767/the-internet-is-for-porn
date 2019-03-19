@@ -54,13 +54,11 @@ export const Niche = styled(NicheCommon)`
 
 const NicheImageCommon = styled.div`
     width: 100%;
+    height: 180px;
     margin-bottom: 5px;
 
-    &::before {
-        content: '';
-        display: block;
-        padding-top: 75%;
-    }
+    ${({theme}) => theme.media.xs`height: 140px;`}
+    ${({theme}) => theme.media.xxs`height: 200px;`}
 `
 
 export const NicheImage = styled(NicheImageCommon)`

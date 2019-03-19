@@ -5,11 +5,13 @@ import React from 'react'
 import {NichesList, NichePlug, NicheImagePlug, TypographyPlug} from 'src/App/Home/assets'
 
 const
-    PornstarInfoPlug = () => <NichesList>
-        {range(0, 20).map(x => <NichePlug key={`${x}-NichePlug`}>
+    nicheWithImagesQuantity = 20,
+
+    HomePlug = () => <NichesList>
+        {range(0, nicheWithImagesQuantity).map(x => <NichePlug key={`${x}-NichePlug`}>
             <NicheImagePlug/>
             <TypographyPlug/>
         </NichePlug>)}
     </NichesList>
 
-export default PornstarInfoPlug
+export default HomePlug

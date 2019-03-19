@@ -41,6 +41,7 @@ export {default as areWeSwitchedOnPage} from 'src/App/helpers/areWeSwitchedOnPag
 export {default as lifecycleForPageWithRefs} from 'src/App/helpers/lifecycleForPageWithRefs'
 export {default as getDomain} from 'src/App/helpers/getDomain'
 export {default as lazyImage} from 'src/App/helpers/lazyImage'
+export {default as getRandomWidthList} from 'src/App/helpers/getRandomWidthList'
 
 // favorite pages helpers
 export {default as addToList} from 'src/App/helpers/favoritePages/addToList'
