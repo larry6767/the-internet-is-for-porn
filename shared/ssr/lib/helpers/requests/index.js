@@ -5,6 +5,7 @@ export {getOrderingSortList, getFavoritesSortList} from 'ssr/lib/helpers/request
 export {default as getOrderedVideoList} from 'ssr/lib/helpers/requests/getOrderedVideoList'
 export {default as getFilteredVideoList} from 'ssr/lib/helpers/requests/getFilteredVideoList'
 export {default as getPageText} from 'ssr/lib/helpers/requests/getPageText'
+export {getVideoPageText} from 'ssr/lib/helpers/requests/getPageText'
 export {default as getTagArchiveList} from 'ssr/lib/helpers/requests/getTagArchiveList'
 export {default as getArchiveFilms} from 'ssr/lib/helpers/requests/getArchiveFilms'
 export {getPornstarInfo} from 'ssr/lib/helpers/requests/getPornstarInfo'
