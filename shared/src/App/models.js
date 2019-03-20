@@ -91,9 +91,10 @@ export const
                 )
         },
 
-    refModel = PropTypes.nullable(PropTypes.instanceOf(
-        typeof Element === 'undefined' ? () => {} : Element // plug for SSR
-    ))
+    refModel = process.env.NODE_ENV === 'production' ? null :
+        PropTypes.nullable(PropTypes.instanceOf(
+            typeof Element === 'undefined' ? () => {} : Element // plug for SSR
+        ))
 
 const
     archiveFilmsModelBuilder = process.env.NODE_ENV === 'production' ? null : isImmutable => {

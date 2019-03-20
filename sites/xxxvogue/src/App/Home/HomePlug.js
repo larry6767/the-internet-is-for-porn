@@ -1,9 +1,17 @@
 import {range} from 'lodash'
 import React from 'react'
-import {compose} from 'recompose'
+import {compose, withProps} from 'recompose'
 
 // local libs
-import {plainProvedGet as g, imagesRandomWidth, setPropTypes, PropTypes} from 'src/App/helpers'
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    imagesRandomWidth,
+    setPropTypes,
+    PropTypes,
+    ImmutablePropTypes,
+} from 'src/App/helpers'
+
 import {refModel} from 'src/App/models'
 import {NichesList, NichePlug, NicheImagePlug, TypographyPlug} from 'src/App/Home/assets'
 
@@ -11,9 +19,9 @@ const
     numberOfItems = 12,
 
     HomePlug = props => <NichesList ref={g(props, 'setListRef')}>
-        {g(props, 'listRef') === null ? null : range(0, numberOfItems).map(x => <NichePlug
+        { ! g(props, 'listRef') ? null : range(0, numberOfItems).map(x => <NichePlug
             key={`${x}-NichePlug`}
-            style={g(props, 'styledBounds')[x]}
+            style={ig(props.styledBounds, x)}
         >
             <NicheImagePlug/>
             <TypographyPlug/>
@@ -21,12 +29,14 @@ const
     </NichesList>
 
 export default compose(
-    imagesRandomWidth({
+    withProps({
         numberOfItems
     }),
-    setPropTypes({
+    imagesRandomWidth,
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        numberOfItems: PropTypes.number,
         listRef: refModel,
-        styledBounds: PropTypes.nullable(PropTypes.arrayOf(PropTypes.exact({
+        styledBounds: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.exact({
             width: PropTypes.string,
         }))),
     })

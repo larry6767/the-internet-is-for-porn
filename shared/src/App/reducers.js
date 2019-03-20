@@ -53,6 +53,7 @@ const
         currentBreakpoint: PropTypes.string,
         favoriteVideoList: ImmutablePropTypes.listOf(PropTypes.number),
         favoritePornstarList: ImmutablePropTypes.listOf(PropTypes.number),
+        randomWidthList: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.number)),
     })
 
 export default combineReducers({
@@ -93,12 +94,17 @@ export default combineReducers({
             addIdToFavoriteList(state, 'favoritePornstarList', id),
         [g(actions, 'removePornstarIdFromFavorite')]: (state, {payload: id}) =>
             removeIdFromFavoriteList(state, 'favoritePornstarList', id),
+
+        [g(actions, 'setRandomWidthList')]: (state, {payload: randomWidthList}) =>
+            state.set('randomWidthList', List(randomWidthList))
+
     }, fromJS({
         currentWidth: 0,
         currentHeight: 0,
         currentBreakpoint: getCurrentBreakpoint(),
         favoriteVideoList: List(),
         favoritePornstarList: List(),
+        randomWidthList: null,
     })),
 
     // static flag to detect if the app is running inside Server-Side Rendering

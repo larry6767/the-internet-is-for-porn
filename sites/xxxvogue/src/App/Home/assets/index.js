@@ -28,6 +28,7 @@ const NicheCommon = styled.div`
     width: calc((100% - 15px) / 4);
     margin-right: 5px;
     margin-bottom: 5px;
+    flex-grow: 1;
 
     ${({theme}) => theme.media.sm`width: calc((100% - 10px) / 3)`}
     ${({theme}) => theme.media.xs`width: calc((100% - 5px) / 2)`}
@@ -54,7 +55,7 @@ export const Niche = styled(NicheCommon)`
 
 const NicheImageCommon = styled.div`
     width: 100%;
-    height: 180px;
+    height: 200px;
     margin-bottom: 5px;
 
     ${({theme}) => theme.media.xs`height: 140px;`}

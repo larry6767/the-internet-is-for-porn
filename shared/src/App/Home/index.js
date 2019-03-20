@@ -79,33 +79,30 @@ const
         </StyledLink>
     </Niche>),
 
-    Home = ({
-        classedBounds, data, routerContext,
-        htmlLang, i18nNichesHeader, i18nPornstarsHeader,
-    }) => <Fragment>
-        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
+    Home = props => <Fragment>
+        <PageTextHelmet htmlLang={g(props, 'htmlLang')} pageText={ig(props.data, 'pageText')}/>
         <PageWrapper>
             <Typography variant="h4" gutterBottom>
-                {i18nNichesHeader}
+                {g(props, 'i18nNichesHeader')}
             </Typography>
             <NichesList>
-                {ig(data, 'nichesList').map(x => <NicheWrapper
+                {ig(props.data, 'nichesList').map(x => <NicheWrapper
                     key={ig(x, 'id')}
                     x={x}
-                    classedBounds={classedBounds}
-                    routerContext={routerContext}
+                    classedBounds={g(props, 'classedBounds')}
+                    routerContext={g(props, 'routerContext')}
                 />)}
             </NichesList>
             <Typography variant="h4" gutterBottom>
-                {i18nPornstarsHeader}
+                {g(props, 'i18nPornstarsHeader')}
             </Typography>
-            <ListComponent component="div" classes={g(classedBounds, 'listComponent')}>
-                {ig(data, 'pornstarsList').map((x, idx) => renderListItemLink(
+            <ListComponent component="div" classes={g(props, 'classedBounds', 'listComponent')}>
+                {ig(props.data, 'pornstarsList').map((x, idx) => renderListItemLink(
                     x,
                     idx,
-                    ig(data, 'pornstarsList'),
-                    classedBounds,
-                    routerContext
+                    ig(props.data, 'pornstarsList'),
+                    g(props, 'classedBounds'),
+                    g(props, 'routerContext'),
                 ))}
             </ListComponent>
         </PageWrapper>

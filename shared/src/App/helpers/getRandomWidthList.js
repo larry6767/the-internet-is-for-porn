@@ -1,4 +1,5 @@
 import {range, chunk, flatten, random, reduce, inRange, round} from 'lodash'
+import {List} from 'immutable'
 
 //local libs
 import g from 'src/App/helpers/plain/provedGet'
@@ -28,7 +29,7 @@ const
 
 export default (numberOfItems, contentSize, numberOfItemsPerRow, widthOffset) => {
     if (numberOfItemsPerRow === 1)
-        return range(0, numberOfItems).map(x => contentSize)
+        return List(range(0, numberOfItems).map(x => contentSize))
 
     const
         minWidthForItem = round(contentSize / numberOfItemsPerRow - widthOffset, 3),
@@ -51,5 +52,5 @@ export default (numberOfItems, contentSize, numberOfItemsPerRow, widthOffset) =>
         return x
     })
 
-    return flatten(arr)
+    return List(flatten(arr))
 }

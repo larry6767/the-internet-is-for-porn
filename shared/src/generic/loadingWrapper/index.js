@@ -1,5 +1,5 @@
 import React from 'react'
-import {compose, branch, renderNothing} from 'recompose'
+import {compose, branch, renderNothing, onlyUpdateForKeys} from 'recompose'
 
 // local libs
 import {immutableProvedGet as ig} from 'src/App/helpers'
