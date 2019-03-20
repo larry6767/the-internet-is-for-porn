@@ -28,8 +28,9 @@ const
     }),
 
     nestedLettersModel = process.env.NODE_ENV === 'production' ? null :
-        PropTypes.objectOf(PropTypes.objectOf(letterModel)),
+        PropTypes.objectOf(PropTypes.objectOf(letterModel))
 
+export const
     // {'A': {'1234': {...}}, 'B': {'4321': {...}}, ...}
     lettersModel = process.env.NODE_ENV === 'production' ? null :
         (props, propName, componentName, ...etc) => {

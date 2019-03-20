@@ -2,7 +2,7 @@ import {ImmutablePropTypes, PropTypes} from 'src/App/helpers'
 
 import {
     immutablePageTextModel,
-    immutableNichesWithThumbsListModel,
+    immutableNichesListWithThumbModel,
     immutableModelsListWithLetterModel,
     pageRequestParamsModel,
 } from 'src/App/models'
@@ -14,6 +14,6 @@ export const
         isFailed: PropTypes.bool,
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageText: PropTypes.nullable(immutablePageTextModel),
-        nichesList: immutableNichesWithThumbsListModel,
+        nichesList: immutableNichesListWithThumbModel,
         pornstarsList: immutableModelsListWithLetterModel,
     })

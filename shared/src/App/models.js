@@ -243,11 +243,11 @@ export const
 
     nichesListModel = process.env.NODE_ENV === 'production' ? null :
         nichesListModelBuilder(false, false),
-    nichesWithThumbsListModel = process.env.NODE_ENV === 'production' ? null :
+    nichesListWithThumbModel = process.env.NODE_ENV === 'production' ? null :
         nichesListModelBuilder(false, true),
     immutableNichesListModel = process.env.NODE_ENV === 'production' ? null :
         nichesListModelBuilder(true, false),
-    immutableNichesWithThumbsListModel = process.env.NODE_ENV === 'production' ? null :
+    immutableNichesListWithThumbModel = process.env.NODE_ENV === 'production' ? null :
         nichesListModelBuilder(true, true),
 
     pageRequestParamsModel = process.env.NODE_ENV === 'production' ? null :

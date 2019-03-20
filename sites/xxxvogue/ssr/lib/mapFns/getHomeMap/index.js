@@ -8,7 +8,7 @@ export default x => {
 
     const
         result = {
-            nichesWithThumbsList: getNichesList(g(x, 'page', 'TAGS_INFO', 'items'), 12, true),
+            nichesListWithThumb: getNichesList(g(x, 'page', 'TAGS_INFO', 'items'), 12, true),
             nichesList: getNichesList(g(x, 'page', 'TAGS_INFO', 'items')),
             pornstarsList: getModelsList(
                 g(x, 'page', 'MODELS_BY_LETTERS', 'letters'),
