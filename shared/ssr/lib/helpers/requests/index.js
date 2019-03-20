@@ -1,5 +1,5 @@
-export {default as getTagListByLetters} from 'ssr/lib/helpers/requests/getTagListByLetters'
-export {default as getTagList} from 'ssr/lib/helpers/requests/getTagList'
+export {default as getNichesListByLetters} from 'ssr/lib/helpers/requests/getNichesListByLetters'
+export {default as getNichesList} from 'ssr/lib/helpers/requests/getNichesList'
 export {default as getModelsList} from 'ssr/lib/helpers/requests/getModelsList'
 export {getOrderingSortList, getFavoritesSortList} from 'ssr/lib/helpers/requests/getSortList'
 export {default as getOrderedVideoList} from 'ssr/lib/helpers/requests/getOrderedVideoList'

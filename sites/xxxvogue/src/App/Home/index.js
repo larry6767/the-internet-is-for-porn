@@ -89,7 +89,7 @@ const
             </Typography>
             {<NichesList ref={g(props, 'setListRef')}>
                 { ! g(props, 'listRef') && ! g(props, 'isSSR') ? null :
-                    ig(props.data, 'nichesList').map((x, idx) => idx >= 12 ? null : <NicheWrapper // TODO get rid of idx >= 12 ? null
+                    ig(props.data, 'nichesWithThumbsList').map((x, idx) => <NicheWrapper
                         key={ig(x, 'id')}
                         x={x}
                         classedBounds={g(props, 'classedBounds')}
@@ -173,7 +173,7 @@ export default compose(
         }),
     })),
     withPropsOnChange(['data'], props => ({
-        numberOfItems: g(ig(props.data, 'nichesList'), 'size'),
+        numberOfItems: g(ig(props.data, 'nichesWithThumbsList'), 'size'),
     })),
     imagesRandomWidth,
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {

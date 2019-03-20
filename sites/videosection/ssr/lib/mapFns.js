@@ -21,8 +21,8 @@ import {incomingGalleryModel, publishedTemplateModel} from 'ssr/lib/helpers/requ
 import {galleryModel, openGraphDataModel} from 'src/App/VideoPage/models'
 
 import {
-    getTagList,
-    getTagListByLetters,
+    getNichesList,
+    getNichesListByLetters,
     getModelsList,
     getOrderingSortList,
     getFilteredVideoList,
@@ -38,13 +38,13 @@ import {
 
 export const
     getHomeMap = x => ({
-        nichesList: getTagList(x.page.TAGS_INFO.items),
+        nichesList: getNichesList(g(x, 'page', 'TAGS_INFO', 'items'), null, true),
         pornstarsList: getModelsList(
             g(x, 'page', 'MODELS_BY_LETTERS', 'letters'),
             g(x, 'page', 'MODELS_BY_LETTERS_MODELS_INFO', 'items'),
             true
         ),
-        pageText: getPageText(x.page.PAGE_TEXT),
+        pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
     }),
 
     // TODO FIXME: now i'm not shure about getting this data,
@@ -52,21 +52,9 @@ export const
     // if we'll leave this implementation we need some additional logic,
     // because it's same data for AllNiches and Niche (we don't need to get twice from API)
     getAllNichesMap = x => ({
-        tagList: getTagListByLetters(x.page.EXTENDED_TAGS_BY_LETTERS.letters),
-        pageText: getPageText(x.page.PAGE_TEXT),
+        tagList: getNichesListByLetters(g(x, 'page', 'EXTENDED_TAGS_BY_LETTERS', 'letters')),
+        pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
     }),
-    // sortBy(
-    //     map(
-    //         x.page.TAGS_INFO.items,
-    //         ({id, name, sub_url, items_count}) => ({
-    //             id,
-    //             name,
-    //             subPage: sub_url,
-    //             itemsCount: items_count,
-    //         })
-    //     ),
-    //     o => o.name
-    // ),
 
     getAllMoviesMap = x => {
         const
@@ -82,7 +70,7 @@ export const
             pagesCount: x.page.PAGES_COUNT,
             pageText: getPageText(x.page.PAGE_TEXT),
             sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')),
-            tagList: getTagListByLetters(x.page.TAGS_BY_LETTERS.letters),
+            tagList: getNichesListByLetters(x.page.TAGS_BY_LETTERS.letters),
 
             tagArchiveList: getTagArchiveList(
                 get(g(x, 'page'), ['TAG_ARCHIVE_LIST_FULL'], g(x, 'page', 'TAG_ARCHIVE_LIST')),
@@ -127,7 +115,7 @@ export const
             pagesCount: g(x, 'page', 'PAGES_COUNT'),
             pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
             sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')),
-            tagList: getTagListByLetters(g(x, 'page', 'TAGS_BY_LETTERS', 'letters')),
+            tagList: getNichesListByLetters(g(x, 'page', 'TAGS_BY_LETTERS', 'letters')),
 
             tagArchiveList: getTagArchiveList(
                 get(g(x, 'page'), ['TAG_ARCHIVE_LIST_FULL'], g(x, 'page', 'TAG_ARCHIVE_LIST')),
