@@ -54,4 +54,9 @@ export const muiStyles = theme => ({
         height: 24,
         color: theme.palette.primary.contrastText,
     },
+    searchIconFocused: {
+        width: 24,
+        height: 24,
+        color: theme.palette.primary.contrastText,
+    },
 })

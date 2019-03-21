@@ -35,11 +35,16 @@ export const muiStyles = theme => ({
         backgroundSize: '25px',
         display: 'block',
         padding: '15px 50px 15px 15px',
-        transition: 'background-image 0.3s',
         color: '#ffffff',
+        transition: 'background-color 0.3s',
 
         '&::placeholder': {
             opacity: 0.6,
+        },
+
+        '&:focus': {
+            backgroundColor: theme.palette.primary.contrastText,
+            color: theme.palette.primary.dark,
         },
 
         [theme.breakpoints.down("xs")]: {
@@ -53,5 +58,10 @@ export const muiStyles = theme => ({
         width: 24,
         height: 24,
         color: theme.palette.primary.contrastText,
+    },
+    searchIconFocused: {
+        width: 24,
+        height: 24,
+        color: theme.palette.primary.light,
     },
 })

@@ -18,4 +18,5 @@ export const SearchButton = styled.button`
     align-items: center;
     justify-content: center;
     border: none;
+    outline: none;
 `

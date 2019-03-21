@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import queryString from 'query-string'
 import {get, throttle} from 'lodash'
-import {compose, withHandlers, withPropsOnChange, onlyUpdateForKeys} from 'recompose'
+import {compose, withHandlers, withPropsOnChange, onlyUpdateForKeys, withState} from 'recompose'
 import {connect} from 'react-redux'
 import {reduxForm, Field, formValueSelector} from 'redux-form/immutable'
 import Autosuggest from 'react-autosuggest'
@@ -87,10 +87,13 @@ const
             clearSuggestions: PropTypes.func,
             getSuggestionValue: PropTypes.func,
             onSubmitHandler: PropTypes.func,
+            inputFocusHandler: PropTypes.func,
+            inputBlurHandler: PropTypes.func,
         })
     )(({
         classes, i18nSearch, searchSuggestions, input,
         loadSuggestions, clearSuggestions, getSuggestionValue, onSubmitHandler,
+        inputFocusHandler, inputBlurHandler
     }) => <Autosuggest
         renderInputComponent={renderInputComponent}
         suggestions={searchSuggestions}
@@ -105,6 +108,8 @@ const
             classes,
             i18nSearch,
             ...input,
+            onFocus: inputFocusHandler,
+            onBlur: inputBlurHandler,
         }}
 
         theme={{
@@ -118,15 +123,6 @@ const
     />)
 
 class Search extends Component {
-    shouldComponentUpdate(nextProps) {
-        const
-            prevProps = g(this, 'props')
-
-        return !(
-            g(prevProps, 'searchSuggestions') === g(nextProps, 'searchSuggestions')
-        )
-    }
-
     render() {
         const
             props = g(this, 'props')
@@ -145,7 +141,9 @@ class Search extends Component {
                 onClick={g(props, 'onSubmitHandler')}
                 title={ig(g(props, 'i18nSearch'), 'buttonTitle')}
             >
-                <SearchIcon className={g(props, 'classes', 'searchIcon')}/>
+                <SearchIcon className={g(props, 'inputFocus')
+                    ? g(props, 'classes', 'searchIconFocused')
+                    : g(props, 'classes', 'searchIcon')}/>
             </SearchButton>
         </SearchForm>
     }
@@ -172,6 +170,7 @@ export default compose(
             suggestionsFetchRequest: g(actions, 'suggestionsFetchRequest'),
         }
     ),
+    withState('inputFocus', 'setInputFocus', false),
     withPropsOnChange([], props => {
         const
             searchQueryQsKey = g(props, 'localizedKey'),
@@ -192,7 +191,7 @@ export default compose(
     withPropsOnChange(['searchSuggestions'], props => ({
         searchSuggestions: Object.freeze(g(props, 'searchSuggestions').toJS()),
     })),
-    onlyUpdateForKeys(['searchSuggestions', 'searchQuery']),
+    onlyUpdateForKeys(['searchSuggestions', 'searchQuery', 'inputFocus']),
     withHandlers({
         loadSuggestions: props => ({value, reason}) => {
             props.suggestionsFetchRequest({searchQuery: value})
@@ -203,6 +202,10 @@ export default compose(
         getSuggestionValue: props => suggestion => {
             props.change(g(props, 'localizedKey'), suggestion)
         },
+
+        inputFocusHandler: props => () => props.setInputFocus(true),
+
+        inputBlurHandler: props => () => props.setInputFocus(false),
 
         // parameters are needed for the case when the handler below
         // is called upon the event 'onSuggestionSelected'
@@ -237,6 +240,7 @@ export default compose(
             suggestionsList: PropTypes.string,
             suggestion: PropTypes.string,
             searchIcon: PropTypes.string,
+            searchIconFocused: PropTypes.string,
         }),
 
         searchSuggestions: PropTypes.arrayOf(PropTypes.string),
@@ -245,6 +249,7 @@ export default compose(
         searchQuery: PropTypes.nullable(PropTypes.string),
         localizedKey: PropTypes.string,
         initialValues: PropTypes.object,
+        inputFocus: PropTypes.bool,
         change: PropTypes.func,
 
         runSearch: PropTypes.func,
@@ -255,5 +260,8 @@ export default compose(
         clearSuggestions: PropTypes.func,
         getSuggestionValue: PropTypes.func,
         onSubmitHandler: PropTypes.func,
+        setInputFocus: PropTypes.func,
+        inputBlurHandler: PropTypes.func,
+        inputFocusHandler: PropTypes.func,
     })
 )(Search)
