@@ -35,29 +35,32 @@ import {
     SITE,
 } from 'src/App/constants'
 
+import {textColor, indicatorColor} from 'src/App/MainHeader/Navigation/fixtures'
+
 const
-    Navigation = ({
-        classedBounds, isSSR, i18nNav, goToPath, getLinkByNavKey, preparedCurrentSection, navMenuItems
-    }) => <Nav>
+    Navigation = props => <Nav>
         <Tabs
-            value={includes(navMenuItems, preparedCurrentSection) ? preparedCurrentSection : false}
-            onChange={goToPath}
-            indicatorColor="primary"
-            textColor="primary"
-            variant={isSSR ? null : 'scrollable'}
+            value={
+                includes(g(props, 'navMenuItems'),
+                g(props, 'preparedCurrentSection')) ? g(props, 'preparedCurrentSection') : false
+            }
+            onChange={g(props, 'goToPath')}
+            variant={g(props, 'isSSR') ? null : 'scrollable'}
             scrollButtons="off"
+            textColor={textColor}
+            indicatorColor={indicatorColor}
         >
-            {navMenuItems.map((navKey, index) => {
+            {g(props, 'navMenuItems').map((navKey, index) => {
                 const
-                    link = getLinkByNavKey(navKey)
+                    link = props.getLinkByNavKey(navKey)
 
                 /* WARNING! <a> with `href` attribute is important to give bare links to SSR */
                 return <Tab
                     key={index /* the order never change */}
                     href={link}
                     value={navKey}
-                    label={ig(i18nNav, navKey, 'title')}
-                    classes={g(classedBounds, 'tab')}
+                    label={ig(props.i18nNav, navKey, 'title')}
+                    classes={g(props, 'classedBounds', 'tab')}
                 />
             })}
         </Tabs>

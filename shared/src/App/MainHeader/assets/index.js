@@ -100,44 +100,6 @@ export const Logo = styled.img`
     ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.mobile`margin: 0;`}
 `
 
-export const Icon = styled.div`
-    display: none;
-    width: 48px;
-    height: 48px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 25px;
-    ${({type}) =>
-        type === 'search'
-        ? 'background-image: url(/img/search.svg);'
-
-        : type === 'close'
-        ? `
-            background-image: url(/img/close.svg);
-            order: 2;
-        `
-
-        : ''
-    }
-
-    ${({theme}) => theme.media.mobile`
-        display: block;
-        background-size: 20px;
-    `}
-`
-
-export const BottomInner = styled.div`
-    border-bottom: 1px solid ${({theme}) => theme.palette.primary.light};
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10px;
-    margin: 0 auto;
-    ${({isSSR}) => `flex-wrap: ${g(isSSR, []) ? 'wrap' : 'no-wrap'};`}
-    ${({theme}) => theme.media.xl`width: 1400px;`}
-    ${({theme}) => theme.media.lg`width: 1200px;`}
-`
-
 export const TextWrapper = styled.div`
     width: 100%;
     margin-bottom: 10px;
@@ -149,4 +111,27 @@ export const TextWrapper = styled.div`
         color: ${({theme}) => theme.palette.primary.contrastText};
         margin-bottom: 0;
     `}
+`
+
+export const BottomInner = styled.div`
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    margin: 0 auto;
+    ${({isSSR}) => `flex-wrap: ${g(isSSR, []) ? 'wrap' : 'no-wrap'};`}
+    ${({theme}) => theme.media.xl`width: 1400px;`}
+    ${({theme}) => theme.media.lg`width: 1200px;`}
+
+    &::after {
+        position: absolute;
+        z-index: -1;
+        bottom: 0;
+        left: -10px;
+        content: '';
+        height: 1px;
+        width: 100%;
+        background-color: ${({theme}) => theme.palette.primary.light}
+    }
 `

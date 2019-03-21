@@ -101,7 +101,7 @@ export const Logo = styled.img`
 `
 
 export const BottomInner = styled.div`
-    border-bottom: 1px solid ${({theme}) => theme.palette.primary.light};
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -110,4 +110,15 @@ export const BottomInner = styled.div`
     ${({isSSR}) => `flex-wrap: ${g(isSSR, []) ? 'wrap' : 'no-wrap'};`}
     ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}
+
+    &::after {
+        position: absolute;
+        z-index: -1;
+        bottom: 0;
+        left: -10px;
+        content: '';
+        height: 1px;
+        width: 100%;
+        background-color: ${({theme}) => theme.palette.primary.lightOpacity}
+    }
 `
