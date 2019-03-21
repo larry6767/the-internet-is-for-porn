@@ -1,10 +1,12 @@
-import {throttle, some} from 'lodash'
+import {throttle, some, sample} from 'lodash'
 import {connect} from 'react-redux'
 import {compose, withPropsOnChange, lifecycle, withState, withHandlers} from 'recompose'
 
 // local libs
 import g from 'src/App/helpers/plain/provedGet'
 import ig from 'src/App/helpers/immutable/provedGet'
+
+import {plugColors} from 'src/App/assets/fixtures'
 
 const
     isVisibleOnScreen = wh => x => {
@@ -65,10 +67,13 @@ export default compose(
         if ( ! g(props, 'wasVisible'))
             return {previewStyle: null}
 
+        const
+            previewStyle = process.env.NODE_ENV === 'production'
+                ? {backgroundImage: `url(${ig(props.x, 'thumb')})`}
+                : {backgroundColor: sample(plugColors)}
+
         return {
-            previewStyle: Object.freeze({
-                backgroundImage: `url(${ig(props.x, 'thumb')})`,
-            }),
+            previewStyle: Object.freeze(previewStyle),
         }
     }),
 )

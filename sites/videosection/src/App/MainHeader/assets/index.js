@@ -128,7 +128,7 @@ export const BottomInner = styled.div`
         position: absolute;
         z-index: -1;
         bottom: 0;
-        left: -10px;
+        left: 0;
         content: '';
         height: 1px;
         width: 100%;

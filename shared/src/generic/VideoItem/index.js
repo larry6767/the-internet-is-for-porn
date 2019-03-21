@@ -1,5 +1,5 @@
 import React from 'react'
-import {replace, set} from 'lodash'
+import {replace, set, sample} from 'lodash'
 
 import {
     compose,
@@ -45,6 +45,8 @@ import {
     Like,
     Duration,
 } from 'src/generic/VideoItem/assets'
+
+import {plugColors} from 'src/App/assets/fixtures'
 
 const
     renderLink = (x, getVideoLink, component) => typeof ig(x, 'videoPageRef') === 'string'
@@ -157,17 +159,20 @@ const
                 return {previewStyle: null}
 
             const
-                currentThumb = g(props, 'currentThumb')
+                currentThumb = g(props, 'currentThumb'),
+                previewStyle = process.env.NODE_ENV === 'production'
+                    ? {
+                        backgroundImage: `url(${
+                            currentThumb === null
+                                ? ig(props.x, 'thumb')
+                                : ig(props.x, 'thumbMask')
+                                    .replace('{num}', ig(props.x, 'thumbs', currentThumb))
+                        })`,
+                    }
+                    : {backgroundColor: sample(plugColors)}
 
             return {
-                previewStyle: Object.freeze({
-                    backgroundImage: `url(${
-                        currentThumb === null
-                            ? ig(props.x, 'thumb')
-                            : ig(props.x, 'thumbMask')
-                                .replace('{num}', ig(props.x, 'thumbs', currentThumb))
-                    })`,
-                }),
+                previewStyle: Object.freeze(previewStyle),
             }
         }),
         onlyUpdateForKeys(['cb', 'x', 'isThisVideoFavorite', 'previewStyle'])
