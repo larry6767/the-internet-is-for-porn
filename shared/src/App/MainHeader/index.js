@@ -1,8 +1,10 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {compose, onlyUpdateForKeys} from 'recompose'
+import {compose, withHandlers, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import CloseIcon from '@material-ui/icons/Close'
+import SearchIcon from '@material-ui/icons/Search'
 
 // local libs
 import {
@@ -10,6 +12,9 @@ import {
     immutableProvedGet as ig,
     PropTypes,
     setPropTypes,
+    compareCurrentBreakpoint as ccb,
+    breakpointSM as sm,
+    breakpoints,
 } from 'src/App/helpers'
 
 import {model} from 'src/App/MainHeader/models'
@@ -29,103 +34,105 @@ import {
     SearchWrapper,
     NavigationWrapper,
     Logo,
-    Icon,
     BottomInner,
     TextWrapper,
 } from 'src/App/MainHeader/assets'
 
 const
-    MainHeader = ({
-        classes, isSSR, pageUrl, currentBreakpoint,
-        data, toggleSearchAction
-    }) => {
-        const
-            isXSorXXS = currentBreakpoint === 'xs' || currentBreakpoint === 'xxs',
-            isSearchShown = ig(data, 'isSearchShown')
-
-        return <Header>
-            <Top>
-                <TopInner>
-                    <TextWrapper>
-                        {ig(data, 'title')
-                            ? <Typography
-                                variant="caption"
-                                gutterBottom
-                                className={g(classes, 'typography')}
-                            >
-                                {`${ig(data, 'title')}. `}
-                            </Typography>
-                            : null}
-                        <Typography variant="caption" className={g(classes, 'typography')}>
-                            {ig(data, 'description')}
+    MainHeader = props => <Header>
+        <Top>
+            <TopInner>
+                <TextWrapper>
+                    {ig(props.data, 'title')
+                        ? <Typography
+                            variant="caption"
+                            gutterBottom
+                            className={g(props, 'classes', 'typography')}
+                        >
+                            {`${ig(props.data, 'title')}. `}
                         </Typography>
-                    </TextWrapper>
-                    <SearchWrapper isSSR={isSSR}>
-                        {
-                            isXSorXXS && isSearchShown ? '' :
-                            isXSorXXS ? <BurgerMenu/> : ''
-                        }
-                        {
-                            isXSorXXS && isSearchShown ? '' :
-                            <StyledSpyLink to="/" isSpy={pageUrl === '/'}>
-                                <Logo src="/img/logo.png" alt="VideoSection logo" isSSR={isSSR}/>
-                            </StyledSpyLink>
-                        }
-                        {
-                            isXSorXXS
-                                ? <Icon
-                                    type={isXSorXXS && isSearchShown
-                                        ? 'close'
-                                        : isXSorXXS
-                                        ? 'search'
-                                        : ''}
-                                    onClick={toggleSearchAction}
-                                />
-                                : null
-                        }
-                        {
-                            !isXSorXXS ? <Search/> :
-                            isXSorXXS && isSearchShown ? <Search/> : ''
-                        }
-                    </SearchWrapper>
-                    <Niche/>
-                </TopInner>
-            </Top>
-            {
-                !isXSorXXS
-                    ? <div>
-                        <BottomInner isSSR={isSSR}>
-                            <NavigationWrapper isSSR={isSSR}>
-                                <Navigation/>
-                                {/* <HDSwitch/> */}
-                            </NavigationWrapper>
-                            <Language/>
-                        </BottomInner>
-                    </div>
-                    : null
-            }
-        </Header>
-    }
+                        : null}
+                    <Typography variant="caption" className={g(props, 'classes', 'typography')}>
+                        {ig(props.data, 'description')}
+                    </Typography>
+                </TextWrapper>
+                <SearchWrapper isSSR={g(props, 'isSSR')}>
+                    {g(props, 'isMobile') && g(props, 'isSearchShown') ? null :
+                        g(props, 'isMobile') ? <BurgerMenu/> : null}
+
+                    {g(props, 'isMobile') && g(props, 'isSearchShown') ? null :
+                        <StyledSpyLink to="/" isSpy={g(props, 'pageUrl') === '/'}>
+                            <Logo
+                                src="/img/logo.png"
+                                alt="VideoSection logo"
+                                isSSR={g(props, 'isSSR')}
+                            />
+                        </StyledSpyLink>}
+
+                    {g(props, 'isMobile') && g(props, 'isSearchShown')
+                        ? <CloseIcon
+                            onClick={g(props, 'toggleSearchHandler')}
+                            className={g(props, 'classes', 'closeIcon')}
+                        />
+                        : g(props, 'isMobile')
+                        ? <SearchIcon
+                            onClick={g(props, 'toggleSearchHandler')}
+                            className={g(props, 'classes', 'searchIcon')}
+                        />
+                        : null}
+
+                    { ! g(props, 'isMobile')
+                        ? <Search/>
+                        : g(props, 'isMobile') && g(props, 'isSearchShown')
+                        ? <Search/>
+                        : null}
+                </SearchWrapper>
+                <Niche/>
+            </TopInner>
+        </Top>
+        { ! g(props, 'isMobile')
+            ? <div>
+                <BottomInner isSSR={g(props, 'isSSR')}>
+                    <NavigationWrapper isSSR={g(props, 'isSSR')}>
+                        <Navigation/>
+                        {/* <HDSwitch/> */}
+                    </NavigationWrapper>
+                    <Language/>
+                </BottomInner>
+            </div>
+            : null}
+    </Header>
 
 export default compose(
     connect(
         state => ({
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             pageUrl: ig(state, 'router', 'location', 'pathname'),
-            currentBreakpoint: ig(state, 'app', 'ui', 'currentBreakpoint'),
+            cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             data: ig(state, 'app', 'mainHeader', 'ui'),
         }),
-        dispatch => ({
-            toggleSearchAction: () => dispatch(actions.toggleSearch())
-        })
+        {
+            toggleSearch: g(actions, 'toggleSearch'),
+        }
     ),
-    onlyUpdateForKeys(['currentBreakpoint', 'data']),
+    withHandlers({
+        toggleSearchHandler: props => () => props.toggleSearch()
+    }),
+    onlyUpdateForKeys(['cb', 'data']),
+    withPropsOnChange(['cb', 'data'], props => ({
+        isMobile: ccb(g(props, 'cb'), sm) === -1,
+        isSearchShown: ig(props.data, 'isSearchShown'),
+    })),
     withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.object,
+        classes: PropTypes.exact({
+            typography: PropTypes.string,
+            searchIcon: PropTypes.string,
+            closeIcon: PropTypes.string,
+        }),
         isSSR: PropTypes.bool,
         pageUrl: PropTypes.string,
-        currentBreakpoint: PropTypes.string,
+        cb: PropTypes.oneOf(breakpoints),
         data: model,
     }),
 )(MainHeader)

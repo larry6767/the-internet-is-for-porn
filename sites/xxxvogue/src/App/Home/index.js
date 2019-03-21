@@ -19,10 +19,8 @@ import {
     setPropTypes,
     PropTypes,
     ImmutablePropTypes,
-    getHeaderText,
     getPageRequestParams,
     doesItHaveToBeReloaded,
-    areWeSwitchedOnPage,
     lazyImage,
     imagesRandomWidth,
 } from 'src/App/helpers'
@@ -36,7 +34,6 @@ import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
 import loadingWrapper from 'src/generic/loadingWrapper'
 import {muiStyles} from 'src/App/Home/assets/muiStyles'
 import actions from 'src/App/Home/actions'
-import headerActions from 'src/App/MainHeader/actions'
 
 import {PageWrapper, LetterIcon, NichesList, Niche, NicheImage, StyledLink} from './assets'
 
@@ -112,11 +109,6 @@ const
         </PageWrapper>
     </Fragment>,
 
-    setNewPageFlow = (prevProps, nextProps) => {
-        if (areWeSwitchedOnPage(prevProps, nextProps))
-            nextProps.setNewText(getHeaderText(ig(nextProps.data, 'pageText'), true))
-    },
-
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
         const
             pageRequestParams = getPageRequestParams(routerContext, match)
@@ -141,7 +133,6 @@ export default compose(
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
-            setNewText: g(headerActions, 'setNewText'),
         }
     ),
     onlyUpdateForKeys(['data', 'cb']),
@@ -151,12 +142,10 @@ export default compose(
     lifecycle({
         componentDidMount() {
             loadPageFlow(this.props)
-            setNewPageFlow(null, this.props)
         },
 
         componentWillReceiveProps(nextProps) {
             loadPageFlow(nextProps)
-            setNewPageFlow(this.props, nextProps)
         },
     }),
     withStylesProps(muiStyles),

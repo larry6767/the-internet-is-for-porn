@@ -100,32 +100,6 @@ export const Logo = styled.img`
     ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.mobile`margin: 0;`}
 `
 
-export const Icon = styled.div`
-    display: none;
-    width: 48px;
-    height: 48px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 25px;
-    ${({type}) =>
-        type === 'search'
-        ? 'background-image: url(/img/search.svg);'
-
-        : type === 'close'
-        ? `
-            background-image: url(/img/close.svg);
-            order: 2;
-        `
-
-        : ''
-    }
-
-    ${({theme}) => theme.media.mobile`
-        display: block;
-        background-size: 20px;
-    `}
-`
-
 export const BottomInner = styled.div`
     border-bottom: 1px solid ${({theme}) => theme.palette.primary.light};
     display: flex;
