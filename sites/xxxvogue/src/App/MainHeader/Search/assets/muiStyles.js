@@ -29,13 +29,12 @@ export const muiStyles = theme => ({
         alignItems: 'center',
         border: 'none',
         borderRadius: '4px',
-        background: '#363a44',
-        backgroundImage: 'url(/img/search.svg)',
+        backgroundColor: theme.palette.primary.lightOpacity,
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'right 15px center',
         backgroundSize: '25px',
         display: 'block',
-        padding: '15px 60px 15px 20px',
+        padding: '15px 50px 15px 15px',
         transition: 'background-image 0.3s',
         color: '#ffffff',
 
@@ -49,5 +48,10 @@ export const muiStyles = theme => ({
             backgroundPosition: 'right 10px center',
             fontSize: '0.875rem',
         },
-    }
+    },
+    searchIcon: {
+        width: 24,
+        height: 24,
+        color: theme.palette.primary.contrastText,
+    },
 })

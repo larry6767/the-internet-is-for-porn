@@ -11,11 +11,11 @@ export const SearchButton = styled.button`
     position: absolute;
     top: 0;
     right: 0;
-    width: 60px;
+    width: 50px;
     height: 100%;
-    opacity: 0;
-
-    &:hover ~ .input--search {
-        background-image: url('/img/search--white.svg');
-    }
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
 `

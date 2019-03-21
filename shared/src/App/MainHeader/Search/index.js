@@ -11,6 +11,7 @@ import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
 import {withStyles} from '@material-ui/core/styles'
+import SearchIcon from '@material-ui/icons/Search'
 
 // local libs
 import {
@@ -143,7 +144,9 @@ class Search extends Component {
                 type="submit"
                 onClick={g(props, 'onSubmitHandler')}
                 title={ig(g(props, 'i18nSearch'), 'buttonTitle')}
-            />
+            >
+                <SearchIcon className={g(props, 'classes', 'searchIcon')}/>
+            </SearchButton>
         </SearchForm>
     }
 }
@@ -233,6 +236,7 @@ export default compose(
             suggestionsContainerOpen: PropTypes.string,
             suggestionsList: PropTypes.string,
             suggestion: PropTypes.string,
+            searchIcon: PropTypes.string,
         }),
 
         searchSuggestions: PropTypes.arrayOf(PropTypes.string),
