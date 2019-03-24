@@ -18,4 +18,5 @@ export const
         nichesListWithThumb: immutableNichesListWithThumbModel,
         nichesList: immutableNichesListModel,
         pornstarsList: immutableModelsListWithLetterModel,
+        randomWidthList: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.number)),
     })

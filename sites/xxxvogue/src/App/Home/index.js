@@ -84,8 +84,8 @@ const
             <Typography variant="h4" gutterBottom>
                 {g(props, 'i18nNichesHeader')}
             </Typography>
-            {<NichesList ref={g(props, 'setListRef')}>
-                { ! g(props, 'listRef') && ! g(props, 'isSSR') ? null :
+            {<NichesList>
+                { ! g(props, 'styledBounds') ? null :
                     ig(props.data, 'nichesListWithThumb').map((x, idx) => <NicheWrapper
                         key={ig(x, 'id')}
                         x={x}
@@ -130,9 +130,11 @@ export default compose(
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nNichesHeader: getHeaderWithOrientation(state, 'niches'),
             i18nPornstarsHeader: getHeaderWithOrientation(state, 'pornstars'),
+            randomWidthList: ig(state, 'app', 'home', 'randomWidthList'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
+            setRandomWidthList: g(actions, 'setRandomWidthList'),
         }
     ),
     onlyUpdateForKeys(['data', 'cb']),
@@ -162,7 +164,7 @@ export default compose(
         }),
     })),
     withPropsOnChange(['data'], props => ({
-        numberOfItems: g(ig(props.data, 'nichesListWithThumb'), 'size'),
+        randomWidthListSize: g(ig(props.data, 'nichesListWithThumb'), 'size'),
     })),
     imagesRandomWidth,
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
@@ -181,6 +183,8 @@ export default compose(
             nicheTitleTypography: PropTypes.object,
         }),
 
+        randomWidthList: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.number)),
+        randomWidthListSize: PropTypes.number,
         styledBounds: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.exact({
             width: PropTypes.string,
         }))),
@@ -197,6 +201,7 @@ export default compose(
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
+        setRandomWidthList: PropTypes.func,
     }),
     loadingWrapper({
         isHome: true,

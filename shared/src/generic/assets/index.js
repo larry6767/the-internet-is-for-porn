@@ -43,3 +43,25 @@ export const PageWrapperNextToList = styled(PageWrapper)`
     ${({theme}) => theme.media.sm`width: 100%`}
     ${({theme}) => theme.media.mobile`width: 100%`}
 `
+
+export const ImageRandomWidth = styled.div`
+    width: calc((100% - 15px) / 4);
+    max-width: 320px;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    flex-grow: 1;
+
+    ${({theme}) => theme.media.md`max-width: 340px;`}
+    ${({theme}) => theme.media.sm`width: calc((100% - 10px) / 3); max-width: 400px;`}
+    ${({theme}) => theme.media.xs`
+        width: calc((100% - 5px) / 2);
+        max-width: calc(50% - 2px);
+        margin: 0 0 5px;
+    `}
+    ${({theme}) => theme.media.xxs`width: 100%; max-width: 100%; margin: 0;`}
+
+    &:nth-of-type(odd) {
+        ${({theme}) => theme.media.xs`margin: 0 4px 5px 0;`}
+    }
+`

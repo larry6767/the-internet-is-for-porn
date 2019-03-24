@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-
+import {ImageRandomWidth} from 'src/generic/assets'
 export {PageWrapper, StyledLink} from '../../../generic/assets'
 
 export const LetterIcon = styled.div`
@@ -22,31 +22,9 @@ export const NichesList = styled.ul`
     ${({theme}) => theme.media.mobile`margin: 0 0 20px;`}
 `
 
-const NicheCommon = styled.div`
+const NicheCommon = styled(ImageRandomWidth)`
     display: flex;
     flex-direction: column;
-    width: calc((100% - 15px) / 4);
-    margin-right: 5px;
-    margin-bottom: 5px;
-    flex-grow: 1;
-
-    ${({theme}) => theme.media.sm`width: calc((100% - 10px) / 3)`}
-    ${({theme}) => theme.media.xs`width: calc((100% - 5px) / 2)`}
-    ${({theme}) => theme.media.xxs`width: 100%;margin-right: 0;`}
-
-    &:nth-of-type(4n) {
-        ${({theme}) => theme.media.xl`margin-right: 0;`}
-        ${({theme}) => theme.media.lg`margin-right: 0;`}
-        ${({theme}) => theme.media.md`margin-right: 0;`}
-    }
-
-    &:nth-of-type(3n) {
-        ${({theme}) => theme.media.sm`margin-right: 0;`}
-    }
-
-    &:nth-child(2n) {
-        ${({theme}) => theme.media.xs`margin-right: 0;`}
-    }
 `
 
 export const Niche = styled(NicheCommon)`
@@ -89,8 +67,8 @@ export const NicheImagePlug = styled(NicheImageCommon)`
 
 export const TypographyPlug = styled.div`
     width: 100%;
-    height: 30px;
+    height: 25px;
     background: ${({theme}) => theme.palette.prerender.plug};
 
-    ${({theme}) => theme.media.mobile`height: 26px;`};
+    ${({theme}) => theme.media.mobile`height: 22px;`};
 `

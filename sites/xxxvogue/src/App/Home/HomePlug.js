@@ -1,5 +1,6 @@
 import {range} from 'lodash'
 import React from 'react'
+import {connect} from 'react-redux'
 import {compose, withProps} from 'recompose'
 
 // local libs
@@ -12,16 +13,16 @@ import {
     ImmutablePropTypes,
 } from 'src/App/helpers'
 
-import {refModel} from 'src/App/models'
 import {NichesList, NichePlug, NicheImagePlug, TypographyPlug} from 'src/App/Home/assets'
+import actions from 'src/App/Home/actions'
 
 const
-    numberOfItems = 12,
+    itemsQuantity = 12,
 
-    HomePlug = props => <NichesList ref={g(props, 'setListRef')}>
-        { ! g(props, 'listRef') ? null : range(0, numberOfItems).map(x => <NichePlug
+    HomePlug = props => <NichesList>
+        { ! g(props, 'styledBounds') ? null : range(0, itemsQuantity).map(x => <NichePlug
             key={`${x}-NichePlug`}
-            style={ig(props.styledBounds, x)}
+            style={ig(props.styledBounds, `${x}`)}
         >
             <NicheImagePlug/>
             <TypographyPlug/>
@@ -29,15 +30,24 @@ const
     </NichesList>
 
 export default compose(
+    connect(
+        state => ({
+            randomWidthList: ig(state, 'app', 'home', 'randomWidthList'),
+        }),
+        {
+            setRandomWidthList: g(actions, 'setRandomWidthList'),
+        }
+    ),
     withProps({
-        numberOfItems
+        randomWidthListSize: itemsQuantity,
     }),
     imagesRandomWidth,
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        numberOfItems: PropTypes.number,
-        listRef: refModel,
+        randomWidthList: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.number)),
+        randomWidthListSize: PropTypes.number,
         styledBounds: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.exact({
             width: PropTypes.string,
         }))),
+        setRandomWidthList: PropTypes.func,
     })
 )(HomePlug)
