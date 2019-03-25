@@ -60,7 +60,6 @@ export const Thumb = styled(ThumbCommon)`
 export const InfoBar = styled.div`
     display: flex;
     align-items: center;
-    ${'' /* min-height: 27px; */}
 `
 
 export const Like = styled.div`

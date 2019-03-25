@@ -147,6 +147,7 @@ const
             cancel: PropTypes.string,
             showInfo: PropTypes.string,
             hideInfo: PropTypes.string,
+            browseAllModels: PropTypes.string,
         })
     },
 

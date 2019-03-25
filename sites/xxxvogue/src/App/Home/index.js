@@ -24,7 +24,12 @@ import {
     breakpoints,
 } from 'src/App/helpers'
 
-import {immutableI18nOrderingModel, routerContextModel} from 'src/App/models'
+import {
+    immutableI18nOrderingModel,
+    routerContextModel,
+    immutableModelsListModel
+} from 'src/App/models'
+
 import {model} from 'src/App/Home/models'
 import routerGetters from 'src/App/routerGetters'
 import PageTextHelmet from 'src/generic/PageTextHelmet'
@@ -93,7 +98,7 @@ const
             <AllPornstarsButton
                 to={props.getPornstarsLink()}
             >
-                {`browse all models`}
+                {g(props, 'i18nBrowseAllModels')}
                 <AllPornstarsQuantity>
                     {`(${ig(props.data, 'allPornstarsQuantity')})`}
                 </AllPornstarsQuantity>
@@ -120,6 +125,7 @@ export default compose(
             routerContext: getRouterContext(state),
             htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
+            i18nBrowseAllModels: ig(state, 'app', 'locale', 'i18n', 'buttons', 'browseAllModels'),
             i18nNichesHeader: getHeaderWithOrientation(state, 'niches'),
             i18nPornstarsHeader: getHeaderWithOrientation(state, 'pornstars'),
             randomWidthList: ig(state, 'app', 'home', 'randomWidthList'),
@@ -202,8 +208,10 @@ export default compose(
         isSSR: PropTypes.bool,
         cb: PropTypes.oneOf(breakpoints),
         data: model,
+        pornstarList: immutableModelsListModel,
         routerContext: routerContextModel,
         htmlLang: PropTypes.string,
+        i18nBrowseAllModels: PropTypes.string,
         i18nOrdering: immutableI18nOrderingModel,
         i18nNichesHeader: PropTypes.string,
         i18nPornstarsHeader: PropTypes.string,

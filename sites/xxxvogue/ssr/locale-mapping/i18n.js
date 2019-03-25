@@ -60,6 +60,7 @@ const
                 cancel: 'Cancel',
                 showInfo: 'Show info',
                 hideInfo: 'Hide info',
+                browseAllModels: 'Browse all models',
             },
             footer: {
                 forParents: 'Parents — Protect your children from adult content \
@@ -200,6 +201,7 @@ const
                 cancel: 'Stornieren',
                 showInfo: 'Zeige',
                 hideInfo: 'Ausblenden',
+                browseAllModels: 'Durchsuchen Sie alle Modelle',
             },
             footer: {
                 forParents: 'Eltern - Schützen sie Ihre Kinder vor Pornografie mit der Hilfe \
@@ -346,6 +348,7 @@ const
                 cancel: 'Annulla',
                 showInfo: 'Mostra',
                 hideInfo: 'Nascondi',
+                browseAllModels: 'Sfoglia tutti i modelli',
             },
             footer: {
                 forParents: 'Genitori – Proteggete i vostri bambini dai contenuti per adulti \
@@ -488,6 +491,7 @@ const
                 cancel: 'Annuler',
                 showInfo: 'Afficher',
                 hideInfo: 'Masquer',
+                browseAllModels: 'Parcourir tous les modèles',
             },
             footer: {
                 forParents: 'Protégez votre enfant et votre famille de la pornographie avec \
@@ -630,6 +634,7 @@ const
                 cancel: 'Cancelar',
                 showInfo: 'Mostrar',
                 hideInfo: 'Ocultar',
+                browseAllModels: 'Navegar todos los modelos',
             },
             footer: {
                 forParents: 'Los padres - Proteja a sus hijos del contenido para adultos con \
@@ -773,6 +778,7 @@ const
                 cancel: 'Cancelar',
                 showInfo: 'Mostrar',
                 hideInfo: 'Ocultar',
+                browseAllModels: 'Procure todos os modelos',
             },
             footer: {
                 forParents: 'Mantem as tuas crianças protegidas online, utiliza estes serviços \
@@ -915,6 +921,7 @@ const
                 cancel: 'Annullera',
                 showInfo: 'Visa info',
                 hideInfo: 'Dölja info',
+                browseAllModels: 'Bläddra bland alla modeller',
             },
             footer: {
                 forParents: 'Barnsäkert och föräldrakontroll från vuxeninnehåll \
@@ -1055,6 +1062,7 @@ const
                 cancel: 'Annuleren',
                 showInfo: 'Toon info',
                 hideInfo: 'Verbergen',
+                browseAllModels: 'Blader door alle modellen',
             },
             footer: {
                 forParents: 'Kindveiligheid en ouderlijk toezicht op inhoud voor \
@@ -1198,6 +1206,7 @@ const
                 cancel: 'Peruuttaa',
                 showInfo: 'Näytä',
                 hideInfo: 'Piilota',
+                browseAllModels: 'Selaa kaikkia malleja',
             },
             footer: {
                 forParents: 'Vanhemmat - Suojelkaa lapsianne aikuissisällöltä näillä palveluilla:',
@@ -1339,6 +1348,7 @@ const
                 cancel: 'Отменить',
                 showInfo: 'Развернуть',
                 hideInfo: 'Скрыть',
+                browseAllModels: 'Просмотреть все модели',
             },
             footer: {
                 forParents: 'Родители - Защитите детей от посещения сайтов для взрослых с \
@@ -1480,6 +1490,7 @@ const
                 cancel: 'Iptal etmek',
                 showInfo: 'Göster',
                 hideInfo: 'Gizle',
+                browseAllModels: 'Tüm modellere göz at',
             },
             footer: {
                 forParents: 'Çocuklarınızı internette güvende tutun. Aşağıdaki hizmetleri \
