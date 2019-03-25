@@ -85,6 +85,7 @@ const
             listArchive: PropTypes.string,
             pornstars: PropTypes.string,
             relatedVideo: PropTypes.string,
+            moreCategories: PropTypes.string,
         })
     },
 

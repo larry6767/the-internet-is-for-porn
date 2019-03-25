@@ -11,9 +11,9 @@ export const NichesList = styled.ul`
     flex-wrap: wrap;
     list-style-type: none;
     padding: 0;
-    margin: 0 0 40px;
+    margin: 0 0 20px;
 
-    ${({theme}) => theme.media.mobile`margin: 0 0 20px; width: 100%; left: 0;`}
+    ${({theme}) => theme.media.mobile`width: 100%; left: 0;`}
 `
 
 const NicheCommon = styled(ImageRandomWidth)`

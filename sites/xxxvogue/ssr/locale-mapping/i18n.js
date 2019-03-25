@@ -22,6 +22,7 @@ const
                 listArchive: 'Archives',
                 pornstars: 'Top Rated %ORIENTATION% Pornstars',
                 relatedVideo: 'Click On Each Of These Related Films',
+                moreCategories: 'More categories',
             },
             search: {
                 inputPlaceholder: 'Search box',
@@ -163,6 +164,7 @@ const
                 listArchive: 'Archiv',
                 pornstars: 'Die Besten %ORIENTATION% Models',
                 relatedVideo: 'Schau sie Dir an, diese ähnlichen Video Clips',
+                moreCategories: 'Weitere Kategorien',
             },
             search: {
                 inputPlaceholder: 'Stichworte hinzufügen',
@@ -309,6 +311,7 @@ const
                 listArchive: 'Archivio',
                 pornstars: 'Le %ORIENTATION% Pornostar Più Votate',
                 relatedVideo: 'Sfoglia Questi Filmati Correlati',
+                moreCategories: 'Altre categorie',
             },
             search: {
                 inputPlaceholder: 'Inserisci parole chiave...',
@@ -453,6 +456,7 @@ const
                 listArchive: 'Les archives',
                 pornstars: 'Les Pornstars %ORIENTATION% les Mieux Notée',
                 relatedVideo: 'Regardez ces scènes au contenu lié',
+                moreCategories: 'Plus de catégories',
             },
             search: {
                 inputPlaceholder: 'Chercher sur Video Section',
@@ -596,6 +600,7 @@ const
                 listArchive: 'Archivo',
                 pornstars: 'Las Más Buscadas %ORIENTATION% Pornstars',
                 relatedVideo: 'Revisar los Escenas Relacionados',
+                moreCategories: 'Más categorías',
             },
             search: {
                 inputPlaceholder: 'Palabra va aquí ...',
@@ -740,6 +745,7 @@ const
                 listArchive: 'Arquivos',
                 pornstars: 'As Melhores Pornstars %ORIENTATION%',
                 relatedVideo: 'Aprecia Estes Videos tube Relacionados',
+                moreCategories: 'Mais categorias',
             },
             search: {
                 inputPlaceholder: 'Palavra chave ou pornstar nome',
@@ -883,6 +889,7 @@ const
                 listArchive: 'Arkiv',
                 pornstars: 'Bästa %ORIENTATION% Porrstjärnor',
                 relatedVideo: 'Utforska Dessa Relaterade Klipp',
+                moreCategories: 'Fler kategorier',
             },
             search: {
                 inputPlaceholder: 'Skriv nyckelordet här...',
@@ -1024,6 +1031,7 @@ const
                 listArchive: 'Archief',
                 pornstars: 'Hoog Gewaardeerde %ORIENTATION% Modellen',
                 relatedVideo: 'Bekijk Deze Gerelateerde Vids',
+                moreCategories: 'Meer categorieën',
             },
             search: {
                 inputPlaceholder: 'Zoekveld',
@@ -1168,6 +1176,7 @@ const
                 listArchive: 'Arkisto',
                 pornstars: 'Suositut %ORIENTATION% Pornotähtiä',
                 relatedVideo: 'Tsekkaa Nämä Vastaavat Videoita',
+                moreCategories: 'Lisää luokkia',
             },
             search: {
                 inputPlaceholder: 'Hakulaatikko',
@@ -1310,6 +1319,7 @@ const
                 listArchive: 'Архивы',
                 pornstars: 'Модели',
                 relatedVideo: 'Лучшие похожие ролики',
+                moreCategories: 'Больше категорий',
             },
             search: {
                 inputPlaceholder: 'Искать на сайте',
@@ -1452,6 +1462,7 @@ const
                 listArchive: 'Arşiv',
                 pornstars: 'En Popüler %ORIENTATION% Modeller',
                 relatedVideo: 'Alakalı Olarak Şunlara Bir Bakın',
+                moreCategories: 'Daha fazla kategori',
             },
             search: {
                 inputPlaceholder: 'Video Section\'de Ara',

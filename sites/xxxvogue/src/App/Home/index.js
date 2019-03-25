@@ -89,6 +89,9 @@ const
                     />)}
             </NichesList>}
             <Typography variant="h4" paragraph>
+                {g(props, 'i18nMoreCategories')}
+            </Typography>
+            <Typography variant="h4" paragraph>
                 {g(props, 'i18nPornstarsHeader')}
             </Typography>
             <PornstarList
@@ -127,6 +130,7 @@ export default compose(
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
             i18nBrowseAllModels: ig(state, 'app', 'locale', 'i18n', 'buttons', 'browseAllModels'),
             i18nNichesHeader: getHeaderWithOrientation(state, 'niches'),
+            i18nMoreCategories: ig(state, 'app', 'locale', 'i18n', 'headers', 'moreCategories'),
             i18nPornstarsHeader: getHeaderWithOrientation(state, 'pornstars'),
             randomWidthList: ig(state, 'app', 'home', 'randomWidthList'),
         }),
@@ -214,6 +218,7 @@ export default compose(
         i18nBrowseAllModels: PropTypes.string,
         i18nOrdering: immutableI18nOrderingModel,
         i18nNichesHeader: PropTypes.string,
+        i18nMoreCategories: PropTypes.string,
         i18nPornstarsHeader: PropTypes.string,
 
         loadPageRequest: PropTypes.func,
