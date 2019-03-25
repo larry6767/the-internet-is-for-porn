@@ -1,0 +1,49 @@
+import {immutableProvedGet as ig} from '../../helpers'
+
+export const muiStyles = (theme, {data, cb}) => {
+    const
+        nichesList = ig(data, 'nichesList')
+
+    return {
+        listComponentRoot: {
+            boxSizing: 'border-box',
+            overflow: 'hidden',
+            width: ig(data, 'isLoading') ? 'auto' : '100%',
+            display: 'grid',
+            gridAutoFlow: 'column',
+            gridTemplateRows:
+                cb === 'md'
+                    ? `repeat(${Math.ceil(nichesList.size / 4)}, 1fr)`
+                    : cb === 'sm'
+                    ? `repeat(${Math.ceil(nichesList.size / 3)}, 1fr)`
+                    : cb === 'xs'
+                    ? `repeat(${Math.ceil(nichesList.size / 2)}, 1fr)`
+                    : cb === 'xxs'
+                    ? `repeat(${Math.ceil(nichesList.size / 1)}, 1fr)`
+                    : `repeat(${Math.ceil(nichesList.size / 5)}, 1fr)`,
+        },
+        listItemTextRoot: {
+            paddingLeft: 0,
+            paddingRight: 0,
+            display: cb === 'xxs'
+                ? 'flex'
+                : 'block',
+            alignItems: 'center',
+        },
+        primaryTypography: {
+            fontSize: 14,
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            marginRight: cb === 'xxs'
+                ? 10
+                : 0
+        },
+        secondaryTypography: {
+            fontSize: 12
+        },
+        itemGutters: {
+            paddingLeft: 10,
+            paddingRight: 10
+        },
+    }
+}

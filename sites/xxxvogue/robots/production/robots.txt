@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /react
+Disallow: /backend-proxy
+Disallow: /static/js/
+Disallow: /img/
+Allow: /img/logo.png

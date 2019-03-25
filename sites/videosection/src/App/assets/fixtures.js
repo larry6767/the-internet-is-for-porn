@@ -1,0 +1,1 @@
+../../../../../shared/src/App/assets/fixtures.js

@@ -1,12 +1,15 @@
 import {set} from 'lodash'
-import {PropTypes} from '../App/helpers'
-import {pageKeys} from '../App/models'
+
+// local libs
+import {PropTypes} from 'src/App/helpers'
+import {pageKeys} from 'src/App/models'
 
 const
     getPageDataParamsOptionsModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         // for now it is the only option we use
         blocks: PropTypes.exact({
             allTagsBlock: PropTypes.number.isOptional,
+            extendedTagsBlock: PropTypes.number.isOptional,
             modelsABCBlockText: PropTypes.number.isOptional,
             modelsABCBlockThumbs: PropTypes.number.isOptional,
             updateSponsorURL: PropTypes.number.isOptional,
@@ -35,3 +38,17 @@ export const
     getPageDataPageMappingModel = PropTypes.exact(
         pageKeys.reduce((o, k) => set(o, k, getPageDataResultModel), {})
     )
+
+const
+    orderingItemModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape({
+        ACTIVE: PropTypes.bool,
+        URL: PropTypes.string,
+    }).isOptional
+
+export const
+    orderingModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape({
+        sort_LATEST: orderingItemModel,
+        sort_LONGEST: orderingItemModel,
+        sort_POPULAR: orderingItemModel,
+        sort_RELEVANT: orderingItemModel,
+    })

@@ -1,1 +1,1 @@
-../../../../robots/rc/robots.txt
+../../../../shared/robots/rc/robots.txt
