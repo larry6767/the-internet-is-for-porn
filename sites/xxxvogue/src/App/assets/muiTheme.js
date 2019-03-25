@@ -18,6 +18,7 @@ const
         typography: {
             useNextVariants: true,
             fontFamily: [
+                'Montserrat',
                 'Arial',
                 'Helvetica',
                 'sans-serif',
@@ -26,14 +27,16 @@ const
         overrides: {
             MuiTypography: {
                 h4: {
-                    fontSize: '2.125rem',
+                    fontSize: '1.25rem',
+                    textAlign: 'center',
+                    fontWeight: 'bold',
 
                     [preMuiTheme.breakpoints.only("sm")]: {
-                        fontSize: '1.5rem',
+                        fontSize: '1.25rem',
                     },
 
                     [preMuiTheme.breakpoints.down("xs")]: {
-                        fontSize: '1.25rem',
+                        fontSize: '1rem',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap',

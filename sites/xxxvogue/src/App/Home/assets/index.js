@@ -12,14 +12,17 @@ export const LetterIcon = styled.div`
 `
 
 export const NichesList = styled.ul`
-    width: 100%;
+    position: relative;
+    left: -5px;
+    top: 0;
+    width: calc(100% + 10px);
     display: flex;
     flex-wrap: wrap;
     list-style-type: none;
     padding: 0;
     margin: 0 0 40px;
 
-    ${({theme}) => theme.media.mobile`margin: 0 0 20px;`}
+    ${({theme}) => theme.media.mobile`margin: 0 0 20px; width: 100%; left: 0;`}
 `
 
 const NicheCommon = styled(ImageRandomWidth)`

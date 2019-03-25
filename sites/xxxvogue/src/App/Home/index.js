@@ -81,7 +81,7 @@ const
     Home = props => <Fragment>
         <PageTextHelmet htmlLang={g(props, 'htmlLang')} pageText={ig(props.data, 'pageText')}/>
         <PageWrapper>
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" paragraph>
                 {g(props, 'i18nNichesHeader')}
             </Typography>
             {<NichesList>
@@ -94,7 +94,7 @@ const
                         routerContext={g(props, 'routerContext')}
                     />)}
             </NichesList>}
-            <Typography variant="h4" gutterBottom>
+            <Typography variant="h4" paragraph>
                 {g(props, 'i18nPornstarsHeader')}
             </Typography>
             <ListComponent component="div" classes={g(props, 'classedBounds', 'listComponent')}>

@@ -21,7 +21,7 @@ export const TopInner = styled.div`
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 10px;
+    padding: 10px;
     margin: 0 auto;
 
     ${({theme}) => theme.media.xl`width: 1400px;`}
@@ -51,7 +51,7 @@ const Wrapper = styled.div`
 export const SearchWrapper = styled(Wrapper)`
     justify-content: space-between;
     ${({isSSR}) => g(isSSR, []) ? 'width: calc(100% - 330px);' : ''}
-    ${({theme}) => theme.media.mobile`width: 100%; min-height: 70px; flex-wrap: wrap;`}
+    ${({theme}) => theme.media.mobile`width: 100%; min-height: 48px; margin-bottom: 10px; flex-wrap: wrap;`}
     ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.sm`width: 100%;`}
     ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.mobile`
         width: 100%;
@@ -92,11 +92,11 @@ export const NavigationWrapper = styled(Wrapper)`
 export const Logo = styled.img`
     flex-shrink: 0;
     margin-right: 20px;
-    width: 179px;
-    height: 50px;
+    width: 158px;
+    height: 61px;
 
-    ${({theme}) => theme.media.sm`width: 135px; height: 37px;`}
-    ${({theme}) => theme.media.mobile`margin: 0 10px; width: 135px; height: 37px;`}
+    ${({theme}) => theme.media.sm`width: 135px; height: 52px;`}
+    ${({theme}) => theme.media.mobile`margin: 8px 10px 0; width: 110px; height: 19px;`}
     ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.mobile`margin: 0;`}
 `
 
@@ -115,10 +115,10 @@ export const BottomInner = styled.div`
         position: absolute;
         z-index: -1;
         bottom: 0;
-        left: 0;
+        left: 10px;
         content: '';
         height: 1px;
-        width: 100%;
+        width: calc(100% - 20px);
         background-color: ${({theme}) => theme.palette.primary.lightOpacity}
     }
 `

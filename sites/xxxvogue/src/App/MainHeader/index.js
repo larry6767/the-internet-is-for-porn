@@ -36,6 +36,8 @@ import {
     BottomInner,
 } from 'src/App/MainHeader/assets'
 
+import {IMG_PATH} from 'src/config'
+
 const
     MainHeader = props => <Header>
         <Top>
@@ -47,8 +49,8 @@ const
                     {g(props, 'isMobile') && g(props, 'isSearchShown') ? null :
                         <StyledSpyLink to="/" isSpy={g(props, 'pageUrl') === '/'}>
                             <Logo
-                                src="/img/logo.png"
-                                alt="VideoSection logo"
+                                src={`${IMG_PATH}logo${g(props, 'isMobile') ? '-mobile' : ''}.png`}
+                                alt="logo"
                                 isSSR={g(props, 'isSSR')}
                             />
                         </StyledSpyLink>}

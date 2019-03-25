@@ -5,10 +5,12 @@ const GlobalStyle = createGlobalStyle`
     body {
         min-height: 100vh;
         min-width: 320px;
+        background-color: #f5f5f680;
+        overflow-x: hidden;
     }
 
     html {
-        font-family: 'Arial', 'Helvetica', sans-serif;
+        font-family: 'Montserrat', 'Arial', 'Helvetica', sans-serif;
     }
 
     * {
