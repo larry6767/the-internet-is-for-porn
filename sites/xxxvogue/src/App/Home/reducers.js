@@ -16,6 +16,7 @@ export default
             nichesListWithThumb: List(),
             nichesList: List(),
             pornstarsList: List(),
+            allPornstarsQuantity: null,
             randomWidthList: null,
         }),
         [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
@@ -26,6 +27,7 @@ export default
             pageText: Map(g(payload, 'data', 'pageText')),
             nichesListWithThumb: List(fromJS(g(payload, 'data', 'nichesListWithThumb'))),
             nichesList: List(fromJS(g(payload, 'data', 'nichesList'))),
+            allPornstarsQuantity: g(payload, 'data', 'allPornstarsQuantity'),
             pornstarsList: List(fromJS(g(payload, 'data', 'pornstarsList'))),
         }),
         [g(actions, 'loadPageFailure')]: (state) => state.merge({
@@ -36,6 +38,7 @@ export default
             nichesListWithThumb: List(),
             nichesList: List(),
             pornstarsList: List(),
+            allPornstarsQuantity: null,
             randomWidthList: null,
         }),
         [g(actions, 'setRandomWidthList')]: (state, {payload}) =>
@@ -49,5 +52,6 @@ export default
         nichesListWithThumb: [],
         nichesList: [],
         pornstarsList: [],
+        allPornstarsQuantity: null,
         randomWidthList: null,
     }))

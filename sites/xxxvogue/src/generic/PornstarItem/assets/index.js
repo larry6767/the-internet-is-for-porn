@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import {Link} from 'react-router-dom'
 
 export const StyledLinkBlock = styled(Link)`
+    position: relative;
     display: inline-block;
     text-decoration: none;
     width: 100%;
@@ -59,12 +60,22 @@ export const Thumb = styled(ThumbCommon)`
 export const InfoBar = styled.div`
     display: flex;
     align-items: center;
-    min-height: 27px;
+    ${'' /* min-height: 27px; */}
 `
 
 export const Like = styled.div`
+    position: absolute;
+    top: 0;
+    right: 0;
     display: flex;
     min-width: 27px;
+    background-color: ${({theme}) => theme.palette.primary.lightOpacity};
+    border-radius: 1px;
+    min-height: 30px;
+    min-width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `
 
 // styles for plug

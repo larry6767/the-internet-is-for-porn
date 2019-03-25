@@ -4,7 +4,7 @@ import {
     immutablePageTextModel,
     immutableNichesListWithThumbModel,
     immutableNichesListModel,
-    immutableModelsListWithLetterModel,
+    immutableModelsListModel,
     pageRequestParamsModel,
 } from 'src/App/models'
 
@@ -17,6 +17,7 @@ export const
         pageText: PropTypes.nullable(immutablePageTextModel),
         nichesListWithThumb: immutableNichesListWithThumbModel,
         nichesList: immutableNichesListModel,
-        pornstarsList: immutableModelsListWithLetterModel,
+        pornstarsList: immutableModelsListModel,
+        allPornstarsQuantity: PropTypes.nullable(PropTypes.number),
         randomWidthList: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.number)),
     })

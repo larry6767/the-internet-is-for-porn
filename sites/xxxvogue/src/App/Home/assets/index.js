@@ -1,15 +1,6 @@
 import styled from 'styled-components'
-import {ImageRandomWidth} from 'src/generic/assets'
-export {PageWrapper, StyledLink} from '../../../generic/assets'
-
-export const LetterIcon = styled.div`
-    width: 24px;
-    display: flex;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: ${({theme}) => theme.palette.primary.main};
-`
+import {ImageRandomWidth, StyledLink} from 'src/generic/assets'
+export {PageWrapper, StyledLink} from 'src/generic/assets'
 
 export const NichesList = styled.ul`
     position: relative;
@@ -56,6 +47,24 @@ export const NicheImage = styled(NicheImageCommon)`
 
 export const NicheTitle = styled.div`
     display: flex;
+`
+
+export const AllPornstarsButton = styled(StyledLink)`
+    width: 100%;
+    height: 50px;
+    background: ${({theme}) => theme.palette.primary.lightOpacity};
+    color: ${({theme}) => theme.palette.primary.contrastText};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin: 10px 0 5px;
+    border-radius: 4px;
+`
+
+export const AllPornstarsQuantity = styled.span`
+    font-weight: normal;
+    margin-left: 4px;
 `
 
 // styles for plug

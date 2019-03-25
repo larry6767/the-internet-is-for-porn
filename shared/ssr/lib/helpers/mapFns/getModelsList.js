@@ -53,14 +53,14 @@ export const
             thumb_url: PropTypes.string,
         }))
 
-export default (letters, items, withLetter = false) => {
+export default (letters, items, quantity = null, withLetter = false) => {
     if (process.env.NODE_ENV !== 'production') {
         assertPropTypes(lettersModel, letters, 'getModelsList', 'letters')
         assertPropTypes(itemsModel, items, 'getModelsList', 'original source')
     }
 
-    const
-        result = reduce(
+    let
+        preparedData = reduce(
             letters,
             (acc, letter, key) => concat(acc, sortBy(
                 map(letter, x => {
@@ -82,13 +82,16 @@ export default (letters, items, withLetter = false) => {
             []
         )
 
+    if (quantity)
+        preparedData = preparedData.slice(0, quantity)
+
     if (process.env.NODE_ENV !== 'production')
         assertPropTypes(
             withLetter ? modelsListWithLetterModel : modelsListModel,
-            result,
+            preparedData,
             'getModelsList',
             'result data'
         )
 
-    return result
+    return preparedData
 }

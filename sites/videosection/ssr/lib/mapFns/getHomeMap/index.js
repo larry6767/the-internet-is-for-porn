@@ -12,6 +12,7 @@ export default x => {
             pornstarsList: getModelsList(
                 g(x, 'page', 'MODELS_BY_LETTERS', 'letters'),
                 g(x, 'page', 'MODELS_BY_LETTERS_MODELS_INFO', 'items'),
+                null,
                 true
             ),
             pageText: getPageText(g(x, 'page', 'PAGE_TEXT'))

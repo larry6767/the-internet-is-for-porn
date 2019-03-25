@@ -1,5 +1,5 @@
 import {PropTypes} from 'src/App/helpers'
-import {nichesListWithThumbModel, modelsListWithLetterModel} from 'src/App/models'
+import {nichesListWithThumbModel, modelsListModel} from 'src/App/models'
 import {incomingPageTextModel, pageTextModel} from 'ssr/lib/helpers/mapFns/getPageText'
 import {lettersModel, itemsModel} from 'ssr/lib/helpers/mapFns/getModelsList'
 import {incomingNichesListModel} from 'ssr/lib/helpers/mapFns/getNichesList'
@@ -22,6 +22,7 @@ export const
 
     mappedHomeModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape({
         nichesListWithThumb: nichesListWithThumbModel,
-        pornstarsList: modelsListWithLetterModel,
+        pornstarsList: modelsListModel,
+        allPornstarsQuantity: PropTypes.number,
         pageText: pageTextModel,
     })

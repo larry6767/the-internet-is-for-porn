@@ -1,12 +1,6 @@
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, lifecycle, withHandlers, withPropsOnChange, onlyUpdateForKeys} from 'recompose'
-import PermIdentityIcon from '@material-ui/icons/PermIdentity'
-
-import ListComponent from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import Typography from '@material-ui/core/Typography'
 
 // local libs
@@ -23,6 +17,11 @@ import {
     doesItHaveToBeReloaded,
     lazyImage,
     imagesRandomWidth,
+    compareCurrentBreakpoint as ccb,
+    breakpointSM as sm,
+    breakpointXS as xs,
+    breakpointXXS as xxs,
+    breakpoints,
 } from 'src/App/helpers'
 
 import {immutableI18nOrderingModel, routerContextModel} from 'src/App/models'
@@ -32,31 +31,21 @@ import PageTextHelmet from 'src/generic/PageTextHelmet'
 import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
 import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
 import loadingWrapper from 'src/generic/loadingWrapper'
+import PornstarList from 'src/generic/PornstarList'
 import {muiStyles} from 'src/App/Home/assets/muiStyles'
 import actions from 'src/App/Home/actions'
 
-import {PageWrapper, LetterIcon, NichesList, Niche, NicheImage, StyledLink} from './assets'
+import {
+    PageWrapper,
+    NichesList,
+    Niche,
+    NicheImage,
+    StyledLink,
+    AllPornstarsButton,
+    AllPornstarsQuantity,
+} from './assets'
 
 const
-    renderListItemLink = (x, idx, arr, classedBounds, routerContext) => <StyledLink
-        to={routerGetters.pornstar.link(routerContext, ig(x, 'subPage'), null)}
-        key={ig(x, 'id')}
-    >
-        <ListItem button classes={g(classedBounds, 'listItem')}>
-            <ListItemIcon>
-                {idx !== 0 && ig(x, 'letter') === ig(arr, [(idx - 1), 'letter'])
-                    ? <PermIdentityIcon></PermIdentityIcon>
-                    : <LetterIcon>{ig(x, 'letter')}</LetterIcon>}
-
-            </ListItemIcon>
-            <ListItemText
-                classes={g(classedBounds, 'listItemText')}
-                primary={ig(x, 'name')}
-                secondary={ig(x, 'itemsCount')}
-            />
-        </ListItem>
-    </StyledLink>,
-
     NicheWrapper = compose(
         lazyImage,
         onlyUpdateForKeys(['x', 'previewStyle'])
@@ -97,15 +86,18 @@ const
             <Typography variant="h4" paragraph>
                 {g(props, 'i18nPornstarsHeader')}
             </Typography>
-            <ListComponent component="div" classes={g(props, 'classedBounds', 'listComponent')}>
-                {ig(props.data, 'pornstarsList').map((x, idx) => renderListItemLink(
-                    x,
-                    idx,
-                    ig(props.data, 'pornstarsList'),
-                    g(props, 'classedBounds'),
-                    g(props, 'routerContext'),
-                ))}
-            </ListComponent>
+            <PornstarList
+                linkBuilder={g(props, 'pornstarLinkBuilder')}
+                pornstarList={g(props, 'pornstarList')}
+            />
+            <AllPornstarsButton
+                to={props.getPornstarsLink()}
+            >
+                {`browse all models`}
+                <AllPornstarsQuantity>
+                    {`(${ig(props.data, 'allPornstarsQuantity')})`}
+                </AllPornstarsQuantity>
+            </AllPornstarsButton>
         </PageWrapper>
     </Fragment>,
 
@@ -138,8 +130,26 @@ export default compose(
         }
     ),
     onlyUpdateForKeys(['data', 'cb']),
+    withPropsOnChange(['data', 'cb'], props => {
+        const
+            size = ccb(g(props, 'cb'), sm) === 0 ? 12
+                : ccb(g(props, 'cb'), xs) === 0 ? 6
+                : ccb(g(props, 'cb'), xxs) === 0 ? 4
+                : null
+
+        return {
+            pornstarList: size
+                ? ig(props.data, 'pornstarsList').setSize(size)
+                : ig(props.data, 'pornstarsList')
+        }
+    }),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
+
+        getPornstarsLink: props => () => routerGetters.pornstars.link(g(props, 'routerContext')),
+
+        pornstarLinkBuilder: props => child =>
+            routerGetters.pornstar.link(g(props, 'routerContext'), g(child, []), null),
     }),
     lifecycle({
         componentDidMount() {
@@ -190,7 +200,7 @@ export default compose(
         }))),
 
         isSSR: PropTypes.bool,
-        cb: PropTypes.string,
+        cb: PropTypes.oneOf(breakpoints),
         data: model,
         routerContext: routerContextModel,
         htmlLang: PropTypes.string,
@@ -202,6 +212,8 @@ export default compose(
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
         setRandomWidthList: PropTypes.func,
+        pornstarLinkBuilder: PropTypes.func,
+        getPornstarsLink: PropTypes.func,
     }),
     loadingWrapper({
         isHome: true,
