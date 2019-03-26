@@ -3,7 +3,7 @@ import {ImmutablePropTypes, PropTypes} from 'src/App/helpers'
 import {
     immutablePageTextModel,
     pageRequestParamsModel,
-    immutableModelsListModel,
+    immutablePornstarsListModel,
 } from 'src/App/models'
 
 export const
@@ -16,7 +16,7 @@ export const
             lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
 
             pageText: PropTypes.nullable(immutablePageTextModel),
-            modelsList: immutableModelsListModel,
+            modelsList: immutablePornstarsListModel,
 
             // TODO: get rid of that shit below (pornstars not supposed to have pagination)
             pageNumber: PropTypes.number,

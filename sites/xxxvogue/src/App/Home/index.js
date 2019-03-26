@@ -27,7 +27,7 @@ import {
 import {
     immutableI18nOrderingModel,
     routerContextModel,
-    immutableModelsListModel
+    immutablePornstarsListModel
 } from 'src/App/models'
 
 import {model} from 'src/App/Home/models'
@@ -212,7 +212,7 @@ export default compose(
         isSSR: PropTypes.bool,
         cb: PropTypes.oneOf(breakpoints),
         data: model,
-        pornstarList: immutableModelsListModel,
+        pornstarList: immutablePornstarsListModel,
         routerContext: routerContextModel,
         htmlLang: PropTypes.string,
         i18nBrowseAllModels: PropTypes.string,

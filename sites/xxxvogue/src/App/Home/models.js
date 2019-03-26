@@ -3,8 +3,8 @@ import {ImmutablePropTypes, PropTypes} from 'src/App/helpers'
 import {
     immutablePageTextModel,
     immutableNichesListWithThumbModel,
-    immutableNichesListModel,
-    immutableModelsListModel,
+    immutableNichesListWithLetterModel,
+    immutablePornstarsListModel,
     pageRequestParamsModel,
 } from 'src/App/models'
 
@@ -16,8 +16,8 @@ export const
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageText: PropTypes.nullable(immutablePageTextModel),
         nichesListWithThumb: immutableNichesListWithThumbModel,
-        nichesList: immutableNichesListModel,
-        pornstarsList: immutableModelsListModel,
+        nichesListWithLetter: immutableNichesListWithLetterModel,
+        pornstarsList: immutablePornstarsListModel,
         allPornstarsQuantity: PropTypes.nullable(PropTypes.number),
         randomWidthList: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.number)),
     })

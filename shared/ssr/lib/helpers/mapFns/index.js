@@ -1,6 +1,6 @@
 export {default as getNichesListByLetters} from 'ssr/lib/helpers/mapFns/getNichesListByLetters'
 export {default as getNichesList} from 'ssr/lib/helpers/mapFns/getNichesList'
-export {default as getModelsList} from 'ssr/lib/helpers/mapFns/getModelsList'
+export {default as getPornstarsList} from 'ssr/lib/helpers/mapFns/getPornstarsList'
 export {getOrderingSortList, getFavoritesSortList} from 'ssr/lib/helpers/mapFns/getSortList'
 export {default as getOrderedVideoList} from 'ssr/lib/helpers/mapFns/getOrderedVideoList'
 export {default as getFilteredVideoList} from 'ssr/lib/helpers/mapFns/getFilteredVideoList'

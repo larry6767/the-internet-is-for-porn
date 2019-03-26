@@ -22,7 +22,7 @@ import {
 import {
     immutableNichesListModel,
     immutableTagArchiveListModel,
-    immutableModelsListWithLetterModel
+    immutablePornstarsListWithLetterModel
 } from 'src/App/models'
 
 import {ListsInner, StyledLink, Section, SectionInner} from 'src/generic/Lists/assets'
@@ -204,7 +204,7 @@ export default compose(
         tagArchiveList: immutableTagArchiveListModel.isOptional,
         archiveLinkBuilder: PropTypes.func.isOptional,
 
-        modelsList: immutableModelsListWithLetterModel.isOptional,
+        modelsList: immutablePornstarsListWithLetterModel.isOptional,
         modelLinkBuilder: PropTypes.func.isOptional,
 
         i18nListNichesHeader: PropTypes.string.isOptional,

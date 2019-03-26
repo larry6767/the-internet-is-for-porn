@@ -1,5 +1,12 @@
 import {plainProvedGet as g, assertPropTypes} from 'src/App/helpers'
-import {getNichesList, getModelsList, getPageText} from 'ssr/lib/helpers/mapFns'
+
+import {
+    getNichesList,
+    getNichesListByLetters,
+    getPornstarsList,
+    getPageText
+} from 'ssr/lib/helpers/mapFns'
+
 import {homeModel, mappedHomeModel} from 'ssr/lib/mapFns/getHomeMap/model'
 
 export default x => {
@@ -9,8 +16,11 @@ export default x => {
     const
         result = {
             nichesListWithThumb: getNichesList(g(x, 'page', 'TAGS_INFO', 'items'), 12, true),
-            nichesList: getNichesList(g(x, 'page', 'TAGS_INFO', 'items')),
-            pornstarsList: getModelsList(
+            nichesListWithLetter: getNichesListByLetters(
+                g(x, 'page', 'TAGS_BY_LETTERS', 'letters'),
+                true,
+            ),
+            pornstarsList: getPornstarsList(
                 g(x, 'page', 'MODELS_BY_LETTERS', 'letters'),
                 g(x, 'page', 'MODELS_BY_LETTERS_MODELS_INFO', 'items'),
                 16,

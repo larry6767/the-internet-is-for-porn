@@ -1,8 +1,4 @@
-import {map, concat, sortBy, reduce} from 'lodash'
-
-// local libs
-import {PropTypes, assertPropTypes, plainProvedGet as g} from 'src/App/helpers'
-import {modelsListModel, modelsListWithLetterModel} from 'src/App/models'
+import {PropTypes} from 'src/App/helpers'
 
 const
     letterKeyModel = process.env.NODE_ENV === 'production' ? null :
@@ -32,7 +28,7 @@ const
 
 export const
     // {'A': {'1234': {...}}, 'B': {'4321': {...}}, ...}
-    lettersModel = process.env.NODE_ENV === 'production' ? null :
+    pornstarsLettersModel = process.env.NODE_ENV === 'production' ? null :
         (props, propName, componentName, ...etc) => {
             const propValue = props[propName]
             if (typeof propValue !== 'object')
@@ -48,50 +44,9 @@ export const
         },
 
     // keys are `letters[].id`s
-    itemsModel = process.env.NODE_ENV === 'production' ? null :
+    pornstarsItemsModel = process.env.NODE_ENV === 'production' ? null :
         PropTypes.objectOf(PropTypes.shape({
             thumb_url: PropTypes.string,
-        }))
+        })),
 
-export default (letters, items, quantity = null, withLetter = false) => {
-    if (process.env.NODE_ENV !== 'production') {
-        assertPropTypes(lettersModel, letters, 'getModelsList', 'letters')
-        assertPropTypes(itemsModel, items, 'getModelsList', 'original source')
-    }
-
-    let
-        preparedData = reduce(
-            letters,
-            (acc, letter, key) => concat(acc, sortBy(
-                map(letter, x => {
-                    const model = {
-                        id: Number(g(x, 'id')),
-                        name: g(x, 'name'),
-                        subPage: g(x, 'sub_url'),
-                        itemsCount: Number(g(x, 'items_count')),
-                        thumb: g(items, g(x, 'id'), 'thumb_url'),
-                    }
-
-                    if (withLetter)
-                        model.letter = g(key, [])
-
-                    return model
-                }),
-                o => g(o, 'name')
-            )),
-            []
-        )
-
-    if (quantity)
-        preparedData = preparedData.slice(0, quantity)
-
-    if (process.env.NODE_ENV !== 'production')
-        assertPropTypes(
-            withLetter ? modelsListWithLetterModel : modelsListModel,
-            preparedData,
-            'getModelsList',
-            'result data'
-        )
-
-    return preparedData
-}
+    nichesLettersModel = pornstarsLettersModel

@@ -1,7 +1,7 @@
 import {plainProvedGet as g, assertPropTypes} from 'src/App/helpers'
 
 import {
-    getModelsList,
+    getPornstarsList,
     getOrderingSortList,
     getFilteredVideoList,
     getPageText,
@@ -38,7 +38,7 @@ export default x => {
                 g(x, 'page', 'GALS_INFO', 'ids'),
                 g(x, 'page', 'GALS_INFO', 'items')
             ),
-            modelsList: getModelsList(
+            modelsList: getPornstarsList(
                 g(x, 'page', 'MODELS_BY_LETTERS', 'letters'),
                 g(x, 'page', 'MODELS_BY_LETTERS_MODELS_INFO', 'items'),
                 null,
