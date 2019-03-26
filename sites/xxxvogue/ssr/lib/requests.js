@@ -53,7 +53,7 @@ const
             getHomeMap,
         ]),
         allNiches: Object.freeze([
-            deepFreeze({blocks: {allTagsBlock: 1}}),
+            deepFreeze({blocks: {extendedTagsBlock: 1}}),
             getAllNichesMap,
         ]),
         niche: Object.freeze([

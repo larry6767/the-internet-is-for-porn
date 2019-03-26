@@ -8,6 +8,7 @@ const
     getPageDataParamsOptionsModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         // for now it is the only option we use
         blocks: PropTypes.exact({
+            extendedTagsBlock: PropTypes.number.isOptional,
             allTagsBlock: PropTypes.number.isOptional,
             modelsABCBlockText: PropTypes.number.isOptional,
             modelsABCBlockThumbs: PropTypes.number.isOptional,
