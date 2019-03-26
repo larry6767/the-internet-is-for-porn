@@ -11,7 +11,7 @@ export const muiStyles = theme => ({
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
         width: '100%',
-        color: theme.palette.primary.lightOpacity,
+        color: theme.palette.primary.lightText,
     },
     favoriteBorderIcon: {
         color: theme.palette.primary.contrastText,

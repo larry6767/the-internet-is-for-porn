@@ -43,18 +43,24 @@ import actions from 'src/App/Home/actions'
 import {
     PageWrapper,
     NichesList,
-    Niche,
+    NicheWithThumb,
     NicheImage,
     StyledLink,
     AllPornstarsButton,
     AllPornstarsQuantity,
+    NichesListWithLetters,
+    Letter,
+    Niche,
+    NicheLink,
+    Name,
+    Quantity,
 } from './assets'
 
 const
     NicheWrapper = compose(
         lazyImage,
         onlyUpdateForKeys(['x', 'previewStyle'])
-    )((props) => <Niche style={g(props, 'style')}>
+    )((props) => <NicheWithThumb style={g(props, 'style')}>
         <StyledLink
             to={routerGetters.niche.link(
                 g(props, 'routerContext'),
@@ -70,7 +76,25 @@ const
                 classes={g(props, 'classedBounds', 'nicheTitleTypography')}
             >{ig(props.x, 'name')}</Typography>
         </StyledLink>
-    </Niche>),
+    </NicheWithThumb>),
+
+    renderNicheOrLetter = (x, idx, arr, nicheLinkBuilder) => {
+        const
+            renderNiche = (x, withKey = false) =>
+                <Niche key={withKey ? `${ig(x, 'id')}-niche` : null}>
+                    <NicheLink to={nicheLinkBuilder(ig(x, 'subPage'))}>
+                        <Name>{ig(x, 'name')}</Name>
+                        <Quantity>{ig(x, 'itemsCount')}</Quantity>
+                    </NicheLink>
+                </Niche>
+
+        return (idx === 0 || (idx !== 0 && ig(x, 'letter') !== ig(arr, [(idx - 1), 'letter'])))
+            ? <Fragment key={`${ig(x, 'id')}-letter`}>
+                <Letter>{ig(x, 'letter')}</Letter>
+                {renderNiche(x)}
+            </Fragment>
+            : renderNiche(x, true)
+    },
 
     Home = props => <Fragment>
         <PageTextHelmet htmlLang={g(props, 'htmlLang')} pageText={ig(props.data, 'pageText')}/>
@@ -88,9 +112,19 @@ const
                         routerContext={g(props, 'routerContext')}
                     />)}
             </NichesList>}
+
             <Typography variant="h4" paragraph>
                 {g(props, 'i18nMoreCategories')}
             </Typography>
+            <NichesListWithLetters itemsQuantity={g(props, 'nichesAndLettersQuantity')}>
+                {ig(props.data, 'nichesListWithLetter').map((x, idx) => renderNicheOrLetter(
+                    x,
+                    idx,
+                    ig(props.data, 'nichesListWithLetter'),
+                    g(props, 'nicheLinkBuilder'),
+                ))}
+            </NichesListWithLetters>
+
             <Typography variant="h4" paragraph>
                 {g(props, 'i18nPornstarsHeader')}
             </Typography>
@@ -98,9 +132,7 @@ const
                 linkBuilder={g(props, 'pornstarLinkBuilder')}
                 pornstarList={g(props, 'pornstarList')}
             />
-            <AllPornstarsButton
-                to={props.getPornstarsLink()}
-            >
+            <AllPornstarsButton to={props.pornstarsLinkBuilder()}>
                 {g(props, 'i18nBrowseAllModels')}
                 <AllPornstarsQuantity>
                     {`(${ig(props.data, 'allPornstarsQuantity')})`}
@@ -153,10 +185,30 @@ export default compose(
                 : ig(props.data, 'pornstarsList')
         }
     }),
+    withPropsOnChange(['data'], props => {
+        const
+            nichesList = ig(props.data, 'nichesListWithLetter'),
+            lettersQuantity = g(
+                nichesList.map(x => ig(x, 'letter')).toSet(),
+                'size'
+            )
+
+        return {
+            nichesAndLettersQuantity: g(nichesList, 'size') + lettersQuantity
+        }
+    }),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
 
-        getPornstarsLink: props => () => routerGetters.pornstars.link(g(props, 'routerContext')),
+        pornstarsLinkBuilder: props => () => routerGetters.pornstars.link(
+            g(props, 'routerContext')
+        ),
+
+        nicheLinkBuilder: props => child => routerGetters.niche.link(
+            g(props, 'routerContext'),
+            g(child, []),
+            null
+        ),
 
         pornstarLinkBuilder: props => child =>
             routerGetters.pornstar.link(g(props, 'routerContext'), g(child, []), null),
@@ -213,6 +265,7 @@ export default compose(
         cb: PropTypes.oneOf(breakpoints),
         data: model,
         pornstarList: immutablePornstarsListModel,
+        nichesAndLettersQuantity: PropTypes.number,
         routerContext: routerContextModel,
         htmlLang: PropTypes.string,
         i18nBrowseAllModels: PropTypes.string,
