@@ -3,10 +3,9 @@ import {mapValues} from 'lodash'
 // local libs
 import {plainProvedGet as g, PropTypes, assertPropTypes} from 'src/App/helpers'
 import {archiveIdModel, archiveFilmsModel} from 'src/App/models'
+import {archiveUrlReg} from 'ssr/lib/models'
 
 const
-    urlReg = /\/(\d{4})-(\d{2})-archive.html$/,
-
     incomingModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
         ACTIVE: PropTypes.oneOfType([
             // check whether it's zero number
@@ -32,7 +31,7 @@ const
                     `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
                     `(it's not a string but ${typeof props[propName]}). Validation failed.`
                 )
-            if (!urlReg.test(props[propName]))
+            if (!archiveUrlReg.test(props[propName]))
                 return new Error(
                     `Invalid prop \`${propName}\` supplied to \`${componentName}\` ` +
                     `(it doesn't match archive link). Validation failed.`
@@ -60,7 +59,7 @@ export default x => {
 
     const
         currentlyActiveId = getProp(x, 'ACTIVE'),
-        match = getProp(x, 'URL').match(urlReg),
+        match = getProp(x, 'URL').match(archiveUrlReg),
 
         result = {
             currentlyActiveId: currentlyActiveId === 0 ? null : currentlyActiveId,

@@ -52,3 +52,9 @@ export const
         sort_POPULAR: orderingItemModel,
         sort_RELEVANT: orderingItemModel,
     })
+
+// regs for mapFns helpers
+export const
+    archiveUrlReg = /\/(\d{4})-(\d{2})-archive.html$/,
+    internalLinkReg = /^(\/[^\/]+)?\/vid-(\d+)\/[^\/]+.htm$/,
+    externalLinkReg = /^http/
