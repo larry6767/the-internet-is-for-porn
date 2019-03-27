@@ -10,7 +10,7 @@ import {defaultHostToFetchSiteLocalesFrom} from 'ssr/config'
 import apiLocales from 'ssr/locale-mapping/backend-api'
 import routerLocales from 'ssr/locale-mapping/router'
 import {backendUrl, backendUrlForReport, backendUrlForSearch} from 'ssr/lib/helpers/backendUrl'
-import getSubPage, {orderingMapping} from 'ssr/lib/helpers/getSubPage'
+import getSubPage, {orderingMapping} from 'ssr/lib/getSubPage'
 import deepFreeze from 'ssr/lib/helpers/deepFreeze'
 
 import {
