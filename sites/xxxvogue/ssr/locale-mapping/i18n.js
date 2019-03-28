@@ -33,7 +33,6 @@ const
             navigation: {
                 home: {title: 'Home'},
                 allNiches: {title: 'All Niches'},
-                allMovies: {title: 'All Movies'},
                 pornstars: {title: 'Pornstars'},
                 favorite: {title: 'Favorite'},
             },
@@ -175,7 +174,6 @@ const
             navigation: {
                 home: {title: 'Hauptseite'},
                 allNiches: {title: 'Alle Gruppen'},
-                allMovies: {title: 'Alle Vids'},
                 pornstars: {title: 'Models'},
                 favorite: {title: 'Favorisierten'},
             },
@@ -323,7 +321,6 @@ const
             navigation: {
                 home: {title: 'Principale'},
                 allNiches: {title: 'Tutte le Categorie'},
-                allMovies: {title: 'Tutti I Film'},
                 pornstars: {title: 'Pornostar '},
                 favorite: {title: 'Preferiti'},
             },
@@ -467,7 +464,6 @@ const
             navigation: {
                 home: {title: 'Principale'},
                 allNiches: {title: 'Toutes les Niches'},
-                allMovies: {title: 'Tout les Tubes'},
                 pornstars: {title: 'Pornstars'},
                 favorite: {title: 'Favoris'},
             },
@@ -611,7 +607,6 @@ const
             navigation: {
                 home: {title: 'Principal'},
                 allNiches: {title: 'Todas las Nichos'},
-                allMovies: {title: 'Todas Películas'},
                 pornstars: {title: 'Pornstars'},
                 favorite: {title: 'Favoritos'},
             },
@@ -756,7 +751,6 @@ const
             navigation: {
                 home: {title: 'Inicial'},
                 allNiches: {title: 'Todas as Niches'},
-                allMovies: {title: 'Todos os Vids tube'},
                 pornstars: {title: 'Pornstars'},
                 favorite: {title: 'Favoritos'},
             },
@@ -900,7 +894,6 @@ const
             navigation: {
                 home: {title: 'Hemsida'},
                 allNiches: {title: 'Alla Kategorier'},
-                allMovies: {title: 'Alla Scener'},
                 pornstars: {title: 'Porrstjärnor'},
                 favorite: {title: 'Favoriter'},
             },
@@ -1042,7 +1035,6 @@ const
             navigation: {
                 home: {title: 'Hoofd'},
                 allNiches: {title: 'Alle Groepen'},
-                allMovies: {title: 'Alle Video\'s'},
                 pornstars: {title: 'Modellen'},
                 favorite: {title: 'Favorieten'},
             },
@@ -1187,7 +1179,6 @@ const
             navigation: {
                 home: {title: 'Etusivu'},
                 allNiches: {title: 'Kaikki Nichet'},
-                allMovies: {title: 'Leffat'},
                 pornstars: {title: 'Pornotähtiä'},
                 favorite: {title: 'Suosikki'},
             },
@@ -1330,7 +1321,6 @@ const
             navigation: {
                 home: {title: 'Главная'},
                 allNiches: {title: 'Все Группы'},
-                allMovies: {title: 'Все Видео'},
                 pornstars: {title: 'Модели'},
                 favorite: {title: 'Избранное'},
             },
@@ -1473,7 +1463,6 @@ const
             navigation: {
                 home: {title: 'Anasayfa'},
                 allNiches: {title: 'Tüm Gruplar'},
-                allMovies: {title: 'Tüm Sahneler'},
                 pornstars: {title: 'Modeller'},
                 favorite: {title: 'Favoriler'},
             },

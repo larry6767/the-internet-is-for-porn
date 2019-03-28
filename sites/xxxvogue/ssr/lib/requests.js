@@ -17,7 +17,6 @@ import {
     getHomeMap,
     getAllNichesMap,
     getNicheMap,
-    getAllMoviesMap,
     getPornstarsMap,
     getPornstarMap,
     getFavoriteMap,
@@ -65,15 +64,6 @@ const
             }}),
             getNicheMap,
         ]),
-        allMovies: Object.freeze([
-            deepFreeze({blocks: {
-                allTagsBlock: 1,
-                searchSponsors: 1,
-                updateExtraURL: 1,
-                updateSponsorURL: 1,
-            }}),
-            getAllMoviesMap,
-        ]),
         pornstars: Object.freeze([
             null,
             getPornstarsMap,
@@ -116,8 +106,7 @@ const
     getPageDataUrlBuilder = (localeCode, orientationCode, page, subPageCode) => {
         const
             pageCodeBranch = g(apiLocales, localeCode, 'pageCode', page),
-            orientationPrefix = g(apiLocales, localeCode, 'orientationPrefixes', orientationCode),
-            {code} = pageCodeBranch
+            orientationPrefix = g(apiLocales, localeCode, 'orientationPrefixes', orientationCode)
 
         let
             url = g(pageCodeBranch, 'url')

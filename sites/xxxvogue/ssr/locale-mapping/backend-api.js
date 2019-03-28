@@ -2,7 +2,7 @@ import {set} from 'lodash'
 
 // local libs
 import {PropTypes, assertPropTypes, plainProvedGet as g} from 'src/App/helpers'
-import {pageKeys} from 'src/App/models'
+import {pageKeys} from 'src/App/pageKeysModel'
 
 // only particular helper, because some of all helpers depends on this module
 import deepFreeze from 'ssr/lib/helpers/deepFreeze'
@@ -14,41 +14,33 @@ const
                 home: {url: '%ORIENTATION_PFX%/'},
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
-                allMovies: {
-                    code: {
-                        straight: 'all-movies',
-                        gay: 'all-movies',
-                        tranny: 'all-movies',
-                    },
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
-                },
                 pornstars: {
-                    code: {straight: 'porn-stars', gay: 'porn-stars', tranny: 'porn-stars'},
+                    code: {straight: 'models', gay: 'models', tranny: 'models'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 pornstar: {
-                    code: {straight: 'porn-star', gay: 'porn-star', tranny: 'porn-star'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%/%SUB_PAGE_CODE%.html',
+                    code: {straight: 'model', gay: 'model', tranny: 'model'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%/%PAGE_CODE%.html',
                 },
                 favorite: {
-                    code: {straight: 'favorite', gay: 'favorite', tranny: 'favorite'},
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    code: {straight: 'favorites', gay: 'favorites', tranny: 'favorites'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 favoritePornstars: {
                     code: {
-                        straight: 'favorite-porn-stars',
-                        gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars',
+                        straight: 'models-favorites',
+                        gay: 'models-favorites',
+                        tranny: 'models-favorites',
                     },
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 video: {
                     code: {straight: 'vid', gay: 'vid', tranny: 'vid'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.htm',
                 },
                 findVideos: {
-                    code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                    code: {straight: 'find', gay: 'find', tranny: 'find'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%%PAGE_CODE%%SUB_PAGE_CODE_SECOND_PIECE%',
                 },
                 site: {
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
@@ -67,41 +59,33 @@ const
                 home: {url: '%ORIENTATION_PFX%/'},
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
-                allMovies: {
-                    code: {
-                        straight: 'alle-vids',
-                        gay: 'alle-videos',
-                        tranny: 'alle-shemale-videos',
-                    },
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
-                },
                 pornstars: {
-                    code: {straight: 'porn-stars', gay: 'porn-stars', tranny: 'porn-stars'},
+                    code: {straight: 'models', gay: 'models', tranny: 'models'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 pornstar: {
-                    code: {straight: 'porn-star', gay: 'porn-star', tranny: 'porn-star'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%/%SUB_PAGE_CODE%.html',
+                    code: {straight: 'model', gay: 'model', tranny: 'model'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%/%PAGE_CODE%.html',
                 },
                 favorite: {
-                    code: {straight: 'favorite', gay: 'favorite', tranny: 'favorite'},
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    code: {straight: 'favorites', gay: 'favorites', tranny: 'favorites'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 favoritePornstars: {
                     code: {
-                        straight: 'favorite-porn-stars',
-                        gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars',
+                        straight: 'models-favorites',
+                        gay: 'models-favorites',
+                        tranny: 'models-favorites',
                     },
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 video: {
                     code: {straight: 'vid', gay: 'vid', tranny: 'vid'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.htm',
                 },
                 findVideos: {
-                    code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                    code: {straight: 'find', gay: 'find', tranny: 'find'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%%PAGE_CODE%%SUB_PAGE_CODE_SECOND_PIECE%',
                 },
                 site: {
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
@@ -120,41 +104,33 @@ const
                 home: {url: '%ORIENTATION_PFX%/'},
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
-                allMovies: {
-                    code: {
-                        straight: 'tutti-i-film',
-                        gay: 'tutti-i-film-gay',
-                        tranny: 'tutti-trans-film',
-                    },
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
-                },
                 pornstars: {
-                    code: {straight: 'porn-stars', gay: 'porn-stars', tranny: 'porn-stars'},
+                    code: {straight: 'models', gay: 'models', tranny: 'models'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 pornstar: {
-                    code: {straight: 'porn-star', gay: 'porn-star', tranny: 'porn-star'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%/%SUB_PAGE_CODE%.html',
+                    code: {straight: 'model', gay: 'model', tranny: 'model'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%/%PAGE_CODE%.html',
                 },
                 favorite: {
-                    code: {straight: 'favorite', gay: 'favorite', tranny: 'favorite'},
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    code: {straight: 'favorites', gay: 'favorites', tranny: 'favorites'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 favoritePornstars: {
                     code: {
-                        straight: 'favorite-porn-stars',
-                        gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars',
+                        straight: 'models-favorites',
+                        gay: 'models-favorites',
+                        tranny: 'models-favorites',
                     },
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 video: {
                     code: {straight: 'vid', gay: 'vid', tranny: 'vid'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.htm',
                 },
                 findVideos: {
-                    code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                    code: {straight: 'find', gay: 'find', tranny: 'find'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%%PAGE_CODE%%SUB_PAGE_CODE_SECOND_PIECE%',
                 },
                 site: {
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
@@ -173,41 +149,33 @@ const
                 home: {url: '%ORIENTATION_PFX%/'},
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
-                allMovies: {
-                    code: {
-                        straight: 'tout-les-tubes',
-                        gay: 'toutes-les-vidéos-gays',
-                        tranny: 'tous-les-clips-trans',
-                    },
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
-                },
                 pornstars: {
-                    code: {straight: 'porn-stars', gay: 'porn-stars', tranny: 'porn-stars'},
+                    code: {straight: 'models', gay: 'models', tranny: 'models'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 pornstar: {
-                    code: {straight: 'porn-star', gay: 'porn-star', tranny: 'porn-star'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%/%SUB_PAGE_CODE%.html',
+                    code: {straight: 'model', gay: 'model', tranny: 'model'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%/%PAGE_CODE%.html',
                 },
                 favorite: {
-                    code: {straight: 'favorite', gay: 'favorite', tranny: 'favorite'},
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    code: {straight: 'favorites', gay: 'favorites', tranny: 'favorites'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 favoritePornstars: {
                     code: {
-                        straight: 'favorite-porn-stars',
-                        gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars',
+                        straight: 'models-favorites',
+                        gay: 'models-favorites',
+                        tranny: 'models-favorites',
                     },
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 video: {
                     code: {straight: 'vid', gay: 'vid', tranny: 'vid'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.htm',
                 },
                 findVideos: {
-                    code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                    code: {straight: 'find', gay: 'find', tranny: 'find'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%%PAGE_CODE%%SUB_PAGE_CODE_SECOND_PIECE%',
                 },
                 site: {
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
@@ -226,41 +194,33 @@ const
                 home: {url: '%ORIENTATION_PFX%/'},
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
-                allMovies: {
-                    code: {
-                        straight: 'todas-películas',
-                        gay: 'todas-películas',
-                        tranny: 'todas-películas',
-                    },
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
-                },
                 pornstars: {
-                    code: {straight: 'porn-stars', gay: 'porn-stars', tranny: 'porn-stars'},
+                    code: {straight: 'models', gay: 'models', tranny: 'models'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 pornstar: {
-                    code: {straight: 'porn-star', gay: 'porn-star', tranny: 'porn-star'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%/%SUB_PAGE_CODE%.html',
+                    code: {straight: 'model', gay: 'model', tranny: 'model'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%/%PAGE_CODE%.html',
                 },
                 favorite: {
-                    code: {straight: 'favorite', gay: 'favorite', tranny: 'favorite'},
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    code: {straight: 'favorites', gay: 'favorites', tranny: 'favorites'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 favoritePornstars: {
                     code: {
-                        straight: 'favorite-porn-stars',
-                        gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars',
+                        straight: 'models-favorites',
+                        gay: 'models-favorites',
+                        tranny: 'models-favorites',
                     },
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 video: {
                     code: {straight: 'vid', gay: 'vid', tranny: 'vid'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.htm',
                 },
                 findVideos: {
-                    code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                    code: {straight: 'find', gay: 'find', tranny: 'find'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%%PAGE_CODE%%SUB_PAGE_CODE_SECOND_PIECE%',
                 },
                 site: {
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
@@ -279,41 +239,33 @@ const
                 home: {url: '%ORIENTATION_PFX%/'},
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
-                allMovies: {
-                    code: {
-                        straight: 'todas-as-cenas',
-                        gay: 'todos-os-vids-tube',
-                        tranny: 'cenas',
-                    },
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
-                },
                 pornstars: {
-                    code: {straight: 'porn-stars', gay: 'porn-stars', tranny: 'porn-stars'},
+                    code: {straight: 'models', gay: 'models', tranny: 'models'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 pornstar: {
-                    code: {straight: 'porn-star', gay: 'porn-star', tranny: 'porn-star'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%/%SUB_PAGE_CODE%.html',
+                    code: {straight: 'model', gay: 'model', tranny: 'model'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%/%PAGE_CODE%.html',
                 },
                 favorite: {
-                    code: {straight: 'favorite', gay: 'favorite', tranny: 'favorite'},
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    code: {straight: 'favorites', gay: 'favorites', tranny: 'favorites'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 favoritePornstars: {
                     code: {
-                        straight: 'favorite-porn-stars',
-                        gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars',
+                        straight: 'models-favorites',
+                        gay: 'models-favorites',
+                        tranny: 'models-favorites',
                     },
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 video: {
                     code: {straight: 'vid', gay: 'vid', tranny: 'vid'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.htm',
                 },
                 findVideos: {
-                    code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                    code: {straight: 'find', gay: 'find', tranny: 'find'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%%PAGE_CODE%%SUB_PAGE_CODE_SECOND_PIECE%',
                 },
                 site: {
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
@@ -332,41 +284,33 @@ const
                 home: {url: '%ORIENTATION_PFX%/'},
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
-                allMovies: {
-                    code: {
-                        straight: 'alla-tubevideor',
-                        gay: 'videor',
-                        tranny: 'filmer',
-                    },
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
-                },
                 pornstars: {
-                    code: {straight: 'porn-stars', gay: 'porn-stars', tranny: 'porn-stars'},
+                    code: {straight: 'models', gay: 'models', tranny: 'models'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 pornstar: {
-                    code: {straight: 'porn-star', gay: 'porn-star', tranny: 'porn-star'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%/%SUB_PAGE_CODE%.html',
+                    code: {straight: 'model', gay: 'model', tranny: 'model'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%/%PAGE_CODE%.html',
                 },
                 favorite: {
-                    code: {straight: 'favorite', gay: 'favorite', tranny: 'favorite'},
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    code: {straight: 'favorites', gay: 'favorites', tranny: 'favorites'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 favoritePornstars: {
                     code: {
-                        straight: 'favorite-porn-stars',
-                        gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars',
+                        straight: 'models-favorites',
+                        gay: 'models-favorites',
+                        tranny: 'models-favorites',
                     },
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 video: {
                     code: {straight: 'vid', gay: 'vid', tranny: 'vid'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.htm',
                 },
                 findVideos: {
-                    code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                    code: {straight: 'find', gay: 'find', tranny: 'find'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%%PAGE_CODE%%SUB_PAGE_CODE_SECOND_PIECE%',
                 },
                 site: {
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
@@ -385,41 +329,33 @@ const
                 home: {url: '%ORIENTATION_PFX%/'},
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
-                allMovies: {
-                    code: {
-                        straight: 'alle-scenes',
-                        gay: 'clips',
-                        tranny: 'alle-videos',
-                    },
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
-                },
                 pornstars: {
-                    code: {straight: 'porn-stars', gay: 'porn-stars', tranny: 'porn-stars'},
+                    code: {straight: 'models', gay: 'models', tranny: 'models'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 pornstar: {
-                    code: {straight: 'porn-star', gay: 'porn-star', tranny: 'porn-star'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%/%SUB_PAGE_CODE%.html',
+                    code: {straight: 'model', gay: 'model', tranny: 'model'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%/%PAGE_CODE%.html',
                 },
                 favorite: {
-                    code: {straight: 'favorite', gay: 'favorite', tranny: 'favorite'},
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    code: {straight: 'favorites', gay: 'favorites', tranny: 'favorites'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 favoritePornstars: {
                     code: {
-                        straight: 'favorite-porn-stars',
-                        gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars',
+                        straight: 'models-favorites',
+                        gay: 'models-favorites',
+                        tranny: 'models-favorites',
                     },
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 video: {
                     code: {straight: 'vid', gay: 'vid', tranny: 'vid'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.htm',
                 },
                 findVideos: {
-                    code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                    code: {straight: 'find', gay: 'find', tranny: 'find'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%%PAGE_CODE%%SUB_PAGE_CODE_SECOND_PIECE%',
                 },
                 site: {
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
@@ -438,41 +374,33 @@ const
                 home: {url: '%ORIENTATION_PFX%/'},
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
-                allMovies: {
-                    code: {
-                        straight: 'leffat',
-                        gay: 'kaikki-klipit',
-                        tranny: 'filmit',
-                    },
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
-                },
                 pornstars: {
-                    code: {straight: 'porn-stars', gay: 'porn-stars', tranny: 'porn-stars'},
+                    code: {straight: 'models', gay: 'models', tranny: 'models'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 pornstar: {
-                    code: {straight: 'porn-star', gay: 'porn-star', tranny: 'porn-star'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%/%SUB_PAGE_CODE%.html',
+                    code: {straight: 'model', gay: 'model', tranny: 'model'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%/%PAGE_CODE%.html',
                 },
                 favorite: {
-                    code: {straight: 'favorite', gay: 'favorite', tranny: 'favorite'},
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    code: {straight: 'favorites', gay: 'favorites', tranny: 'favorites'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 favoritePornstars: {
                     code: {
-                        straight: 'favorite-porn-stars',
-                        gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars',
+                        straight: 'models-favorites',
+                        gay: 'models-favorites',
+                        tranny: 'models-favorites',
                     },
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 video: {
                     code: {straight: 'vid', gay: 'vid', tranny: 'vid'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.htm',
                 },
                 findVideos: {
-                    code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                    code: {straight: 'find', gay: 'find', tranny: 'find'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%%PAGE_CODE%%SUB_PAGE_CODE_SECOND_PIECE%',
                 },
                 site: {
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
@@ -491,41 +419,33 @@ const
                 home: {url: '%ORIENTATION_PFX%/'},
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
-                allMovies: {
-                    code: {
-                        straight: 'фильмы',
-                        gay: 'все-эпизоды',
-                        tranny: 'сцены',
-                    },
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
-                },
                 pornstars: {
-                    code: {straight: 'porn-stars', gay: 'porn-stars', tranny: 'porn-stars'},
+                    code: {straight: 'models', gay: 'models', tranny: 'models'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 pornstar: {
-                    code: {straight: 'porn-star', gay: 'porn-star', tranny: 'porn-star'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%/%SUB_PAGE_CODE%.html',
+                    code: {straight: 'model', gay: 'model', tranny: 'model'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%/%PAGE_CODE%.html',
                 },
                 favorite: {
-                    code: {straight: 'favorite', gay: 'favorite', tranny: 'favorite'},
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    code: {straight: 'favorites', gay: 'favorites', tranny: 'favorites'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 favoritePornstars: {
                     code: {
-                        straight: 'favorite-porn-stars',
-                        gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars',
+                        straight: 'models-favorites',
+                        gay: 'models-favorites',
+                        tranny: 'models-favorites',
                     },
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 video: {
                     code: {straight: 'vid', gay: 'vid', tranny: 'vid'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.htm',
                 },
                 findVideos: {
-                    code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                    code: {straight: 'find', gay: 'find', tranny: 'find'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%%PAGE_CODE%%SUB_PAGE_CODE_SECOND_PIECE%',
                 },
                 site: {
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
@@ -544,41 +464,33 @@ const
                 home: {url: '%ORIENTATION_PFX%/'},
                 allNiches: {url: '%ORIENTATION_PFX%/?categories'},
                 niche: {url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%.html'},
-                allMovies: {
-                    code: {
-                        straight: 'tüm-kanal-videoları',
-                        gay: 'filmler',
-                        tranny: 'sahneler',
-                    },
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%.html',
-                },
                 pornstars: {
-                    code: {straight: 'porn-stars', gay: 'porn-stars', tranny: 'porn-stars'},
+                    code: {straight: 'models', gay: 'models', tranny: 'models'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 pornstar: {
-                    code: {straight: 'porn-star', gay: 'porn-star', tranny: 'porn-star'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%/%SUB_PAGE_CODE%.html',
+                    code: {straight: 'model', gay: 'model', tranny: 'model'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%/%PAGE_CODE%.html',
                 },
                 favorite: {
-                    code: {straight: 'favorite', gay: 'favorite', tranny: 'favorite'},
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    code: {straight: 'favorites', gay: 'favorites', tranny: 'favorites'},
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 favoritePornstars: {
                     code: {
-                        straight: 'favorite-porn-stars',
-                        gay: 'favorite-porn-stars',
-                        tranny: 'favorite-porn-stars',
+                        straight: 'models-favorites',
+                        gay: 'models-favorites',
+                        tranny: 'models-favorites',
                     },
-                    url: '%ORIENTATION_PFX%/your-%PAGE_CODE%.html',
+                    url: '%ORIENTATION_PFX%/%PAGE_CODE%.html',
                 },
                 video: {
                     code: {straight: 'vid', gay: 'vid', tranny: 'vid'},
                     url: '%ORIENTATION_PFX%/%PAGE_CODE%-%SUB_PAGE_CODE%.htm',
                 },
                 findVideos: {
-                    code: {straight: 'find-vids', gay: 'find-vids', tranny: 'find-vids'},
-                    url: '%ORIENTATION_PFX%/%PAGE_CODE%%SUB_PAGE_CODE%',
+                    code: {straight: 'find', gay: 'find', tranny: 'find'},
+                    url: '%ORIENTATION_PFX%/%SUB_PAGE_CODE%%PAGE_CODE%%SUB_PAGE_CODE_SECOND_PIECE%',
                 },
                 site: {
                     code: {straight: 'site', gay: 'site', tranny: 'site'},
@@ -611,7 +523,6 @@ const
         home: withoutPageCodeBranchModel,
         allNiches: withoutPageCodeBranchModel,
         niche: withoutPageCodeBranchModel,
-        allMovies: pageCodeBranchModel,
         pornstars: pageCodeBranchModel,
         pornstar: pageCodeBranchModel,
         favorite: pageCodeBranchModel,

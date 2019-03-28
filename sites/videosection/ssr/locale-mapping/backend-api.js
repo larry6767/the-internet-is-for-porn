@@ -2,7 +2,7 @@ import {set} from 'lodash'
 
 // local libs
 import {PropTypes, assertPropTypes, plainProvedGet as g} from 'src/App/helpers'
-import {pageKeys} from 'src/App/models'
+import {pageKeys} from 'src/App/pageKeysModel'
 
 // only particular helper, because some of all helpers depends on this module
 import deepFreeze from 'ssr/lib/helpers/deepFreeze'

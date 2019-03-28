@@ -35,21 +35,6 @@ const
         })
 
 export const
-    pageKeys = Object.freeze([
-        'home',
-        'allNiches',
-        'niche',
-        'allMovies',
-        'pornstars',
-        'pornstar',
-        'favorite',
-        'favoritePornstars',
-        'video',
-        'findVideos',
-        'site',
-        'notFound',
-    ]),
-
     orientationCodes = Object.freeze(['straight', 'gay', 'tranny']),
     defaultOrientationCode = orientationCodes[0],
 

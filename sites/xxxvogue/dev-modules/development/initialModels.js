@@ -108,7 +108,6 @@ const
         return exact({
             home: navigationItem,
             allNiches: navigationItem,
-            allMovies: navigationItem,
             pornstars: navigationItem,
             favorite: navigationItem,
         })
