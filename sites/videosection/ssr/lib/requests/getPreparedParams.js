@@ -7,7 +7,7 @@ import routerLocales from 'ssr/locale-mapping/router'
 
 const
     orderingMapping = Object.freeze({
-        byDate: 'recent',
+        byDate: 'latest',
         byDuration: 'longest',
         byPopularity: 'popular',
         byRelevant: 'relevant',
@@ -25,9 +25,6 @@ export const
         pagination = 1,
         archive,
         searchQuery = null,
-
-        source,
-        duration,
     ) => {
         const
             qs = {},
@@ -35,10 +32,14 @@ export const
                 Object.keys(orderingMapping),
                 k => g(routerLocales, localeCode, 'ordering', k, 'qsValue') === ordering
             ),
+            isSitePage = page === 'site',
             isSearch = page === 'findVideos'
 
         let
             preparedOrdering = backOrdering !== null ? g(orderingMapping, backOrdering) : null,
+            preparedPagination = pagination && Number(pagination) - 1 > 0
+                ? `-${Number(pagination) - 1}`
+                : '',
             preparedArchive
 
         if ( // because popular(relevant for search) by default
@@ -51,7 +52,7 @@ export const
                 preparedOrdering !== g(orderingMapping, 'byRelevant')
             )
         )
-            preparedOrdering = `${preparedOrdering}/`
+            preparedOrdering = isSitePage ? `/${preparedOrdering}` : `-${preparedOrdering}`
         else
             preparedOrdering = ''
 
@@ -64,7 +65,7 @@ export const
                     year = padStart(g(archive, 0), 4, '0'),
                     month = padStart(g(archive, 1), 2, '0')
 
-                preparedArchive = `/${year}${month}/archive-vids`
+                preparedArchive = `/${year}-${month}-archive`
                 break;
             default:
                 throw new Error(`Invalid "archive" argument: ${JSON.stringify(archive)}`)
@@ -76,22 +77,17 @@ export const
         if (searchQuery)
             qs.q = searchQuery
 
-        if (source)
-            qs.src = source
-
-        if (duration)
-            qs.len = duration
-
-        if (pagination && pagination > 0)
-            qs.embed = pagination > 2 ? `2-${pagination}` : pagination
+        if (searchQuery && pagination)
+            qs.p = pagination
 
         return {
             localeCode: localeCode ? localeCode : '',
             orientationCode: orientationCode ? orientationCode : '',
             page: page ? page : '',
             child: child ? child : '',
-            subchild: subchild ? `/${subchild}` : '',
+            subchild: subchild ? subchild : '',
             ordering: preparedOrdering,
+            pagination: preparedPagination,
             archive: preparedArchive,
             qs: g(Object.keys(qs), 'length') > 0 ? `?${queryString.stringify(qs)}` : ''
         }
