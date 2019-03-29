@@ -9,6 +9,5 @@ export const
         'favoritePornstars',
         'video',
         'findVideos',
-        'site',
         'notFound',
     ])

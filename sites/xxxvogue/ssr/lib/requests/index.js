@@ -2,134 +2,17 @@ import {map, find, compact} from 'lodash'
 import fetch from 'node-fetch'
 import FormData from 'form-data'
 import queryString from 'query-string'
-import {parse, format} from 'url'
 
 // local libs
 import {plainProvedGet as g, assertPropTypes, getClassId} from 'src/App/helpers'
 import {defaultHostToFetchSiteLocalesFrom} from 'ssr/config'
-import apiLocales from 'ssr/locale-mapping/backend-api'
-import routerLocales from 'ssr/locale-mapping/router'
 import {backendUrl, backendUrlForReport, backendUrlForSearch} from 'ssr/lib/helpers/backendUrl'
-import getSubPage, {orderingMapping} from 'ssr/lib/getSubPage'
-import deepFreeze from 'ssr/lib/helpers/deepFreeze'
+import {getPageDataPageMapping} from 'ssr/lib/requests/getPageDataPageMapping'
+import {getPageDataUrlBuilder} from 'ssr/lib/requests/getPageDataUrlBuilder'
+import {fetchResponseExtractor} from 'ssr/lib/requests/fetchResponseExtractor'
+import {getPreparedParams} from 'ssr/lib/requests/getPreparedParams'
 
-import {
-    getHomeMap,
-    getAllNichesMap,
-    getNicheMap,
-    getPornstarsMap,
-    getPornstarMap,
-    getFavoriteMap,
-    getFavoritePornstarsMap,
-    getVideoPageMap,
-    getFindVideosMap,
-    getSiteMap,
-    getNotFoundMap,
-} from 'ssr/lib/mapFns'
-
-import {
-    getPageDataResultModel,
-    getPageDataReqBodyModel,
-    getPageDataPageMappingModel,
-} from 'ssr/lib/models'
-
-const
-    // `callStackGetter` supposed to be (() => new Error().stack) in place where it's called,
-    // otherwise it's hard to debug which request is caused an exception.
-    fetchResponseExtractor = callStackGetter => response => {
-        if ( ! response.ok)
-            throw new Error(
-                `Response is not OK (status code is ${response.status}), ` +
-                `call stack: ${callStackGetter()}`
-            )
-
-        return response.json()
-    },
-
-    getPageDataPageMapping = Object.freeze({
-        home: Object.freeze([
-            deepFreeze({blocks: {allTagsBlock: 1, modelsABCBlockText: 1, modelsABCBlockThumbs: 1}}),
-            getHomeMap,
-        ]),
-        allNiches: Object.freeze([
-            deepFreeze({blocks: {extendedTagsBlock: 1}}),
-            getAllNichesMap,
-        ]),
-        niche: Object.freeze([
-            deepFreeze({blocks: {
-                allTagsBlock: 1,
-                searchSponsors: 1,
-                updateExtraURL: 1,
-                updateSponsorURL: 1,
-            }}),
-            getNicheMap,
-        ]),
-        pornstars: Object.freeze([
-            null,
-            getPornstarsMap,
-        ]),
-        pornstar: Object.freeze([
-            deepFreeze({blocks: {
-                modelsABCBlockText: 1,
-                modelsABCBlockThumbs: 1,
-                updateExtraURL: 1,
-                updateSponsorURL: 1,
-            }}),
-            getPornstarMap,
-        ]),
-        favorite: Object.freeze([
-            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
-            getFavoriteMap,
-        ]),
-        favoritePornstars: Object.freeze([
-            deepFreeze({blocks: {modelsABCBlockThumbs: 1}}),
-            getFavoritePornstarsMap,
-        ]),
-        video: Object.freeze([
-            deepFreeze({blocks: {searchSponsors: 1, updateExtraURL: 1, updateSponsorURL: 1}}),
-            getVideoPageMap,
-        ]),
-        findVideos: Object.freeze([
-            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
-            getFindVideosMap,
-        ]),
-        site: Object.freeze([
-            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
-            getSiteMap,
-        ]),
-        notFound: Object.freeze([
-            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
-            getNotFoundMap,
-        ]),
-    }),
-
-    getPageDataUrlBuilder = (localeCode, orientationCode, page, subPageCode) => {
-        const
-            pageCodeBranch = g(apiLocales, localeCode, 'pageCode', page),
-            orientationPrefix = g(apiLocales, localeCode, 'orientationPrefixes', orientationCode)
-
-        let
-            url = g(pageCodeBranch, 'url')
-
-        if (pageCodeBranch.hasOwnProperty('code'))
-            url = url.replace(/%PAGE_CODE%/g, g(pageCodeBranch, 'code', orientationCode))
-
-        if (subPageCode !== null)
-            url = url.replace(/%SUB_PAGE_CODE%/g, subPageCode)
-
-        url = url.replace(/%ORIENTATION_PFX%/g, orientationPrefix)
-        url = parse(url)
-        url.pathname = url.pathname.split(/\//).map(x => encodeURIComponent(x)).join('/')
-        return format(url)
-    }
-
-if (process.env.NODE_ENV !== 'production')
-    assertPropTypes(
-        getPageDataPageMappingModel,
-        getPageDataPageMapping,
-        'requests',
-        'getPageDataPageMapping'
-    )
+import {getPageDataResultModel, getPageDataReqBodyModel} from 'ssr/lib/models'
 
 /*
     Generic helper to obtain data from backend for specific "page".
@@ -147,29 +30,26 @@ export const getPageData = siteLocales => async ({
     pagination,
     archive,
     searchQuery,
-    isSitePage = false,
 }) => {
     const
-        backOrdering = !ordering ? null : find(
-            Object.keys(orderingMapping),
-            k => g(routerLocales, localeCode, 'ordering', k, 'qsValue') === ordering
-        )
+        preparedParams = getPreparedParams(
+            localeCode,
+            orientationCode,
+            page,
 
-    if (ordering && !backOrdering)
-        throw new Error(`"ordering" argument is broken: ${JSON.stringify(ordering)}`)
-
-    const
-        subPageCode = getSubPage(
-            child && subchild ? `${child}/${subchild}` : child,
-            backOrdering,
+            child,
+            subchild,
+            ordering,
             pagination,
             archive ? [g(archive, 'year'), g(archive, 'month')] : [],
             searchQuery,
-            isSitePage,
         ),
 
-        url = getPageDataUrlBuilder(localeCode, orientationCode, page, subPageCode),
+        url = getPageDataUrlBuilder(preparedParams),
+
         result = g(getPageDataPageMapping, page)
+
+        console.log('+++++++++++++URL: ', url)
 
     if (process.env.NODE_ENV !== 'production')
         assertPropTypes(getPageDataResultModel, result, 'requests', 'getPageData')
