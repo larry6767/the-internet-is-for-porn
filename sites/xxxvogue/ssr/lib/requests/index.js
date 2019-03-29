@@ -49,8 +49,6 @@ export const getPageData = siteLocales => async ({
 
         result = g(getPageDataPageMapping, page)
 
-        console.log('+++++++++++++URL: ', url)
-
     if (process.env.NODE_ENV !== 'production')
         assertPropTypes(getPageDataResultModel, result, 'requests', 'getPageData')
 

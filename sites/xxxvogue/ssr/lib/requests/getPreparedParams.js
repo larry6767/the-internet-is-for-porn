@@ -23,7 +23,7 @@ export const
         subchild,
         ordering = null,
         pagination = 1,
-        archive = [],
+        archive,
         searchQuery = null,
 
         source,
