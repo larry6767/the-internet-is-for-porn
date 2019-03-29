@@ -245,7 +245,10 @@ const
                 {ccb(cb, xs) === 0 ? null : renderProviderLink(classes, x, getSearchLink)}
 
                 <TagsBlock>
-                    {ig(x, 'tagsShort').map(x => <StyledLink key={x} to={getSearchLink(x)}>
+                    {ig(x, 'tagsShort').map((x, idx) => <StyledLink
+                        key={`${x}-${idx}`}
+                        to={getSearchLink(x)}
+                    >
                         {x}
                     </StyledLink>)}
                 </TagsBlock>
