@@ -56,7 +56,12 @@ const
                 saga: PropTypes.func.isOptional,
                 statusCodeResolver: PropTypes.func.isOptional,
             }),
-        ])
+        ]),
+
+    // in "production" mode we use "moved permanently" redirect.
+    // in "development" mode we use "moved temporarily" to prevent messing up with browser's cache
+    // (cached redirects).
+    redirectCode = process.env.NODE_ENV === 'production' ? 301 : 302
 
 // renders a page and makes a proper response for express.js
 export default (
@@ -105,7 +110,7 @@ export default (
 
             if (staticLegacyRedirectsRouterContext.hasOwnProperty('url')) {
                 const url = g(escapeURL(g(staticLegacyRedirectsRouterContext, 'url')), [])
-                res.writeHead(302, {'Location': url})
+                res.writeHead(redirectCode, {'Location': url})
                 return res.end()
             }
         }
