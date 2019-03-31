@@ -90,7 +90,7 @@ export default (
         store.dispatch(appActions.fillLocaleI18n(g(i18n, localeCode)))
         store.dispatch(languageActions.setNewLanguage(localeCode))
 
-        {
+        { // handling legacy redirects (keeping working old site bookmarks)
             const
                 state = store.getState(),
                 staticLegacyRedirectsRouterContext = {},
@@ -104,12 +104,19 @@ export default (
             // just to obtain redirect and
             renderToString(
                 <StaticRouter location={g(req, 'url')} context={staticLegacyRedirectsRouterContext}>
-                    <LegacyRedirectsRouterBuilder routerContext={redirectsRouterContext}/>
+                    <LegacyRedirectsRouterBuilder
+                        routerContext={redirectsRouterContext}
+                        siteLocales={siteLocales}
+                    />
                 </StaticRouter>
             )
 
             if (staticLegacyRedirectsRouterContext.hasOwnProperty('url')) {
                 const url = g(escapeURL(g(staticLegacyRedirectsRouterContext, 'url')), [])
+                res.writeHead(redirectCode, {'Location': url})
+                return res.end()
+            } else if (staticLegacyRedirectsRouterContext.hasOwnProperty('legacyRedirectFlow')) {
+                const url = await staticLegacyRedirectsRouterContext.legacyRedirectFlow(req)
                 res.writeHead(redirectCode, {'Location': url})
                 return res.end()
             }
