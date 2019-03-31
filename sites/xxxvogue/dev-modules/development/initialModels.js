@@ -85,6 +85,7 @@ const
             listArchive: PropTypes.string,
             pornstars: PropTypes.string,
             relatedVideo: PropTypes.string,
+            moreCategories: PropTypes.string,
         })
     },
 
@@ -107,7 +108,6 @@ const
         return exact({
             home: navigationItem,
             allNiches: navigationItem,
-            allMovies: navigationItem,
             pornstars: navigationItem,
             favorite: navigationItem,
         })
@@ -147,6 +147,7 @@ const
             cancel: PropTypes.string,
             showInfo: PropTypes.string,
             hideInfo: PropTypes.string,
+            browseAllModels: PropTypes.string,
         })
     },
 

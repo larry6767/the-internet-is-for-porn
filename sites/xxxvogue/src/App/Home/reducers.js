@@ -14,8 +14,9 @@ export default
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageText: null,
             nichesListWithThumb: List(),
-            nichesList: List(),
+            nichesListWithLetter: List(),
             pornstarsList: List(),
+            allPornstarsQuantity: null,
             randomWidthList: null,
         }),
         [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
@@ -25,7 +26,8 @@ export default
             lastPageRequestParams: g(payload, 'pageRequestParams'),
             pageText: Map(g(payload, 'data', 'pageText')),
             nichesListWithThumb: List(fromJS(g(payload, 'data', 'nichesListWithThumb'))),
-            nichesList: List(fromJS(g(payload, 'data', 'nichesList'))),
+            nichesListWithLetter: List(fromJS(g(payload, 'data', 'nichesListWithLetter'))),
+            allPornstarsQuantity: g(payload, 'data', 'allPornstarsQuantity'),
             pornstarsList: List(fromJS(g(payload, 'data', 'pornstarsList'))),
         }),
         [g(actions, 'loadPageFailure')]: (state) => state.merge({
@@ -34,8 +36,9 @@ export default
             isFailed: true,
             pageText: null,
             nichesListWithThumb: List(),
-            nichesList: List(),
+            nichesListWithLetter: List(),
             pornstarsList: List(),
+            allPornstarsQuantity: null,
             randomWidthList: null,
         }),
         [g(actions, 'setRandomWidthList')]: (state, {payload}) =>
@@ -47,7 +50,8 @@ export default
         lastPageRequestParams: null,
         pageText: null,
         nichesListWithThumb: [],
-        nichesList: [],
+        nichesListWithLetter: [],
         pornstarsList: [],
+        allPornstarsQuantity: null,
         randomWidthList: null,
     }))

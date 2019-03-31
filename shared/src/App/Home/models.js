@@ -3,7 +3,7 @@ import {ImmutablePropTypes, PropTypes} from 'src/App/helpers'
 import {
     immutablePageTextModel,
     immutableNichesListWithThumbModel,
-    immutableModelsListWithLetterModel,
+    immutablePornstarsListWithLetterModel,
     pageRequestParamsModel,
 } from 'src/App/models'
 
@@ -15,5 +15,5 @@ export const
         lastPageRequestParams: PropTypes.nullable(pageRequestParamsModel),
         pageText: PropTypes.nullable(immutablePageTextModel),
         nichesList: immutableNichesListWithThumbModel,
-        pornstarsList: immutableModelsListWithLetterModel,
+        pornstarsList: immutablePornstarsListWithLetterModel,
     })

@@ -2,7 +2,7 @@ import {ImmutablePropTypes, PropTypes} from 'src/App/helpers'
 
 import {
     immutablePageTextModel,
-    immutableModelsListWithLetterModel,
+    immutablePornstarsListWithLetterModel,
     pageRequestParamsModel,
 } from 'src/App/models'
 
@@ -94,7 +94,7 @@ const
         currentSort: PropTypes.nullable(PropTypes.string),
         itemsCount: PropTypes.number,
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
-        modelsList: immutableModelsListWithLetterModel,
+        modelsList: immutablePornstarsListWithLetterModel,
         pornstarInfoForTable: immutablePornstarInfoForTableModel,
         pornstarInfoForTableKeysOrder: ImmutablePropTypes.listOf(PropTypes.string),
         pornstarInfo: PropTypes.nullable(immutablePornstarInfoModel),

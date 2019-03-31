@@ -35,21 +35,6 @@ const
         })
 
 export const
-    pageKeys = Object.freeze([
-        'home',
-        'allNiches',
-        'niche',
-        'allMovies',
-        'pornstars',
-        'pornstar',
-        'favorite',
-        'favoritePornstars',
-        'video',
-        'findVideos',
-        'site',
-        'notFound',
-    ]),
-
     orientationCodes = Object.freeze(['straight', 'gay', 'tranny']),
     defaultOrientationCode = orientationCodes[0],
 
@@ -146,7 +131,7 @@ const
             }))
         },
 
-    modelsListModelBuilder = process.env.NODE_ENV === 'production' ? null :
+    pornstarsListModelBuilder = process.env.NODE_ENV === 'production' ? null :
         (isImmutable, withLetter) => {
             const
                 exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
@@ -167,7 +152,7 @@ const
         },
 
     nichesListModelBuilder = process.env.NODE_ENV === 'production' ? null :
-        (isImmutable, withThumb) => {
+        (isImmutable, withThumb, withLetter) => {
             const
                 exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact,
                 listOf = isImmutable ? ImmutablePropTypes.listOf : PropTypes.arrayOf,
@@ -181,6 +166,9 @@ const
 
             if (withThumb)
                 props.thumb = PropTypes.string
+
+            if (withLetter)
+                props.letter = PropTypes.string
 
             return listOf(exact(props))
         },
@@ -232,23 +220,27 @@ export const
     immutableVideoPageTextModel = process.env.NODE_ENV === 'production' ? null :
         pageTextModelBuilder(true, true),
 
-    modelsListModel = process.env.NODE_ENV === 'production' ? null :
-        modelsListModelBuilder(false, false),
-    modelsListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
-        modelsListModelBuilder(false, true),
-    immutableModelsListModel = process.env.NODE_ENV === 'production' ? null :
-        modelsListModelBuilder(true, false),
-    immutableModelsListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
-        modelsListModelBuilder(true, true),
+    pornstarsListModel = process.env.NODE_ENV === 'production' ? null :
+        pornstarsListModelBuilder(false, false),
+    pornstarsListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
+        pornstarsListModelBuilder(false, true),
+    immutablePornstarsListModel = process.env.NODE_ENV === 'production' ? null :
+        pornstarsListModelBuilder(true, false),
+    immutablePornstarsListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
+        pornstarsListModelBuilder(true, true),
 
     nichesListModel = process.env.NODE_ENV === 'production' ? null :
-        nichesListModelBuilder(false, false),
+        nichesListModelBuilder(false, false, false),
     nichesListWithThumbModel = process.env.NODE_ENV === 'production' ? null :
-        nichesListModelBuilder(false, true),
+        nichesListModelBuilder(false, true, false),
+    nichesListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
+        nichesListModelBuilder(false, false, true),
     immutableNichesListModel = process.env.NODE_ENV === 'production' ? null :
-        nichesListModelBuilder(true, false),
+        nichesListModelBuilder(true, false, false),
     immutableNichesListWithThumbModel = process.env.NODE_ENV === 'production' ? null :
-        nichesListModelBuilder(true, true),
+        nichesListModelBuilder(true, true, false),
+    immutableNichesListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
+        nichesListModelBuilder(true, false, true),
 
     pageRequestParamsModel = process.env.NODE_ENV === 'production' ? null :
         ImmutablePropTypes.exact({

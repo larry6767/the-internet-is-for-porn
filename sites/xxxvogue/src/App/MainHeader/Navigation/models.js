@@ -1,1 +1,2 @@
-../../../../../../shared/src/App/MainHeader/Navigation/models.js
+export const
+    navMenuOrder = Object.freeze(['home', 'allNiches', 'pornstars', 'favorite'])

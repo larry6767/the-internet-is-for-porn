@@ -113,12 +113,11 @@ export const BottomInner = styled.div`
 
     &::after {
         position: absolute;
-        z-index: -1;
         bottom: 0;
         left: 10px;
         content: '';
         height: 1px;
         width: calc(100% - 20px);
-        background-color: ${({theme}) => theme.palette.primary.lightOpacity}
+        background-color: ${({theme}) => theme.palette.primary.extraLight}
     }
 `

@@ -2,6 +2,7 @@ import React from 'react'
 import {map} from 'lodash'
 import {Switch, Redirect, Route} from 'react-router-dom'
 import {compose} from 'recompose'
+import fetch from 'node-fetch'
 
 // local libs
 import {
@@ -14,6 +15,9 @@ import {ssrRouterContextModel, orientationCodes} from 'src/App/models'
 import routerGetters from 'src/App/routerGetters'
 import nichesRedirects from 'ssr/fixtures/legacy-redirects/niches-redirects.json'
 import pornstarsRedirects from 'ssr/fixtures/legacy-redirects/pornstars-redirects.json'
+import {backendUrl} from 'ssr/lib/helpers/backendUrl'
+import {proxiedHeaders} from 'ssr/lib/backend-proxy'
+import {internalLinkReg} from 'ssr/lib/models'
 
 const
     videoRedirectFrom = r => {
@@ -32,12 +36,38 @@ const
     // and we have more important tasks now
     getFromForAllMovies = (r, orientationCode, section, field = 'from') =>
         ig(r, 'ssr', 'legacyOrientationPrefixes', orientationCode) +
-        ig(r, 'router', 'redirects', section, field, orientationCode)
+        ig(r, 'router', 'redirects', section, field, orientationCode),
+
+    legacyVideoRedirectFlow = (siteLocales, r, orientationCode) => async req => {
+        const
+            url = ig(r, 'location', 'pathname'),
+            localeCode = ig(r, 'ssr', 'localeCode'),
+            videoId = g(url.match(internalLinkReg), 2),
+
+            response = await fetch(backendUrl(siteLocales, localeCode), {
+                method: 'POST',
+                headers: proxiedHeaders(siteLocales, localeCode)(req),
+
+                body: JSON.stringify({
+                    operation: 'getPageDataByUrl',
+                    params: {url},
+                }),
+            })
+
+        if (response.ok)
+            return routerGetters.video.link(
+                r,
+                videoId,
+                g(await response.json(), 'page', 'GALLERY', 'title')
+            )
+        else
+            throw new Error(`Response is not OK (status code is ${response.status})`)
+    }
 
 const
     // TODO redirects supposed to be splitted for specific orientations (see mapping module),
     //      see page codes mapping in backend-api mapping module to see how it could be done.
-    LegacyRedirectsRouterBuilder = ({routerContext: r}) => <Switch>
+    LegacyRedirectsRouterBuilder = ({routerContext: r, siteLocales}) => <Switch>
         {orientationCodes.map(orientationCode => {
             const
                 orientedR = r.set('currentOrientation', orientationCode),
@@ -50,7 +80,8 @@ const
                     to={routerGetters.niche.link(orientedR, to)}
                 />),
 
-                pornstarsBranch = g(pornstarsRedirects, ig(r, 'ssr', 'localeCode'), orientationCode),
+                pornstarsBranch =
+                    g(pornstarsRedirects, ig(r, 'ssr', 'localeCode'), orientationCode),
 
                 pornstarsRedirectsList = map(pornstarsBranch, (to, from) => <Redirect
                     key={`${orientationCode}-${to}-niche`}
@@ -90,18 +121,19 @@ const
                     to={routerGetters.pornstars.link(orientedR)}
                 />,
 
-                <Redirect
+                <Route
                     key={`${orientationCode}-video-redirect`}
                     exact
-                    from={
+                    path={
                         ig(r, 'ssr', 'legacyOrientationPrefixes', orientationCode) +
                         videoRedirectFrom(r)
                     }
-                    to={
-                        // It must be `path` here, not `link`
-                        // (to automatically fill the route masks)!
-                        routerGetters.video.path(r, orientationCode)
-                    }
+                    render={props => {
+                        props.staticContext.legacyRedirectFlow =
+                            legacyVideoRedirectFlow(siteLocales, orientedR, orientationCode)
+
+                        return null
+                    }}
                 />,
 
                 <Redirect

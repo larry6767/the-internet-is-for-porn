@@ -42,7 +42,7 @@ const
                         />}
                 </Like>
                 <Typography
-                    variant="body2"
+                    variant="caption"
                     className={g(props, 'classes', 'typographyQuantity')}
                 >
                     {`${ig(props.x, 'itemsCount')} ${ig(props.i18nButtons, 'favoriteMovies')}`}

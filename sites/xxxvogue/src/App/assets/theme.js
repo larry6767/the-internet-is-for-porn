@@ -35,11 +35,15 @@ const breakPoints = Object.freeze({
 const theme = Object.freeze({
     palette: Object.freeze({
         primary: Object.freeze({
+            extraLight: '#c4c6ca',
             light: '#525663',
+            lightText: '#96989c',
             main: '#292d39',
             dark: '#000213',
             contrastText: '#fff',
+            extraLightOpacity: '#c4c6ca80',
             lightOpacity: '#52566380',
+            lightTextOpacity: '#96989c80',
             mainOpacity: '#292d3980',
             darkOpacity: '#00021380',
             contrastTextOpacity: '#ffffff80',

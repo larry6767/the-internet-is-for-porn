@@ -69,6 +69,9 @@ const
                         fontSize: '0.65rem',
                     },
                 },
+                caption: {
+                    fontSize: '0.65rem',
+                },
             },
             MuiMenuItem: {
                 root: {

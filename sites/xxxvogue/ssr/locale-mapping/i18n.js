@@ -22,6 +22,7 @@ const
                 listArchive: 'Archives',
                 pornstars: 'Top Rated %ORIENTATION% Pornstars',
                 relatedVideo: 'Click On Each Of These Related Films',
+                moreCategories: 'More categories',
             },
             search: {
                 inputPlaceholder: 'Search box',
@@ -32,7 +33,6 @@ const
             navigation: {
                 home: {title: 'Home'},
                 allNiches: {title: 'All Niches'},
-                allMovies: {title: 'All Movies'},
                 pornstars: {title: 'Pornstars'},
                 favorite: {title: 'Favorite'},
             },
@@ -60,6 +60,7 @@ const
                 cancel: 'Cancel',
                 showInfo: 'Show info',
                 hideInfo: 'Hide info',
+                browseAllModels: 'Browse all models',
             },
             footer: {
                 forParents: 'Parents — Protect your children from adult content \
@@ -162,6 +163,7 @@ const
                 listArchive: 'Archiv',
                 pornstars: 'Die Besten %ORIENTATION% Models',
                 relatedVideo: 'Schau sie Dir an, diese ähnlichen Video Clips',
+                moreCategories: 'Weitere Kategorien',
             },
             search: {
                 inputPlaceholder: 'Stichworte hinzufügen',
@@ -172,7 +174,6 @@ const
             navigation: {
                 home: {title: 'Hauptseite'},
                 allNiches: {title: 'Alle Gruppen'},
-                allMovies: {title: 'Alle Vids'},
                 pornstars: {title: 'Models'},
                 favorite: {title: 'Favorisierten'},
             },
@@ -200,6 +201,7 @@ const
                 cancel: 'Stornieren',
                 showInfo: 'Zeige',
                 hideInfo: 'Ausblenden',
+                browseAllModels: 'Durchsuchen Sie alle Modelle',
             },
             footer: {
                 forParents: 'Eltern - Schützen sie Ihre Kinder vor Pornografie mit der Hilfe \
@@ -307,6 +309,7 @@ const
                 listArchive: 'Archivio',
                 pornstars: 'Le %ORIENTATION% Pornostar Più Votate',
                 relatedVideo: 'Sfoglia Questi Filmati Correlati',
+                moreCategories: 'Altre categorie',
             },
             search: {
                 inputPlaceholder: 'Inserisci parole chiave...',
@@ -318,7 +321,6 @@ const
             navigation: {
                 home: {title: 'Principale'},
                 allNiches: {title: 'Tutte le Categorie'},
-                allMovies: {title: 'Tutti I Film'},
                 pornstars: {title: 'Pornostar '},
                 favorite: {title: 'Preferiti'},
             },
@@ -346,6 +348,7 @@ const
                 cancel: 'Annulla',
                 showInfo: 'Mostra',
                 hideInfo: 'Nascondi',
+                browseAllModels: 'Sfoglia tutti i modelli',
             },
             footer: {
                 forParents: 'Genitori – Proteggete i vostri bambini dai contenuti per adulti \
@@ -450,6 +453,7 @@ const
                 listArchive: 'Les archives',
                 pornstars: 'Les Pornstars %ORIENTATION% les Mieux Notée',
                 relatedVideo: 'Regardez ces scènes au contenu lié',
+                moreCategories: 'Plus de catégories',
             },
             search: {
                 inputPlaceholder: 'Chercher sur Video Section',
@@ -460,7 +464,6 @@ const
             navigation: {
                 home: {title: 'Principale'},
                 allNiches: {title: 'Toutes les Niches'},
-                allMovies: {title: 'Tout les Tubes'},
                 pornstars: {title: 'Pornstars'},
                 favorite: {title: 'Favoris'},
             },
@@ -488,6 +491,7 @@ const
                 cancel: 'Annuler',
                 showInfo: 'Afficher',
                 hideInfo: 'Masquer',
+                browseAllModels: 'Parcourir tous les modèles',
             },
             footer: {
                 forParents: 'Protégez votre enfant et votre famille de la pornographie avec \
@@ -592,6 +596,7 @@ const
                 listArchive: 'Archivo',
                 pornstars: 'Las Más Buscadas %ORIENTATION% Pornstars',
                 relatedVideo: 'Revisar los Escenas Relacionados',
+                moreCategories: 'Más categorías',
             },
             search: {
                 inputPlaceholder: 'Palabra va aquí ...',
@@ -602,7 +607,6 @@ const
             navigation: {
                 home: {title: 'Principal'},
                 allNiches: {title: 'Todas las Nichos'},
-                allMovies: {title: 'Todas Películas'},
                 pornstars: {title: 'Pornstars'},
                 favorite: {title: 'Favoritos'},
             },
@@ -630,6 +634,7 @@ const
                 cancel: 'Cancelar',
                 showInfo: 'Mostrar',
                 hideInfo: 'Ocultar',
+                browseAllModels: 'Navegar todos los modelos',
             },
             footer: {
                 forParents: 'Los padres - Proteja a sus hijos del contenido para adultos con \
@@ -735,6 +740,7 @@ const
                 listArchive: 'Arquivos',
                 pornstars: 'As Melhores Pornstars %ORIENTATION%',
                 relatedVideo: 'Aprecia Estes Videos tube Relacionados',
+                moreCategories: 'Mais categorias',
             },
             search: {
                 inputPlaceholder: 'Palavra chave ou pornstar nome',
@@ -745,7 +751,6 @@ const
             navigation: {
                 home: {title: 'Inicial'},
                 allNiches: {title: 'Todas as Niches'},
-                allMovies: {title: 'Todos os Vids tube'},
                 pornstars: {title: 'Pornstars'},
                 favorite: {title: 'Favoritos'},
             },
@@ -773,6 +778,7 @@ const
                 cancel: 'Cancelar',
                 showInfo: 'Mostrar',
                 hideInfo: 'Ocultar',
+                browseAllModels: 'Procure todos os modelos',
             },
             footer: {
                 forParents: 'Mantem as tuas crianças protegidas online, utiliza estes serviços \
@@ -877,6 +883,7 @@ const
                 listArchive: 'Arkiv',
                 pornstars: 'Bästa %ORIENTATION% Porrstjärnor',
                 relatedVideo: 'Utforska Dessa Relaterade Klipp',
+                moreCategories: 'Fler kategorier',
             },
             search: {
                 inputPlaceholder: 'Skriv nyckelordet här...',
@@ -887,7 +894,6 @@ const
             navigation: {
                 home: {title: 'Hemsida'},
                 allNiches: {title: 'Alla Kategorier'},
-                allMovies: {title: 'Alla Scener'},
                 pornstars: {title: 'Porrstjärnor'},
                 favorite: {title: 'Favoriter'},
             },
@@ -915,6 +921,7 @@ const
                 cancel: 'Annullera',
                 showInfo: 'Visa info',
                 hideInfo: 'Dölja info',
+                browseAllModels: 'Bläddra bland alla modeller',
             },
             footer: {
                 forParents: 'Barnsäkert och föräldrakontroll från vuxeninnehåll \
@@ -1017,6 +1024,7 @@ const
                 listArchive: 'Archief',
                 pornstars: 'Hoog Gewaardeerde %ORIENTATION% Modellen',
                 relatedVideo: 'Bekijk Deze Gerelateerde Vids',
+                moreCategories: 'Meer categorieën',
             },
             search: {
                 inputPlaceholder: 'Zoekveld',
@@ -1027,7 +1035,6 @@ const
             navigation: {
                 home: {title: 'Hoofd'},
                 allNiches: {title: 'Alle Groepen'},
-                allMovies: {title: 'Alle Video\'s'},
                 pornstars: {title: 'Modellen'},
                 favorite: {title: 'Favorieten'},
             },
@@ -1055,6 +1062,7 @@ const
                 cancel: 'Annuleren',
                 showInfo: 'Toon info',
                 hideInfo: 'Verbergen',
+                browseAllModels: 'Blader door alle modellen',
             },
             footer: {
                 forParents: 'Kindveiligheid en ouderlijk toezicht op inhoud voor \
@@ -1160,6 +1168,7 @@ const
                 listArchive: 'Arkisto',
                 pornstars: 'Suositut %ORIENTATION% Pornotähtiä',
                 relatedVideo: 'Tsekkaa Nämä Vastaavat Videoita',
+                moreCategories: 'Lisää luokkia',
             },
             search: {
                 inputPlaceholder: 'Hakulaatikko',
@@ -1170,7 +1179,6 @@ const
             navigation: {
                 home: {title: 'Etusivu'},
                 allNiches: {title: 'Kaikki Nichet'},
-                allMovies: {title: 'Leffat'},
                 pornstars: {title: 'Pornotähtiä'},
                 favorite: {title: 'Suosikki'},
             },
@@ -1198,6 +1206,7 @@ const
                 cancel: 'Peruuttaa',
                 showInfo: 'Näytä',
                 hideInfo: 'Piilota',
+                browseAllModels: 'Selaa kaikkia malleja',
             },
             footer: {
                 forParents: 'Vanhemmat - Suojelkaa lapsianne aikuissisällöltä näillä palveluilla:',
@@ -1301,6 +1310,7 @@ const
                 listArchive: 'Архивы',
                 pornstars: 'Модели',
                 relatedVideo: 'Лучшие похожие ролики',
+                moreCategories: 'Больше категорий',
             },
             search: {
                 inputPlaceholder: 'Искать на сайте',
@@ -1311,7 +1321,6 @@ const
             navigation: {
                 home: {title: 'Главная'},
                 allNiches: {title: 'Все Группы'},
-                allMovies: {title: 'Все Видео'},
                 pornstars: {title: 'Модели'},
                 favorite: {title: 'Избранное'},
             },
@@ -1339,6 +1348,7 @@ const
                 cancel: 'Отменить',
                 showInfo: 'Развернуть',
                 hideInfo: 'Скрыть',
+                browseAllModels: 'Просмотреть все модели',
             },
             footer: {
                 forParents: 'Родители - Защитите детей от посещения сайтов для взрослых с \
@@ -1442,6 +1452,7 @@ const
                 listArchive: 'Arşiv',
                 pornstars: 'En Popüler %ORIENTATION% Modeller',
                 relatedVideo: 'Alakalı Olarak Şunlara Bir Bakın',
+                moreCategories: 'Daha fazla kategori',
             },
             search: {
                 inputPlaceholder: 'Video Section\'de Ara',
@@ -1452,7 +1463,6 @@ const
             navigation: {
                 home: {title: 'Anasayfa'},
                 allNiches: {title: 'Tüm Gruplar'},
-                allMovies: {title: 'Tüm Sahneler'},
                 pornstars: {title: 'Modeller'},
                 favorite: {title: 'Favoriler'},
             },
@@ -1480,6 +1490,7 @@ const
                 cancel: 'Iptal etmek',
                 showInfo: 'Göster',
                 hideInfo: 'Gizle',
+                browseAllModels: 'Tüm modellere göz at',
             },
             footer: {
                 forParents: 'Çocuklarınızı internette güvende tutun. Aşağıdaki hizmetleri \

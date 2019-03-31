@@ -8,7 +8,7 @@ import {
     pornstarInfoForTableModel
 } from 'ssr/lib/helpers/mapFns/getPornstarInfo'
 
-import {modelsListWithLetterModel} from 'ssr/lib/helpers/mapFns/getModelsList'
+import {pornstarsListWithLetterModel} from 'ssr/lib/helpers/mapFns/getPornstarsList'
 import {sortModel} from 'ssr/lib/helpers/mapFns/getSortList'
 import {orderingModel} from 'ssr/lib/models'
 
@@ -39,7 +39,7 @@ export const
         currentSort: PropTypes.string,
         itemsCount: PropTypes.number,
         videoList: PropTypes.arrayOf(videoItemModel),
-        modelsList: modelsListWithLetterModel,
+        modelsList: pornstarsListWithLetterModel,
         pornstarInfo: pornstarInfoModel,
         pornstarInfoForTable: pornstarInfoForTableModel,
     })

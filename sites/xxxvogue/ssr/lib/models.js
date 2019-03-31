@@ -2,12 +2,13 @@ import {set} from 'lodash'
 
 // local libs
 import {PropTypes} from 'src/App/helpers'
-import {pageKeys} from 'src/App/models'
+import {pageKeys} from 'src/App/pageKeysModel'
 
 const
     getPageDataParamsOptionsModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
         // for now it is the only option we use
         blocks: PropTypes.exact({
+            extendedTagsBlock: PropTypes.number.isOptional,
             allTagsBlock: PropTypes.number.isOptional,
             modelsABCBlockText: PropTypes.number.isOptional,
             modelsABCBlockThumbs: PropTypes.number.isOptional,
@@ -51,3 +52,9 @@ export const
         sort_POPULAR: orderingItemModel,
         sort_RELEVANT: orderingItemModel,
     })
+
+// regs for mapFns helpers
+export const
+    archiveUrlReg = /\/(\d{4})(\d{2})\/archive-vids.html\?f=1$/,
+    internalLinkReg = /^(\/[^\/]+)?\/(\d+)\/[^\/]+.htm$/,
+    externalLinkReg = /^http/

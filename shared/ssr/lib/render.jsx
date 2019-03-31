@@ -56,7 +56,12 @@ const
                 saga: PropTypes.func.isOptional,
                 statusCodeResolver: PropTypes.func.isOptional,
             }),
-        ])
+        ]),
+
+    // in "production" mode we use "moved permanently" redirect.
+    // in "development" mode we use "moved temporarily" to prevent messing up with browser's cache
+    // (cached redirects).
+    redirectCode = process.env.NODE_ENV === 'production' ? 301 : 302
 
 // renders a page and makes a proper response for express.js
 export default (
@@ -85,7 +90,7 @@ export default (
         store.dispatch(appActions.fillLocaleI18n(g(i18n, localeCode)))
         store.dispatch(languageActions.setNewLanguage(localeCode))
 
-        {
+        { // handling legacy redirects (keeping working old site bookmarks)
             const
                 state = store.getState(),
                 staticLegacyRedirectsRouterContext = {},
@@ -99,13 +104,20 @@ export default (
             // just to obtain redirect and
             renderToString(
                 <StaticRouter location={g(req, 'url')} context={staticLegacyRedirectsRouterContext}>
-                    <LegacyRedirectsRouterBuilder routerContext={redirectsRouterContext}/>
+                    <LegacyRedirectsRouterBuilder
+                        routerContext={redirectsRouterContext}
+                        siteLocales={siteLocales}
+                    />
                 </StaticRouter>
             )
 
             if (staticLegacyRedirectsRouterContext.hasOwnProperty('url')) {
                 const url = g(escapeURL(g(staticLegacyRedirectsRouterContext, 'url')), [])
-                res.writeHead(302, {'Location': url})
+                res.writeHead(redirectCode, {'Location': url})
+                return res.end()
+            } else if (staticLegacyRedirectsRouterContext.hasOwnProperty('legacyRedirectFlow')) {
+                const url = await staticLegacyRedirectsRouterContext.legacyRedirectFlow(req)
+                res.writeHead(redirectCode, {'Location': url})
                 return res.end()
             }
         }

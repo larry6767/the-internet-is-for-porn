@@ -1,0 +1,1 @@
+../../../../../shared/src/App/RouterBuilder/getAllNichesRoutes.js

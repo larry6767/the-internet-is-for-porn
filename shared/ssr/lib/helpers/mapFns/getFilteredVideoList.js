@@ -3,12 +3,10 @@ import {map, mapValues, take} from 'lodash'
 // local libs
 import {PropTypes, assertPropTypes, plainProvedGet as g} from 'src/App/helpers'
 import {videoItemModel} from 'src/generic/VideoItem/models'
+import {internalLinkReg, externalLinkReg} from 'ssr/lib/models'
 import getOrderedVideoList from 'ssr/lib/helpers/mapFns/getOrderedVideoList'
 
 const
-    internalLinkReg = /^(\/[^\/]+)?\/vid-(\d+)\/[^\/]+.htm$/,
-    externalLinkReg = /^http/,
-
     incomingModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({
         // It's supposed to be a number (not a string, as returned by backend),
         // because `x.page.GALS_INFO.ids` contains these ids as numbers.

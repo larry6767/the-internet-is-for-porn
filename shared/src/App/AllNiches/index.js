@@ -55,18 +55,18 @@ const
         </ListItem>
     </StyledLink>,
 
-    AllNiches = ({classedBounds, data, getChildLink, htmlLang, i18nAllNichesHeader}) => <Fragment>
-        <PageTextHelmet htmlLang={htmlLang} pageText={ig(data, 'pageText')}/>
+    AllNiches = props => <Fragment>
+        <PageTextHelmet htmlLang={g(props, 'htmlLang')} pageText={ig(props.data, 'pageText')}/>
         <PageWrapper>
             <Typography variant="h4" gutterBottom>
-                {i18nAllNichesHeader}
+                {g(props, 'i18nAllNichesHeader')}
             </Typography>
             <ListComponent
                 component="div"
-                classes={g(classedBounds, 'listComponent')}
+                classes={g(props, 'classedBounds', 'listComponent')}
             >
-                {ig(data, 'nichesList').map(x =>
-                    renderListItemLink(x, classedBounds, getChildLink)
+                {ig(props.data, 'nichesList').map(x =>
+                    renderListItemLink(x, g(props, 'classedBounds'), g(props, 'getChildLink'))
                 )}
             </ListComponent>
         </PageWrapper>

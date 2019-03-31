@@ -1,7 +1,7 @@
 import {PropTypes} from 'src/App/helpers'
-import {nichesListWithThumbModel, modelsListWithLetterModel} from 'src/App/models'
+import {nichesListWithThumbModel, pornstarsListWithLetterModel} from 'src/App/models'
 import {incomingPageTextModel, pageTextModel} from 'ssr/lib/helpers/mapFns/getPageText'
-import {lettersModel, itemsModel} from 'ssr/lib/helpers/mapFns/getModelsList'
+import {pornstarsLettersModel, pornstarsItemsModel} from 'ssr/lib/helpers/mapFns/getPornstarsList'
 import {incomingNichesListModel} from 'ssr/lib/helpers/mapFns/getNichesList'
 
 export const
@@ -11,10 +11,10 @@ export const
                 items: incomingNichesListModel,
             }),
             MODELS_BY_LETTERS: PropTypes.shape({
-                letters: lettersModel,
+                letters: pornstarsLettersModel,
             }),
             MODELS_BY_LETTERS_MODELS_INFO: PropTypes.shape({
-                items: itemsModel,
+                items: pornstarsItemsModel,
             }),
             PAGE_TEXT: incomingPageTextModel,
         }),
@@ -22,6 +22,6 @@ export const
 
     mappedHomeModel = process.env.NODE_ENV === 'production' ? null : PropTypes.shape({
         nichesList: nichesListWithThumbModel,
-        pornstarsList: modelsListWithLetterModel,
+        pornstarsList: pornstarsListWithLetterModel,
         pageText: pageTextModel,
     })

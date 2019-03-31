@@ -2,7 +2,7 @@ import {set} from 'lodash'
 
 // local libs
 import {PropTypes} from 'src/App/helpers'
-import {pageKeys} from 'src/App/models'
+import {pageKeys} from 'src/App/pageKeysModel'
 
 const
     getPageDataParamsOptionsModel = process.env.NODE_ENV === 'production' ? null : PropTypes.exact({
@@ -52,3 +52,9 @@ export const
         sort_POPULAR: orderingItemModel,
         sort_RELEVANT: orderingItemModel,
     })
+
+// regs for mapFns helpers
+export const
+    archiveUrlReg = /\/(\d{4})-(\d{2})-archive.html$/,
+    internalLinkReg = /^(\/[^\/]+)?\/vid-(\d+)\/[^\/]+.htm$/,
+    externalLinkReg = /^http/
