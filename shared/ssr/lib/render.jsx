@@ -116,7 +116,10 @@ export default (
                 res.writeHead(redirectCode, {'Location': url})
                 return res.end()
             } else if (staticLegacyRedirectsRouterContext.hasOwnProperty('legacyRedirectFlow')) {
-                const url = await staticLegacyRedirectsRouterContext.legacyRedirectFlow(req)
+                const
+                    result = await staticLegacyRedirectsRouterContext.legacyRedirectFlow(req),
+                    url = g(escapeURL(result), [])
+
                 res.writeHead(redirectCode, {'Location': url})
                 return res.end()
             }
