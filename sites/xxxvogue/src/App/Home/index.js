@@ -90,9 +90,7 @@ const
                     />)}
             </NichesList>}
 
-            <Typography variant="h4" paragraph>
-                {g(props, 'i18nMoreCategories')}
-            </Typography>
+            <Typography variant="h4" paragraph>{g(props, 'i18nMoreCategories')}</Typography>
             <NichesListWithLetters
                 nichesListWithLetter={ig(props.data, 'nichesListWithLetter')}
                 routerContext={g(props, 'routerContext')}

@@ -28,7 +28,10 @@ export default x => {
         pagesCount: g(x, 'page', 'PAGES_COUNT'),
         pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
         sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')),
-        tagList: getNichesListByLetters(g(x, 'page', 'TAGS_BY_LETTERS', 'letters')),
+        nichesListWithLetter: getNichesListByLetters(
+            g(x, 'page', 'TAGS_BY_LETTERS', 'letters'),
+            true,
+        ),
 
         tagArchiveList: getTagArchiveList(
             get(g(x, 'page'), ['TAG_ARCHIVE_LIST_FULL'], g(x, 'page', 'TAG_ARCHIVE_LIST')),

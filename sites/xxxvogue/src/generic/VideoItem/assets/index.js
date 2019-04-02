@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import {ImageRandomWidth} from 'src/generic/assets'
 import {Link} from 'react-router-dom'
 
 export const StyledLink = styled(Link)`
@@ -24,30 +25,8 @@ export const NativeLink = styled.a`
     text-decoration: none;
 `
 
-export const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: calc((100% - 15px) / 4);
-    margin-right: 5px;
-    margin-bottom: 5px;
+export const Wrapper = styled(ImageRandomWidth)`
 
-    ${({theme}) => theme.media.sm`width: calc((100% - 10px) / 3)`}
-    ${({theme}) => theme.media.xs`width: calc((100% - 5px) / 2)`}
-    ${({theme}) => theme.media.xxs`width: 100%; margin-right: 0;`}
-
-    &:nth-of-type(4n) {
-        ${({theme}) => theme.media.xl`margin-right: 0;`}
-        ${({theme}) => theme.media.lg`margin-right: 0;`}
-        ${({theme}) => theme.media.md`margin-right: 0;`}
-    }
-
-    &:nth-of-type(3n) {
-        ${({theme}) => theme.media.sm`margin-right: 0;`}
-    }
-
-    &:nth-child(2n) {
-        ${({theme}) => theme.media.xs`margin-right: 0;`}
-    }
 `
 
 export const VideoPreviewBar = styled.div`
@@ -65,12 +44,11 @@ export const VideoPreviewBar = styled.div`
 
 const VideoPreviewCommon = styled.div`
     width: 100%;
+    height: 200px;
+    margin-bottom: 5px;
 
-    &::before {
-        content: '';
-        display: block;
-        padding-top: 75%;
-    }
+    ${({theme}) => theme.media.xs`height: 140px;`}
+    ${({theme}) => theme.media.xxs`height: 200px;`}
 `
 
 export const VideoPreview = styled(VideoPreviewCommon)`
