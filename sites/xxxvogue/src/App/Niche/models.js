@@ -24,7 +24,6 @@ export const
         pageNumber: PropTypes.number,
         pagesCount: PropTypes.number,
         pageText: PropTypes.nullable(immutablePageTextModel),
-        sponsorsList: ImmutablePropTypes.listOf(PropTypes.string),
         nichesListWithLetter: immutableNichesListWithLetterModel,
         tagArchiveList: immutableTagArchiveListModel,
         sortList: immutableSortListModel,

@@ -1,11 +1,10 @@
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
-import {compose, withHandlers, withProps, withState, lifecycle} from 'recompose'
+import {compose, withHandlers, withProps, lifecycle} from 'recompose'
 import Typography from '@material-ui/core/Typography'
 
 // local libs
 import {
-    getHeaderWithOrientation,
     plainProvedGet as g,
     immutableProvedGet as ig,
     getRouterContext,
@@ -13,10 +12,9 @@ import {
     PropTypes,
     getPageRequestParams,
     doesItHaveToBeReloaded,
-    breakpoints,
 } from 'src/App/helpers'
 
-import {routerContextModel, refModel} from 'src/App/models'
+import {routerContextModel} from 'src/App/models'
 import {model} from 'src/App/Niche/models'
 import routerGetters from 'src/App/routerGetters'
 import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
@@ -24,7 +22,7 @@ import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
 import loadingWrapper from 'src/generic/loadingWrapper'
 import ControlBar from 'src/generic/ControlBar'
 import PageTextHelmet from 'src/generic/PageTextHelmet'
-import NichesListWithLetters from 'src/generic/NichesListWithLetters'
+import ListWithLabels from 'src/generic/ListWithLabels'
 import VideoList from 'src/generic/VideoList'
 import {PageWrapper} from 'src/App/Niche/assets'
 import headerActions from 'src/App/MainHeader/actions'
@@ -34,19 +32,7 @@ import {NICHE} from 'src/App/constants'
 const
     Niche = props => <Fragment>
         <PageTextHelmet htmlLang={g(props, 'htmlLang')} pageText={ig(props.data, 'pageText')}/>
-        {/* {!g(props, 'pageWrapperRef') && !g(props, 'isSSR') ? null : <Lists
-            cb={g(props, 'cb')}
-            maxHeight={!g(props, 'isSSR') ? g(props, 'pageWrapperRef', 'clientHeight') : null}
-            sponsorsList={ig(props.data, 'sponsorsList')}
-            sponsorLinkBuilder={g(props, 'sponsorLinkBuilder')}
-            tagList={ig(props.data, 'tagList')}
-            tagLinkBuilder={g(props, 'listsTagLinkBuilder')}
-            tagArchiveList={ig(props.data, 'tagArchiveList')}
-            archiveLinkBuilder={g(props, 'listsArchiveLinkBuilder')}
-            i18nListNichesHeader={g(props, 'i18nListNichesHeader')}
-            i18nListArchiveHeader={g(props, 'i18nListArchiveHeader')}
-        />} */}
-        <PageWrapper ref={g(props, 'setPageWrapperRef')}>
+        <PageWrapper>
             <Typography variant="h4" paragraph>
                 {ig(props.data, 'pageText', 'listHeader')}
             </Typography>
@@ -85,10 +71,17 @@ const
                 tagArchiveListNewer={ig(props.data, 'tagArchiveListNewer')}
             />}
 
+            <Typography variant="h4" paragraph>{g(props, 'i18nListArchive')}</Typography>
+            <ListWithLabels
+                list={ig(props.data, 'tagArchiveList')}
+                isArchive={true}
+                linkBuilder={g(props, 'listsArchiveLinkBuilder')}
+            />
+
             <Typography variant="h4" paragraph>{g(props, 'i18nMoreCategories')}</Typography>
-            <NichesListWithLetters
-                nichesListWithLetter={ig(props.data, 'nichesListWithLetter')}
-                routerContext={g(props, 'routerContext')}
+            <ListWithLabels
+                list={ig(props.data, 'nichesListWithLetter')}
+                linkBuilder={g(props, 'listsNicheLinkBuilder')}
             />
         </PageWrapper>
     </Fragment>,
@@ -106,14 +99,12 @@ export default compose(
     sectionPortal,
     connect(
         state => ({
-            cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             data: ig(state, 'app', NICHE),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
             i18nMoreCategories: ig(state, 'app', 'locale', 'i18n', 'headers', 'moreCategories'),
-            i18nListNichesHeader: getHeaderWithOrientation(state, 'listNiches'),
-            i18nListArchiveHeader: ig(state, 'app', 'locale', 'i18n', 'headers', 'listArchive'),
+            i18nListArchive: ig(state, 'app', 'locale', 'i18n', 'headers', 'listArchive'),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -121,7 +112,6 @@ export default compose(
             setNewText: g(headerActions, 'setNewText'),
         }
     ),
-    withState('pageWrapperRef', 'setPageWrapperRef', null),
     withProps(props => ({
         nicheCode: g(props, 'match', 'params', 'child'),
         archiveParams:
@@ -175,7 +165,7 @@ export default compose(
                 null
             ),
 
-        listsTagLinkBuilder: props => child =>
+        listsNicheLinkBuilder: props => child =>
             routerGetters.niche.link(g(props, 'routerContext'), child, null),
 
         listsArchiveLinkBuilder: props => (year, month) =>
@@ -186,9 +176,6 @@ export default compose(
                 month,
                 null
             ),
-
-        sponsorLinkBuilder: props => sponsor =>
-            routerGetters.site.link(g(props, 'routerContext'), sponsor, null)
     }),
     lifecycle({
         componentDidMount() {
@@ -200,15 +187,12 @@ export default compose(
         },
     }),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        cb: PropTypes.oneOf(breakpoints),
         data: model,
         isSSR: PropTypes.bool,
         routerContext: routerContextModel,
         htmlLang: PropTypes.string,
         i18nMoreCategories: PropTypes.string,
-        i18nListNichesHeader: PropTypes.string,
-        i18nListArchiveHeader: PropTypes.string,
-        pageWrapperRef: refModel,
+        i18nListArchive: PropTypes.string,
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
@@ -217,10 +201,8 @@ export default compose(
         controlLinkBuilder: PropTypes.func,
         controlArchiveLinkBuilder: PropTypes.func,
         controlBackFromArchiveLinkBuilder: PropTypes.func,
-        listsTagLinkBuilder: PropTypes.func,
+        listsNicheLinkBuilder: PropTypes.func,
         listsArchiveLinkBuilder: PropTypes.func,
-        sponsorLinkBuilder: PropTypes.func,
-        setPageWrapperRef: PropTypes.func,
     }),
     loadingWrapper({
         withControlBar: true,
