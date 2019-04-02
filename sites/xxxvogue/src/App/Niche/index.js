@@ -71,12 +71,14 @@ const
                 tagArchiveListNewer={ig(props.data, 'tagArchiveListNewer')}
             />}
 
-            <Typography variant="h4" paragraph>{g(props, 'i18nListArchive')}</Typography>
-            <ListWithLabels
-                list={ig(props.data, 'tagArchiveList')}
-                isArchive={true}
-                linkBuilder={g(props, 'listsArchiveLinkBuilder')}
-            />
+            { ! g(ig(props.data, 'tagArchiveList'), 'size') ? null : <Fragment>
+                <Typography variant="h4" paragraph>{g(props, 'i18nListArchive')}</Typography>
+                <ListWithLabels
+                    list={ig(props.data, 'tagArchiveList')}
+                    isArchive={true}
+                    linkBuilder={g(props, 'listsArchiveLinkBuilder')}
+                />
+            </Fragment>}
 
             <Typography variant="h4" paragraph>{g(props, 'i18nMoreCategories')}</Typography>
             <ListWithLabels
