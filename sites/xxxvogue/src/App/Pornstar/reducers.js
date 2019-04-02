@@ -24,6 +24,7 @@ export default
             pornstarInfoForTable: Map(),
             pornstarInfoForTableKeysOrder: List(),
             pornstarInfo: null,
+            randomWidthList: null,
         }),
         [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
@@ -59,10 +60,14 @@ export default
             pornstarInfoForTable: Map(),
             pornstarInfoForTableKeysOrder: List(),
             pornstarInfo: null,
+            randomWidthList: null,
         }),
 
         [g(actions, 'setNewSort')]: (state, {payload}) =>
             state.set('currentSort', g(payload, 'newSortValue')),
+
+        [g(actions, 'setRandomWidthList')]: (state, {payload}) =>
+            state.set('randomWidthList', List(g(payload, 'randomWidthList'))),
     }, fromJS({
         isLoading: false,
         isLoaded: false,
@@ -85,4 +90,5 @@ export default
         pornstarInfoForTableKeysOrder: [],
 
         pornstarInfo: null,
+        randomWidthList: null,
     }))

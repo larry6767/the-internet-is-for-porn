@@ -29,6 +29,7 @@ import VideoList from 'src/generic/VideoList'
 import {PageWrapper} from 'src/App/Niche/assets'
 import headerActions from 'src/App/MainHeader/actions'
 import actions from 'src/App/Niche/actions'
+import {NICHE} from 'src/App/constants'
 
 const
     Niche = props => <Fragment>
@@ -64,7 +65,7 @@ const
                 tagArchiveListNewer={ig(props.data, 'tagArchiveListNewer')}
             />
             <VideoList
-                videoListRandomWidthForPage={'niche'}
+                videoListRandomWidthForPage={NICHE}
                 videoList={ig(props.data, 'videoList')}
             />
 
@@ -106,7 +107,7 @@ export default compose(
     connect(
         state => ({
             cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: ig(state, 'app', 'niche'),
+            data: ig(state, 'app', NICHE),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
@@ -224,6 +225,6 @@ export default compose(
     loadingWrapper({
         withControlBar: true,
         withMoviesList: true,
-        videoListRandomWidthForPage: 'niche',
+        videoListRandomWidthForPage: NICHE,
     })
 )(Niche)

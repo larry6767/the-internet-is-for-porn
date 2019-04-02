@@ -16,6 +16,10 @@ import {
 import {List} from 'src/generic/VideoList/assets'
 import VideoItemPlug from 'src/generic/VideoItem/VideoItemPlug'
 import nicheActions from 'src/App/Niche/actions'
+import pornstarActions from 'src/App/Pornstar/actions'
+import findVideosActions from 'src/App/FindVideos/actions'
+import favoriteActions from 'src/App/Favorite/actions'
+import {NICHE, PORNSTAR, FIND_VIDEOS, FAVORITE} from 'src/App/constants'
 
 const
     itemsQuantity = 48,
@@ -34,12 +38,29 @@ export default compose(
         }),
         {
             setRandomWidthListForNiche: g(nicheActions, 'setRandomWidthList'),
+            setRandomWidthListForPornstar: g(pornstarActions, 'setRandomWidthList'),
+            setRandomWidthListForFindVideos: g(findVideosActions, 'setRandomWidthList'),
+            setRandomWidthListForFavorite: g(favoriteActions, 'setRandomWidthList'),
         }
     ),
     withHandlers({
         setRandomWidthList: props => x => {
-            if (g(props, 'videoListRandomWidthForPage') === 'niche')
-                props.setRandomWidthListForNiche(x)
+            switch (g(props, 'videoListRandomWidthForPage')) {
+                case NICHE:
+                    props.setRandomWidthListForNiche(x)
+                    break
+                case PORNSTAR:
+                    props.setRandomWidthListForPornstar(x)
+                    break
+                case FIND_VIDEOS:
+                    props.setRandomWidthListForFindVideos(x)
+                    break
+                case FAVORITE:
+                    props.setRandomWidthListForFavorite(x)
+                    break
+                default:
+                    break
+            }
         },
     }),
     withProps({

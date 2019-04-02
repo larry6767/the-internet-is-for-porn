@@ -20,7 +20,11 @@ import routerGetters from 'src/App/routerGetters'
 import VideoItem from 'src/generic/VideoItem'
 import {List} from 'src/generic/VideoList/assets'
 import nicheActions from 'src/App/Niche/actions'
+import pornstarActions from 'src/App/Pornstar/actions'
+import findVideosActions from 'src/App/FindVideos/actions'
+import favoriteActions from 'src/App/Favorite/actions'
 import appActions from 'src/App/actions'
+import {NICHE, PORNSTAR, FIND_VIDEOS, FAVORITE} from 'src/App/constants'
 
 const
     VideoList = props => <List>
@@ -40,24 +44,42 @@ const
 
 export default compose(
     connect(
-        state => ({
+        (state, props) => ({
             cb: state.getIn(['app', 'ui', 'currentBreakpoint']),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             favoriteVideoList: ig(state, 'app', 'ui', 'favoriteVideoList'),
-            randomWidthList: ig(state, 'app', 'niche', 'randomWidthList'),
+            randomWidthList:
+                ig(state, 'app', g(props, 'videoListRandomWidthForPage'), 'randomWidthList'),
         }),
         {
             addVideoToFavorite: g(appActions, 'addVideoToFavorite'),
             removeVideoFromFavorite: g(appActions, 'removeVideoFromFavorite'),
             setRandomWidthListForNiche: g(nicheActions, 'setRandomWidthList'),
+            setRandomWidthListForPornstar: g(pornstarActions, 'setRandomWidthList'),
+            setRandomWidthListForFindVideos: g(findVideosActions, 'setRandomWidthList'),
+            setRandomWidthListForFavorite: g(favoriteActions, 'setRandomWidthList'),
         }
     ),
     onlyUpdateForKeys(['cb', 'favoriteVideoList', 'videoList']),
     withHandlers({
         setRandomWidthList: props => x => {
-            if (g(props, 'videoListRandomWidthForPage') === 'niche')
-                props.setRandomWidthListForNiche(x)
+            switch (g(props, 'videoListRandomWidthForPage')) {
+                case NICHE:
+                    props.setRandomWidthListForNiche(x)
+                    break
+                case PORNSTAR:
+                    props.setRandomWidthListForPornstar(x)
+                    break
+                case FIND_VIDEOS:
+                    props.setRandomWidthListForFindVideos(x)
+                    break
+                case FAVORITE:
+                    props.setRandomWidthListForFavorite(x)
+                    break
+                default:
+                    break
+            }
         },
 
         addVideoToFavoriteHandler: props => event => {
@@ -111,5 +133,8 @@ export default compose(
 
         setRandomWidthList: PropTypes.func,
         setRandomWidthListForNiche: PropTypes.func,
+        setRandomWidthListForPornstar: PropTypes.func,
+        setRandomWidthListForFindVideos: PropTypes.func,
+        setRandomWidthListForFavorite: PropTypes.func,
     })
 )(VideoList)

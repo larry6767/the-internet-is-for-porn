@@ -41,6 +41,7 @@ import {PageWrapperNextToList} from 'src/App/Pornstar/assets'
 import appActions from 'src/App/actions'
 import headerActions from 'src/App/MainHeader/actions'
 import actions from 'src/App/Pornstar/actions'
+import {PORNSTAR} from 'src/App/constants'
 
 const
     Pornstar = ({
@@ -91,6 +92,7 @@ const
                 archiveLinkBuilder={null}
             />
             <VideoList
+                videoListRandomWidthForPage={PORNSTAR}
                 videoList={ig(data, 'videoList')}
             />
         </PageWrapperNextToList>
@@ -115,7 +117,7 @@ export default compose(
     connect(
         state => ({
             cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
-            data: ig(state, 'app', 'pornstar'),
+            data: ig(state, 'app', PORNSTAR),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             routerContext: getRouterContext(state),
             htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
@@ -241,5 +243,6 @@ export default compose(
         withPornstarInfo: true,
         withControlBar: true,
         withMoviesList: true,
+        videoListRandomWidthForPage: PORNSTAR,
     })
 )(Pornstar)

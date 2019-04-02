@@ -21,11 +21,11 @@ export function* loadNichePageFlow(action, ssrContext) {
             pageRequestParams = g(action, 'payload', 'pageRequestParams'),
             data = yield obtainPageData(ssrContext, 'niche', pageRequestParams)
 
-            if (isSSR) {
-                const
-                    randomWidthList = getRandomWidthList(g(data, 'nichesListWithThumb', 'length'))
-                yield put(actions.setRandomWidthList({randomWidthList}))
-            }
+        if (isSSR) {
+            const
+                randomWidthList = getRandomWidthList(g(data, 'nichesListWithThumb', 'length'))
+            yield put(actions.setRandomWidthList({randomWidthList}))
+        }
 
         yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {
