@@ -17,6 +17,7 @@ export default
             pagesCount: 1,
             itemsCount: 0,
             videoList: List(),
+            randomWidthList: null,
         }),
         [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
@@ -38,11 +39,14 @@ export default
             pagesCount: 1,
             itemsCount: 0,
             videoList: List(),
+            randomWidthList: null,
         }),
         [g(actions, 'addToList')]: (state, action) =>
             addToList(state, 'videoList', g(action, 'payload')),
         [g(actions, 'removeFromList')]: (state, action) =>
             removeFromList(state, 'videoList', g(action, 'payload')),
+        [g(actions, 'setRandomWidthList')]: (state, {payload}) =>
+            state.set('randomWidthList', List(g(payload, 'randomWidthList')))
     }, fromJS({
         isLoading: false,
         isLoaded: false,
@@ -53,4 +57,5 @@ export default
         pagesCount: 1,
         itemsCount: 0,
         videoList: [],
+        randomWidthList: null,
     }))

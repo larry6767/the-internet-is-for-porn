@@ -4,7 +4,7 @@ import {push} from 'connected-react-router/immutable'
 // local libs
 import {
     obtainPageData,
-    getHeaderText,
+    getRandomWidthList,
     getRouterContext,
     plainProvedGet as g,
     immutableProvedGet as ig,
@@ -12,7 +12,6 @@ import {
 
 import routerGetters from 'src/App/routerGetters'
 import errorActions from 'src/generic/ErrorMessage/actions'
-import headerActions from 'src/App/MainHeader/actions'
 import actions from 'src/App/FindVideos/actions'
 
 export function* loadFindVideosPageFlow(action, ssrContext) {
@@ -22,8 +21,11 @@ export function* loadFindVideosPageFlow(action, ssrContext) {
             pageRequestParams = g(action, 'payload', 'pageRequestParams'),
             data = yield obtainPageData(ssrContext, 'findVideos', pageRequestParams)
 
-        if (isSSR)
-            yield put(headerActions.setNewText(getHeaderText(g(data, 'pageText'))))
+        if (isSSR) {
+            const
+                randomWidthList = getRandomWidthList(g(data, 'nichesListWithThumb', 'length'))
+            yield put(actions.setRandomWidthList({randomWidthList}))
+        }
 
         yield put(actions.loadPageSuccess({pageRequestParams, data}))
     } catch (err) {

@@ -19,4 +19,5 @@ export const
         currentSort: PropTypes.nullable(PropTypes.string),
         itemsCount: PropTypes.number,
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
+        randomWidthList: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.number)),
     })

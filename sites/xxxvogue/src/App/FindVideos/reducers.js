@@ -20,6 +20,7 @@ export default
             currentSort: null,
             itemsCount: 0,
             videoList: List(),
+            randomWidthList: null,
         }),
         [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
@@ -47,9 +48,12 @@ export default
             currentSort: null,
             itemsCount: 0,
             videoList: List(),
+            randomWidthList: null,
         }),
         [g(actions, 'setNewSort')]: (state, {payload}) =>
             state.set('currentSort', g(payload, 'newSortValue')),
+        [g(actions, 'setRandomWidthList')]: (state, {payload}) =>
+            state.set('randomWidthList', List(g(payload, 'randomWidthList')))
     }, fromJS({
         isLoading: false,
         isLoaded: false,
@@ -63,4 +67,5 @@ export default
         currentSort: null,
         itemsCount: 0,
         videoList: [],
+        randomWidthList: null,
     }))

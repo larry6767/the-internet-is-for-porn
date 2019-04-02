@@ -37,6 +37,7 @@ import {PageWrapper, StyledLink} from 'src/App/FindVideos/assets'
 import headerActions from 'src/App/MainHeader/actions'
 import actions from 'src/App/FindVideos/actions'
 import {muiStyles} from 'src/App/FindVideos/assets/muiStyles'
+import {FIND_VIDEOS} from 'src/App/constants'
 
 const
     FindVideos = props => <Fragment>
@@ -69,7 +70,10 @@ const
                 linkBuilder={g(props, 'controlLinkBuilder')}
                 archiveLinkBuilder={null}
             />
-            <VideoList videoList={ig(props.data, 'videoList')}/>
+            <VideoList
+                videoListRandomWidthForPage={FIND_VIDEOS}
+                videoList={ig(props.data, 'videoList')}
+            />
             {g(ig(props.data, 'videoList'), 'size') < 20 ? null : <ControlBar
                 isDownBelow={true}
                 chooseSort={g(props, 'chooseSort')}
@@ -108,7 +112,7 @@ export default compose(
     connect(
         state => ({
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
-            data: ig(state, 'app', 'findVideos'),
+            data: ig(state, 'app', FIND_VIDEOS),
             htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
             routerContext: getRouterContext(state),
             i18nYesButton: ig(state, 'app', 'locale', 'i18n', 'buttons', 'agree'),
@@ -262,5 +266,6 @@ export default compose(
     loadingWrapper({
         withControlBar: true,
         withMoviesList: true,
+        videoListRandomWidthForPage: FIND_VIDEOS,
     })
 )(FindVideos)

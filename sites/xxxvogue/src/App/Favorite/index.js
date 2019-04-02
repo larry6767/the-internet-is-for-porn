@@ -30,6 +30,7 @@ import {PageWrapper} from 'src/App/Favorite/assets'
 import headerActions from 'src/App/MainHeader/actions'
 import actions from 'src/App/Favorite/actions'
 import {muiStyles} from 'src/App/Favorite/assets/muiStyles'
+import {FAVORITE} from 'src/App/constants'
 
 const
     favoriteButtons = {
@@ -63,7 +64,10 @@ const
                 tagArchiveListNewer={null}
                 archiveLinkBuilder={null}
             />
-            <VideoList videoList={ig(props.data, 'videoList')}/>
+            <VideoList
+                videoListRandomWidthForPage={FAVORITE}
+                videoList={ig(props.data, 'videoList')}
+            />
             {g(ig(props.data, 'videoList'), 'size') < 20 ? null : <ControlBar
                 isDownBelow={true}
                 linkBuilder={g(props, 'controlLinkBuilder')}
@@ -100,7 +104,7 @@ export default compose(
         state => ({
             routerContext: getRouterContext(state),
             htmlLang: ig(state, 'app', 'locale', 'i18n', 'htmlLangAttribute'),
-            data: ig(state, 'app', 'favorite'),
+            data: ig(state, 'app', FAVORITE),
         }),
         {
             loadPageRequest: g(actions, 'loadPageRequest'),
@@ -145,5 +149,6 @@ export default compose(
     loadingWrapper({
         withControlBar: true,
         withMoviesList: true,
+        videoListRandomWidthForPage: FAVORITE,
     })
 )(Favorite)
