@@ -2,7 +2,13 @@ import React, {Fragment} from 'react'
 import {compose, withPropsOnChange} from 'recompose'
 
 // local libs
-import {plainProvedGet as g, immutableProvedGet as ig} from 'src/App/helpers'
+import {
+    plainProvedGet as g,
+    immutableProvedGet as ig,
+    setPropTypes,
+    ImmutablePropTypes,
+    PropTypes,
+} from 'src/App/helpers'
 
 import {
     List,
@@ -63,4 +69,13 @@ export default compose(
             itemsAndLabelsQuantity: g(list, 'size') + lettersQuantity
         }
     }),
+    setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        list: ImmutablePropTypes.list,
+        linkBuilder: PropTypes.func,
+        isArchive: PropTypes.bool.isOptional,
+        itemsAndLabelsQuantity: PropTypes.number,
+        id: PropTypes.string,
+        label: PropTypes.string,
+        item: PropTypes.string,
+    })
 )(ListWithLabels)
