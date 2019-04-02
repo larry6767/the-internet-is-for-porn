@@ -33,8 +33,9 @@ const
 
 export default compose(
     connect(
-        state => ({
-            randomWidthList: ig(state, 'app', 'niche', 'randomWidthList'),
+        (state, props) => ({
+            randomWidthList:
+                ig(state, 'app', g(props, 'videoListRandomWidthForPage'), 'randomWidthList'),
         }),
         {
             setRandomWidthListForNiche: g(nicheActions, 'setRandomWidthList'),
@@ -75,7 +76,10 @@ export default compose(
         }))),
         videoListRandomWidthForPage: PropTypes.string,
 
-        setRandomWidthListForNiche: PropTypes.func,
         setRandomWidthList: PropTypes.func,
+        setRandomWidthListForNiche: PropTypes.func,
+        setRandomWidthListForPornstar: PropTypes.func,
+        setRandomWidthListForFindVideos: PropTypes.func,
+        setRandomWidthListForFavorite: PropTypes.func,
     })
 )(VideoListPlug)
