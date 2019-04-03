@@ -21,6 +21,7 @@ export default
             itemsCount: 0,
             videoList: List(),
             randomWidthList: null,
+            sponsorsList: List(),
         }),
         [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
@@ -35,6 +36,7 @@ export default
             currentSort: g(payload, 'data', 'currentSort'),
             itemsCount: g(payload, 'data', 'itemsCount'),
             videoList: List(fromJS(g(payload, 'data', 'videoList'))),
+            sponsorsList: List(fromJS(g(payload, 'data', 'sponsorsList'))),
         }),
         [g(actions, 'loadPageFailure')]: state => state.merge({
             isLoading: false,
@@ -49,6 +51,7 @@ export default
             itemsCount: 0,
             videoList: List(),
             randomWidthList: null,
+            sponsorsList: List(),
         }),
         [g(actions, 'setNewSort')]: (state, {payload}) =>
             state.set('currentSort', g(payload, 'newSortValue')),
@@ -68,4 +71,5 @@ export default
         itemsCount: 0,
         videoList: [],
         randomWidthList: null,
+        sponsorsList: [],
     }))

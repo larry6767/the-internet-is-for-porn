@@ -4,6 +4,7 @@ import {
     immutablePageTextModel,
     immutablePornstarsListWithLetterModel,
     pageRequestParamsModel,
+    immutableSponsorsListModel,
 } from 'src/App/models'
 
 import {immutableVideoItemModel} from 'src/generic/VideoItem/models'
@@ -99,6 +100,7 @@ const
         pornstarInfoForTableKeysOrder: ImmutablePropTypes.listOf(PropTypes.string),
         pornstarInfo: PropTypes.nullable(immutablePornstarInfoModel),
         randomWidthList: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.number)),
+        sponsorsList: immutableSponsorsListModel,
     })
 
 export {

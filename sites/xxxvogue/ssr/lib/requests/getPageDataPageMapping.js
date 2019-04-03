@@ -43,6 +43,7 @@ export const
             deepFreeze({blocks: {
                 modelsABCBlockText: 1,
                 modelsABCBlockThumbs: 1,
+                searchSponsors: 1,
                 updateExtraURL: 1,
                 updateSponsorURL: 1,
             }}),
@@ -61,7 +62,7 @@ export const
             getVideoPageMap,
         ]),
         findVideos: Object.freeze([
-            deepFreeze({blocks: {updateExtraURL: 1, updateSponsorURL: 1}}),
+            deepFreeze({blocks: {searchSponsors: 1, updateExtraURL: 1, updateSponsorURL: 1}}),
             getFindVideosMap,
         ]),
         notFound: Object.freeze([

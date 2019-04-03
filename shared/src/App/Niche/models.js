@@ -8,6 +8,7 @@ import {
     immutableTagArchiveListModel,
     immutableSortListModel,
     immutableTagArchiveListOlderOrNewerModel,
+    immutableSponsorsListModel,
 } from 'src/App/models'
 
 import {immutableVideoItemModel} from 'src/generic/VideoItem/models'
@@ -24,7 +25,7 @@ export const
         pageNumber: PropTypes.number,
         pagesCount: PropTypes.number,
         pageText: PropTypes.nullable(immutablePageTextModel),
-        sponsorsList: ImmutablePropTypes.listOf(PropTypes.string),
+        sponsorsList: immutableSponsorsListModel,
         tagList: immutableNichesListModel,
         tagArchiveList: immutableTagArchiveListModel,
         sortList: immutableSortListModel,

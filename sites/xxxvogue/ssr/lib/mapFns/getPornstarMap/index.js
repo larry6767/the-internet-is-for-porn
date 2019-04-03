@@ -7,6 +7,7 @@ import {
     getPageText,
     getPornstarInfo,
     getPornstarInfoForTable,
+    getSponsorsList,
 } from 'ssr/lib/helpers/mapFns'
 
 import {pornstarModel, mappedPornstarModel} from 'ssr/lib/mapFns/getPornstarMap/model'
@@ -47,6 +48,7 @@ export default x => {
             pornstarInfo: getPornstarInfo(g(x, 'page', 'MODEL_INFO')),
             pornstarInfoForTable: g(pornstarInfoForTable, 'data'),
             pornstarInfoForTableKeysOrder: g(pornstarInfoForTable, 'keysOrder'),
+            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')),
         }
 
     if (process.env.NODE_ENV !== 'production')

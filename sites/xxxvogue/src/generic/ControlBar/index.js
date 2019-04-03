@@ -25,11 +25,10 @@ import {
     immutableI18nOrderingModel,
     immutableI18nButtonsModel,
     immutableArchiveFilmsModel,
+    immutableSponsorsListModel,
 } from 'src/App/models'
 
-import Pagination from 'src/generic/Pagination'
 import WrappedButton from 'src/generic/WrappedButton'
-
 import {muiStyles} from 'src/generic/ControlBar/assets/muiStyles'
 
 import {
@@ -107,18 +106,6 @@ const
         currentSort,
         archiveFilms,
     }) => <Fragment>
-        <Pagination
-            cb={cb}
-            pageNumber={pageNumber}
-            pagesCount={pagesCount}
-            linkBuilder={linkBuilder}
-            i18nButtons={i18nButtons}
-        />
-
-        {archiveFilms === null ? null : <WrappedButton
-            link={archiveLinkBuilder(ig(archiveFilms, 'year'), ig(archiveFilms, 'month'))}
-            text={ig(i18nButtons, 'archive')}
-        />}
         <SortWrapper>
             {ccb(cb, sm) === -1 ? null : <Typography
                 variant="body1"
@@ -168,29 +155,6 @@ const
         archiveLinkBuilder,
         backFromArchiveLinkBuilder,
     }) => <Fragment>
-        {tagArchiveListOlder === null ? null : <WrappedButton
-            link={archiveLinkBuilder(
-                ig(tagArchiveListOlder, 'year'),
-                ig(tagArchiveListOlder, 'month')
-            )}
-            text={ig(i18nButtons, 'previousMonth')}
-        />}
-
-        <Pagination
-            cb={cb}
-            pageNumber={pageNumber}
-            pagesCount={pagesCount}
-            linkBuilder={linkBuilder}
-            i18nButtons={i18nButtons}
-        />
-
-        {tagArchiveListNewer === null ? null : <WrappedButton
-            link={archiveLinkBuilder(
-                ig(tagArchiveListNewer, 'year'),
-                ig(tagArchiveListNewer, 'month')
-            )}
-            text={ig(i18nButtons, 'nextMonth')}
-        />}
         <WrappedButton
             link={backFromArchiveLinkBuilder()}
             text={ig(i18nButtons, 'topFilms')}
@@ -216,15 +180,6 @@ const
         i18nButtons,
         favoriteButtons,
     }) => <Fragment>
-        {pagesCount === 1 || pagesCount === 0 ? null :
-            <Pagination
-                cb={cb}
-                pageNumber={pageNumber}
-                pagesCount={pagesCount}
-                linkBuilder={linkBuilder}
-                i18nButtons={i18nButtons}
-            />}
-
         <WrappedButton
             link={favoriteLinkBuilder('favorite')}
             text={ig(i18nButtons, 'favoriteMovies')}
@@ -237,13 +192,6 @@ const
             variant={g(favoriteButtons, 'pornstars') ? 'contained' : 'outlined'}
         />
     </Fragment>),
-
-    ShowedElements = ({
-        itemsCount, pageNumber, i18nLabelShowing
-    }) => <Typography variant="body1" gutterBottom>
-        {`${i18nLabelShowing
-            } ${itemsCount * pageNumber - (itemsCount - 1)} - ${itemsCount * pageNumber}`}
-    </Typography>,
 
     ControlBar = ({
         classedBounds,
@@ -272,11 +220,6 @@ const
         tagArchiveListNewer,
         favoriteButtons,
     }) => <Wrapper isDownBelow={isDownBelow}>
-        { ! isDownBelow ? null : <ShowedElements
-            itemsCount={itemsCount}
-            pageNumber={pageNumber}
-            i18nLabelShowing={i18nLabelShowing}
-        />}
         <ControlButtons>
             {archiveFilms && ig(archiveFilms, 'currentlyActiveId') !== null
                 ? <ArchiveControlBar
@@ -319,11 +262,6 @@ const
                 />
             }
         </ControlButtons>
-        {isDownBelow ? null : <ShowedElements
-            itemsCount={itemsCount}
-            pageNumber={pageNumber}
-            i18nLabelShowing={i18nLabelShowing}
-        />}
     </Wrapper>
 
 export default compose(
@@ -385,5 +323,6 @@ export default compose(
             movies: PropTypes.bool,
             pornstars: PropTypes.bool,
         }).isOptional, // could be not presented at all
+        sponsorsList: immutableSponsorsListModel,
     }),
 )(ControlBar)

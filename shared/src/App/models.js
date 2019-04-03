@@ -191,7 +191,14 @@ const
                 ...props,
                 galleryTitle: PropTypes.string,
             }) : exact(props)
-        }
+        },
+
+    sponsorsListModelBuilder = process.env.NODE_ENV === 'production' ? null : isImmutable => {
+        const
+            listOf = isImmutable ? ImmutablePropTypes.listOf : PropTypes.arrayOf
+
+        return listOf(PropTypes.string)
+    }
 
 export const
     archiveFilmsModel = process.env.NODE_ENV === 'production' ? null :
@@ -241,6 +248,11 @@ export const
         nichesListModelBuilder(true, true, false),
     immutableNichesListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
         nichesListModelBuilder(true, false, true),
+
+    sponsorsListModel = process.env.NODE_ENV === 'production' ? null :
+        sponsorsListModelBuilder(false),
+    immutableSponsorsListModel = process.env.NODE_ENV === 'production' ? null :
+        sponsorsListModelBuilder(true),
 
     pageRequestParamsModel = process.env.NODE_ENV === 'production' ? null :
         ImmutablePropTypes.exact({

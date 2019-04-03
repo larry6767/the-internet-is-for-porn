@@ -49,27 +49,12 @@ const
                 archiveFilms={ig(props.data, 'archiveFilms')}
                 tagArchiveListOlder={ig(props.data, 'tagArchiveListOlder')}
                 tagArchiveListNewer={ig(props.data, 'tagArchiveListNewer')}
+                sponsorsList={ig(props.data, 'sponsorsList')}
             />
             <VideoList
                 videoListRandomWidthForPage={NICHE}
                 videoList={ig(props.data, 'videoList')}
             />
-
-            {g(ig(props.data, 'videoList'), 'size') < 20 ? null : <ControlBar
-                isDownBelow={true}
-                linkBuilder={g(props, 'controlLinkBuilder')}
-                archiveLinkBuilder={g(props, 'controlArchiveLinkBuilder')}
-                backFromArchiveLinkBuilder={g(props, 'controlBackFromArchiveLinkBuilder')}
-                chooseSort={g(props, 'chooseSort')}
-                pagesCount={ig(props.data, 'pagesCount')}
-                pageNumber={ig(props.data, 'pageNumber')}
-                itemsCount={ig(props.data, 'itemsCount')}
-                sortList={ig(props.data, 'sortList')}
-                currentSort={ig(props.data, 'currentSort')}
-                archiveFilms={ig(props.data, 'archiveFilms')}
-                tagArchiveListOlder={ig(props.data, 'tagArchiveListOlder')}
-                tagArchiveListNewer={ig(props.data, 'tagArchiveListNewer')}
-            />}
 
             { ! g(ig(props.data, 'tagArchiveList'), 'size') ? null : <Fragment>
                 <Typography variant="h4" paragraph>{g(props, 'i18nListArchive')}</Typography>

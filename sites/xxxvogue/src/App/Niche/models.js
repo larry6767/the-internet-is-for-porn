@@ -8,6 +8,7 @@ import {
     immutableTagArchiveListModel,
     immutableSortListModel,
     immutableTagArchiveListOlderOrNewerModel,
+    immutableSponsorsListModel,
 } from 'src/App/models'
 
 import {immutableVideoItemModel} from 'src/generic/VideoItem/models'
@@ -34,4 +35,5 @@ export const
         itemsCount: PropTypes.number,
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
         randomWidthList: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.number)),
+        sponsorsList: immutableSponsorsListModel,
     })

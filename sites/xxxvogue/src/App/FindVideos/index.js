@@ -69,25 +69,12 @@ const
                 tagArchiveListNewer={null}
                 linkBuilder={g(props, 'controlLinkBuilder')}
                 archiveLinkBuilder={null}
+                sponsorsList={ig(props.data, 'sponsorsList')}
             />
             <VideoList
                 videoListRandomWidthForPage={FIND_VIDEOS}
                 videoList={ig(props.data, 'videoList')}
             />
-            {g(ig(props.data, 'videoList'), 'size') < 20 ? null : <ControlBar
-                isDownBelow={true}
-                chooseSort={g(props, 'chooseSort')}
-                pagesCount={ig(props.data, 'pagesCount')}
-                pageNumber={ig(props.data, 'pageNumber')}
-                itemsCount={ig(props.data, 'itemsCount')}
-                sortList={ig(props.data, 'sortList')}
-                currentSort={ig(props.data, 'currentSort')}
-                archiveFilms={null}
-                tagArchiveListOlder={null}
-                tagArchiveListNewer={null}
-                linkBuilder={g(props, 'controlLinkBuilder')}
-                archiveLinkBuilder={null}
-            />}
         </PageWrapper>
     </Fragment>,
 
