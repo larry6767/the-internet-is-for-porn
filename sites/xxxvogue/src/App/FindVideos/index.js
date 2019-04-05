@@ -70,6 +70,7 @@ const
                 linkBuilder={g(props, 'controlLinkBuilder')}
                 archiveLinkBuilder={null}
                 sponsorsList={ig(props.data, 'sponsorsList')}
+                currentSponsor={ig(props.data, 'currentSponsor')}
             />
             <VideoList
                 videoListRandomWidthForPage={FIND_VIDEOS}

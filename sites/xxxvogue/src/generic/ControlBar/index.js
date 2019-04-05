@@ -4,9 +4,6 @@ import {compose, onlyUpdateForKeys, withPropsOnChange} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 
 import Typography from '@material-ui/core/Typography'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import OutlinedInput from '@material-ui/core/OutlinedInput'
 
 // local libs
 import {
@@ -25,72 +22,39 @@ import {
     immutableI18nOrderingModel,
     immutableI18nButtonsModel,
     immutableArchiveFilmsModel,
-    immutableSponsorsListModel,
+    immutableI18nSponsorModel,
+    immutableI18nDurationModel,
 } from 'src/App/models'
 
 import WrappedButton from 'src/generic/WrappedButton'
+import SortSelect from 'src/generic/SortSelect'
 import {muiStyles} from 'src/generic/ControlBar/assets/muiStyles'
 
 import {
     Wrapper,
     ControlButtons,
     SortWrapper,
-    InlinedSelectionWrap,
-    InlinedSelectionList,
-    InlinedSelectionItem,
 } from 'src/generic/ControlBar/assets'
 
 const
-    SortSelectMaterial = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classedBounds: PropTypes.shape({select: PropTypes.object}),
-        i18nOrdering: immutableI18nOrderingModel,
-        sortList: immutableSortListModel,
-        chooseSort: PropTypes.func,
-        currentSort: PropTypes.nullable(PropTypes.string),
-    })(({classedBounds, i18nOrdering, sortList, chooseSort, currentSort}) => <Select
-        classes={g(classedBounds, 'select')}
-        value={currentSort || ''}
-        input={<OutlinedInput onChange={chooseSort} labelWidth={0}/>}
-    >
-        {sortList.map(x =>
-            <MenuItem key={ig(x, 'code')} value={ig(x, 'code')}>
-                {ig(i18nOrdering, ig(x, 'code'))}
-            </MenuItem>
-        )}
-    </Select>),
-
-    SortSelectInlined = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        sortList: immutableSortListModel,
-        linkBuilder: PropTypes.func,
-        i18nOrdering: immutableI18nOrderingModel,
-    })(({sortList, linkBuilder, i18nOrdering}) => <InlinedSelectionWrap>
-        <InlinedSelectionList>
-            {sortList.map(x =>
-                <InlinedSelectionItem
-                    key={ig(x, 'code')}
-                    href={linkBuilder({ordering: ig(x, 'code'), pagination: null})}
-                    isActive={ig(x, 'isActive')}
-                >
-                    {ig(i18nOrdering, ig(x, 'code'))}
-                </InlinedSelectionItem>
-            )}
-        </InlinedSelectionList>
-    </InlinedSelectionWrap>),
-
     NicheControlBar = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classedBounds: PropTypes.shape({typography: PropTypes.object}),
         cb: PropTypes.oneOf(breakpoints).isOptional,
         pageNumber: PropTypes.number,
         pagesCount: PropTypes.number,
-        linkBuilder: PropTypes.func,
         archiveLinkBuilder: PropTypes.nullable(PropTypes.func),
-        i18nOrdering: immutableI18nOrderingModel,
         i18nButtons: immutableI18nButtonsModel,
         isSSR: PropTypes.bool,
-        chooseSort: PropTypes.func,
-        sortList: immutableSortListModel,
-        currentSort: PropTypes.nullable(PropTypes.string),
         archiveFilms: PropTypes.nullable(immutableArchiveFilmsModel),
+
+        linkBuilder: PropTypes.func,
+        chooseSort: PropTypes.func,
+        i18nOrdering: immutableI18nOrderingModel,
+        i18nDuration: immutableI18nDurationModel,
+        i18nSponsor: immutableI18nSponsorModel,
+        sortList: immutableSortListModel,
+        durationList: immutableSortListModel,
+        sponsorsList: immutableSortListModel,
     })(({
         classedBounds,
         cb,
@@ -98,37 +62,47 @@ const
         pagesCount,
         linkBuilder,
         archiveLinkBuilder,
-        i18nOrdering,
         i18nButtons,
         isSSR,
         chooseSort,
-        sortList,
-        currentSort,
         archiveFilms,
-    }) => <Fragment>
-        <SortWrapper>
-            {ccb(cb, sm) === -1 ? null : <Typography
-                variant="body1"
-                classes={g(classedBounds, 'typography')}
-            >
-                {`${ig(i18nOrdering, 'label')}:`}
-            </Typography>}
 
-            {isSSR
-                ? <SortSelectInlined
-                    sortList={sortList}
-                    linkBuilder={linkBuilder}
-                    i18nOrdering={i18nOrdering}
-                />
-                : <SortSelectMaterial
-                    classedBounds={classedBounds}
-                    i18nOrdering={i18nOrdering}
-                    sortList={sortList}
-                    chooseSort={chooseSort}
-                    currentSort={currentSort}
-                />
-            }
-        </SortWrapper>
+        i18nOrdering,
+        i18nDuration,
+        i18nSponsor,
+        sortList,
+        durationList,
+        sponsorsList,
+    }) => <Fragment>
+        { ! g(sortList, 'size') ? null : <SortSelect
+            isInlined={true}
+                isSSR={isSSR}
+            classedBounds={classedBounds}
+            chooseSort={chooseSort}
+            name={'ordering'}
+            sortList={sortList}
+            linkBuilder={linkBuilder}
+            i18n={i18nOrdering}
+        />}
+
+        { ! g(durationList, 'size') ? null : <SortSelect
+            isSSR={isSSR}
+            classedBounds={classedBounds}
+            chooseSort={chooseSort}
+            name={'duration'}
+            sortList={durationList}
+            linkBuilder={linkBuilder}
+            i18n={i18nDuration}
+        />}
+        { ! g(sponsorsList, 'size') ? null : <SortSelect
+            isSSR={isSSR}
+            classedBounds={classedBounds}
+            chooseSort={chooseSort}
+            name={'sponsor'}
+            sortList={sponsorsList}
+            linkBuilder={linkBuilder}
+            i18n={i18nSponsor}
+        />}
     </Fragment>),
 
     ArchiveControlBar = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
@@ -145,20 +119,50 @@ const
         archiveLinkBuilder: PropTypes.func,
         backFromArchiveLinkBuilder: PropTypes.func,
     })(({
+        classedBounds,
         cb,
+        isSSR,
         pageNumber,
         pagesCount,
         linkBuilder,
         i18nButtons,
+        i18nSponsor,
+        i18nDuration,
         tagArchiveListOlder,
         tagArchiveListNewer,
         archiveLinkBuilder,
         backFromArchiveLinkBuilder,
+        sponsorsList,
+        chooseSort,
     }) => <Fragment>
         <WrappedButton
             link={backFromArchiveLinkBuilder()}
             text={ig(i18nButtons, 'topFilms')}
         />
+        <SortWrapper>
+            {ccb(cb, sm) === -1 ? null : <Typography
+                variant="body1"
+                classes={g(classedBounds, 'typography')}
+            >
+                {`${ig(i18nSponsor, 'label')}:`}
+            </Typography>}
+
+            {/* {isSSR
+                ? <SponsorsSelectInlined
+                    sponsorsList={sponsorsList}
+                    linkBuilder={linkBuilder}
+                    currentSponsor={currentSponsor}
+                    all={ig(i18nSponsor, 'all')}
+                />
+                : <SponsorsSelectMaterial
+                    classedBounds={classedBounds}
+                    sponsorsList={sponsorsList}
+                    chooseSort={chooseSort}
+                    currentSponsor={currentSponsor}
+                    all={ig(i18nSponsor, 'all')}
+                />
+            } */}
+        </SortWrapper>
     </Fragment>),
 
     FavoriteControlBar = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
@@ -198,6 +202,8 @@ const
         cb,
         isSSR,
         i18nOrdering,
+        i18nSponsor,
+        i18nDuration,
         i18nButtons,
         i18nLabelShowing,
 
@@ -212,27 +218,36 @@ const
         pagesCount,
         pageNumber,
         itemsCount,
-        sortList,
-        currentSort,
 
         archiveFilms,
         tagArchiveListOlder,
         tagArchiveListNewer,
         favoriteButtons,
+
+        sortList,
+        durationList,
+        sponsorsList,
     }) => <Wrapper isDownBelow={isDownBelow}>
         <ControlButtons>
             {archiveFilms && ig(archiveFilms, 'currentlyActiveId') !== null
                 ? <ArchiveControlBar
                     classedBounds={classedBounds}
                     cb={cb}
+                    isSSR={isSSR}
                     pageNumber={pageNumber}
                     pagesCount={pagesCount}
                     i18nButtons={i18nButtons}
+                    i18nSponsor={i18nSponsor}
+                    i18nDuration={i18nDuration}
                     tagArchiveListOlder={tagArchiveListOlder}
                     tagArchiveListNewer={tagArchiveListNewer}
                     linkBuilder={linkBuilder}
                     archiveLinkBuilder={archiveLinkBuilder}
                     backFromArchiveLinkBuilder={backFromArchiveLinkBuilder}
+                    chooseSort={chooseSort}
+
+                    durationList={durationList}
+                    sponsorsList={sponsorsList}
                 />
                 : favoriteButtons
                 ? <FavoriteControlBar
@@ -253,12 +268,16 @@ const
                     linkBuilder={linkBuilder}
                     archiveLinkBuilder={archiveLinkBuilder}
                     i18nOrdering={i18nOrdering}
+                    i18nSponsor={i18nSponsor}
+                    i18nDuration={i18nDuration}
                     i18nButtons={i18nButtons}
                     isSSR={isSSR}
                     chooseSort={chooseSort}
-                    sortList={sortList}
-                    currentSort={currentSort}
                     archiveFilms={archiveFilms}
+
+                    sortList={sortList}
+                    durationList={durationList}
+                    sponsorsList={sponsorsList}
                 />
             }
         </ControlButtons>
@@ -270,8 +289,9 @@ export default compose(
             cb: ig(state, 'app', 'ui', 'currentBreakpoint'),
             isSSR: ig(state, 'app', 'ssr', 'isSSR'),
             i18nOrdering: ig(state, 'app', 'locale', 'i18n', 'ordering'),
+            i18nSponsor: ig(state, 'app', 'locale', 'i18n', 'sponsor'),
+            i18nDuration: ig(state, 'app', 'locale', 'i18n', 'duration'),
             i18nButtons: ig(state, 'app', 'locale', 'i18n', 'buttons'),
-            i18nLabelShowing: ig(state, 'app', 'locale', 'i18n', 'labels', 'showing'),
         }),
     ),
     onlyUpdateForKeys(['cb']),
@@ -294,8 +314,9 @@ export default compose(
         cb: PropTypes.oneOf(breakpoints).isOptional,
         isSSR: PropTypes.bool,
         i18nOrdering: immutableI18nOrderingModel,
+        i18nSponsor: immutableI18nSponsorModel,
+        i18nDuration: immutableI18nDurationModel,
         i18nButtons: immutableI18nButtonsModel,
-        i18nLabelShowing: PropTypes.string,
 
         isDownBelow: PropTypes.bool.isOptional,
 
@@ -308,8 +329,6 @@ export default compose(
         pagesCount: PropTypes.number,
         pageNumber: PropTypes.number,
         itemsCount: PropTypes.number,
-        sortList: immutableSortListModel.isOptional, // could be not presented at all
-        currentSort: PropTypes.string.isOptional, // could be not presented at all
 
         archiveFilms: immutableArchiveFilmsModel.isOptional, // could be not presented at all
 
@@ -323,6 +342,9 @@ export default compose(
             movies: PropTypes.bool,
             pornstars: PropTypes.bool,
         }).isOptional, // could be not presented at all
-        sponsorsList: immutableSponsorsListModel,
+
+        sortList: immutableSortListModel.isOptional, // could be not presented at all
+        durationList: immutableSortListModel.isOptional,
+        sponsorsList: immutableSortListModel.isOptional,
     }),
 )(ControlBar)

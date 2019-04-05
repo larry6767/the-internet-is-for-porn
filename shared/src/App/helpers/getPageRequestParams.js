@@ -16,6 +16,8 @@ export default (routerContext, match, isSitePage = false) => {
         ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
         pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
         searchQuery = get(qs, [ig(routerContext, 'router', 'searchQuery', 'qsKey')], null),
+        sponsor = get(qs, [ig(routerContext, 'router', 'sponsor', 'qsKey')], null),
+        duration = get(qs, [ig(routerContext, 'router', 'duration', 'qsKey')], null),
 
         result = fromJS({
             orientationCode: ig(routerContext, 'currentOrientation'),
@@ -31,6 +33,9 @@ export default (routerContext, match, isSitePage = false) => {
 
             searchQuery,
             isSitePage,
+
+            sponsor,
+            duration,
         })
 
     if (process.env.NODE_ENV !== 'production')

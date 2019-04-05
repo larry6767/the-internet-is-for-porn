@@ -91,6 +91,7 @@ const
                 linkBuilder={controlLinkBuilder}
                 archiveLinkBuilder={null}
                 sponsorsList={ig(data, 'sponsorsList')}
+                currentSponsor={ig(data, 'currentSponsor')}
             />
             <VideoList
                 videoListRandomWidthForPage={PORNSTAR}

@@ -27,4 +27,5 @@ export const
         videoList: ImmutablePropTypes.listOf(immutableVideoItemModel),
         randomWidthList: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.number)),
         sponsorsList: immutableSponsorsListModel,
+        currentSponsor: PropTypes.nullable(PropTypes.string),
     })

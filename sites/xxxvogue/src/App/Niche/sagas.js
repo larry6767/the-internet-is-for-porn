@@ -40,23 +40,24 @@ function* setNewSort({payload}) {
         routerContext = yield select(state => getRouterContext(state)),
         nicheCode = g(payload, 'nicheCode'),
         archiveParams = g(payload, 'archiveParams'),
-        newSortValue = g(payload, 'newSortValue')
+        newSortValue = g(payload, 'newSortValue'),
+        sortName = g(payload, 'sortName')
 
     yield put(push(
         archiveParams === null
         ? routerGetters.niche.link(
             routerContext,
             nicheCode,
-            {ordering: newSortValue},
-            ['ordering']
+            {[sortName]: newSortValue},
+            ['ordering', 'sponsor', 'duration']
         )
         : routerGetters.nicheArchive.link(
             routerContext,
             nicheCode,
             g(archiveParams, 'year'),
             g(archiveParams, 'month'),
-            {ordering: newSortValue},
-            ['ordering']
+            {[sortName]: newSortValue},
+            ['ordering', 'sponsor', 'duration']
         )
     ))
 }

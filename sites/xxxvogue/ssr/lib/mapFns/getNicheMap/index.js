@@ -10,7 +10,8 @@ import {
     getPageText,
     getTagArchiveList,
     getArchiveFilms,
-    getSponsorsList,
+    getSponsorsListForFilter,
+    getDurationList,
 } from 'ssr/lib/helpers/mapFns'
 
 export default x => {
@@ -27,7 +28,8 @@ export default x => {
         pageNumber: g(x, 'page', 'PAGE_NUMBER'),
         pagesCount: g(x, 'page', 'PAGES_COUNT'),
         pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
-        sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')),
+        sponsorsList: getSponsorsListForFilter(g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')),
+        durationList: getDurationList(g(x, 'page', 'CUSTOM_DATA', 'galsFacets').length),
         nichesListWithLetter: getNichesListByLetters(
             g(x, 'page', 'TAGS_BY_LETTERS', 'letters'),
             true,

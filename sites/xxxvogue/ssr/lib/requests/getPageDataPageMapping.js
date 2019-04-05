@@ -29,7 +29,7 @@ export const
         niche: Object.freeze([
             deepFreeze({blocks: {
                 allTagsBlock: 1,
-                searchSponsors: 1,
+                galsFacets: 1,
                 updateExtraURL: 1,
                 updateSponsorURL: 1,
             }}),
@@ -43,7 +43,7 @@ export const
             deepFreeze({blocks: {
                 modelsABCBlockText: 1,
                 modelsABCBlockThumbs: 1,
-                searchSponsors: 1,
+                galsFacets: 1,
                 updateExtraURL: 1,
                 updateSponsorURL: 1,
             }}),
@@ -62,7 +62,7 @@ export const
             getVideoPageMap,
         ]),
         findVideos: Object.freeze([
-            deepFreeze({blocks: {searchSponsors: 1, updateExtraURL: 1, updateSponsorURL: 1}}),
+            deepFreeze({blocks: {galsFacets: 1, updateExtraURL: 1, updateSponsorURL: 1}}),
             getFindVideosMap,
         ]),
         notFound: Object.freeze([

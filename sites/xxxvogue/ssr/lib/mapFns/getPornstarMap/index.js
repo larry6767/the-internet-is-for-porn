@@ -48,7 +48,8 @@ export default x => {
             pornstarInfo: getPornstarInfo(g(x, 'page', 'MODEL_INFO')),
             pornstarInfoForTable: g(pornstarInfoForTable, 'data'),
             pornstarInfoForTableKeysOrder: g(pornstarInfoForTable, 'keysOrder'),
-            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')),
+            sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')),
+            currentSponsor: g(x, 'page', 'SPONSOR_URL_NAME'),
         }
 
     if (process.env.NODE_ENV !== 'production')

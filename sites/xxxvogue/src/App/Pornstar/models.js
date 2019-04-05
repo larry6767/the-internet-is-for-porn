@@ -101,6 +101,7 @@ const
         pornstarInfo: PropTypes.nullable(immutablePornstarInfoModel),
         randomWidthList: PropTypes.nullable(ImmutablePropTypes.listOf(PropTypes.number)),
         sponsorsList: immutableSponsorsListModel,
+        currentSponsor: PropTypes.nullable(PropTypes.string),
     })
 
 export {

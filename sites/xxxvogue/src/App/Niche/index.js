@@ -44,11 +44,12 @@ const
                 pagesCount={ig(props.data, 'pagesCount')}
                 pageNumber={ig(props.data, 'pageNumber')}
                 itemsCount={ig(props.data, 'itemsCount')}
-                sortList={ig(props.data, 'sortList')}
-                currentSort={ig(props.data, 'currentSort')}
                 archiveFilms={ig(props.data, 'archiveFilms')}
                 tagArchiveListOlder={ig(props.data, 'tagArchiveListOlder')}
                 tagArchiveListNewer={ig(props.data, 'tagArchiveListNewer')}
+
+                sortList={ig(props.data, 'sortList')}
+                durationList={ig(props.data, 'durationList')}
                 sponsorsList={ig(props.data, 'sponsorsList')}
             />
             <VideoList
@@ -113,6 +114,7 @@ export default compose(
         chooseSort: props => event => {
             event.preventDefault()
             props.setNewSort({
+                sortName: event.target.name,
                 newSortValue: event.target.value,
                 nicheCode: g(props, 'nicheCode'),
                 archiveParams: g(props, 'archiveParams'),

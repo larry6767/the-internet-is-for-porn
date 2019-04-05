@@ -331,3 +331,7 @@ export const
 
     i18nModel = i18nModelBuilder(false),
     immutableI18nModel = i18nModelBuilder(true)
+
+export const // used for additional sorting by sponsor and by duration on some sites (xxxvogue)
+    i18nSponsorModel = null, immutableI18nSponsorModel = null,
+    i18nDurationModel = null, immutableI18nDurationModel = null

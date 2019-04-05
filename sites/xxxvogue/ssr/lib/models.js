@@ -15,6 +15,7 @@ const
             updateSponsorURL: PropTypes.number.isOptional,
             updateExtraURL: PropTypes.number.isOptional,
             searchSponsors: PropTypes.number.isOptional,
+            galsFacets: PropTypes.number.isOptional,
         }).isOptional,
     }),
 
@@ -55,6 +56,6 @@ export const
 
 // regs for mapFns helpers
 export const
-    archiveUrlReg = /\/(\d{4})(\d{2})\/archive-vids.html\?f=1$/,
+    archiveUrlReg = /\/(\d{4})(\d{2})\/archive-vids.html\?f=1/,
     internalLinkReg = /^(\/[^\/]+)?\/(\d+)\/[^\/]+.htm$/,
     externalLinkReg = /^http/

@@ -26,6 +26,7 @@ export default
             pornstarInfo: null,
             randomWidthList: null,
             sponsorsList: List(),
+            currentSponsor: null,
         }),
         [g(actions, 'loadPageSuccess')]: (state, {payload}) => state.merge({
             isLoading: false,
@@ -45,6 +46,7 @@ export default
             pornstarInfoForTableKeysOrder: List(g(payload, 'data', 'pornstarInfoForTableKeysOrder')),
             pornstarInfo: Map(fromJS(g(payload, 'data', 'pornstarInfo'))),
             sponsorsList: List(fromJS(g(payload, 'data', 'sponsorsList'))),
+            currentSponsor: g(payload, 'data', 'currentSponsor'),
         }),
         [g(actions, 'loadPageFailure')]: state => state.merge({
             isLoading: false,
@@ -64,6 +66,7 @@ export default
             pornstarInfo: null,
             randomWidthList: null,
             sponsorsList: List(),
+            currentSponsor: null,
         }),
 
         [g(actions, 'setNewSort')]: (state, {payload}) =>
@@ -95,4 +98,5 @@ export default
         pornstarInfo: null,
         randomWidthList: null,
         sponsorsList: [],
+        currentSponsor: null,
     }))

@@ -21,7 +21,8 @@ export default x => {
         pageNumber: g(x, 'page', 'PAGE_NUMBER'),
         pageText: getPageText(g(x, 'page', 'PAGE_TEXT')),
         pagesCount: g(x, 'page', 'PAGES_COUNT'),
-        sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'searchSponsors')),
+        sponsorsList: getSponsorsList(g(x, 'page', 'CUSTOM_DATA', 'galsFacets', 'sponsor')),
+        currentSponsor: g(x, 'page', 'SPONSOR_URL_NAME'),
 
         sortList,
         currentSort:

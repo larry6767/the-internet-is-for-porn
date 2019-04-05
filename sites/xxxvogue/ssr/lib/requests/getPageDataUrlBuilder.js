@@ -33,6 +33,8 @@ export const
             .replace(ARCHIVE_MASK, g(preparedParams, 'archive'))
             .replace(QUERY_STRING_MASK, g(preparedParams, 'qs'))
 
+        console.log(url)
+
         url = parse(url)
         url.pathname = url.pathname.split(/\//).map(x => encodeURIComponent(x)).join('/')
         return format(url)
