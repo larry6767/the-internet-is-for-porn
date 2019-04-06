@@ -10,14 +10,18 @@ import {assertPropTypes} from 'src/App/helpers/propTypes/check'
 // WARNING! Be careful! Avoid recursive dependencies!
 import {pageRequestParamsModel} from 'src/App/models'
 
-export default (routerContext, match, isSitePage = false) => {
+export default (
+    routerContext,
+    match,
+    isSitePage = false,
+    withDuration = false,
+    withSponsor = false,
+) => {
     const
         qs = queryString.parse(ig(routerContext, 'location', 'search')),
         ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
         pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
         searchQuery = get(qs, [ig(routerContext, 'router', 'searchQuery', 'qsKey')], null),
-        sponsor = get(qs, [ig(routerContext, 'router', 'sponsor', 'qsKey')], null),
-        duration = get(qs, [ig(routerContext, 'router', 'duration', 'qsKey')], null),
 
         result = fromJS({
             orientationCode: ig(routerContext, 'currentOrientation'),
@@ -33,10 +37,13 @@ export default (routerContext, match, isSitePage = false) => {
 
             searchQuery,
             isSitePage,
-
-            sponsor,
-            duration,
         })
+
+        if (withDuration)
+            result.duration = get(qs, [ig(routerContext, 'router', 'duration', 'qsKey')], null)
+
+        if (withSponsor)
+            result.sponsor = get(qs, [ig(routerContext, 'router', 'sponsor', 'qsKey')], null)
 
     if (process.env.NODE_ENV !== 'production')
         assertPropTypes(

@@ -13,10 +13,6 @@ export {
     i18nSearchModel, immutableI18nSearchModel,
     i18nNavigationModel, immutableI18nNavigationModel,
     i18nOrderingModel, immutableI18nOrderingModel,
-    // used for additional sorting by sponsor and by duration on some sites (xxxvogue)
-    i18nSponsorModel, immutableI18nSponsorModel,
-    i18nDurationModel, immutableI18nDurationModel,
-    //
     i18nButtonsModel, immutableI18nButtonsModel,
     i18nFooterModel, immutableI18nFooterModel,
     i18nReportModel, immutableI18nReportModel,
@@ -273,9 +269,4 @@ export const
 
             searchQuery: PropTypes.nullable(PropTypes.string),
             isSitePage: PropTypes.nullable(PropTypes.bool),
-
-            // two params below are used for additional sorting by sponsor and by duration
-            // on some sites (xxxvogue)
-            sponsor: PropTypes.nullable(PropTypes.string),
-            duration: PropTypes.nullable(PropTypes.string),
         })
