@@ -1,5 +1,5 @@
 import React from 'react'
-import {compose} from 'recompose'
+import {compose, withPropsOnChange} from 'recompose'
 import {withStyles} from '@material-ui/core/styles'
 
 import Typography from '@material-ui/core/Typography'
@@ -19,14 +19,14 @@ import {
 } from 'src/App/helpers'
 
 import {immutableSortListModel} from 'src/App/models'
-import {muiStyles} from 'src/generic/ControlBar/assets/muiStyles'
+import {muiStyles} from 'src/generic/SortSelect/assets/muiStyles'
 
 import {
     SortWrapper,
     InlinedSelectionWrap,
     InlinedSelectionList,
     InlinedSelectionItem,
-} from 'src/generic/ControlBar/assets'
+} from 'src/generic/SortSelect/assets'
 
 const
     SortSelectMaterial = setPropTypes(process.env.NODE_ENV === 'production' ? null : {
@@ -68,7 +68,18 @@ const
             {sortList.map(x =>
                 <InlinedSelectionItem
                     key={ig(x, 'code')}
-                    href={linkBuilder({ordering: ig(x, 'code'), pagination: null})}
+                    href={linkBuilder(name === 'ordering' ? {
+                        ordering: ig(x, 'code'),
+                        pagination: null,
+                    }
+                    : name === 'sponsor' ? {
+                        sponsor: ig(x, 'code').toLowerCase(),
+                        pagination: null,
+                    }
+                    : {
+                        duration: ig(x, 'code'),
+                        pagination: null,
+                    })}
                     isActive={ig(x, 'isActive')}
                 >
                     {(name !== 'sponsor') || (name === 'sponsor' && ig(x, 'code') === 'all')
@@ -108,6 +119,12 @@ const
 
 export default compose(
     withStyles(muiStyles),
+    withPropsOnChange([], props => ({
+        classedBounds: Object.freeze({
+            select: Object.freeze({select: g(props, 'classes', 'selectRoot')}),
+            typography: Object.freeze({root: g(props, 'classes', 'typographyRoot')}),
+        }),
+    })),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
         classes: PropTypes.exact({
             typographyRoot: PropTypes.string,
@@ -118,7 +135,7 @@ export default compose(
             typography: PropTypes.object,
         }),
         isInlined: PropTypes.bool.isOptional,
-        cb: PropTypes.oneOf(breakpoints).isOptional,
+        cb: PropTypes.oneOf(breakpoints),
         isSSR: PropTypes.bool,
 
         // i18n:

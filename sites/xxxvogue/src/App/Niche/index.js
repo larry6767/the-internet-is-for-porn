@@ -37,20 +37,16 @@ const
                 {ig(props.data, 'pageText', 'listHeader')}
             </Typography>
             <ControlBar
-                linkBuilder={g(props, 'controlLinkBuilder')}
-                archiveLinkBuilder={g(props, 'controlArchiveLinkBuilder')}
-                backFromArchiveLinkBuilder={g(props, 'controlBackFromArchiveLinkBuilder')}
-                chooseSort={g(props, 'chooseSort')}
                 pagesCount={ig(props.data, 'pagesCount')}
                 pageNumber={ig(props.data, 'pageNumber')}
                 itemsCount={ig(props.data, 'itemsCount')}
-                archiveFilms={ig(props.data, 'archiveFilms')}
-                tagArchiveListOlder={ig(props.data, 'tagArchiveListOlder')}
-                tagArchiveListNewer={ig(props.data, 'tagArchiveListNewer')}
-
                 sortList={ig(props.data, 'sortList')}
                 durationList={ig(props.data, 'durationList')}
                 sponsorsList={ig(props.data, 'sponsorsList')}
+                archiveFilms={ig(props.data, 'archiveFilms')}
+                chooseSort={g(props, 'chooseSort')}
+                linkBuilder={g(props, 'controlLinkBuilder')}
+                backFromArchiveLinkBuilder={g(props, 'controlBackFromArchiveLinkBuilder')}
             />
             <VideoList
                 videoListRandomWidthForPage={NICHE}
@@ -127,7 +123,7 @@ export default compose(
                 g(props, 'routerContext'),
                 g(props, 'nicheCode'),
                 qsParams,
-                ['ordering', 'pagination']
+                ['ordering', 'pagination', 'sponsor', 'duration']
             )
             : routerGetters.nicheArchive.link(
                 g(props, 'routerContext'),
@@ -135,16 +131,7 @@ export default compose(
                 g(props, 'archiveParams', 'year'),
                 g(props, 'archiveParams', 'month'),
                 qsParams,
-                ['pagination']
-            ),
-
-        controlArchiveLinkBuilder: props => (year, month) =>
-            routerGetters.nicheArchive.link(
-                g(props, 'routerContext'),
-                g(props, 'nicheCode'),
-                year,
-                month,
-                null
+                ['pagination', 'sponsor', 'duration']
             ),
 
         controlBackFromArchiveLinkBuilder: props => () =>

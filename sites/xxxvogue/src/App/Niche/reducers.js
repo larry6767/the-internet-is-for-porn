@@ -21,7 +21,6 @@ export default
             nichesListWithLetter: List(),
             tagArchiveList: List(),
             sortList: List(),
-            currentSort: null,
             archiveFilms: null,
             tagArchiveListOlder: null,
             tagArchiveListNewer: null,
@@ -51,7 +50,6 @@ export default
                 nichesListWithLetter: List(fromJS(g(payload, 'data', 'nichesListWithLetter'))),
                 tagArchiveList: List(fromJS(g(payload, 'data', 'tagArchiveList'))),
                 sortList: List(fromJS(g(payload, 'data', 'sortList'))),
-                currentSort: g(payload, 'data', 'currentSort'),
                 archiveFilms: archiveFilms && Map(fromJS(archiveFilms)),
                 tagArchiveListOlder: tagArchiveListOlder && Map(fromJS(tagArchiveListOlder)),
                 tagArchiveListNewer: tagArchiveListNewer && Map(fromJS(tagArchiveListNewer)),
@@ -74,7 +72,6 @@ export default
             nichesListWithLetter: List(),
             tagArchiveList: List(),
             sortList: List(),
-            currentSort: null,
             archiveFilms: null,
             tagArchiveListOlder: null,
             tagArchiveListNewer: null,
@@ -84,9 +81,6 @@ export default
             sponsorsList: List(),
             durationList: List(),
         }),
-        [g(actions, 'setNewSort')]: (state, {payload}) =>
-            state.set('currentSort', g(payload, 'newSortValue')),
-
         [g(actions, 'setRandomWidthList')]: (state, {payload}) =>
             state.set('randomWidthList', List(g(payload, 'randomWidthList')))
     }, fromJS({
@@ -103,7 +97,6 @@ export default
         nichesListWithLetter: [],
         tagArchiveList: [],
         sortList: [],
-        currentSort: null,
         archiveFilms: null,
         tagArchiveListOlder: null,
         tagArchiveListNewer: null,

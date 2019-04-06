@@ -26,7 +26,6 @@ export const
         pageText: PropTypes.nullable(immutablePageTextModel),
         nichesListWithLetter: immutableNichesListWithLetterModel,
         tagArchiveList: immutableTagArchiveListModel,
-        currentSort: PropTypes.nullable(PropTypes.string),
         archiveFilms: PropTypes.nullable(immutableArchiveFilmsModel),
         tagArchiveListOlder: immutableTagArchiveListOlderOrNewerModel,
         tagArchiveListNewer: immutableTagArchiveListOlderOrNewerModel,
