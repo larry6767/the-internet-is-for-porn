@@ -256,6 +256,18 @@ export const
     immutableSponsorsListModel = process.env.NODE_ENV === 'production' ? null :
         sponsorsListModelBuilder(true),
 
+    requestSpecificParamsKeys = Object.freeze([
+        'child',
+        'subchild',
+        'ordering',
+        'pagination',
+        'archive',
+        'searchQuery',
+        'isSitePage',
+        'sponsor',
+        'duration',
+    ]),
+
     pageRequestParamsModel = process.env.NODE_ENV === 'production' ? null :
         ImmutablePropTypes.exact({
             orientationCode: PropTypes.string,

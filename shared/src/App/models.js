@@ -254,6 +254,15 @@ export const
     immutableSponsorsListModel = process.env.NODE_ENV === 'production' ? null :
         sponsorsListModelBuilder(true),
 
+    requestSpecificParamsKeys = Object.freeze([
+        'child',
+        'subchild',
+        'ordering',
+        'pagination',
+        'archive',
+        'searchQuery',
+    ]),
+
     pageRequestParamsModel = process.env.NODE_ENV === 'production' ? null :
         ImmutablePropTypes.exact({
             orientationCode: PropTypes.string,
@@ -268,5 +277,4 @@ export const
             })),
 
             searchQuery: PropTypes.nullable(PropTypes.string),
-            isSitePage: PropTypes.nullable(PropTypes.bool),
         })

@@ -112,14 +112,6 @@ export default compose(
     ),
     onlyUpdateForKeys(['cb']),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
-        classes: PropTypes.exact({
-            typographyRoot: PropTypes.string,
-            selectRoot: PropTypes.string,
-        }),
-        classedBounds: PropTypes.exact({
-            select: PropTypes.object,
-            typography: PropTypes.object,
-        }),
         cb: PropTypes.oneOf(breakpoints).isOptional,
         isSSR: PropTypes.bool,
         i18nButtons: immutableI18nButtonsModel,

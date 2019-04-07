@@ -175,7 +175,6 @@ export default compose(
         setNewSort: PropTypes.func,
         chooseSort: PropTypes.func,
         controlLinkBuilder: PropTypes.func,
-        controlArchiveLinkBuilder: PropTypes.func,
         controlBackFromArchiveLinkBuilder: PropTypes.func,
         listsNicheLinkBuilder: PropTypes.func,
         listsArchiveLinkBuilder: PropTypes.func,

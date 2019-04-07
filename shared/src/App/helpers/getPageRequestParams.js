@@ -8,22 +8,17 @@ import ig from 'src/App/helpers/immutable/provedGet'
 import {assertPropTypes} from 'src/App/helpers/propTypes/check'
 
 // WARNING! Be careful! Avoid recursive dependencies!
-import {pageRequestParamsModel} from 'src/App/models'
+import {pageRequestParamsModel, requestSpecificParamsKeys} from 'src/App/models'
 
-export default (
-    routerContext,
-    match,
-    isSitePage = false,
-    withDuration = false,
-    withSponsor = false,
-) => {
+export default (routerContext, match) => {
     const
         qs = queryString.parse(ig(routerContext, 'location', 'search')),
         ordering = get(qs, [ig(routerContext, 'router', 'ordering', 'qsKey')], null),
         pagination = get(qs, [ig(routerContext, 'router', 'pagination', 'qsKey')], null),
-        searchQuery = get(qs, [ig(routerContext, 'router', 'searchQuery', 'qsKey')], null),
+        searchQuery = get(qs, [ig(routerContext, 'router', 'searchQuery', 'qsKey')], null)
 
-        result = fromJS({
+    let
+        result = {
             orientationCode: ig(routerContext, 'currentOrientation'),
             child: match.params.child || null,
             subchild: match.params.subchild || null,
@@ -36,14 +31,15 @@ export default (
             },
 
             searchQuery,
-            isSitePage,
-        })
+        }
 
-        if (withDuration)
+        if (~requestSpecificParamsKeys.indexOf('duration'))
             result.duration = get(qs, [ig(routerContext, 'router', 'duration', 'qsKey')], null)
 
-        if (withSponsor)
+        if (~requestSpecificParamsKeys.indexOf('sponsor'))
             result.sponsor = get(qs, [ig(routerContext, 'router', 'sponsor', 'qsKey')], null)
+
+    result = fromJS(result)
 
     if (process.env.NODE_ENV !== 'production')
         assertPropTypes(
