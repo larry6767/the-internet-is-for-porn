@@ -33,11 +33,11 @@ export default (routerContext, match) => {
             searchQuery,
         }
 
-        if (~requestSpecificParamsKeys.indexOf('duration'))
-            result.duration = get(qs, [ig(routerContext, 'router', 'duration', 'qsKey')], null)
+    if (~requestSpecificParamsKeys.indexOf('duration'))
+        result.duration = get(qs, [ig(routerContext, 'router', 'duration', 'qsKey')], null)
 
-        if (~requestSpecificParamsKeys.indexOf('sponsor'))
-            result.sponsor = get(qs, [ig(routerContext, 'router', 'sponsor', 'qsKey')], null)
+    if (~requestSpecificParamsKeys.indexOf('sponsor'))
+        result.sponsor = get(qs, [ig(routerContext, 'router', 'sponsor', 'qsKey')], null)
 
     result = fromJS(result)
 

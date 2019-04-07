@@ -263,7 +263,6 @@ export const
         'pagination',
         'archive',
         'searchQuery',
-        'isSitePage',
         'sponsor',
         'duration',
     ]),
@@ -282,7 +281,6 @@ export const
             })),
 
             searchQuery: PropTypes.nullable(PropTypes.string),
-            isSitePage: PropTypes.nullable(PropTypes.bool),
             sponsor: PropTypes.nullable(PropTypes.string),
             duration: PropTypes.nullable(PropTypes.string),
         })
