@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <% Object.keys(router.orientation).forEach(function(orientationName){ %>
+        <% var orientationHost = host + router.orientation[orientationName] %>
+        <!-- Main page -->
+        <url>
+            <loc><%= orientationHost %></loc>
+            <priority>1</priority>
+            <changefreq>daily</changefreq>
+        </url>
+
+
+        <!-- Niches -->
+        <% var nichesUrl = orientationHost + '/' + router.routes.allNiches.section %>
+        <url>
+            <loc><%= nichesUrl %></loc>
+            <priority>1</priority>
+            <changefreq>daily</changefreq>
+        </url>
+        <% for (let i = 0; i < niches[orientationName].length; i++) { %>
+            <url>
+                <loc><%= nichesUrl %>/<%= niches[orientationName][i] %></loc>
+                <priority>1</priority>
+                <changefreq>daily</changefreq>
+            </url>
+        <% } %>
+        <!-- /Niches -->
+
+        <!-- Stars -->
+        <url>
+            <loc><%= orientationHost %>/<%= router.routes.pornstars.section %></loc>
+            <priority>1</priority>
+            <changefreq>daily</changefreq>
+        </url>
+        <% var pornStarUrl = orientationHost + '/' + router.routes.pornstar.section %>
+        <% for (let i = 0; i < stars[orientationName].length; i++) { %>
+            <url>
+                <loc><%= pornStarUrl %>/<%= stars[orientationName][i] %></loc>
+                <priority>1</priority>
+                <changefreq>daily</changefreq>
+            </url>
+        <% } %>
+        <!-- /Stars -->
+
+        <!-- Movies -->
+        <url>
+            <loc><%= orientationHost %>/<%= router.routes.allMovies.section %></loc>
+            <priority>1</priority>
+            <changefreq>daily</changefreq>
+        </url>
+        <% var videoUrl = orientationHost + '/' + router.routes.video.section %>
+        <% for (let i = 0; i < videos[orientationName].length; i++) { %>
+            <url>
+                <loc><%= videoUrl %>/<%= videos[orientationName][i] %></loc>
+                <priority>1</priority>
+                <changefreq>daily</changefreq>
+            </url>
+        <% } %>
+        <!-- /Movies -->
+    <% }) %>
+</urlset>

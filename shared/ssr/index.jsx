@@ -18,6 +18,8 @@ import {deepFreeze} from 'ssr/lib/helpers'
 import renderPage from 'ssr/lib/render'
 import {newStore} from 'ssr/lib/store'
 import backendProxyHandler from 'ssr/lib/backend-proxy'
+import createSitemap from 'ssr/lib/sitemap-generator'
+
 import {getSiteLocales} from 'ssr/lib/requests'
 import {validate as apiLocaleMappingValidate} from 'ssr/locale-mapping/backend-api'
 import {validate as routerLocaleMappingValidate} from 'ssr/locale-mapping/router'
@@ -125,6 +127,8 @@ const initApp = async () => {
     app.get('/robots.txt', (req, res) => res.sendFile(robotsTxtFilePath))
     app.get('/manifest.json', (req, res) => res.sendFile(join(publicDir, '/manifest.json')))
     app.use('/img', express.static(join(publicDir, 'img')))
+    app.get('/sitemap.xml', createSitemap(siteLocales, defaultSiteLocaleCode));
+
     if (isProduction) app.use('/static/js', express.static(join(publicDir, 'static', 'js')))
 
     app.use(
