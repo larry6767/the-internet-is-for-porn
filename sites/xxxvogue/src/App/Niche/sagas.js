@@ -23,7 +23,7 @@ export function* loadNichePageFlow(action, ssrContext) {
 
         if (isSSR) {
             const
-                randomWidthList = getRandomWidthList(g(data, 'nichesListWithThumb', 'length'))
+                randomWidthList = getRandomWidthList(g(data, 'videoList', 'length'))
             yield put(actions.setRandomWidthList({randomWidthList}))
         }
 

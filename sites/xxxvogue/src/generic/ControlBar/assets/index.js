@@ -2,10 +2,7 @@ import styled from 'styled-components'
 
 export const Wrapper = styled.div`
     display: flex;
-    flex-direction: column;
-
-    ${({isDownBelow}) => isDownBelow ? `margin-top: 20px;` : ''};
-    ${({theme, isDownBelow}) => theme.media.mobile`${isDownBelow ? 'margin-top: 10px;' : ''}`};
+    justify-content: space-between;
 `
 
 export const ControlButtons = styled.div`

@@ -6,27 +6,38 @@ export const List = styled.ul`
     width: 100%;
     display: grid;
     grid-auto-flow: column;
-    grid-template-rows: repeat(${({itemsQuantity}) => Math.ceil(itemsQuantity / 5)}, 1fr);
+    grid-template-columns: repeat(6, calc(100% / 6));
+    grid-template-rows: repeat(${({itemsQuantity}) => Math.ceil(itemsQuantity / 6)}, 1fr);
     padding: 10px 0;
     border: 1px solid ${({theme}) => theme.palette.primary.extraLight};
     border-radius: 2px;
     list-style-type: none;
     margin: 0 0 30px;
 
-    ${({theme, itemsQuantity}) =>
-        theme.media.lg`grid-template-rows: repeat(${Math.ceil(itemsQuantity / 4)}, 1fr)`}
+    ${({theme, itemsQuantity}) => theme.media.lg`
+        grid-template-rows: repeat(${Math.ceil(itemsQuantity / 5)}, 1fr);
+        grid-template-columns: repeat(5, calc(100% / 5));
+    `}
 
-    ${({theme, itemsQuantity}) =>
-        theme.media.md`grid-template-rows: repeat(${Math.ceil(itemsQuantity / 4)}, 1fr)`}
+    ${({theme, itemsQuantity}) => theme.media.md`
+        grid-template-rows: repeat(${Math.ceil(itemsQuantity / 4)}, 1fr);
+        grid-template-columns: repeat(4, calc(100% / 4));
+    `}
 
-    ${({theme, itemsQuantity}) =>
-        theme.media.sm`grid-template-rows: repeat(${Math.ceil(itemsQuantity / 3)}, 1fr)`}
+    ${({theme, itemsQuantity}) => theme.media.sm`
+        grid-template-rows: repeat(${Math.ceil(itemsQuantity / 3)}, 1fr);
+        grid-template-columns: repeat(3, calc(100% / 3));
+    `}
 
-    ${({theme, itemsQuantity}) =>
-        theme.media.xs`grid-template-rows: repeat(${Math.ceil(itemsQuantity / 2)}, 1fr)`}
+    ${({theme, itemsQuantity}) => theme.media.xs`
+        grid-template-rows: repeat(${Math.ceil(itemsQuantity / 2)}, 1fr);
+        grid-template-columns: repeat(2, calc(100% / 2));
+    `}
 
-    ${({theme, itemsQuantity}) =>
-        theme.media.xxs`grid-template-rows: repeat(${Math.ceil(itemsQuantity / 1)}, 1fr)`}
+    ${({theme, itemsQuantity}) => theme.media.xxs`
+        grid-template-rows: repeat(${Math.ceil(itemsQuantity / 1)}, 1fr);
+        grid-template-columns: repeat(1, calc(100% / 1));
+    `}
 `
 
 const ItemOrLabel = styled.li`
@@ -44,18 +55,22 @@ const ItemOrLabel = styled.li`
 `
 
 export const Label = styled(ItemOrLabel)`
-    font-size: 1rem;
+    font-size: 18px;
     font-weight: bold;
     padding: 7px 14px 7px 15px;
 
-    ${({theme}) => theme.media.mobile`font-size: 0.875rem;`}
+    ${({theme}) => theme.media.md`font-size: 16px;`}
+    ${({theme}) => theme.media.sm`font-size: 16px;`}
+    ${({theme}) => theme.media.mobile`font-size: 16px;`}
 `
 
 export const Item = styled(ItemOrLabel)`
-    font-size: 0.875rem;
+    font-size: 14px;
     padding: 0 9px 0 10px;
 
-    ${({theme}) => theme.media.mobile`font-size: 0.75rem;`}
+    ${({theme}) => theme.media.md`font-size: 12px;`}
+    ${({theme}) => theme.media.sm`font-size: 12px;`}
+    ${({theme}) => theme.media.mobile`font-size: 12px;`}
 `
 
 export const Link = styled(StyledLink)`

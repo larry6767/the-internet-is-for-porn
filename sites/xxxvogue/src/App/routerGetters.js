@@ -149,7 +149,8 @@ const
 
                 return `${orientationPfx}/${niche}/:child`
             },
-            link: (r, child, qsParams={/*ordering:'…', sponsor: '…', pagination:1*/}, allowedQsKeys) => {
+            link: (r, child, qsParams={}, allowedQsKeys) => {
+                // qsParams={ordering:'…', sponsor: '…', duration: '…', pagination:1}
                 const
                     orientationPfx = ig(r, 'router', 'orientation', ig(r, 'currentOrientation')),
                     niche = ig(r, 'router', 'routes', 'niche', 'section'),

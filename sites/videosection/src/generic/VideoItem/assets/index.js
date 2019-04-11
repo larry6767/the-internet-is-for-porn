@@ -18,6 +18,7 @@ export const StyledLinkBlock = styled(Link)`
 export const ProviderLink = styled(({isInline, ...rest}) => <Link {...rest}/>)`
     ${({theme, isInline}) =>
         `color: ${isInline ? theme.palette.primary.contrastText : theme.palette.primary.dark}`}
+    white-space: nowrap;
 `
 
 export const NativeLink = styled.a`

@@ -37,6 +37,7 @@ export const muiStyles = theme => ({
         padding: '15px 50px 15px 15px',
         color: '#ffffff',
         transition: 'background-color 0.3s',
+        fontSize: 14,
 
         '&::placeholder': {
             opacity: 0.6,
@@ -47,11 +48,14 @@ export const muiStyles = theme => ({
             color: theme.palette.primary.dark,
         },
 
+        [theme.breakpoints.down("md")]: {
+            fontSize: '12px',
+        },
+
         [theme.breakpoints.down("xs")]: {
             padding: '8px 40px 8px 10px',
             backgroundSize: '20px',
             backgroundPosition: 'right 10px center',
-            fontSize: '0.875rem',
         },
     },
     searchIcon: {

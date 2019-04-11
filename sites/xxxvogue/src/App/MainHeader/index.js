@@ -33,6 +33,7 @@ import {
     SearchWrapper,
     NavigationWrapper,
     Logo,
+    Bottom,
     BottomInner,
 } from 'src/App/MainHeader/assets'
 
@@ -77,7 +78,7 @@ const
             </TopInner>
         </Top>
         { ! g(props, 'isMobile')
-            ? <div>
+            ? <Bottom>
                 <BottomInner isSSR={g(props, 'isSSR')}>
                     <NavigationWrapper isSSR={g(props, 'isSSR')}>
                         <Navigation/>
@@ -85,7 +86,7 @@ const
                     </NavigationWrapper>
                     <Language/>
                 </BottomInner>
-            </div>
+            </Bottom>
             : null}
     </Header>
 

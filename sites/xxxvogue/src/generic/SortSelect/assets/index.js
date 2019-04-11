@@ -1,10 +1,15 @@
+import React from 'react'
 import styled from 'styled-components'
+import {Link} from 'react-router-dom'
 
 export const SortWrapper = styled.div`
     display: flex;
     align-items: center;
+    margin-left: 40px;
     margin-bottom: 12px;
 
+    ${({theme}) => theme.media.md`margin-left: 20px;`};
+    ${({theme}) => theme.media.sm`margin-left: 20px;`};
     ${({theme}) => theme.media.mobile`margin-bottom: 8px;`};
 
     html.is-loading & * {
@@ -29,32 +34,33 @@ export const InlinedSelectionList = styled.nav`
     justify-content: center;
 `
 
-export const InlinedSelectionItem = styled.a`
+export const InlinedSelectionItem = styled(({isActive, ...rest}) => <Link {...rest}/>)`
     display: inline-block;
-    padding: 10px 10px;
-    border: 2px solid
-        ${({theme, isActive}) => isActive ? theme.palette.primary.main : theme.palette.primary.dark};
-    color:
-        ${({theme, isActive}) =>
-            isActive ? theme.palette.primary.main : theme.palette.primary.light};
+    padding: 5px;
+    color: ${({theme, isActive}) => isActive ? theme.palette.primary.contrastText :
+        theme.palette.primary.main};
+    background: ${({theme, isActive}) => isActive ? theme.palette.primary.main : 'transparent'};
     text-align: center;
     white-space: nowrap;
     text-decoration: none;
     vertical-align: middle;
     line-height: 24px;
+    border-radius: 4px;
+    margin-right: 2px;
+    font-size: 14px;
+
+    ${({theme}) => theme.media.md`font-size: 12px;`};
+    ${({theme}) => theme.media.sm`font-size: 12px;`};
+    ${({theme}) => theme.media.mobile`font-size: 12px;`};
 
     &>* {
         vertical-align: middle;
         margin-bottom: 0;
     }
 
-    &:first-child {
-        border-radius: 4px 0 0 4px;
-        border-right: none;
-    }
-
-    &:last-child {
-        border-radius: 0 4px 4px 0;
-        border-left: none;
+    &:hover {
+        ${({theme, isActive}) => isActive
+            ? `cursor: default; background: ${theme.palette.primary.main}`
+            : theme.palette.primary.extraLight};
     }
 `

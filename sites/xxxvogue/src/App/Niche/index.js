@@ -33,10 +33,8 @@ const
     Niche = props => <Fragment>
         <PageTextHelmet htmlLang={g(props, 'htmlLang')} pageText={ig(props.data, 'pageText')}/>
         <PageWrapper>
-            <Typography variant="h4" paragraph>
-                {ig(props.data, 'pageText', 'listHeader')}
-            </Typography>
             <ControlBar
+                header={ig(props.data, 'pageText', 'listHeader')}
                 pagesCount={ig(props.data, 'pagesCount')}
                 pageNumber={ig(props.data, 'pageNumber')}
                 itemsCount={ig(props.data, 'itemsCount')}

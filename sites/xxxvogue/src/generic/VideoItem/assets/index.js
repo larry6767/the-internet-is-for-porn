@@ -19,6 +19,7 @@ export const StyledLinkBlock = styled(Link)`
 export const ProviderLink = styled(({isInline, ...rest}) => <Link {...rest}/>)`
     ${({theme, isInline}) =>
         `color: ${isInline ? theme.palette.primary.contrastText : theme.palette.primary.dark}`}
+    white-space: nowrap;
 `
 
 export const NativeLink = styled.a`
@@ -103,10 +104,12 @@ export const TagsBlock = styled.div`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 0.75rem;
+    font-size: 12px;
     line-height: 1.5;
 
-    ${({theme}) => theme.media.mobile`font-size: 0.65rem;`}
+    ${({theme}) => theme.media.md`font-size: 10px;`}
+    ${({theme}) => theme.media.sm`font-size: 10px;`}
+    ${({theme}) => theme.media.mobile`font-size: 10px;`}
 `
 
 export const Like = styled.div`

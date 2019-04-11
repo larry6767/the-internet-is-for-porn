@@ -5,7 +5,7 @@ import {withStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
-import OutlinedInput from '@material-ui/core/OutlinedInput'
+import InputBase from '@material-ui/core/InputBase'
 
 // local libs
 import {
@@ -44,7 +44,7 @@ const
             classes={g(classedBounds, 'select')}
             value={currentValue}
             name={name}
-            input={<OutlinedInput onChange={chooseSort} labelWidth={0}/>}
+            input={<InputBase onChange={chooseSort}/>}
         >
             {sortList.map(x =>
                 <MenuItem
@@ -68,7 +68,7 @@ const
             {sortList.map(x =>
                 <InlinedSelectionItem
                     key={ig(x, 'code')}
-                    href={linkBuilder(name === 'ordering' ? {
+                    to={linkBuilder(name === 'ordering' ? {
                         ordering: ig(x, 'code'),
                         pagination: null,
                     }

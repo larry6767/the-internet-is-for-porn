@@ -100,8 +100,22 @@ export const Logo = styled.img`
     ${({theme, isSSR}) => !g(isSSR, []) ? null : theme.media.mobile`margin: 0;`}
 `
 
-export const BottomInner = styled.div`
+export const Bottom = styled.div`
     position: relative;
+
+    &::after {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        content: '';
+        height: 1px;
+        width: 100%;
+        background-color: ${({theme}) => theme.palette.primary.extraLight}
+    }
+`
+
+export const BottomInner = styled.div`
+    ${'' /* position: relative; */}
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -110,14 +124,4 @@ export const BottomInner = styled.div`
     ${({isSSR}) => `flex-wrap: ${g(isSSR, []) ? 'wrap' : 'no-wrap'};`}
     ${({theme}) => theme.media.xl`width: 1400px;`}
     ${({theme}) => theme.media.lg`width: 1200px;`}
-
-    &::after {
-        position: absolute;
-        bottom: 0;
-        left: 10px;
-        content: '';
-        height: 1px;
-        width: calc(100% - 20px);
-        background-color: ${({theme}) => theme.palette.primary.extraLight}
-    }
 `

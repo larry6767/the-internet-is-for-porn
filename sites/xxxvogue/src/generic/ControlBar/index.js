@@ -1,6 +1,8 @@
 import React, {Fragment} from 'react'
 import {connect} from 'react-redux'
 import {compose, onlyUpdateForKeys} from 'recompose'
+import Typography from '@material-ui/core/Typography'
+import {withStyles} from '@material-ui/core/styles'
 
 // local libs
 import {
@@ -25,15 +27,18 @@ import {
 import WrappedButton from 'src/generic/WrappedButton'
 import SortSelect from 'src/generic/SortSelect'
 import {Wrapper, ControlButtons} from 'src/generic/ControlBar/assets'
+import {muiStyles} from 'src/generic/ControlBar/assets/muiStyles'
 
 const
     ControlBar = ({
+        classes,
         cb,
         isSSR,
         i18nButtons,
         i18nOrdering,
         i18nDuration,
         i18nSponsor,
+        header,
         sortList,
         durationList,
         sponsorsList,
@@ -44,6 +49,13 @@ const
         archiveFilms,
         favoriteButtons,
     }) => <Wrapper>
+        { ! header ? null : <Typography
+            variant="h4"
+            className={g(classes, 'typographyRoot')}
+        >
+            {header}
+        </Typography>}
+
         <ControlButtons>
             {favoriteButtons ? <Fragment>
                 <WrappedButton
@@ -111,7 +123,11 @@ export default compose(
         }),
     ),
     onlyUpdateForKeys(['cb']),
+    withStyles(muiStyles),
     setPropTypes(process.env.NODE_ENV === 'production' ? null : {
+        classes: PropTypes.exact({
+            typographyRoot: PropTypes.string,
+        }),
         cb: PropTypes.oneOf(breakpoints).isOptional,
         isSSR: PropTypes.bool,
         i18nButtons: immutableI18nButtonsModel,
