@@ -33,7 +33,7 @@ export function* loadSuggestionsFlow({payload: formData}) {
         yield put(actions.setNewSuggestions(suggestions))
     } catch (err) {
         console.error('loadSuggestionsFlow is failed with exception:', err)
-        yield put(actions.sendReportFailure())
+        yield put(actions.setEmptySuggestions())
         yield put(errorActions.openErrorMessage())
     }
 }
