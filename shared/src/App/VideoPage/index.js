@@ -106,7 +106,7 @@ const
         ? <AdIframeWrapper currentWidth={currentWidth}>
             <AdIframe
                 title={src}
-                src={`https://videosection.com/_ad#str-eng-1545--${src}`}
+                src={`//a.o333o.com/api/spots/${src}`}
                 currentWidth={currentWidth}
                 frameBorder="0"
             />
@@ -173,7 +173,7 @@ const
                                         <CloseAdvertisement
                                             onClick={g(props, 'closeAdvertisementHandler')}
                                         />
-                                        {renderIframe('invideo', g(props, 'currentWidth'))}
+                                        {renderIframe('96402?p=1', g(props, 'currentWidth'))}
                                     </InlineAdvertisement>
                                 </InlineAdvertisementWrapper>
                                 : null}
@@ -227,8 +227,8 @@ const
                         </ControlPanel>
                     </VideoWrapper>
                     <Advertisement>
-                        {renderIframe('sidebar1', g(props, 'currentWidth'))}
-                        {renderIframe('sidebar2', g(props, 'currentWidth'))}
+                        {renderIframe('96398?p=1', g(props, 'currentWidth'))}
+                        {renderIframe('96399?p=1', g(props, 'currentWidth'))}
                     </Advertisement>
                     <TagsWrapper>
                         { ! ig(props.data, 'gallery', 'tags') ? null :
@@ -252,12 +252,12 @@ const
                     videoList={ig(props.data, 'videoList')}
                 />
             </RelatedVideos>
-            <BottomAdvertisement>
+            {/* <BottomAdvertisement>
                 {renderIframe('bottom1', g(props, 'currentWidth'))}
                 {renderIframe('bottom2', g(props, 'currentWidth'))}
                 {ccb(g(props, 'cb'), md) === -1 ? null :
                     renderIframe('bottom3', g(props, 'currentWidth'))}
-            </BottomAdvertisement>
+            </BottomAdvertisement> */}
         </PageWrapper>
     </Fragment>,
 
