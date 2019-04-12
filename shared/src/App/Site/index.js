@@ -80,7 +80,7 @@ const
 
     loadPageFlow = ({data, loadPage, routerContext, match}) => {
         const
-            pageRequestParams = getPageRequestParams(routerContext, match, true)
+            pageRequestParams = getPageRequestParams(routerContext, match)
 
         if (doesItHaveToBeReloaded(data, pageRequestParams))
             loadPage(pageRequestParams)

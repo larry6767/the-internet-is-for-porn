@@ -35,6 +35,17 @@ const
                 searchQuery: exact({
                     qsKey: PropTypes.string,
                 }),
+                sponsor: exact({
+                    qsKey: PropTypes.string,
+                    all: exact({qsValue: PropTypes.string}),
+                }),
+                duration: exact({
+                    qsKey: PropTypes.string,
+                    all: exact({qsValue: PropTypes.string}),
+                    short: exact({qsValue: PropTypes.string}),
+                    medium: exact({qsValue: PropTypes.string}),
+                    long: exact({qsValue: PropTypes.string}),
+                }),
                 orientation: exact({
                     straight: PropTypes.string,
                     gay: PropTypes.string,
@@ -123,6 +134,29 @@ const
             byDuration: PropTypes.string,
             byPopularity: PropTypes.string,
             byRelevant: PropTypes.string,
+        })
+    },
+
+    i18nSponsorModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            label: PropTypes.string,
+            all: PropTypes.string,
+        })
+    },
+
+    i18nDurationModelBuilder = isImmutable => {
+        const
+            exact = isImmutable ? ImmutablePropTypes.exact : PropTypes.exact
+
+        return exact({
+            label: PropTypes.string,
+            all: PropTypes.string,
+            short: PropTypes.string,
+            medium: PropTypes.string,
+            long: PropTypes.string,
         })
     },
 
@@ -268,6 +302,12 @@ const
     i18nOrderingModel = i18nOrderingModelBuilder(false),
     immutableI18nOrderingModel = i18nOrderingModelBuilder(true),
 
+    i18nSponsorModel = i18nSponsorModelBuilder(false),
+    immutableI18nSponsorModel = i18nSponsorModelBuilder(true),
+
+    i18nDurationModel = i18nDurationModelBuilder(false),
+    immutableI18nDurationModel = i18nDurationModelBuilder(true),
+
     i18nButtonsModel = i18nButtonsModelBuilder(false),
     immutableI18nButtonsModel = i18nButtonsModelBuilder(true),
 
@@ -297,6 +337,8 @@ const
             search: isImmutable ? immutableI18nSearchModel : i18nSearchModel,
             navigation: isImmutable ? immutableI18nNavigationModel : i18nNavigationModel,
             ordering: isImmutable ? immutableI18nOrderingModel : i18nOrderingModel,
+            sponsor: isImmutable ? immutableI18nSponsorModel : i18nSponsorModel,
+            duration: isImmutable ? immutableI18nDurationModel : i18nDurationModel,
             buttons: isImmutable ? immutableI18nButtonsModel : i18nButtonsModel,
             footer: isImmutable ? immutableI18nFooterModel : i18nFooterModel,
             report: isImmutable ? immutableI18nReportModel : i18nReportModel,
@@ -316,6 +358,8 @@ export {
     i18nSearchModel, immutableI18nSearchModel,
     i18nNavigationModel, immutableI18nNavigationModel,
     i18nOrderingModel, immutableI18nOrderingModel,
+    i18nSponsorModel, immutableI18nSponsorModel,
+    i18nDurationModel, immutableI18nDurationModel,
     i18nButtonsModel, immutableI18nButtonsModel,
     i18nFooterModel, immutableI18nFooterModel,
     i18nReportModel, immutableI18nReportModel,

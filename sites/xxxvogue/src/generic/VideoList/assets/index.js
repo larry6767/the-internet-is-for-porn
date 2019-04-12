@@ -1,14 +1,15 @@
 import styled from 'styled-components'
 
 export const List = styled.ul`
-    width: 100%;
+    position: relative;
+    left: -5px;
+    top: 0;
+    width: calc(100% + 10px);
     display: flex;
     flex-wrap: wrap;
     list-style-type: none;
     padding: 0;
-    margin: 0;
-`
+    margin: 0 0 20px;
 
-export const VideoListPlug = styled(List)`
-
+    ${({theme}) => theme.media.mobile`width: 100%; left: 0;`}
 `

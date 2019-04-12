@@ -1,4 +1,5 @@
 import {PropTypes} from 'src/App/helpers'
+import {sponsorsListModel} from 'src/App/models'
 import {videoItemModel} from 'src/generic/VideoItem/models'
 import {incomingVideoItemModel} from 'ssr/lib/helpers/mapFns/getFilteredVideoList'
 import {incomingPageTextModel, pageTextModel} from 'ssr/lib/helpers/mapFns/getPageText'
@@ -27,6 +28,12 @@ export const
             }),
             MODELS_BY_LETTERS: PropTypes.object, // TODO better type
             MODELS_BY_LETTERS_MODELS_INFO: PropTypes.object, // TODO better type
+            CUSTOM_DATA: PropTypes.shape({
+                galsFacets: PropTypes.shape({
+                    sponsor: PropTypes.object, // TODO better type
+                }),
+            }),
+            SPONSOR_URL_NAME: PropTypes.nullable(PropTypes.string),
         }),
     }),
 
@@ -42,4 +49,6 @@ export const
         modelsList: pornstarsListWithLetterModel,
         pornstarInfo: pornstarInfoModel,
         pornstarInfoForTable: pornstarInfoForTableModel,
+        sponsorsList: sponsorsListModel,
+        currentSponsor: PropTypes.nullable(PropTypes.string),
     })

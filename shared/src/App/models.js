@@ -191,7 +191,14 @@ const
                 ...props,
                 galleryTitle: PropTypes.string,
             }) : exact(props)
-        }
+        },
+
+    sponsorsListModelBuilder = process.env.NODE_ENV === 'production' ? null : isImmutable => {
+        const
+            listOf = isImmutable ? ImmutablePropTypes.listOf : PropTypes.arrayOf
+
+        return listOf(PropTypes.string)
+    }
 
 export const
     archiveFilmsModel = process.env.NODE_ENV === 'production' ? null :
@@ -242,6 +249,20 @@ export const
     immutableNichesListWithLetterModel = process.env.NODE_ENV === 'production' ? null :
         nichesListModelBuilder(true, false, true),
 
+    sponsorsListModel = process.env.NODE_ENV === 'production' ? null :
+        sponsorsListModelBuilder(false),
+    immutableSponsorsListModel = process.env.NODE_ENV === 'production' ? null :
+        sponsorsListModelBuilder(true),
+
+    requestSpecificParamsKeys = Object.freeze([
+        'child',
+        'subchild',
+        'ordering',
+        'pagination',
+        'archive',
+        'searchQuery',
+    ]),
+
     pageRequestParamsModel = process.env.NODE_ENV === 'production' ? null :
         ImmutablePropTypes.exact({
             orientationCode: PropTypes.string,
@@ -256,5 +277,4 @@ export const
             })),
 
             searchQuery: PropTypes.nullable(PropTypes.string),
-            isSitePage: PropTypes.nullable(PropTypes.bool),
         })

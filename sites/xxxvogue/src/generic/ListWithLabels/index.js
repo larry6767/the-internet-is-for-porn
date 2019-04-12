@@ -1,0 +1,1 @@
+../../../../../shared/src/generic/ListWithLabels/index.js

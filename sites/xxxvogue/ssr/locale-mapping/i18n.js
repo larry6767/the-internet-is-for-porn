@@ -43,6 +43,17 @@ const
                 byPopularity: 'Popularity',
                 byRelevant: 'Relevant',
             },
+            sponsor: {
+                label: 'Channels',
+                all: 'All',
+            },
+            duration: {
+                label: 'Duration',
+                all: 'All',
+                short: 'Short',
+                medium: 'Medium',
+                long: 'Long',
+            },
             buttons: {
                 report: 'Report',
                 favoriteMovies: 'Films',
@@ -183,6 +194,17 @@ const
                 byDuration: 'Dauer',
                 byPopularity: 'Popularität',
                 byRelevant: 'Ähnlich',
+            },
+            sponsor: {
+                label: 'Channels',
+                all: 'Alles',
+            },
+            duration: {
+                label: 'Duration',
+                all: 'Alles',
+                short: 'Short',
+                medium: 'Medium',
+                long: 'Long',
             },
             buttons: {
                 report: 'Bericht',
@@ -331,6 +353,17 @@ const
                 byPopularity: 'Popolari',
                 byRelevant: 'Correlati',
             },
+            sponsor: {
+                label: 'Canali',
+                all: 'Tutti',
+            },
+            duration: {
+                label: 'Duration',
+                all: 'Tutti',
+                short: 'Short',
+                medium: 'Medium',
+                long: 'Long',
+            },
             buttons: {
                 report: 'Rapporto',
                 favoriteMovies: 'Cinema',
@@ -474,6 +507,17 @@ const
                 byPopularity: 'Popularité',
                 byRelevant: 'Pertinence',
             },
+            sponsor: {
+                label: 'Canaux',
+                all: 'Toutes',
+            },
+            duration: {
+                label: 'Duration',
+                all: 'Toutes',
+                short: 'Short',
+                medium: 'Medium',
+                long: 'Long',
+            },
             buttons: {
                 report: 'Signaler',
                 favoriteMovies: 'Scènes',
@@ -616,6 +660,17 @@ const
                 byDuration: 'Plazo',
                 byPopularity: 'Distinguido',
                 byRelevant: 'Principal',
+            },
+            sponsor: {
+                label: 'Los canales',
+                all: 'Todos',
+            },
+            duration: {
+                label: 'Duration',
+                all: 'Todos',
+                short: 'Short',
+                medium: 'Medium',
+                long: 'Long',
             },
             buttons: {
                 report: 'Informe',
@@ -761,6 +816,17 @@ const
                 byPopularity: 'Popular',
                 byRelevant: 'Relacionado',
             },
+            sponsor: {
+                label: 'Canais',
+                all: 'Todos',
+            },
+            duration: {
+                label: 'Duration',
+                all: 'Todos',
+                short: 'Short',
+                medium: 'Medium',
+                long: 'Long',
+            },
             buttons: {
                 report: 'Reportar',
                 favoriteMovies: 'Videos Tube',
@@ -904,6 +970,17 @@ const
                 byPopularity: 'Rankning',
                 byRelevant: 'Instämmande',
             },
+            sponsor: {
+                label: 'Kanaler',
+                all: 'Alla',
+            },
+            duration: {
+                label: 'Duration',
+                all: 'Alla',
+                short: 'Short',
+                medium: 'Medium',
+                long: 'Long',
+            },
             buttons: {
                 report: 'Rapportera',
                 favoriteMovies: 'Klipp',
@@ -1044,6 +1121,17 @@ const
                 byDuration: 'Lengte',
                 byPopularity: 'Populariteit',
                 byRelevant: 'Relevantie',
+            },
+            sponsor: {
+                label: 'Kanalen',
+                all: 'Alle',
+            },
+            duration: {
+                label: 'Duration',
+                all: 'Alle',
+                short: 'Short',
+                medium: 'Medium',
+                long: 'Long',
             },
             buttons: {
                 report: 'Meld',
@@ -1189,6 +1277,17 @@ const
                 byPopularity: 'Suositut',
                 byRelevant: 'Tärkeimmät',
             },
+            sponsor: {
+                label: 'Channels',
+                all: 'All',
+            },
+            duration: {
+                label: 'Duration',
+                all: 'All',
+                short: 'Short',
+                medium: 'Medium',
+                long: 'Long',
+            },
             buttons: {
                 report: 'Ilmianna',
                 favoriteMovies: 'Pornotähtiä',
@@ -1331,6 +1430,17 @@ const
                 byPopularity: 'Рейтинг',
                 byRelevant: 'Тематика',
             },
+            sponsor: {
+                label: 'Каналы',
+                all: 'Все',
+            },
+            duration: {
+                label: 'Duration',
+                all: 'Все',
+                short: 'Short',
+                medium: 'Medium',
+                long: 'Long',
+            },
             buttons: {
                 report: 'Жалоба',
                 favoriteMovies: 'Видео',
@@ -1472,6 +1582,17 @@ const
                 byDuration: 'Süresine',
                 byPopularity: 'Popüler',
                 byRelevant: 'Alakalı',
+            },
+            sponsor: {
+                label: 'Kanallar',
+                all: 'Tüm',
+            },
+            duration: {
+                label: 'Duration',
+                all: 'Tüm',
+                short: 'Short',
+                medium: 'Medium',
+                long: 'Long',
             },
             buttons: {
                 report: 'Rapor Et',

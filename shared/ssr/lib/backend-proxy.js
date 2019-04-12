@@ -5,7 +5,7 @@ import apiLocaleMapping from 'ssr/locale-mapping/backend-api'
 import {frontRouterLocaleMapping} from 'ssr/locale-mapping/router'
 import i18n from 'ssr/locale-mapping/i18n'
 import {plainProvedGet as g} from 'src/App/helpers'
-import {orientationCodes} from 'src/App/models'
+import {orientationCodes, requestSpecificParamsKeys} from 'src/App/models'
 import {getPureDomain, patchSiteLocales} from 'src/App/helpers/hostLocale'
 import {logRequestError} from 'ssr/lib/helpers'
 
@@ -64,11 +64,6 @@ const
             ...additionalData
         }).end()
     },
-
-    requestSpecificParamsKeys =
-        Object.freeze(
-            ['child', 'subchild', 'ordering', 'pagination', 'archive', 'searchQuery', 'isSitePage']
-        ),
 
     requestHandler = siteLocales => (req, res) => {
         const

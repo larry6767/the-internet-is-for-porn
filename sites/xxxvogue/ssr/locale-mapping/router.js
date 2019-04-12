@@ -47,6 +47,17 @@ const
             searchQuery: {
                 qsKey: 'query'
             },
+            sponsor: {
+                qsKey: 'sponsor',
+                all: {qsValue: 'all'},
+            },
+            duration: {
+                qsKey: 'duration',
+                all: {qsValue: 'all'},
+                short: {qsValue: 'short'},
+                medium: {qsValue: 'medium'},
+                long: {qsValue: 'long'},
+            },
             orientation: {
                 straight: '',
                 gay: '/gays',
@@ -93,6 +104,17 @@ const
             },
             searchQuery: {
                 qsKey: 'abfrage'
+            },
+            sponsor: {
+                qsKey: 'sponsor',
+                all: {qsValue: 'all'},
+            },
+            duration: {
+                qsKey: 'duration',
+                all: {qsValue: 'all'},
+                short: {qsValue: 'short'},
+                medium: {qsValue: 'medium'},
+                long: {qsValue: 'long'},
             },
             orientation: {
                 straight: '',
@@ -141,6 +163,17 @@ const
             searchQuery: {
                 qsKey: 'domanda'
             },
+            sponsor: {
+                qsKey: 'sponsor',
+                all: {qsValue: 'all'},
+            },
+            duration: {
+                qsKey: 'duration',
+                all: {qsValue: 'all'},
+                short: {qsValue: 'short'},
+                medium: {qsValue: 'medium'},
+                long: {qsValue: 'long'},
+            },
             orientation: {
                 straight: '',
                 gay: '/gay',
@@ -187,6 +220,17 @@ const
             },
             searchQuery: {
                 qsKey: 'question'
+            },
+            sponsor: {
+                qsKey: 'sponsor',
+                all: {qsValue: 'all'},
+            },
+            duration: {
+                qsKey: 'duration',
+                all: {qsValue: 'all'},
+                short: {qsValue: 'short'},
+                medium: {qsValue: 'medium'},
+                long: {qsValue: 'long'},
             },
             orientation: {
                 straight: '',
@@ -235,6 +279,17 @@ const
             searchQuery: {
                 qsKey: 'consulta'
             },
+            sponsor: {
+                qsKey: 'sponsor',
+                all: {qsValue: 'all'},
+            },
+            duration: {
+                qsKey: 'duration',
+                all: {qsValue: 'all'},
+                short: {qsValue: 'short'},
+                medium: {qsValue: 'medium'},
+                long: {qsValue: 'long'},
+            },
             orientation: {
                 straight: '',
                 gay: '/homosexual',
@@ -281,6 +336,17 @@ const
             },
             searchQuery: {
                 qsKey: 'inquerir'
+            },
+            sponsor: {
+                qsKey: 'sponsor',
+                all: {qsValue: 'all'},
+            },
+            duration: {
+                qsKey: 'duration',
+                all: {qsValue: 'all'},
+                short: {qsValue: 'short'},
+                medium: {qsValue: 'medium'},
+                long: {qsValue: 'long'},
             },
             orientation: {
                 straight: '',
@@ -329,6 +395,17 @@ const
             searchQuery: {
                 qsKey: 'fråga'
             },
+            sponsor: {
+                qsKey: 'sponsor',
+                all: {qsValue: 'all'},
+            },
+            duration: {
+                qsKey: 'duration',
+                all: {qsValue: 'all'},
+                short: {qsValue: 'short'},
+                medium: {qsValue: 'medium'},
+                long: {qsValue: 'long'},
+            },
             orientation: {
                 straight: '',
                 gay: '/bögiga',
@@ -375,6 +452,17 @@ const
             },
             searchQuery: {
                 qsKey: 'vraag'
+            },
+            sponsor: {
+                qsKey: 'sponsor',
+                all: {qsValue: 'all'},
+            },
+            duration: {
+                qsKey: 'duration',
+                all: {qsValue: 'all'},
+                short: {qsValue: 'short'},
+                medium: {qsValue: 'medium'},
+                long: {qsValue: 'long'},
             },
             orientation: {
                 straight: '',
@@ -423,6 +511,17 @@ const
             searchQuery: {
                 qsKey: 'tiedustelu'
             },
+            sponsor: {
+                qsKey: 'sponsor',
+                all: {qsValue: 'all'},
+            },
+            duration: {
+                qsKey: 'duration',
+                all: {qsValue: 'all'},
+                short: {qsValue: 'short'},
+                medium: {qsValue: 'medium'},
+                long: {qsValue: 'long'},
+            },
             orientation: {
                 straight: '',
                 gay: '/homo',
@@ -469,6 +568,17 @@ const
             },
             searchQuery: {
                 qsKey: 'запрос'
+            },
+            sponsor: {
+                qsKey: 'sponsor',
+                all: {qsValue: 'all'},
+            },
+            duration: {
+                qsKey: 'duration',
+                all: {qsValue: 'all'},
+                short: {qsValue: 'short'},
+                medium: {qsValue: 'medium'},
+                long: {qsValue: 'long'},
             },
             orientation: {
                 straight: '',
@@ -517,6 +627,17 @@ const
             searchQuery: {
                 qsKey: 'sorgu'
             },
+            sponsor: {
+                qsKey: 'sponsor',
+                all: {qsValue: 'all'},
+            },
+            duration: {
+                qsKey: 'duration',
+                all: {qsValue: 'all'},
+                short: {qsValue: 'short'},
+                medium: {qsValue: 'medium'},
+                long: {qsValue: 'long'},
+            },
             orientation: {
                 straight: '',
                 gay: '/gayler',
@@ -526,7 +647,7 @@ const
     }),
 
     frontRouterLocaleKeys = Object.freeze([
-        'routes', 'ordering', 'pagination', 'searchQuery', 'orientation',
+        'routes', 'ordering', 'pagination', 'searchQuery', 'sponsor', 'duration', 'orientation',
     ])
 
 export const

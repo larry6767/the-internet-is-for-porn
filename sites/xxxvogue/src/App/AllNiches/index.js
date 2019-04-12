@@ -17,12 +17,13 @@ import {
 
 import {routerContextModel} from 'src/App/models'
 import {model} from 'src/App/AllNiches/models'
+import routerGetters from 'src/App/routerGetters'
 import PageTextHelmet from 'src/generic/PageTextHelmet'
 import actions from 'src/App/AllNiches/actions'
 import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
 import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
 import loadingWrapper from 'src/generic/loadingWrapper'
-import NichesListWithLetters from 'src/generic/NichesListWithLetters'
+import ListWithLabels from 'src/generic/ListWithLabels'
 import {PageWrapper} from 'src/App/AllNiches/assets'
 import {muiStyles} from 'src/App/AllNiches/assets/muiStyles'
 
@@ -33,9 +34,9 @@ const
             <Typography variant="h4" paragraph>
                 {g(props, 'i18nAllNichesHeader')}
             </Typography>
-            <NichesListWithLetters
-                nichesListWithLetter={ig(props.data, 'nichesList')}
-                routerContext={g(props, 'routerContext')}
+            <ListWithLabels
+                list={ig(props.data, 'nichesList')}
+                linkBuilder={g(props, 'listsNicheLinkBuilder')}
             />
         </PageWrapper>
     </Fragment>,
@@ -66,6 +67,9 @@ export default compose(
     onlyUpdateForKeys(['data', 'cb']),
     withHandlers({
         loadPage: props => pageRequestParams => props.loadPageRequest({pageRequestParams}),
+
+        listsNicheLinkBuilder: props => child =>
+            routerGetters.niche.link(g(props, 'routerContext'), child, null),
     }),
     lifecycle({
         componentDidMount() {
@@ -109,6 +113,7 @@ export default compose(
 
         loadPageRequest: PropTypes.func,
         loadPage: PropTypes.func,
+        listsNicheLinkBuilder: PropTypes.func,
     }),
     loadingWrapper({
         isAllNiches: true,

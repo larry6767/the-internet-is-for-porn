@@ -37,7 +37,7 @@ import sectionPortal from 'src/App/MainHeader/Navigation/sectionPortal'
 import orientationPortal from 'src/App/MainHeader/Niche/orientationPortal'
 import loadingWrapper from 'src/generic/loadingWrapper'
 import PornstarList from 'src/generic/PornstarList'
-import NichesListWithLetters from 'src/generic/NichesListWithLetters'
+import ListWithLabels from 'src/generic/ListWithLabels'
 import {muiStyles} from 'src/App/Home/assets/muiStyles'
 import actions from 'src/App/Home/actions'
 
@@ -90,12 +90,10 @@ const
                     />)}
             </NichesList>}
 
-            <Typography variant="h4" paragraph>
-                {g(props, 'i18nMoreCategories')}
-            </Typography>
-            <NichesListWithLetters
-                nichesListWithLetter={ig(props.data, 'nichesListWithLetter')}
-                routerContext={g(props, 'routerContext')}
+            <Typography variant="h4" paragraph>{g(props, 'i18nMoreCategories')}</Typography>
+            <ListWithLabels
+                list={ig(props.data, 'nichesListWithLetter')}
+                linkBuilder={g(props, 'listsNicheLinkBuilder')}
             />
 
             <Typography variant="h4" paragraph>
@@ -167,6 +165,9 @@ export default compose(
 
         pornstarLinkBuilder: props => child =>
             routerGetters.pornstar.link(g(props, 'routerContext'), g(child, []), null),
+
+        listsNicheLinkBuilder: props => child =>
+            routerGetters.niche.link(g(props, 'routerContext'), child, null),
     }),
     lifecycle({
         componentDidMount() {
@@ -233,8 +234,9 @@ export default compose(
         loadPage: PropTypes.func,
         setNewText: PropTypes.func,
         setRandomWidthList: PropTypes.func,
+        pornstarsLinkBuilder: PropTypes.func,
         pornstarLinkBuilder: PropTypes.func,
-        getPornstarsLink: PropTypes.func,
+        listsNicheLinkBuilder: PropTypes.func,
     }),
     loadingWrapper({
         isHome: true,

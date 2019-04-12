@@ -4,7 +4,7 @@ import ImmutablePropTypes from 'src/App/helpers/propTypes/immutable'
 import {assertPropTypes} from 'src/App/helpers/propTypes/check'
 
 // WARNING! Be careful! Avoid recursive dependencies!
-import {pageRequestParamsModel} from '../models'
+import {pageRequestParamsModel} from 'src/App/models'
 
 const
     dataModelProps = process.env.NODE_ENV === 'production' ? null : Object.freeze({

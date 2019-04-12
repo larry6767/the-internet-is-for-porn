@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import {StyledLink} from 'src/generic/assets'
 
-export const NichesList = styled.ul`
+export const List = styled.ul`
     overflow: hidden;
     width: 100%;
     display: grid;
@@ -29,7 +29,7 @@ export const NichesList = styled.ul`
         theme.media.xxs`grid-template-rows: repeat(${Math.ceil(itemsQuantity / 1)}, 1fr)`}
 `
 
-const LetterOrNiche = styled.li`
+const ItemOrLabel = styled.li`
     position: relative;
 
     &::before {
@@ -43,7 +43,7 @@ const LetterOrNiche = styled.li`
     }
 `
 
-export const Letter = styled(LetterOrNiche)`
+export const Label = styled(ItemOrLabel)`
     font-size: 1rem;
     font-weight: bold;
     padding: 7px 14px 7px 15px;
@@ -51,14 +51,14 @@ export const Letter = styled(LetterOrNiche)`
     ${({theme}) => theme.media.mobile`font-size: 0.875rem;`}
 `
 
-export const Niche = styled(LetterOrNiche)`
+export const Item = styled(ItemOrLabel)`
     font-size: 0.875rem;
     padding: 0 9px 0 10px;
 
     ${({theme}) => theme.media.mobile`font-size: 0.75rem;`}
 `
 
-export const NicheLink = styled(StyledLink)`
+export const Link = styled(StyledLink)`
     display: flex;
     justify-content: space-between;
     padding: 7px;

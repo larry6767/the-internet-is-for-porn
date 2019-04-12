@@ -30,6 +30,9 @@ export const getPageData = siteLocales => async ({
     pagination,
     archive,
     searchQuery,
+
+    sponsor,
+    duration,
 }) => {
     const
         preparedParams = getPreparedParams(
@@ -43,6 +46,9 @@ export const getPageData = siteLocales => async ({
             pagination,
             archive ? [g(archive, 'year'), g(archive, 'month')] : [],
             searchQuery,
+
+            sponsor,
+            duration,
         ),
 
         url = getPageDataUrlBuilder(preparedParams),

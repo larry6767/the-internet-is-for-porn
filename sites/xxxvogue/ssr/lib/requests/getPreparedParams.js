@@ -26,7 +26,7 @@ export const
         archive,
         searchQuery = null,
 
-        source,
+        sponsor,
         duration,
     ) => {
         const
@@ -76,11 +76,14 @@ export const
         if (searchQuery)
             qs.q = searchQuery
 
-        if (source)
-            qs.src = source
+        if (sponsor && sponsor !== 'all')
+            qs.src = sponsor
 
-        if (duration)
-            qs.len = duration
+        if (duration && duration !== 'all')
+            qs.len = duration === 'short' ? '0-5' :
+                duration === 'medium' ? '5-15' :
+                duration === 'long' ? '15-0' :
+                ''
 
         if (pagination && pagination > 0)
             qs.embed = pagination > 2 ? `2-${pagination}` : pagination

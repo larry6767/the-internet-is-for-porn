@@ -2,7 +2,18 @@ import styled from 'styled-components'
 import {IMG_PATH} from 'src/config'
 
 export const Footer = styled.footer`
+    position: relative;
     width: 100%;
+
+    &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: '';
+        height: 1px;
+        width: 100%;
+        background-color: ${({theme}) => theme.palette.primary.extraLight};
+    }
 `
 
 const footerBackgroundPath = `${IMG_PATH}footer/footer-background.png`
@@ -12,16 +23,6 @@ export const FooterInner = styled.div`
     display: flex;
     padding: 25px 10px 10px;
     margin: 0 auto;
-
-    &::before {
-        position: absolute;
-        top: 0;
-        left: 10px;
-        content: '';
-        height: 1px;
-        width: calc(100% - 20px);
-        background-color: ${({theme}) => theme.palette.primary.extraLight};
-    }
 
     &::after {
         content: '';
